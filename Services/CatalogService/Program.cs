@@ -7,7 +7,8 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var keyVaultEndpoint = new Uri(builder.Configuration["Vault:Uri"]);
+// Vault:Name defined in appsettings.json
+var keyVaultEndpoint = new Uri($"https://{builder.Configuration["Vault:Name"]}.vault.azure.net/");
 if (builder.Environment.IsDevelopment())
 {
     //
