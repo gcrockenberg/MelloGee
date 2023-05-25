@@ -3,6 +3,9 @@ on:
   push:
     branches:
     - main
+# Added permission to support Azure login using OIDC
+permissions:
+  id-token: write
 env:
   CONTAINER_APP_CONTAINER_NAME: mg-main-container
   CONTAINER_APP_NAME: mg-catalogservice-api
