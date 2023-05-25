@@ -1,0 +1,15 @@
+using CatalogService.Model;
+
+namespace CatalogService.Database
+{
+    public interface IPlatformRepo
+    {
+        bool SaveChanges();
+
+        IEnumerable<Product> GetProducts();
+
+        Product GetProductById(int id);
+
+        void CreateProduct(Product platform);
+    }
+}

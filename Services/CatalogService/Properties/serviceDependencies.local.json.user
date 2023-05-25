@@ -1,0 +1,57 @@
+{
+  "dependencies": {
+    "secrets.user": {
+      "restored": true,
+      "restoreTime": "2023-05-03T21:55:54.663534Z"
+    },
+    "mssql1": {
+      "restored": false,
+      "restoreTime": "2023-05-03T21:55:54.6645349Z"
+    },
+    "secrets1": {
+      "restored": true,
+      "restoreTime": "2023-05-03T21:38:00.3956421Z"
+    },
+    "sqlite1": {
+      "restored": true,
+      "restoreTime": "2023-05-03T21:51:29.1879651Z"
+    }
+  },
+  "parameters": {
+    "mssql1.subscriptionId": {
+      "Name": "mssql1.subscriptionId",
+      "Type": "subscription",
+      "Value": "48e9f9a8-695d-42ee-bc6d-b6f85795e2b6"
+    },
+    "mssql1.resourceGroupLocation": {
+      "Name": "mssql1.resourceGroupLocation",
+      "Type": "location",
+      "Value": "eastus"
+    },
+    "secrets1.resourceGroupName": {
+      "Name": "secrets1.resourceGroupName",
+      "Type": "resourceGroup",
+      "Value": "MelloGee"
+    },
+    "subscriptionId": {
+      "Name": "subscriptionId",
+      "Type": "subscription",
+      "Value": "48e9f9a8-695d-42ee-bc6d-b6f85795e2b6"
+    },
+    "mssql1.resourceGroupName": {
+      "Name": "mssql1.resourceGroupName",
+      "Type": "resourceGroup",
+      "Value": "MelloGee"
+    },
+    "secrets1.resourceGroupLocation": {
+      "Name": "secrets1.resourceGroupLocation",
+      "Type": "location",
+      "Value": "eastus"
+    },
+    "secrets1.subscriptionId": {
+      "Name": "secrets1.subscriptionId",
+      "Type": "subscription",
+      "Value": "48e9f9a8-695d-42ee-bc6d-b6f85795e2b6"
+    }
+  }
+}
