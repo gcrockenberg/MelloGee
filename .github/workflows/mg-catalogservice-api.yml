@@ -32,12 +32,35 @@ jobs:
         file: ${{ env.DOCKER_FILE_PATH }}
   deploy:
     runs-on: ubuntu-latest
+    # Experimenting with Git Environments
+    environment: dev
     needs: build
     steps:
-    - name: Azure Login
-      uses: azure/login@v1
+#    - name: Azure Login
+#      uses: azure/login@v1
+#      with:
+#        creds: ${{ secrets.mg_catalogservice_api_SPN }}
+# Experimenting with Azure login using OIDC
+# https://colinsalmcorner.com/actions-authenticate-to-azure-without-a-secret/ 
+     # ubuntu Az CLI installation 
+    - name: Install CLI-beta
+      run: |
+        cd ../..
+        CWD="$(pwd)"
+        python3 -m venv oidc-venv
+        . oidc-venv/bin/activate
+        echo "activated environment" 
+        python3 -m pip install --upgrade pip
+        echo "started installing cli beta" 
+        pip install -q --extra-index-url https://azcliprod.blob.core.windows.net/beta/simple/ azure-cli
+        echo "installed cli beta"    
+        echo "$CWD/oidc-venv/bin" >> $GITHUB_PATH   
+    - name: 'Az CLI login'
+      uses: azure/login@v1.4.0
       with:
-        creds: ${{ secrets.mg_catalogservice_api_SPN }}
+        client-id: ${{ secrets.AZURE_CLIENT_ID }}
+        tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+        subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
     - name: Deploy to containerapp
       uses: azure/CLI@v1
       with:
