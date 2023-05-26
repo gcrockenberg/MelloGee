@@ -3,6 +3,14 @@
 version: '3.4'
 
 services:
+  envoygateway:
+    image: envoygateway
+    build: 
+      context: .
+      dockerfile: Gateways/Envoy/Dockerfile
+    ports:
+      - "9901:9901"
+      - "10000:10000"
   catalogservice:
     image: catalogservice
     build:
