@@ -1,18 +1,29 @@
+# Please refer https://aka.ms/HTTPSinContainer on how to setup an https developer certificate for your ASP.NET Core service.
+
 version: '3.4'
 
 services:
   catalogservice:
-    image: ${DOCKER_REGISTRY-}catalogservice
+    image: catalogservice
     build:
       context: .
       dockerfile: Services/CatalogService/Dockerfile
+    ports:
+      - 8080:80
+      - 8081:443
   coffeeapi:
-    image: ${DOCKER_REGISTRY-}coffeeapi
+    image: coffeeapi
     build:
       context: .
       dockerfile: Services/Coffee/Coffee.API/Dockerfile
+    ports:
+      - 8082:80
+      - 8083:443
   teaapi:
-    image: ${DOCKER_REGISTRY-}teaapi
+    image: teaapi
     build:
       context: .
       dockerfile: Services/Tea/Tea.API/Dockerfile
+    ports:
+      - 8084:80
+      - 8085:443

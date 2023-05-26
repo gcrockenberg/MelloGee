@@ -16,7 +16,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+// If enabled then specify ASPNETCORE_HTTPS_PORT: port# in Docker environment
+//app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
