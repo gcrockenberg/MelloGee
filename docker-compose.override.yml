@@ -10,3 +10,21 @@ services:
       - "8081:443"
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+  coffeeapi:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:443;http://+:80
+    ports:
+      - "8080:80"
+      - "8081:443"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+  teaapi:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:443;http://+:80
+    ports:
+      - "8080:80"
+      - "8081:443"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro

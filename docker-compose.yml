@@ -6,4 +6,13 @@ services:
     build:
       context: .
       dockerfile: Services/CatalogService/Dockerfile
-
+  coffeeapi:
+    image: ${DOCKER_REGISTRY-}coffeeapi
+    build:
+      context: .
+      dockerfile: Services/Coffee/Coffee.API/Dockerfile
+  teaapi:
+    image: ${DOCKER_REGISTRY-}teaapi
+    build:
+      context: .
+      dockerfile: Services/Tea/Tea.API/Dockerfile
