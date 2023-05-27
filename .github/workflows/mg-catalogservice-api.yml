@@ -51,9 +51,9 @@ jobs:
       name: Build and push image to Docker Hub registry
       uses: docker/build-push-action@v2
       with:
-        context: .
         push: true 
         tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.PROJECT_NAME_FOR_DOCKER }}:${{ github.sha }}
+        file: ${{ env.DOCKER_FILE_PATH }}
   deploy:
     runs-on: ubuntu-latest
     # Set Git Environments
