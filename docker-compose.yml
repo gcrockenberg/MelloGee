@@ -33,6 +33,8 @@ services:
     build:
       context: .
       dockerfile: Services/Tea/Tea.API/Dockerfile
-    ports:
-      - 8084:80
-      - 8085:443
+# Hide direct external access to the container
+# Envoy still has routing access within the composed environment
+#    ports:
+#      - 8084:80
+#      - 8085:443
