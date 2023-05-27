@@ -18,9 +18,9 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-#    - # Not needed for Docker Hub container registry 
-#      name: Checkout to the branch
-#      uses: actions/checkout@v3
+    - 
+      name: Checkout to the branch
+      uses: actions/checkout@v3
     - 
       name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v1
