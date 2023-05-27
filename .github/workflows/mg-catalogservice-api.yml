@@ -100,9 +100,9 @@ jobs:
         inlineScript: >
           az config set extension.use_dynamic_install=yes_without_prompt
 
-          az containerapp registry set --name ${{ env.CONTAINER_APP_NAME }} --resource-group ${{ env.CONTAINER_APP_RESOURCE_GROUP_NAME }} --image ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.PROJECT_NAME_FOR_DOCKER }}:${{ github.sha }} --environment ${{ env.CONTAINER_APPS_ENVIRONMENT }} --registry-username ${{ secrets.DOCKERHUB_USERNAME }} --registry-password ${{ secrets.DOCKERHUB_TOKEN }} --server registry.hub.docker.com 
+          az containerapp registry set --name ${{ env.CONTAINER_APP_NAME }} --resource-group ${{ env.CONTAINER_APP_RESOURCE_GROUP_NAME }} --username ${{ secrets.DOCKERHUB_USERNAME }} --password ${{ secrets.DOCKERHUB_TOKEN }} --server registry.hub.docker.com 
 
-          az containerapp update --name ${{ env.CONTAINER_APP_NAME }} --container-name ${{ env.CONTAINER_APP_CONTAINER_NAME }} --resource-group ${{ env.CONTAINER_APP_RESOURCE_GROUP_NAME }} --image ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.PROJECT_NAME_FOR_DOCKER }}:${{ github.sha }}
+          az containerapp update --name ${{ env.CONTAINER_APP_NAME }} --resource-group ${{ env.CONTAINER_APP_RESOURCE_GROUP_NAME }} --image ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.PROJECT_NAME_FOR_DOCKER }}:${{ github.sha }}
     - name: logout
       run: >
         az logout
