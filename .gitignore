@@ -12,7 +12,9 @@ project.lock.json
 *.user 
 *.userosscache 
 *.sln.docstates 
-.local/
+
+# Any private keys
+*.pem
 
 # Build results 
 [Dd]ebug/ 
