@@ -3,8 +3,8 @@
 version: '3.4'
 
 services:
-  envoygateway:
-    image: envoygateway
+  mg-envoygateway:
+    image: mg-envoygateway
     build: 
       context: .
       dockerfile: Gateways/Envoy/Dockerfile
@@ -12,8 +12,8 @@ services:
       - "9901:9901"
       - "10000:10000"
       - "10001:10001"
-  catalogservice:
-    image: catalogservice
+  mg-catalogservice-api:
+    image: mg-catalogservice-api
     build:
       context: .
       dockerfile: Services/CatalogService/Dockerfile
@@ -32,7 +32,7 @@ services:
 #      - 8082:80
 #      - 8083:443
   mg-tea-api:
-    image: teaapi
+    image: mg-tea-api
     build:
       context: .
       dockerfile: Services/Tea/Tea.API/Dockerfile

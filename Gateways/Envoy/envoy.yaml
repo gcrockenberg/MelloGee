@@ -112,7 +112,7 @@ static_resources:
         - endpoint:
             address:
               socket_address:
-                address: coffeeapi # the service name defined in docker-compose.yml
+                address: mg-coffee-api # the service name defined in docker-compose.yml
                 port_value: 443
     transport_socket: # for https only. It will break http routing
       name: envoy.transport_sockets.tls
