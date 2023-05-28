@@ -6,7 +6,7 @@ namespace CatalogService.Controllers
     [Route("[controller]")]
     public class WeatherForecastController : ControllerBase
     {
-        const string DEPL_SANITY_CHECK = "20230528";
+        const string DEPL_SANITY_CHECK = "20230528.2";
 
         private static readonly string[] Summaries = new[]
         {
