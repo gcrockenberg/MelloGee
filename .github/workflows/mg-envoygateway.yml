@@ -50,7 +50,7 @@ jobs:
 
           az containerapp registry set --name ${{ env.CONTAINER_APP_NAME }} --resource-group ${{ env.CONTAINER_APP_RESOURCE_GROUP_NAME }} --username ${{ secrets.DOCKERHUB_USERNAME }} --password ${{ secrets.DOCKERHUB_TOKEN }} --server ${{ env.CONTAINER_REGISTRY_LOGIN_SERVER }} 
 
-          az containerapp update --name ${{ env.CONTAINER_APP_NAME }} --resource-group ${{ env.CONTAINER_APP_RESOURCE_GROUP_NAME }} --image ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.PROJECT_NAME_FOR_DOCKER }}:${{ github.sha }}
+          az containerapp update --name ${{ env.CONTAINER_APP_NAME }} --resource-group ${{ env.CONTAINER_APP_RESOURCE_GROUP_NAME }} --image ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.PROJECT_NAME_FOR_DOCKER }}:latest
     - name: logout
       run: >
         az logout
