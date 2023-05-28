@@ -1,4 +1,4 @@
-name: Build and deploy .NET application to container app mg-catalogservice-api
+name: Build and deploy .NET application to container app mg-coffee-api
 on:
   push:
     branches:
@@ -8,12 +8,11 @@ permissions:
   id-token: write
 env:
   CONTAINER_APP_CONTAINER_NAME: mg-main-container
-  CONTAINER_APP_NAME: mg-catalogservice-api
+  CONTAINER_APP_NAME: mg-coffee-api
   CONTAINER_APP_RESOURCE_GROUP_NAME: MelloGee
-  #CONTAINER_REGISTRY_LOGIN_SERVER: mellogeeacr.azurecr.io
   CONTAINER_REGISTRY_LOGIN_SERVER: registry.hub.docker.com
-  DOCKER_FILE_PATH: Services/CatalogService/Dockerfile
-  PROJECT_NAME_FOR_DOCKER: catalogservice
+  DOCKER_FILE_PATH: Services/Coffee/Coffee.API/Dockerfile
+  PROJECT_NAME_FOR_DOCKER: coffeeapi
   CONTAINER_APPS_ENVIRONMENT: mg-container-env
 jobs:
   build:
@@ -25,14 +24,7 @@ jobs:
     - 
       name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v1
-#    - 
-#      name: Login to Azure container registry
-#      uses: docker/login-action@v1
-#      with:
-#        registry: ${{ env.CONTAINER_REGISTRY_LOGIN_SERVER }}
-#        username: ${{ secrets.mellogeeacr_USERNAME_9A5D }}
-#        password: ${{ secrets.mellogeeacr_PASSWORD_9A5D }}
-    - # Switched to using Docker Hub container registry
+    - 
       name: Setup Docker Buildx
       uses: docker/setup-buildx-action@v1
     - 
@@ -41,13 +33,6 @@ jobs:
       with:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_TOKEN }}
-#    - 
-#      name: Build and push image to Azure registry
-#      uses: docker/build-push-action@v2
-#      with:
-#        push: true
-#        tags: ${{ env.CONTAINER_REGISTRY_LOGIN_SERVER }}/${{ env.PROJECT_NAME_FOR_DOCKER }}:${{ github.sha }}
-#        file: ${{ env.DOCKER_FILE_PATH }}
     - 
       name: Build and push image to Docker Hub registry
       uses: docker/build-push-action@v2
@@ -61,11 +46,6 @@ jobs:
     environment: dev
     needs: build
     steps:
-# Login to Azure using App Registration and ClientSecret
-#    - name: Azure Login
-#      uses: azure/login@v1
-#      with:
-#        creds: ${{ secrets.mg_catalogservice_api_SPN }}
 # Login to Azure using OIDC
 # https://colinsalmcorner.com/actions-authenticate-to-azure-without-a-secret/ 
     # ubuntu Az CLI installation 
@@ -87,17 +67,9 @@ jobs:
         client-id: ${{ secrets.AZURE_CLIENT_ID }}
         tenant-id: ${{ secrets.AZURE_TENANT_ID }}
         subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-    - name: Deploy to containerapp
+    - name: Deploy to Azure Container App
       uses: azure/CLI@v1
       with:
-        # Depoy from Azure Container Registry
-#        inlineScript: >
-#          az config set extension.use_dynamic_install=yes_without_prompt
-#
-#          az containerapp registry set --name ${{ env.CONTAINER_APP_NAME }} --resource-group ${{ env.CONTAINER_APP_RESOURCE_GROUP_NAME }} --server ${{ env.CONTAINER_REGISTRY_LOGIN_SERVER }} --username ${{ secrets.mellogeeacr_USERNAME_9A5D }} --password ${{ secrets.mellogeeacr_PASSWORD_9A5D }}
-#
-#          az containerapp update --name ${{ env.CONTAINER_APP_NAME }} --container-name ${{ env.CONTAINER_APP_CONTAINER_NAME }} --resource-group ${{ env.CONTAINER_APP_RESOURCE_GROUP_NAME }} --image ${{ env.CONTAINER_REGISTRY_LOGIN_SERVER }}/${{ env.PROJECT_NAME_FOR_DOCKER }}:${{ github.sha }}
-        # Depoy from Docker Hub Container Registry
         inlineScript: >
           az config set extension.use_dynamic_install=yes_without_prompt
 
