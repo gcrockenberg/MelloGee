@@ -31,11 +31,11 @@ static_resources:
                   #host_rewrite_literal: www.google.com
                   prefix_rewrite: "/coffee"
                   cluster: coffee_service
-              - match:
-                  prefix: "/t"
-                route:
-                  prefix_rewrite: "/tea"
-                  cluster: tea_service
+#              - match:
+#                  prefix: "/t"
+#                route:
+#                  prefix_rewrite: "/tea"
+#                  cluster: tea_service
           http_filters:
           - name: envoy.filters.http.router
             typed_config:
@@ -74,11 +74,11 @@ static_resources:
                   #host_rewrite_literal: www.google.com
                   prefix_rewrite: "/coffee"
                   cluster: secure_coffee_service
-              - match:
-                  prefix: "/t"
-                route:
-                  prefix_rewrite: "/tea"
-                  cluster: tea_service
+#              - match:
+#                  prefix: "/t"
+#                route:
+#                  prefix_rewrite: "/tea"
+#                  cluster: tea_service
           http_filters:
           - name: envoy.filters.http.router
             typed_config:

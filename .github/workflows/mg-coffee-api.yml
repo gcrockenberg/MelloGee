@@ -1,4 +1,4 @@
-name: Build and deploy .NET application to container app mg-coffee-api
+name: mg-coffee-api - Build and deploy .NET API to container app
 on:
   push:
     branches:
