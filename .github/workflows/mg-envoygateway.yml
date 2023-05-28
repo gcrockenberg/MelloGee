@@ -15,36 +15,11 @@ env:
   PROJECT_NAME_FOR_DOCKER: mg-envoygateway
   CONTAINER_APPS_ENVIRONMENT: mg-container-env
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-    - 
-      name: Checkout to the branch
-      uses: actions/checkout@v3
-    - 
-      name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v1
-    - 
-      name: Setup Docker Buildx
-      uses: docker/setup-buildx-action@v1
-    - 
-      name: Login to Docker Hub container registry
-      uses: docker/login-action@v1
-      with:
-        username: ${{ secrets.DOCKERHUB_USERNAME }}
-        password: ${{ secrets.DOCKERHUB_TOKEN }}
-    - 
-      name: Build and push image to Docker Hub registry
-      uses: docker/build-push-action@v2
-      with:
-        push: true 
-        tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.PROJECT_NAME_FOR_DOCKER }}:${{ github.sha }}
-        file: ${{ env.DOCKER_FILE_PATH }}
+  # No build because pre-built image has all configs including https cert
   deploy:
     runs-on: ubuntu-latest
     # Set Git Environments
     environment: dev
-    needs: build
     steps:
 # Login to Azure using OIDC
 # https://colinsalmcorner.com/actions-authenticate-to-azure-without-a-secret/ 
