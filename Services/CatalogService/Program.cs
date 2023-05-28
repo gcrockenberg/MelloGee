@@ -3,6 +3,7 @@ using Azure.Core.Diagnostics;
 using Azure.Identity;
 using CatalogService.Database;
 using CatalogService.Model;
+using CatalogService.SyncDataServices.Http;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -44,6 +45,8 @@ else
 }
 
 Console.WriteLine($"KeyVaultTest: {builder.Configuration["KeyVaultConnectionTest"]}");
+
+builder.Services.AddHttpClient<ICoffeeDataClient, HttpCoffeeDataClient>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();

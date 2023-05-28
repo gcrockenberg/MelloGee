@@ -74,10 +74,6 @@
               "target": "Package",
               "version": "[7.0.5, )"
             },
-            "Microsoft.Extensions.Azure": {
-              "target": "Package",
-              "version": "[1.6.3, )"
-            },
             "Microsoft.NET.Build.Containers": {
               "target": "Package",
               "version": "[7.0.400-preview.23225.10, )",

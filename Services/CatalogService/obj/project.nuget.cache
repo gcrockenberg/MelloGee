@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "Xj6knelXkzKpooSJ6HJMIzFsD6qAml4mHLt7JhDWGtz19o+I3dgiXN9H8U4+pJ/Wqc6dCrINWKTQUA2elnXaYQ==",
+  "dgSpecHash": "KpwW7kcWK8zNWlqYaCEwR8bJ6czHGxd1FMLIie2IoE0or4kSKUygl6wOD2yIw+YvdxpigSwLusoPtQaN89GyNQ==",
   "success": true,
   "projectFilePath": "C:\\MelloGee\\Services\\CatalogService\\CatalogService.csproj",
   "expectedPackageFiles": [
@@ -22,12 +22,10 @@
     "C:\\Users\\cc_ll\\.nuget\\packages\\microsoft.entityframeworkcore.sqlserver\\7.0.5\\microsoft.entityframeworkcore.sqlserver.7.0.5.nupkg.sha512",
     "C:\\Users\\cc_ll\\.nuget\\packages\\microsoft.entityframeworkcore.tools\\7.0.5\\microsoft.entityframeworkcore.tools.7.0.5.nupkg.sha512",
     "C:\\Users\\cc_ll\\.nuget\\packages\\microsoft.extensions.apidescription.server\\3.0.0\\microsoft.extensions.apidescription.server.3.0.0.nupkg.sha512",
-    "C:\\Users\\cc_ll\\.nuget\\packages\\microsoft.extensions.azure\\1.6.3\\microsoft.extensions.azure.1.6.3.nupkg.sha512",
     "C:\\Users\\cc_ll\\.nuget\\packages\\microsoft.extensions.caching.abstractions\\7.0.0\\microsoft.extensions.caching.abstractions.7.0.0.nupkg.sha512",
     "C:\\Users\\cc_ll\\.nuget\\packages\\microsoft.extensions.caching.memory\\7.0.0\\microsoft.extensions.caching.memory.7.0.0.nupkg.sha512",
     "C:\\Users\\cc_ll\\.nuget\\packages\\microsoft.extensions.configuration\\2.1.0\\microsoft.extensions.configuration.2.1.0.nupkg.sha512",
     "C:\\Users\\cc_ll\\.nuget\\packages\\microsoft.extensions.configuration.abstractions\\7.0.0\\microsoft.extensions.configuration.abstractions.7.0.0.nupkg.sha512",
-    "C:\\Users\\cc_ll\\.nuget\\packages\\microsoft.extensions.configuration.binder\\2.1.0\\microsoft.extensions.configuration.binder.2.1.0.nupkg.sha512",
     "C:\\Users\\cc_ll\\.nuget\\packages\\microsoft.extensions.dependencyinjection\\7.0.0\\microsoft.extensions.dependencyinjection.7.0.0.nupkg.sha512",
     "C:\\Users\\cc_ll\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\7.0.0\\microsoft.extensions.dependencyinjection.abstractions.7.0.0.nupkg.sha512",
     "C:\\Users\\cc_ll\\.nuget\\packages\\microsoft.extensions.dependencymodel\\7.0.0\\microsoft.extensions.dependencymodel.7.0.0.nupkg.sha512",

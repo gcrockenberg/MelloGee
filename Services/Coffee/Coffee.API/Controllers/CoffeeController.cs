@@ -21,6 +21,7 @@ public class CoffeeController : ControllerBase
     [HttpGet]
     public ActionResult Get()
     {
+        Console.WriteLine("--> Getting coffee ...");
         var random = new Random();
 
         return Ok(Coffees[random.Next(Coffees.Length)]);
