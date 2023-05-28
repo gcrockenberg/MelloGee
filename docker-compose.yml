@@ -21,8 +21,8 @@ services:
     ports:
       - 8080:80
       - 8081:443
-  coffeeapi:
-    image: coffeeapi
+  mg-coffee-api:
+    image: mg-coffee-api
     build:
       context: .
       dockerfile: Services/Coffee/Coffee.API/Dockerfile
@@ -31,7 +31,7 @@ services:
 #    ports:
 #      - 8082:80
 #      - 8083:443
-  teaapi:
+  mg-tea-api:
     image: teaapi
     build:
       context: .

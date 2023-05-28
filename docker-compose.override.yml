@@ -7,14 +7,14 @@ services:
       - ASPNETCORE_URLS=https://+:443;http://+:80
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
-  coffeeapi:
+  mg-coffee-api:
     environment:
       ASPNETCORE_ENVIRONMENT: Development
       ASPNETCORE_HTTPS_PORT: 8083
       ASPNETCORE_URLS: "https://+:443;http://+:80"
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
-  teaapi:
+  mg-tea-api:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=https://+:443;http://+:80

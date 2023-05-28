@@ -2,16 +2,3 @@
 
 version: '3.4'
 
-services:
-  teaapi:
-    image: teaapi
-    build:
-      context: .
-      dockerfile: Services/Tea/Tea.API/Dockerfile
-    ports:
-      - 80:80
-      - 443:443
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-    volumes:
-      - ~/.vsdbg:/remote_debugger:rw
