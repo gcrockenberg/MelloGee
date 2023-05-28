@@ -1,4 +1,4 @@
-name: mg-envoygateway - Build and deploy to container app mg-envoygateway
+name: mg-envoygateway - Build and deploy to container app
 on:
   push:
     branches:

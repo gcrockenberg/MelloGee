@@ -73,7 +73,8 @@ static_resources:
                 route:
                   #host_rewrite_literal: www.google.com
                   prefix_rewrite: "/coffee"
-                  cluster: secure_coffee_service
+                  cluster: coffee_service
+#                  cluster: secure_coffee_service
 #              - match:
 #                  prefix: "/t"
 #                route:
