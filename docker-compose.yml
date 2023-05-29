@@ -10,8 +10,8 @@ services:
       dockerfile: Gateways/Envoy/Dockerfile
     ports:
       - "9901:9901"
-      - "10000:10000"
-      - "10001:10001"
+      - "80:80"
+      - "443:443"
   mg-catalogservice-api:
     image: mg-catalogservice-api
     build:
