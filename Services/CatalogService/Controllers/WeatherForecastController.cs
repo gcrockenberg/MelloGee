@@ -43,7 +43,7 @@ namespace CatalogService.Controllers
             {
                 Date = DateTime.Now.AddDays(index),
                 TemperatureC = Random.Shared.Next(-20, 55),
-                Summary = $"{Summaries[Random.Shared.Next(Summaries.Length)]}:{DEPL_SANITY_CHECK}"
+                Summary = $"{Summaries[Random.Shared.Next(Summaries.Length)]}:{DEPL_SANITY_CHECK}:IsHttps:{HttpContext.Request.IsHttps}"
             })
             .ToArray();
         }
