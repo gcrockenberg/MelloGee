@@ -8,7 +8,7 @@ permissions:
   id-token: write
 env:
   CONTAINER_APP_CONTAINER_NAME: mg-main-container
-  CONTAINER_APP_NAME: mg-catalogservice-api
+  CONTAINER_APP_NAME: mg-catalog-api
   CONTAINER_APP_RESOURCE_GROUP_NAME: MelloGee
   #CONTAINER_REGISTRY_LOGIN_SERVER: mellogeeacr.azurecr.io
   CONTAINER_REGISTRY_LOGIN_SERVER: registry.hub.docker.com
