@@ -1,4 +1,4 @@
-name: mg-catalog-service - Build and deploy .NET API to container app
+name: mg-catalog-api - Build and deploy .NET API to container app
 on:
   push:
     branches:
