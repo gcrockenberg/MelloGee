@@ -1,9 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "KpwW7kcWK8zNWlqYaCEwR8bJ6czHGxd1FMLIie2IoE0or4kSKUygl6wOD2yIw+YvdxpigSwLusoPtQaN89GyNQ==",
+  "dgSpecHash": "NAFwpVO8LHzoKf7skbkXktKeYfd4lvBKp56plfb0KJG7pk76BXWsYuxK8y/6LaAFhAOUURIaU8OzaD2j96Grmg==",
   "success": true,
   "projectFilePath": "C:\\MelloGee\\Services\\CatalogService\\CatalogService.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\cc_ll\\.nuget\\packages\\aspnetcore.healthchecks.ui.client\\6.0.5\\aspnetcore.healthchecks.ui.client.6.0.5.nupkg.sha512",
+    "C:\\Users\\cc_ll\\.nuget\\packages\\aspnetcore.healthchecks.ui.core\\6.0.5\\aspnetcore.healthchecks.ui.core.6.0.5.nupkg.sha512",
     "C:\\Users\\cc_ll\\.nuget\\packages\\azure.core\\1.31.0\\azure.core.1.31.0.nupkg.sha512",
     "C:\\Users\\cc_ll\\.nuget\\packages\\azure.extensions.aspnetcore.configuration.secrets\\1.0.0\\azure.extensions.aspnetcore.configuration.secrets.1.0.0.nupkg.sha512",
     "C:\\Users\\cc_ll\\.nuget\\packages\\azure.identity\\1.9.0-beta.3\\azure.identity.1.9.0-beta.3.nupkg.sha512",
@@ -29,6 +31,10 @@
     "C:\\Users\\cc_ll\\.nuget\\packages\\microsoft.extensions.dependencyinjection\\7.0.0\\microsoft.extensions.dependencyinjection.7.0.0.nupkg.sha512",
     "C:\\Users\\cc_ll\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\7.0.0\\microsoft.extensions.dependencyinjection.abstractions.7.0.0.nupkg.sha512",
     "C:\\Users\\cc_ll\\.nuget\\packages\\microsoft.extensions.dependencymodel\\7.0.0\\microsoft.extensions.dependencymodel.7.0.0.nupkg.sha512",
+    "C:\\Users\\cc_ll\\.nuget\\packages\\microsoft.extensions.diagnostics.healthchecks\\6.0.7\\microsoft.extensions.diagnostics.healthchecks.6.0.7.nupkg.sha512",
+    "C:\\Users\\cc_ll\\.nuget\\packages\\microsoft.extensions.diagnostics.healthchecks.abstractions\\6.0.7\\microsoft.extensions.diagnostics.healthchecks.abstractions.6.0.7.nupkg.sha512",
+    "C:\\Users\\cc_ll\\.nuget\\packages\\microsoft.extensions.fileproviders.abstractions\\6.0.0\\microsoft.extensions.fileproviders.abstractions.6.0.0.nupkg.sha512",
+    "C:\\Users\\cc_ll\\.nuget\\packages\\microsoft.extensions.hosting.abstractions\\6.0.0\\microsoft.extensions.hosting.abstractions.6.0.0.nupkg.sha512",
     "C:\\Users\\cc_ll\\.nuget\\packages\\microsoft.extensions.logging\\7.0.0\\microsoft.extensions.logging.7.0.0.nupkg.sha512",
     "C:\\Users\\cc_ll\\.nuget\\packages\\microsoft.extensions.logging.abstractions\\7.0.0\\microsoft.extensions.logging.abstractions.7.0.0.nupkg.sha512",
     "C:\\Users\\cc_ll\\.nuget\\packages\\microsoft.extensions.options\\7.0.0\\microsoft.extensions.options.7.0.0.nupkg.sha512",

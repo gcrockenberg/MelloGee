@@ -44,6 +44,10 @@
         "net7.0": {
           "targetAlias": "net7.0",
           "dependencies": {
+            "AspNetCore.HealthChecks.UI.Client": {
+              "target": "Package",
+              "version": "[6.0.5, )"
+            },
             "Azure.Extensions.AspNetCore.Configuration.Secrets": {
               "target": "Package",
               "version": "[1.0.0, )"

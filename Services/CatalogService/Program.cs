@@ -1,3 +1,6 @@
+using HealthChecks.UI.Client;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Vault:Name defined in appsettings.json
@@ -54,6 +57,17 @@ builder.Services.AddDbContext<Context>(options =>
 builder.Services.AddCustomHealthCheck(builder.Configuration);
 
 var app = builder.Build();
+
+// Expose the health check endpoints
+app.MapHealthChecks("/hc", new HealthCheckOptions()
+{
+    Predicate = _ => true,
+    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+});
+app.MapHealthChecks("/liveness", new HealthCheckOptions
+{
+    Predicate = r => r.Name.Contains("self")
+});
 
 
 //if (app.Environment.IsDevelopment())
