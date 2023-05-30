@@ -1,3 +1,5 @@
+# Excluding Envoy within Container Environments
+# Using Azure App Gateway
 name: mg-gateway - Build and deploy to container app
 on:
   push:

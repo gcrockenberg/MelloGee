@@ -11,7 +11,7 @@ services:
     ports:
       - "9901:9901"
       - "80:7777"
-      - "10001:10001"
+#      - "10001:10001"    # Forget HTTPS in Container Environment
   mg-catalogservice-api:
     image: mg-catalogservice-api
     build:
