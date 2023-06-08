@@ -1,0 +1,50 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "subscriptionId": {
+            "value": "48e9f9a8-695d-42ee-bc6d-b6f85795e2b6"
+        },
+        "name": {
+            "value": "me-coffee-api"
+        },
+        "location": {
+            "value": "eastus"
+        },
+        "environmentId": {
+            "value": "/subscriptions/48e9f9a8-695d-42ee-bc6d-b6f85795e2b6/resourceGroups/MelloGee/providers/Microsoft.App/managedEnvironments/env-me-dev-eastus"
+        },
+        "containers": {
+            "value": [
+                {
+                    "name": "me-coffee-api",
+                    "image": "gcrockenberg/coffeeapi:latest",
+                    "command": [],
+                    "resources": {
+                        "cpu": 0.25,
+                        "memory": ".5Gi"
+                    }
+                }
+            ]
+        },
+        "registries": {
+            "value": []
+        },
+        "secrets": {
+            "value": {
+                "arrayValue": []
+            }
+        },
+        "ingress": {
+            "value": {
+                "external": true,
+                "transport": "Auto",
+                "allowInsecure": false,
+                "targetPort": 80,
+                "stickySessions": {
+                    "affinity": "none"
+                }
+            }
+        }
+    }
+}

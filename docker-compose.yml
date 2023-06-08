@@ -3,6 +3,8 @@
 version: '3.4'
 
 services:
+# Explore switching to self-hosted App Gateway for local dev
+# https://learn.microsoft.com/en-us/azure/api-management/self-hosted-gateway-overview
   mg-envoygateway:
     image: mg-envoygateway
     build: 
