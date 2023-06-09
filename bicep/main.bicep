@@ -17,43 +17,6 @@ param environmentType string = 'dev'
 @description('The location into which your Azure resources should be deployed.')
 param location string = resourceGroup().location
 
-//@description('A unique suffix to add to resource names that need to be globally unique.')
-//var resourceNameSuffix = take(uniqueString(resourceGroup().id), 13)
-
-@description('Place holder for Container Apps')
-@secure()
-param secrets object = {
-  arrayValue: []
-}
-
-var containerResources = {
-            cpu: '0.25'
-            memory: '.5Gi'
-          }
-
-var containerScale = {
-        minReplicas: 0
-        maxReplicas: 1
-      }
-
-@description('Docker registry for container app')
-param containerRegistries array = [
-        {
-          server: 'registry.docker.io'
-        }
-      ]
-
-@description('Container Apps are secure in vNet and accessed through APIM')
-param ingress object = {
-  external: true
-  transport: 'Auto'
-  allowInsecure: true
-  targetPort: 80
-  stickySessions: {
-    affinity: 'none'
-  }
-}
-
 
 resource containerAppManagedEnvironment 'Microsoft.App/managedEnvironments@2022-11-01-preview' = {
   name: 'env-${solutionName}-${environmentType}-${location}'
@@ -111,30 +74,5 @@ resource vnetForManagedEnvironment 'Microsoft.Network/virtualNetworks@2020-07-01
       ]
     }
     subnets: []
-  }
-}
-
-resource coffeeApiContainerApp 'Microsoft.App/containerapps@2022-11-01-preview' = {
-  name: '${solutionName}-coffee-api'
-  kind: 'containerapps'
-  location: location
-  properties: {
-    environmentId: containerAppManagedEnvironment.id
-    configuration: {
-      secrets: secrets.arrayValue
-      registries: containerRegistries
-      activeRevisionsMode: 'Single'
-      ingress: ingress
-    }
-    template: {
-      containers: [
-        {
-          name: '${environmentType}-coffee-api'
-          image: 'gcrockenberg/coffeeapi:latest'
-          resources: containerResources
-        }
-      ]
-      scale: containerScale
-    }
   }
 }
