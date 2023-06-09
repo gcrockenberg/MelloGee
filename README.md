@@ -45,15 +45,15 @@ After provisioning Me (below) we'll configure the environment to allow Actions t
 - AZURE_SUBSCRIPTION_ID - Azure Container App Revisions will pull images from Docker
 - AZURE_TENANT_ID
 - Verify that .github/*.yml files reference the right Resource Group and other env variables
-- Open Container App console and curl the APIs, view the logs
+- Open Container App console in Azure portal and curl the APIs, view the logs
 
 **That's it so far**
-: The solution runs on an internal subnet (no public access). Will add workloads when it is out of preview. The containers have curl installed for quick API checks. I'll upload some architecture stuff shortly. Right now the API's talk to each other and to Azure Key Vault. Just setting up the basic foundations. I'll wire up the public APIM gateway soon then work on real API's and front ends.
+: Currently the APIs run on an internal subnet (no public access). Will add workloads to the Container App Environment when it is out of preview. The containers have curl installed for quick API checks. The APIs "talk" to each other and to Azure Key Vault. Just setting up the basic foundations. I'll wire up the public APIM gateway soon then work on real API's and front ends.
 
 ### Working on 
 - Configuring APIM as the Gateway. Might explore other API Gateway options later.
 - Explore APIM Self-hosted gateway
-- Better micro-services, Event Bus and front ends
+- Better micro-services, Event Bus, aggregation, SignalR and front ends
 
 [^1]: The Azure Container Apps Managed Environment creates an additional Resource Group for Kubernetes that it controls
 
