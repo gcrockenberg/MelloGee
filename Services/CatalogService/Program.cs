@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 var builder = WebApplication.CreateBuilder(args);
 
 // Vault:Name defined in appsettings.json
-var keyVaultEndpoint = new Uri($"https://{builder.Configuration["Vault:Name"]}.vault.azure.net/");
+var keyVaultEndpoint = new Uri($"https://{builder.Configuration["VAULT_NAME"]}.vault.azure.net/");
 if (builder.Environment.IsDevelopment())
 {
     /**

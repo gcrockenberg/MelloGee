@@ -2,10 +2,8 @@
   SYNOPSIS: Managed Environment subnet infrastructure module
   DESCRIPTION: Provisions the subnet required for a Container Apps Managed Environment.
   VERSION: 1.0.0
-  OWNER TEAM: MelloGee
+  OWNER TEAM: Gerard C.
 */
-@description('Used in subnet name. The name of the parent vNet.')
-param vnetName string
 
 @description('Used in subnet name. The name of the app or solution.')
 param solutionName string
@@ -22,13 +20,31 @@ param location string
 
 var snetName = take('snet-${solutionName}-${environmentType}-${location}', 80)
 
-resource subnetForManagedEnvironment 'Microsoft.Network/virtualNetworks/subnets@2020-07-01' = {
-  name: '${vnetName}/${snetName}'
+
+resource vnetForManagedEnvironment 'Microsoft.Network/virtualNetworks@2022-11-01' = {
+  location: location
+  name: take('vnet-${solutionName}-${environmentType}-${location}', 64)
   properties: {
-    delegations: []
-    serviceEndpoints: []
-    addressPrefix: '10.0.0.0/23'
+    addressSpace: {
+      addressPrefixes: [
+        '10.0.0.0/16'
+      ]
+    }
+    subnets: [
+      {
+        name: snetName
+        properties: {
+          delegations: []
+          serviceEndpoints: []
+          addressPrefix: '10.0.0.0/23'
+        }
+      }      
+    ]
+  }
+
+  resource subnetForManagedEnvironment 'subnets' existing = {
+    name: snetName
   }
 }
 
-output id string = subnetForManagedEnvironment.id
+output id string = vnetForManagedEnvironment::subnetForManagedEnvironment.id

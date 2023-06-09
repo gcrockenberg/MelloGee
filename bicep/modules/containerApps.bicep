@@ -2,7 +2,7 @@
   SYNOPSIS: Me
   DESCRIPTION: Create and configure the Me Container Apps
   VERSION: 1.0.0
-  OWNER TEAM: MelloGee
+  OWNER TEAM: Gerard C.
 */
 @description('The name of the app or solution.')
 param solutionName string = 'me'
@@ -17,10 +17,7 @@ param location string = resourceGroup().location
 ])
 param environmentType string = 'dev'
 
-//@description('A unique suffix to add to resource names that need to be globally unique.')
-//var resourceNameSuffix = take(uniqueString(resourceGroup().id), 13)
-
-@description('Place holder for Container Apps')
+@description('Right now the container app secrets are common. Just connecting with Docker.')
 @secure()
 param containerSecrets object = {
   arrayValue: [
@@ -31,19 +28,23 @@ param containerSecrets object = {
       ]      
 }
 
-@description('Required to use Docker as container registry.')
+@description('Required to integrate with Docker as container registry')
 @secure()
 param containerRegistryPassword string
 
+@description('The smallest for dev testing')
 var containerResources = {
             cpu: '0.25'
-            memory: '.5Gi'
+            memory: '0.5Gi'
           }
 
+@description('Allow scale to 0 for minimal cost during dev')
 var containerScale = {
         minReplicas: 0
         maxReplicas: 1
       }
+
+var keyVaultName = 'kv-${solutionName}-${environmentType}-${location}'
 
 @description('Docker registry for container app')
 param containerRegistries array = [
@@ -54,7 +55,7 @@ param containerRegistries array = [
         }
       ]
 
-@description('Container Apps are secure in vNet and accessed through APIM')
+@description('Container Apps are secure in subnet and accessed through APIM')
 param ingress object = {
   external: true
   transport: 'Auto'
@@ -65,10 +66,12 @@ param ingress object = {
   }
 }
 
+@description('I wonder if this can be passed in as a parameter')
 resource containerAppManagedEnvironment 'Microsoft.App/managedEnvironments@2022-11-01-preview' existing = {
   name: 'env-${solutionName}-${environmentType}-${location}'
 }
 
+@description('Set up the container app - CI/CD completes the api deployment')
 resource coffeeApiContainerApp 'Microsoft.App/containerapps@2022-11-01-preview' = {
   name: '${solutionName}-coffee-api'
   location: location
@@ -93,7 +96,8 @@ resource coffeeApiContainerApp 'Microsoft.App/containerapps@2022-11-01-preview' 
   }
 }
 
-resource catalogApiContainerApp 'Microsoft.App/containerapps@2022-11-01-preview' = {
+@description('Set up the container app - CI/CD completes the api deployment')
+resource catalogApiContainerApp 'Microsoft.App/containerApps@2022-11-01-preview' = {
   name: '${solutionName}-catalog-api'
   location: location
   properties: {
@@ -110,11 +114,20 @@ resource catalogApiContainerApp 'Microsoft.App/containerapps@2022-11-01-preview'
           name: 'container-main'
           image: 'gcrockenberg/catalogapi:latest'
           resources: containerResources
+          env: [
+            {
+              name: 'VAULT_NAME'
+              value: keyVaultName
+            }
+          ]
         }
       ]
       scale: containerScale
     }
   }
+  dependsOn: [
+    keyVaultForManagedEnvironment
+  ]
 }
 
 @description('This is the built-in Key Vault Secrets User role. See https://docs.microsoft.com/azure/role-based-access-control/built-in-roles#key-vault-secrets-user')
@@ -123,13 +136,15 @@ resource keyVaultReaderRoleDefinition 'Microsoft.Authorization/roleDefinitions@2
   name: '4633458b-17de-408a-b874-0445c86b69e6'
 }
 
-// TODO - Build Key Vault into full solution automation
-@description('Preexisting key vault')
-resource keyVault 'Microsoft.KeyVault/vaults@2023-02-01' existing = {
-  name: 'MG-CatalogServiceVault'
+module keyVaultForManagedEnvironment 'keyVault.bicep' = {
+  name: 'keyVault'
+  params: {
+    keyVaultName: keyVaultName
+    location: location
+  }
 }
 
-@description('Connect container app to the key vault')
+@description('Connect container app to the key vault using System Assigned Id and RBAC')
 resource connectCatalogApiToKeyVault 'Microsoft.ServiceLinker/linkers@2022-11-01-preview' = {
   scope: catalogApiContainerApp
   name: 'catalogapi_to_keyvault'
@@ -137,7 +152,7 @@ resource connectCatalogApiToKeyVault 'Microsoft.ServiceLinker/linkers@2022-11-01
     clientType: 'dotnet'
     targetService: {
       type: 'AzureResource'
-      id: keyVault.id
+      id: keyVaultForManagedEnvironment.outputs.id
       resourceProperties: {
         type: 'KeyVault'
         connectAsKubernetesCsiDriver: false

@@ -1,9 +1,9 @@
-# 'Me', a simple demo 
+# 'Me', a technology demonstration
 
 A personal project to provide backend and frontend examples of a microservice based solution hosted in Azure.
 
 ## Environment
-- [Azure Container Apps](https://learn.microsoft.com/en-us/azure/container-apps/)
+- [Azure Container Apps](https://learn.microsoft.com/en-us/azure/container-apps/) - IaaS, easy orchestration, globally scalable, pay-as-you-go
 - [Azure App Gateway](https://learn.microsoft.com/en-us/azure/application-gateway/)
 - Docker Container Registry
 - GitHub Actions CI/CD
@@ -13,8 +13,10 @@ These steps were established on my Windows 10 machine
 
 ## Steps for using Me
 ### Local
-1. Work in progress
+- Work in progress. Developing directly in the cloud has become so easy ...
+
 ### Azure
+I need to build Key Vault into the automation. I've been using my own separate instance.
 **Prereqs**
 : Deploying Me to Azure requires a few things
 1. An Azure account [(Free is fine)][def]
@@ -34,6 +36,7 @@ After provisioning Me (below) we'll configure the environment to allow Actions t
 1. az configure --defaults group=*my-resource-group*
 2. az deployment group create --template-file bicep/main.bicep
 3. az deployment group create --template-file bicep/container.bicep
+- Container apps will be ready for CI/CD next
 
 **GitHub Actions CI/CD**
 : Set the following GitHub secrets which are used by GitHub CI/CD Actions to deploy Container Apps
@@ -42,9 +45,10 @@ After provisioning Me (below) we'll configure the environment to allow Actions t
 - AZURE_SUBSCRIPTION_ID - Azure Container App Revisions will pull images from Docker
 - AZURE_TENANT_ID
 - Verify that .github/*.yml files reference the right Resource Group and other env variables
+- Open Container App console and curl the APIs, view the logs
 
 **That's it so far**
-The solution runs on an internal subnet (no public access). The containers have curl installed for quick API checks. I'll wire up the public APIM gateway soon then work on real API's and front ends. Also I'll upload some architecture stuff. Right now the API's talk to each other and to Azure Key Vault. Just setting up the basic foundations.
+: The solution runs on an internal subnet (no public access). Will add workloads when it is out of preview. The containers have curl installed for quick API checks. I'll upload some architecture stuff shortly. Right now the API's talk to each other and to Azure Key Vault. Just setting up the basic foundations. I'll wire up the public APIM gateway soon then work on real API's and front ends.
 
 ### Working on 
 - Merging/modularizing bicep files so only one run is needed. ARM templates are just reverse engineering sources.

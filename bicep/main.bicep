@@ -2,7 +2,7 @@
   SYNOPSIS: Me
   DESCRIPTION: Create and manage the resources to support the Me solution
   VERSION: 1.0.0
-  OWNER TEAM: MelloGee
+  OWNER TEAM: Gerard C.
 */
 @description('The name of the app or solution.')
 param solutionName string = 'me'
@@ -16,6 +16,10 @@ param environmentType string = 'dev'
 
 @description('The location into which your Azure resources should be deployed.')
 param location string = resourceGroup().location
+
+@description('Required to use Docker as container registry.')
+@secure()
+param containerRegistryPassword string
 
 
 resource containerAppManagedEnvironment 'Microsoft.App/managedEnvironments@2022-11-01-preview' = {
@@ -35,12 +39,9 @@ resource containerAppManagedEnvironment 'Microsoft.App/managedEnvironments@2022-
     }
     zoneRedundant: false
   }
-  dependsOn: [
-    subnetForManagedEnvironment
-  ]
 }
 
-resource workspaceForManagedEnvionment 'Microsoft.OperationalInsights/workspaces@2020-08-01' = {
+resource workspaceForManagedEnvionment 'Microsoft.OperationalInsights/workspaces@2022-10-01' = {
   name: take('wkspc-${solutionName}-${environmentType}-${location}', 63)
   location: location
   properties: {
@@ -50,29 +51,26 @@ resource workspaceForManagedEnvionment 'Microsoft.OperationalInsights/workspaces
     retentionInDays: 30
     workspaceCapping: {}
   }
-  dependsOn: []
 }
 
 module subnetForManagedEnvironment 'modules/newInfrastructureSubnetTemplate.bicep' = {
   name: 'newInfrastructureSubnetTemplate'
-  //  scope: resourceGroup(subscriptionId, 'MelloGee')
   params: {
-    vnetName: vnetForManagedEnvironment.name
     environmentType: environmentType
     location: location
     solutionName: solutionName
   }
 }
 
-resource vnetForManagedEnvironment 'Microsoft.Network/virtualNetworks@2020-07-01' = {
-  location: location
-  name: take('vnet-${solutionName}-${environmentType}-${location}', 64)
-  properties: {
-    addressSpace: {
-      addressPrefixes: [
-        '10.0.0.0/16'
-      ]
-    }
-    subnets: []
+module containerApps 'modules/containerApps.bicep' = {
+  name: 'containerApps'
+  params: {
+    environmentType: environmentType
+    location: location
+    solutionName: solutionName
+    containerRegistryPassword: containerRegistryPassword
   }
+  dependsOn: [
+    containerAppManagedEnvironment
+  ]
 }

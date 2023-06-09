@@ -14,8 +14,8 @@ services:
       - "9901:9901"
       - "80:7777"
 #      - "10001:10001"    # Forget HTTPS in Container Environment
-  mg-catalogservice-api:
-    image: mg-catalogservice-api
+  me-catalogservice-api:
+    image: me-catalogservice-api
     build:
       context: .
       dockerfile: Services/CatalogService/Dockerfile
