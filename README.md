@@ -31,17 +31,20 @@ After provisioning Me (below) we'll configure the environment to allow Actions t
 
 **Provision Me**
 : Create the Azure infrastructure for Me in an Azure Resource Group of your choosing [^1]
-1. az configure --defaults group=<my-resource-group>
+1. az configure --defaults group=*my-resource-group*
 2. az deployment group create --template-file bicep/main.bicep
 3. az deployment group create --template-file bicep/container.bicep
 
 **GitHub Actions CI/CD**
-: Set the following GitHub secrets are used by GitHub CI/CD Actions to deploy Container Apps
+: Set the following GitHub secrets which are used by GitHub CI/CD Actions to deploy Container Apps
 - [DOCKERHUB_TOKEN](https://docs.docker.com/docker-hub/access-tokens/) - Container images will be pushed to Docker
 - DOCKERHUB_USERNAME
 - AZURE_SUBSCRIPTION_ID - Azure Container App Revisions will pull images from Docker
 - AZURE_TENANT_ID
 - Verify that .github/*.yml files reference the right Resource Group and other env variables
+
+**That's it so far**
+The solution runs on an internal subnet (no public access). The containers have curl installed for quick API checks. I'll wire up the public APIM gateway soon then work on real API's and front ends. Also I'll upload some architecture stuff. Right now the API's talk to each other and to Azure Key Vault. Just setting up the basic foundations.
 
 ### Working on 
 - Merging/modularizing bicep files so only one run is needed. ARM templates are just reverse engineering sources.
