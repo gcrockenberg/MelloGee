@@ -4,7 +4,7 @@ A personal project to provide backend and frontend examples of a microservice ba
 
 ## Environment
 - [Azure Container Apps](https://learn.microsoft.com/en-us/azure/container-apps/) - IaaS, easy orchestration, globally scalable, pay-as-you-go
-- [Azure App Gateway](https://learn.microsoft.com/en-us/azure/application-gateway/)
+- [Azure API Management](https://azure.microsoft.com/en-us/products/api-management/)
 - Docker Container Registry
 - GitHub Actions CI/CD
 
