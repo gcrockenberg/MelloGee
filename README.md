@@ -8,6 +8,8 @@ A personal project to provide backend and frontend examples of a microservice ba
 - Docker Container Registry
 - GitHub Actions CI/CD
 
+![Me architecture](images/Me%20Architecture.png)
+
 ## Notes
 These steps were established on my Windows 10 machine
 
@@ -16,7 +18,6 @@ These steps were established on my Windows 10 machine
 - Work in progress. Developing directly in the cloud has become so easy ...
 
 ### Azure
-I need to build Key Vault into the automation. I've been using my own separate instance.
 **Prereqs**
 : Deploying Me to Azure requires a few things
 1. An Azure account [(Free is fine)][def]
@@ -35,7 +36,6 @@ After provisioning Me (below) we'll configure the environment to allow Actions t
 : Create the Azure infrastructure for Me in an Azure Resource Group of your choosing [^1]
 1. az configure --defaults group=*my-resource-group*
 2. az deployment group create --template-file bicep/main.bicep
-3. az deployment group create --template-file bicep/container.bicep
 - Container apps will be ready for CI/CD next
 
 **GitHub Actions CI/CD**
@@ -51,10 +51,9 @@ After provisioning Me (below) we'll configure the environment to allow Actions t
 : The solution runs on an internal subnet (no public access). Will add workloads when it is out of preview. The containers have curl installed for quick API checks. I'll upload some architecture stuff shortly. Right now the API's talk to each other and to Azure Key Vault. Just setting up the basic foundations. I'll wire up the public APIM gateway soon then work on real API's and front ends.
 
 ### Working on 
-- Merging/modularizing bicep files so only one run is needed. ARM templates are just reverse engineering sources.
-- Verifying and documenting local set up.
-- APIM as an interim step before going deeper with Api Gateways
-- APIM Self-hosted gateway for local dev
+- Configuring APIM as the Gateway. Might explore other API Gateway options later.
+- Explore APIM Self-hosted gateway
+- Better micro-services, Event Bus and front ends
 
 [^1]: The Azure Container Apps Managed Environment creates an additional Resource Group for Kubernetes that it controls
 
