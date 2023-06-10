@@ -27,7 +27,7 @@ These steps were established on my Windows 10 machine
 **Fork Me**
 : Me uses GitHub Actions for CI/CD so you'll need your own copy
 
-After provisioning Me (below) we'll configure the environment to allow Actions to deploy the Container Apps
+After provisioning Me (below) we'll configure the environment to enable GitHub Actions to deploy the Container Apps
 
 **Clone Me**
 : So you can run the scripts

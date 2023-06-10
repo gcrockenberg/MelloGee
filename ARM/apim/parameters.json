@@ -1,0 +1,68 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "apimName": {
+            "value": "me"
+        },
+        "location": {
+            "value": "eastus"
+        },
+        "tier": {
+            "value": "Developer"
+        },
+        "capacity": {
+            "value": "1"
+        },
+        "adminEmail": {
+            "value": "gcrockenberg@outlook.com"
+        },
+        "organizationName": {
+            "value": "myoptyx"
+        },
+        "virtualNetworkType": {
+            "value": "External"
+        },
+        "tagsByResource": {
+            "value": {}
+        },
+        "vnet": {
+            "value": {}
+        },
+        "customProperties": {
+            "value": {
+                "Microsoft.WindowsAzure.ApiManagement.Gateway.Security.Protocols.Tls11": false,
+                "Microsoft.WindowsAzure.ApiManagement.Gateway.Security.Protocols.Tls10": false,
+                "Microsoft.WindowsAzure.ApiManagement.Gateway.Security.Backend.Protocols.Tls11": false,
+                "Microsoft.WindowsAzure.ApiManagement.Gateway.Security.Backend.Protocols.Tls10": false,
+                "Microsoft.WindowsAzure.ApiManagement.Gateway.Security.Backend.Protocols.Ssl30": false,
+                "Microsoft.WindowsAzure.ApiManagement.Gateway.Protocols.Server.Http2": false,
+                "Microsoft.WindowsAzure.ApiManagement.Gateway.Security.Ciphers.TripleDes168": false,
+                "Microsoft.WindowsAzure.ApiManagement.Gateway.Security.Protocols.Ssl30": false
+            }
+        },
+        "identity": {
+            "value": {
+                "type": "None"
+            }
+        },
+        "appInsightsObject": {
+            "value": {
+                "id": null,
+                "name": null
+            }
+        },
+        "publicIpAddressId": {
+            "value": ""
+        },
+        "privateEndpoint": {
+            "value": {}
+        },
+        "privateDnsDeploymentName": {
+            "value": "PrivateDNS-1686335142622"
+        },
+        "subnetDeploymentName": {
+            "value": "UpdateSubnetDeployment-1686335142622"
+        }
+    }
+}
