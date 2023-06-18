@@ -1,0 +1,171 @@
+{
+    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "subscriptionId": {
+            "type": "string"
+        },
+        "name": {
+            "type": "string"
+        },
+        "location": {
+            "type": "string"
+        },
+        "environmentId": {
+            "type": "string"
+        },
+        "containers": {
+            "type": "array"
+        },
+        "secrets": {
+            "type": "secureObject",
+            "defaultValue": {
+                "arrayValue": []
+            }
+        },
+        "registries": {
+            "type": "array"
+        },
+        "ingress": {
+            "type": "object"
+        },
+        "environmentName": {
+            "type": "string"
+        },
+        "workspaceName": {
+            "type": "string"
+        },
+        "workspaceLocation": {
+            "type": "string"
+        }
+    },
+    "resources": [
+        {
+            "apiVersion": "2022-11-01-preview",
+            "name": "[parameters('name')]",
+            "type": "Microsoft.App/containerapps",
+            "kind": "containerapps",
+            "location": "[parameters('location')]",
+            "dependsOn": [
+                "[concat('Microsoft.App/managedEnvironments/', parameters('environmentName'))]"
+            ],
+            "properties": {
+                "environmentId": "[parameters('environmentId')]",
+                "configuration": {
+                    "secrets": "[parameters('secrets').arrayValue]",
+                    "registries": "[parameters('registries')]",
+                    "activeRevisionsMode": "Single",
+                    "ingress": "[parameters('ingress')]"
+                },
+                "template": {
+                    "containers": "[parameters('containers')]",
+                    "scale": {
+                        "minReplicas": 0
+                    }
+                },
+                "workloadProfileName": "Consumption"
+            }
+        },
+        {
+            "apiVersion": "2022-11-01-preview",
+            "name": "[parameters('environmentName')]",
+            "type": "Microsoft.App/managedEnvironments",
+            "location": "[parameters('location')]",
+            "dependsOn": [
+                "[concat('Microsoft.OperationalInsights/workspaces/', parameters('workspaceName'))]",
+                "Microsoft.Resources/deployments/newInfrastructureSubnetTemplate"
+            ],
+            "properties": {
+                "appLogsConfiguration": {
+                    "destination": "log-analytics",
+                    "logAnalyticsConfiguration": {
+                        "customerId": "[reference(concat('Microsoft.OperationalInsights/workspaces/', parameters('workspaceName')), '2020-08-01').customerId]",
+                        "sharedKey": "[listKeys(concat('Microsoft.OperationalInsights/workspaces/', parameters('workspaceName')), '2020-08-01').primarySharedKey]"
+                    }
+                },
+                "workloadProfiles": [
+                    {
+                        "name": "Consumption",
+                        "workloadProfileType": "Consumption"
+                    }
+                ],
+                "vnetConfiguration": {
+                    "infrastructureSubnetId": "/subscriptions/48e9f9a8-695d-42ee-bc6d-b6f85795e2b6/resourceGroups/MelloGee/providers/Microsoft.Network/virtualNetworks/vnet-MelloGee-a3eb/subnets/infra-subnet",
+                    "internal": true
+                },
+                "zoneRedundant": false
+            }
+        },
+        {
+            "apiVersion": "2020-08-01",
+            "name": "[parameters('workspaceName')]",
+            "type": "Microsoft.OperationalInsights/workspaces",
+            "location": "[parameters('workspaceLocation')]",
+            "dependsOn": [],
+            "properties": {
+                "sku": {
+                    "name": "PerGB2018"
+                },
+                "retentionInDays": 30,
+                "workspaceCapping": {}
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2020-06-01",
+            "name": "newInfrastructureSubnetTemplate",
+            "resourceGroup": "MelloGee",
+            "subscriptionId": "48e9f9a8-695d-42ee-bc6d-b6f85795e2b6",
+            "properties": {
+                "mode": "Incremental",
+                "template": {
+                    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                    "contentVersion": "1.0.0.0",
+                    "parameters": {},
+                    "variables": {},
+                    "resources": [
+                        {
+                            "type": "Microsoft.Network/virtualNetworks/subnets",
+                            "apiVersion": "2020-07-01",
+                            "name": "vnet-MelloGee-a3eb/infra-subnet",
+                            "properties": {
+                                "delegations": [
+                                    {
+                                        "name": "Microsoft.App.environments",
+                                        "id": "/subscriptions/48e9f9a8-695d-42ee-bc6d-b6f85795e2b6/resourceGroup/MelloGee/providers/Microsoft.Network/availableDelegations/Microsoft.App.environments",
+                                        "type": "Microsoft.Network/availableDelegations",
+                                        "properties": {
+                                            "serviceName": "Microsoft.App/environments",
+                                            "actions": [
+                                                "Microsoft.Network/virtualNetworks/subnets/join/action"
+                                            ]
+                                        }
+                                    }
+                                ],
+                                "serviceEndpoints": [],
+                                "addressPrefix": "10.0.0.0/23"
+                            }
+                        }
+                    ]
+                }
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks', 'vnet-MelloGee-a3eb')]"
+            ]
+        },
+        {
+            "type": "Microsoft.Network/virtualNetworks",
+            "apiVersion": "2020-07-01",
+            "location": "eastus",
+            "name": "vnet-MelloGee-a3eb",
+            "properties": {
+                "addressSpace": {
+                    "addressPrefixes": [
+                        "10.0.0.0/16"
+                    ]
+                },
+                "subnets": []
+            }
+        }
+    ]
+}

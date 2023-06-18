@@ -32,6 +32,13 @@ After provisioning Me (below) we'll configure the environment to enable GitHub A
 **Clone Me**
 : So you can run the scripts
 
+**Push initial images to Docker**
+: So that Docker has a latest version of them. The following provisioning will pull them and import the APIs into APIM.
+1. docker build -t *your-docker-login*/catalogapi . -f Services\CatalogService\Dockerfile
+2. docker push *your-docker-login*/catalogapi
+3. docker build -t *your-docker-login*/coffeeapi . -f Services\Coffee\Coffee.API\Dockerfile
+4. docker push *your-docker-login*/coffeeapi
+
 **Provision Me**
 : Create the Azure infrastructure for Me in an Azure Resource Group of your choosing [^1]
 1. az configure --defaults group=*my-resource-group*
@@ -48,12 +55,13 @@ After provisioning Me (below) we'll configure the environment to enable GitHub A
 - Open Container App console in Azure portal and curl the APIs, view the logs
 
 **That's it so far**
-: Currently the APIs run on an internal subnet (no public access). Will add workloads to the Container App Environment when it is out of preview. The containers have curl installed for quick API checks. The APIs "talk" to each other and to Azure Key Vault. Just setting up the basic foundations. I'll wire up the public APIM gateway soon then work on real API's and front ends.
+: Container Apps Environment is external. Container Apps restrict access via IP only granting access to APIM. The containers have curl installed for quick API checks but you can toggle Ingress to allow public access. The APIs "talk" to each other and to Azure Key Vault. APIM connects to the Container Apps as Backend Services.
 
 ### Working on 
-- Configuring APIM as the Gateway. Might explore other API Gateway options later.
-- Explore APIM Self-hosted gateway
-- Better micro-services, Event Bus, aggregation, SignalR and front ends
+- Better micro-services, front-ends, Event Bus, aggregation, and SignalR
+
+### TO DO
+- Script initial Docker image build and push
 
 [^1]: The Azure Container Apps Managed Environment creates an additional Resource Group for Kubernetes that it controls
 

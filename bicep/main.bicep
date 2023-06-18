@@ -21,25 +21,25 @@ param location string = resourceGroup().location
 @secure()
 param containerRegistryPassword string
 
+@description('Required to use Docker as container registry.')
+@secure()
+param containerRegistryUserName string
 
-resource containerAppManagedEnvironment 'Microsoft.App/managedEnvironments@2022-11-01-preview' = {
-  name: 'env-${solutionName}-${environmentType}-${location}'
-  location: location
-  properties: {
-    appLogsConfiguration: {
-      destination: 'log-analytics'
-      logAnalyticsConfiguration: {
-        customerId: workspaceForManagedEnvionment.properties.customerId
-        sharedKey: workspaceForManagedEnvionment.listKeys().primarySharedKey
-      }
-    }
-    vnetConfiguration: {
-      infrastructureSubnetId: subnetForManagedEnvironment.outputs.id
-      internal: true
-    }
-    zoneRedundant: false
+@description('The Container App microservices')
+var microservices = [
+  {
+    apiPath: 'cof'
+    connectKeyVault: false
+    containerAppName: '${solutionName}-coffee-api'
+    dockerImageName: '${containerRegistryUserName}/coffeeapi:latest'
   }
-}
+  {
+    apiPath: 'cat'
+    connectKeyVault: true
+    containerAppName: '${solutionName}-catalog-api'
+    dockerImageName: '${containerRegistryUserName}/catalogapi:latest'
+  }
+]
 
 resource workspaceForManagedEnvionment 'Microsoft.OperationalInsights/workspaces@2022-10-01' = {
   name: take('wkspc-${solutionName}-${environmentType}-${location}', 63)
@@ -62,15 +62,58 @@ module subnetForManagedEnvironment 'modules/newInfrastructureSubnetTemplate.bice
   }
 }
 
-module containerApps 'modules/containerApps.bicep' = {
-  name: 'containerApps'
+resource containerAppsManagedEnvironment 'Microsoft.App/managedEnvironments@2022-11-01-preview' = {
+  name: 'env-${solutionName}-${environmentType}-${location}'
+  location: location
+  properties: {
+    infrastructureResourceGroup: 'rg-infrastructure-${solutionName}-${environmentType}'
+    appLogsConfiguration: {
+      destination: 'log-analytics'
+      logAnalyticsConfiguration: {
+        customerId: workspaceForManagedEnvionment.properties.customerId
+        sharedKey: workspaceForManagedEnvionment.listKeys().primarySharedKey
+      }
+    }
+    vnetConfiguration: {
+      infrastructureSubnetId: subnetForManagedEnvironment.outputs.id
+      internal: false
+    }
+    zoneRedundant: false
+  }
+}
+
+module apiManagement 'modules/apim.bicep' = {
+  name: 'apiManagementTemplate'
   params: {
     environmentType: environmentType
     location: location
     solutionName: solutionName
-    containerRegistryPassword: containerRegistryPassword
   }
-  dependsOn: [
-    containerAppManagedEnvironment
-  ]
 }
+
+var keyVaultName = 'kv-${solutionName}-${environmentType}-${location}'
+module keyVaultForSolution 'modules/keyVault.bicep' = {
+  name: 'keyVaultTemplate'
+  params: {
+    keyVaultName: keyVaultName
+    location: location
+  }
+}
+
+module containerAppModule 'modules/containerApp.bicep' = [for (microservice, index) in microservices: {
+  name: 'containerAppModule-${index}'
+  params: {
+    apimIpAddress: apiManagement.outputs.ipAddress
+    apimName: apiManagement.outputs.name
+    apiPath: microservice.apiPath
+    connectKeyVault: microservice.connectKeyVault
+    containerAppName: microservice.containerAppName
+    containerAppManagedEnvironmentName: containerAppsManagedEnvironment.name
+    containerRegistryPassword: containerRegistryPassword
+    containerRegistryUserName: containerRegistryUserName
+    dockerImageName: microservice.dockerImageName
+    keyVaultId: keyVaultForSolution.outputs.id
+    keyVaultName: keyVaultName
+    location: location
+  }
+}]

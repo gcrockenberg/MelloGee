@@ -18,7 +18,7 @@ param environmentType string
 @description('Used in subnet name. The location into which your Azure resources should be deployed.')
 param location string
 
-var snetName = take('snet-${solutionName}-${environmentType}-${location}', 80)
+var envSubnetName = take('snet-${solutionName}-${environmentType}-${location}', 80)
 
 
 resource vnetForManagedEnvironment 'Microsoft.Network/virtualNetworks@2022-11-01' = {
@@ -32,19 +32,20 @@ resource vnetForManagedEnvironment 'Microsoft.Network/virtualNetworks@2022-11-01
     }
     subnets: [
       {
-        name: snetName
+        name: envSubnetName
         properties: {
           delegations: []
           serviceEndpoints: []
           addressPrefix: '10.0.0.0/23'
         }
-      }      
+      }
     ]
   }
 
   resource subnetForManagedEnvironment 'subnets' existing = {
-    name: snetName
+    name: envSubnetName
   }
 }
+
 
 output id string = vnetForManagedEnvironment::subnetForManagedEnvironment.id

@@ -70,6 +70,7 @@ app.MapHealthChecks("/liveness", new HealthCheckOptions
 });
 
 
+// Swagger is used by APIM to import operations using OpenAPI
 //if (app.Environment.IsDevelopment())
 //{
 app.UseSwagger();
@@ -98,7 +99,7 @@ public static class CustomExtensionMethods
 {
     /// <summary>
     /// Implement health check
-    /// Best practice but also used by Azure App Gateway
+    /// Best practice but also configurable in Container App />
     /// </summary>
     /// <param name="services"></param>
     /// <param name="configuration"></param>

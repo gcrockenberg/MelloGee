@@ -5,8 +5,7 @@
       "launchBrowser": true,
       "launchUrl": "swagger",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development",
-        "AZURE_USERNAME": "gcrockenberg@outlook.com"
+        "ASPNETCORE_ENVIRONMENT": "Development"
       },
       "dotnetRunMessages": true,
       "applicationUrl": "https://localhost:7102;http://localhost:5166"
@@ -16,8 +15,7 @@
       "launchBrowser": true,
       "launchUrl": "swagger",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development",
-        "AZURE_USERNAME": "gcrockenberg@outlook.com"
+        "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
     "Docker": {
@@ -25,10 +23,7 @@
       "launchBrowser": true,
       "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}/swagger",
       "publishAllPorts": true,
-      "useSSL": true,
-      "environmentVariables": {
-        "AZURE_USERNAME": "gcrockenberg@outlook.com"
-      }
+      "useSSL": true
     }
   },
   "$schema": "https://json.schemastore.org/launchsettings.json",
