@@ -61,6 +61,7 @@ jobs:
     environment: dev
     needs: build
     steps:
+    - uses: actions/checkout@v2
     - name: Azure Login using OIDC
       uses: ./.github/workflows/composite/azure-oidc-login
       with:
