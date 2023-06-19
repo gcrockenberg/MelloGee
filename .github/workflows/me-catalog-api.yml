@@ -61,12 +61,11 @@ jobs:
     environment: dev
     needs: build
     steps:
-    - name: "Echo in file"
+    - name: "Echo"
       env:
         SECRETS_VARS: ${{ toJson(secrets) }}
-      run: echo "$SECRETS_VARS" > "secrets.txt"
-        value=`cat secrets.txt`
-        echo $value      
+      run: echo $SECRETS_VARS
+        echo "Done with echo"   
 # Login to Azure using App Registration and ClientSecret
 #    - name: Azure Login
 #      uses: azure/login@v1
