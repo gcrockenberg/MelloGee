@@ -45,7 +45,7 @@ After provisioning Me (below) we'll configure the environment to enable GitHub A
 : Set the following GitHub secrets which are used by GitHub CI/CD Actions to deploy Container Apps
 - [DOCKERHUB_TOKEN](https://docs.docker.com/docker-hub/access-tokens/) - Container images will be pushed to Docker
 - DOCKERHUB_USERNAME
-- AZURE_CLIENT_ID - From the User Assigned Identity provisioned above (Supports OIDC login)
+- AZURE_CLIENT_ID - User Assigned Identity provisioned above -> Settings -> Properties (Supports OIDC login)
 - AZURE_SUBSCRIPTION_ID - Azure Container App Revisions will pull images from Docker (Supports OIDC login)
 - AZURE_TENANT_ID - (Supports OIDC login)
 - Verify that .github/*.yml files reference the right Resource Group and other env variables

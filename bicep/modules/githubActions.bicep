@@ -34,7 +34,7 @@ resource federatedIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities/fed
   name: federatedIdentityName
   properties: {
     issuer: 'https://token.actions.githubusercontent.com'
-    subject: 'repo:${githubOrganizationOrUsername}/me:environment:${environmentType}'
+    subject: 'repo:${githubOrganizationOrUsername}/${solutionName}:environment:${environmentType}'
     audiences: [
       'api://AzureADTokenExchange'
     ]

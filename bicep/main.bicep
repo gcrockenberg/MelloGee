@@ -126,7 +126,7 @@ module githubActionsModule 'modules/githubActions.bicep' = {
   name: 'githubActionsTemplate'
   params: {
     environmentType: environmentType
-    githubRepoUserName: githubOrganizationOrUsername
+    githubOrganizationOrUsername: githubOrganizationOrUsername
     location: location
     solutionName: solutionName
   }
