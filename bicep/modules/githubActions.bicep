@@ -8,7 +8,7 @@ param solutionName string
 ])
 param environmentType string
 param location string
-param githubRepoUserName string
+param githubOrganizationOrUsername string
 
 var federatedIdentityName = 'fic-${solutionName}-${environmentType}'
 
@@ -34,7 +34,7 @@ resource federatedIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities/fed
   name: federatedIdentityName
   properties: {
     issuer: 'https://token.actions.githubusercontent.com'
-    subject: 'repo:${githubRepoUserName}/me-microservice:environment:/${environmentType}'
+    subject: 'repo:${githubOrganizationOrUsername}/me:environment:${environmentType}'
     audiences: [
       'api://AzureADTokenExchange'
     ]

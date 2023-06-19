@@ -27,7 +27,7 @@ param containerRegistryUserName string
 
 @description('Github Repo User Login - Required to provision Federated Id Credentials for Github Open Id Connect login.')
 @secure()
-param githubRepoUserName string
+param githubOrganizationOrUsername string
 
 @description('The Container App microservices')
 var microservices = [
@@ -126,7 +126,7 @@ module githubActionsModule 'modules/githubActions.bicep' = {
   name: 'githubActionsTemplate'
   params: {
     environmentType: environmentType
-    githubRepoUserName: githubRepoUserName
+    githubRepoUserName: githubOrganizationOrUsername
     location: location
     solutionName: solutionName
   }

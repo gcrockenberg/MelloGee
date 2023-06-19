@@ -56,7 +56,8 @@ jobs:
         file: ${{ env.DOCKER_FILE_PATH }}
   deploy:
     runs-on: ubuntu-latest
-    # Set Git Environments
+    # Set Git Environment - Used in "Subject Identifier" for Federated Credentials
+    # https://learn.microsoft.com/en-us/azure/developer/github/connect-from-azure?tabs=azure-cli%2Clinux
     environment: dev
     needs: build
     steps:
@@ -79,7 +80,10 @@ jobs:
         echo "started installing cli beta" 
         pip install -q --extra-index-url https://azcliprod.blob.core.windows.net/beta/simple/ azure-cli
         echo "installed cli beta"    
-        echo "$CWD/oidc-venv/bin" >> $GITHUB_PATH   
+        echo "$CWD/oidc-venv/bin" >> $GITHUB_PATH  
+        echo "TENANT: ${{secrets.AZURE_TENANT_ID}}"
+        echo "SUBSCRIPTION: ${{secrets.AZURE_SUBSCRIPTION_ID}}"
+        echo "${{secrets.AZURE_CLIENT_ID}}"
     - name: 'Az CLI login'
       uses: azure/login@v1.4.0
       with:
