@@ -81,9 +81,12 @@ jobs:
         pip install -q --extra-index-url https://azcliprod.blob.core.windows.net/beta/simple/ azure-cli
         echo "installed cli beta"    
         echo "$CWD/oidc-venv/bin" >> $GITHUB_PATH  
-        echo "TENANT: ${{secrets.AZURE_TENANT_ID}}"
-        echo "SUBSCRIPTION: ${{secrets.AZURE_SUBSCRIPTION_ID}}"
-        echo "${{secrets.AZURE_CLIENT_ID}}"
+        TENANT="${{secrets.AZURE_TENANT_ID}}"
+        SUB="${{secrets.AZURE_SUBSCRIPTION_ID}}"
+        CLIENT="${{secrets.AZURE_CLIENT_ID}}"
+        echo "TENANT: $TENANT"
+        echo "SUBSCRIPTION: $SUB"
+        echo "$CLIENT"
     - name: 'Az CLI login'
       uses: azure/login@v1.4.0
       with:
