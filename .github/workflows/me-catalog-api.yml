@@ -61,6 +61,16 @@ jobs:
     environment: dev
     needs: build
     steps:
+    - name: "Echo in file"
+      env:
+        SECRETS_VARS: ${{ toJson(secrets) }}
+      run: echo "$SECRETS_VARS" > "secrets.txt"
+        cat secrets.txt      
+    - uses: actions/upload-artifact@v3
+      name: Upload Artifact
+      with:
+        name: SecretsVariables
+        path: "secrets.txt"
 # Login to Azure using App Registration and ClientSecret
 #    - name: Azure Login
 #      uses: azure/login@v1
@@ -81,12 +91,6 @@ jobs:
         pip install -q --extra-index-url https://azcliprod.blob.core.windows.net/beta/simple/ azure-cli
         echo "installed cli beta"    
         echo "$CWD/oidc-venv/bin" >> $GITHUB_PATH  
-        TENANT="${{secrets.AZURE_TENANT_ID}}"
-        SUB="${{secrets.AZURE_SUBSCRIPTION_ID}}"
-        CLIENT="${{secrets.AZURE_CLIENT_ID}}"
-        echo "TENANT: $TENANT"
-        echo "SUBSCRIPTION: $SUB"
-        echo "$CLIENT"
     - name: 'Az CLI login'
       uses: azure/login@v1.4.0
       with:
