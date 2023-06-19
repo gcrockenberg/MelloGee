@@ -58,17 +58,6 @@ param containerRegistries array = [
   }
 ]
 
-// @description('Container Apps are secure in subnet and accessed through APIM')
-// param ingress object = {
-//   external: true
-//   transport: 'Auto'
-//   allowInsecure: true
-//   targetPort: 80
-//   stickySessions: {
-//     affinity: 'none'
-//   }
-// }
-
 resource containerAppManagedEnvironment 'Microsoft.App/managedEnvironments@2022-11-01-preview' existing = {
   name: containerAppManagedEnvironmentName
 }

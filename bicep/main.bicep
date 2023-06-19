@@ -21,9 +21,13 @@ param location string = resourceGroup().location
 @secure()
 param containerRegistryPassword string
 
-@description('Required to use Docker as container registry.')
+@description('Docker Login - Required to use Docker as container registry.')
 @secure()
 param containerRegistryUserName string
+
+@description('Github Repo User Login - Required to provision Federated Id Credentials for Github Open Id Connect login.')
+@secure()
+param githubRepoUserName string
 
 @description('The Container App microservices')
 var microservices = [
@@ -117,3 +121,14 @@ module containerAppModule 'modules/containerApp.bicep' = [for (microservice, ind
     location: location
   }
 }]
+
+module githubActionsModule 'modules/githubActions.bicep' = {
+  name: 'githubActionsTemplate'
+  params: {
+    environmentType: environmentType
+    githubRepoUserName: githubRepoUserName
+    location: location
+    solutionName: solutionName
+  }
+}
+
