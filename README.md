@@ -30,7 +30,7 @@ After provisioning Me (below) we'll configure the environment to enable GitHub A
 : So you can run the scripts
 
 **Push initial images to Docker**
-: So that Docker has a latest version of them. The following provisioning will pull them and import the APIs into APIM.
+: So that Docker has a latest version of them. The provisioning that follows will pull them and import the APIs into APIM.
 1. docker build -t *your-docker-login*/catalogapi . -f Services\CatalogService\Dockerfile
 2. docker push *your-docker-login*/catalogapi
 3. docker build -t *your-docker-login*/coffeeapi . -f Services\Coffee\Coffee.API\Dockerfile
@@ -45,7 +45,7 @@ After provisioning Me (below) we'll configure the environment to enable GitHub A
 : Set the following GitHub secrets which are used by GitHub CI/CD Actions to deploy Container Apps
 - [DOCKERHUB_TOKEN](https://docs.docker.com/docker-hub/access-tokens/) - Container images will be pushed to Docker
 - DOCKERHUB_USERNAME
-- AZURE_CLIENT_ID - User Assigned Identity provisioned above -> Settings -> Properties (Supports OIDC login)
+- AZURE_CLIENT_ID - User Assigned Identity provisioned above -> Settings -> Properties (Supports OIDC login) DON'T USE CLIENT ID DISPLAYED UNDER "Overview"
 - AZURE_SUBSCRIPTION_ID - Azure Container App Revisions will pull images from Docker (Supports OIDC login)
 - AZURE_TENANT_ID - (Supports OIDC login)
 - Verify that .github/*.yml files reference the right Resource Group and other env variables

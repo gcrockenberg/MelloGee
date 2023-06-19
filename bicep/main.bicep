@@ -1,6 +1,6 @@
 /*
   SYNOPSIS: Me
-  DESCRIPTION: Create and manage the resources to support the Me solution
+  DESCRIPTION: Provision the resources for the Me solution
   VERSION: 1.0.0
   OWNER TEAM: Gerard C.
 */
@@ -19,13 +19,13 @@ param location string = resourceGroup().location
 
 @description('Required to use Docker as container registry.')
 @secure()
-param containerRegistryPassword string
+param dockerHubPasswordOrToken string
 
-@description('Docker Login - Required to use Docker as container registry.')
+@description('Required to use Docker as container registry.')
 @secure()
-param containerRegistryUserName string
+param dockerHubUsername string
 
-@description('Github Repo User Login - Required to provision Federated Id Credentials for Github Open Id Connect login.')
+@description('Required to provision Federated Id Credentials for Github Open Id Connect login.')
 @secure()
 param githubOrganizationOrUsername string
 
@@ -35,13 +35,13 @@ var microservices = [
     apiPath: 'cof'
     connectKeyVault: false
     containerAppName: '${solutionName}-coffee-api'
-    dockerImageName: '${containerRegistryUserName}/coffeeapi:latest'
+    dockerImageName: '${dockerHubUsername}/coffeeapi:latest'
   }
   {
     apiPath: 'cat'
     connectKeyVault: true
     containerAppName: '${solutionName}-catalog-api'
-    dockerImageName: '${containerRegistryUserName}/catalogapi:latest'
+    dockerImageName: '${dockerHubUsername}/catalogapi:latest'
   }
 ]
 
@@ -113,8 +113,8 @@ module containerAppModule 'modules/containerApp.bicep' = [for (microservice, ind
     connectKeyVault: microservice.connectKeyVault
     containerAppName: microservice.containerAppName
     containerAppManagedEnvironmentName: containerAppsManagedEnvironment.name
-    containerRegistryPassword: containerRegistryPassword
-    containerRegistryUserName: containerRegistryUserName
+    dockerHubPasswordOrToken: dockerHubPasswordOrToken
+    dockerHubUsername: dockerHubUsername
     dockerImageName: microservice.dockerImageName
     keyVaultId: keyVaultForSolution.outputs.id
     keyVaultName: keyVaultName

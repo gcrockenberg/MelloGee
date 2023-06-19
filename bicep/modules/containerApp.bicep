@@ -22,17 +22,17 @@ param containerSecrets object = {
   arrayValue: [
     {
       name: 'container-registry-password'
-      value: containerRegistryPassword
+      value: dockerHubPasswordOrToken
     }
   ]
 }
 
 @description('Required to integrate with Docker as container registry')
 @secure()
-param containerRegistryPassword string
+param dockerHubPasswordOrToken string
 @description('Required to integrate with Docker as container registry')
 @secure()
-param containerRegistryUserName string
+param dockerHubUsername string
 
 @description('The smallest for dev testing')
 var containerResources = {
@@ -54,7 +54,7 @@ param containerRegistries array = [
   {
     server: 'registry.docker.io'
     passwordSecretRef: 'container-registry-password'
-    username: containerRegistryUserName
+    username: dockerHubUsername
   }
 ]
 
