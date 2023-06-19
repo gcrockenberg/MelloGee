@@ -12,7 +12,7 @@ param githubRepoUserName string
 
 var federatedIdentityName = 'fic-${solutionName}-${environmentType}'
 
-resource userAssignedIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2022-01-31-preview' = {
+resource userAssignedIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2023-01-31' = {
   name: 'uai-${solutionName}-${environmentType}'
   location: location
 }
@@ -29,7 +29,7 @@ module githubActionsModule 'roleAssignment.bicep' = {
 
 // https://learn.microsoft.com/en-us/azure/developer/github/connect-from-azure?tabs=azure-cli%2Clinux
 @description('Create trust between GitHub and User Assigned Identity')
-resource federatedIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities/federatedIdentityCredentials@2022-01-31-preview' = {
+resource federatedIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities/federatedIdentityCredentials@2023-01-31' = {
   parent: userAssignedIdentity
   name: federatedIdentityName
   properties: {
