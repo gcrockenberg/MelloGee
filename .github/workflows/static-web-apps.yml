@@ -24,8 +24,9 @@ jobs:
           node-version: 16
       -
         name: Build root config
-        run: npm run build:webpack
         working-directory: frontends/micro-frontend 
+        run: npm install
+          npm run build:webpack
       - 
         name: Deploy
         id: builddeploy
