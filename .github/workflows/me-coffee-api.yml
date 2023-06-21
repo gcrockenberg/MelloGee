@@ -2,7 +2,9 @@ name: me-coffee-api - Build and deploy .NET API to container app
 on:
   push:
     branches:
-    - main
+      - main
+    paths:
+      - Services/Coffee
 # Permission to support Azure login using OIDC
 permissions:
   id-token: write

@@ -45,14 +45,14 @@ After provisioning Me (below) we'll configure the environment to enable GitHub A
 : Set the following GitHub secrets which are used by GitHub CI/CD Actions to deploy Container Apps
 - [DOCKERHUB_TOKEN](https://docs.docker.com/docker-hub/access-tokens/) - Container images will be pushed to Docker
 - DOCKERHUB_USERNAME
-- AZURE_CLIENT_ID - User Assigned Identity provisioned above -> Settings -> Properties (Supports OIDC login) DON'T USE CLIENT ID DISPLAYED UNDER "Overview"
+- AZURE_CLIENT_ID - User Assigned Identity provisioned above -> Settings -> Properties (Supports OIDC login) DON'T USE CLIENT ID DISPLAYED UNDER "Overview". I put this in a GitHub Environment called dev so, later, I can have separate federated environments for dev and prod.
 - AZURE_SUBSCRIPTION_ID - Azure Container App Revisions will pull images from Docker (Supports OIDC login)
 - AZURE_TENANT_ID - (Supports OIDC login)
 - Verify that .github/*.yml files reference the right Resource Group and other env variables
 
 **Testing**
 - Open Container App console in Azure portal and curl the APIs, view the logs
-- Test APIs defined in APIM
+- Test APIs that were imported into APIM
 
 **That's it so far**
 : Container Apps Environment is external. Container Apps restrict access via IP only granting access to APIM. The containers have curl installed for quick API checks but you can toggle Ingress to allow public access. The APIs "talk" to each other and to Azure Key Vault. APIM connects to the Container Apps as Backend Services.
