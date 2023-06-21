@@ -5,7 +5,8 @@ on:
     branches:
       - main
 #    paths:
-#      - frontends/micro-frontend**
+#      - frontends/micro-frontend/src**
+#      - frontends/micro-frontend/importmap.json
 
 jobs:
   build_and_deploy_job:
@@ -37,6 +38,12 @@ jobs:
         name: Build root config
         working-directory: frontends/micro-frontend 
         run: npm run build:webpack
+      - 
+        name: Sync importmap.json
+        shell: bash
+        working-directory: frontends/micro-frontend
+        run: |
+          rsync importmap.json dist
       - 
         name: Deploy
         id: builddeploy
