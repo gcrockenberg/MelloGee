@@ -4,7 +4,7 @@ on:
     branches:
     - main
     paths:
-    - Services/Coffee
+    - Services/Coffee**
 # Permission to support Azure login using OIDC
 permissions:
   id-token: write
