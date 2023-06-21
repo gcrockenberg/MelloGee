@@ -30,7 +30,7 @@ jobs:
       #     pwd
       #     ls
       -
-        name: Npm install
+        name: Install webpack
         working-directory: frontends/micro-frontend 
         run: npm install webpack
       -
