@@ -22,23 +22,17 @@ jobs:
         uses: actions/setup-node@v3
         with: 
           node-version: 16
-      - 
-        name: Test 1
-        shell: bash
-        run: |
-          pwd
-          ls
-      - 
-        name: Test 2
-        shell: bash
-        working-directory: frontends/micro-frontend
-        run: |
-          pwd
-          ls
+      # - 
+      #   name: Test 2
+      #   shell: bash
+      #   working-directory: frontends/micro-frontend
+      #   run: |
+      #     pwd
+      #     ls
       -
         name: Npm install
         working-directory: frontends/micro-frontend 
-        run: npm install
+        run: npm install webpack
       -
         name: Build root config
         working-directory: frontends/micro-frontend 
