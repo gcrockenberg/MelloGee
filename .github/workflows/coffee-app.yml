@@ -45,8 +45,11 @@ jobs:
     environment: dev
     needs: build
     steps:
-    - 
+    - # Only need to azure-oidc-login 
       uses: actions/checkout@v3
+      with:
+        sparse-checkout: |
+          .github   
     - 
       name: Download artifacts
       uses: actions/download-artifact@v3
@@ -58,7 +61,7 @@ jobs:
       shell: bash
       run: |
         pwd
-        ls
+        ls -al
     - 
       name: Azure Login using OIDC
       uses: ./.github/workflows/composite/azure-oidc-login
@@ -71,7 +74,7 @@ jobs:
       uses: azure/CLI@v1
       with:
         inlineScript: >
-          az storage blob upload-batch --overwrite -d coffee-app --account-name ${{ env.STORAGE_ACCOUNT_NAME }} --account-key $(accountkey) -s "dist"
+          az storage blob upload-batch --overwrite true -d coffee-app --account-name ${{ env.STORAGE_ACCOUNT_NAME }} --account-key ${{ secrets.STORAGE_ACCOUNT_KEY }} -s dist
     - 
       name: logout
       run: >
