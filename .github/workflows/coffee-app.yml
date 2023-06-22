@@ -62,7 +62,7 @@ jobs:
     - 
       name: Test 2
       shell: bash
-      #working-directory: frontends/micro-frontend
+      working-directory: frontends/micro-frontend/coffee-app
       run: |
         pwd
         ls
@@ -71,7 +71,7 @@ jobs:
       uses: azure/CLI@v1
       with:
         inlineScript: >
-          az storage blob upload-batch --overwrite -d coffee-app --account-name ${{ env.STORAGE_ACCOUNT_NAME }} --account-key $(accountkey) -s "$(Agent.BuildDirectory)\\drop\\dist"
+          az storage blob upload-batch --overwrite -d coffee-app --account-name ${{ env.STORAGE_ACCOUNT_NAME }} --account-key $(accountkey) -s "frontends/micro-frontend/coffee-app/dist"
     - 
       name: logout
       run: >
