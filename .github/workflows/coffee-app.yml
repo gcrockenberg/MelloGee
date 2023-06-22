@@ -24,6 +24,10 @@ jobs:
       with: 
         node-version: 16
     -
+      name: Npm install
+      working-directory: frontends/micro-frontend/coffee-app 
+      run: npm install
+    -
       name: Build application
       working-directory: frontends/micro-frontend/coffee-app 
       run: npm run build:single-spa:coffee-app
