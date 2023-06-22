@@ -25,10 +25,10 @@ jobs:
       uses: actions/setup-node@v3
       with: 
         node-version: 16
-    # -
-    #   name: Npm install
-    #   working-directory: ${{ env.WORKING_DIRECTORY }} 
-    #   run: npm install
+    -
+      name: Npm install
+      working-directory: ${{ env.WORKING_DIRECTORY }} 
+      run: npm install webpack-merge webpack-config-single-spa-react-ts
     -
       name: Build application
       working-directory: ${{ env.WORKING_DIRECTORY }} 
