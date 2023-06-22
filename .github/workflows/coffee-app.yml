@@ -71,7 +71,7 @@ jobs:
       uses: azure/CLI@v1
       with:
         inlineScript: >
-          az storage blob upload-batch --overwrite -d angular-microapp --account-name ${{ env.STORAGE_ACCOUNT_NAME }} --account-key $(accountkey) -s "$(Agent.BuildDirectory)\\drop\\dist"
+          az storage blob upload-batch --overwrite -d coffee-app --account-name ${{ env.STORAGE_ACCOUNT_NAME }} --account-key $(accountkey) -s "$(Agent.BuildDirectory)\\drop\\dist"
     - 
       name: logout
       run: >
