@@ -4,7 +4,7 @@
     "jsx": "react-jsx",
     "declarationDir": "dist"
   },
-  "files": ["src/me-react-app.tsx"],
+  "files": ["src/me-catalog-app.tsx"],
   "include": ["src/**/*"],
   "exclude": ["src/**/*.test*"]
 }

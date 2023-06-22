@@ -1,5 +1,5 @@
 {
-  "name": "angular-app",
+  "name": "coffee-app",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
@@ -7,8 +7,8 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "build:single-spa:angular-app": "ng build angular-app --configuration production",
-    "serve:single-spa:angular-app": "ng s --project angular-app --disable-host-check --port 8081 --live-reload false"
+    "build:single-spa:coffee-app": "ng build coffee-app --configuration production",
+    "serve:single-spa:coffee-app": "ng s --project coffee-app --disable-host-check --port 8081 --live-reload false"
   },
   "private": true,
   "dependencies": {

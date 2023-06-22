@@ -41,16 +41,21 @@ After provisioning Me (below) we'll configure the environment to enable GitHub A
 1. az configure --defaults group=*my-resource-group*
 2. az deployment group create --template-file bicep/main.bicep
 
-**GitHub Actions CI/CD**
-: Set the following GitHub secrets which are used by GitHub CI/CD Actions to deploy Container Apps
+**GitHub Actions CI/CD Repository Secrets**
+: The following Repository Secrets support CI/CD deployments
 - [DOCKERHUB_TOKEN](https://docs.docker.com/docker-hub/access-tokens/) - Container images will be pushed to Docker
 - DOCKERHUB_USERNAME
-- AZURE_CLIENT_ID - User Assigned Identity provisioned above -> Settings -> Properties (Supports OIDC login) DON'T USE CLIENT ID DISPLAYED UNDER "Overview". I put this in a GitHub Environment called dev so, later, I can have separate federated environments for dev and prod.
 - AZURE_SUBSCRIPTION_ID - Azure Container App Revisions will pull images from Docker (Supports OIDC login)
 - AZURE_TENANT_ID - (Supports OIDC login)
-- Verify that .github/*.yml files reference the right Resource Group and other env variables
+
+**GitHub Actions CI/CD Environment Secrets (dev)**
+: The following Environment Secrets support the beginning of CI/CD dev/prod isolation
+- STORAGE_ACCOUNT_KEY - to deploy the micro-frontend modules
+- AZURE_CLIENT_ID - User Assigned Identity provisioned above -> Settings -> Properties (Supports OIDC login) DON'T USE CLIENT ID DISPLAYED UNDER "Overview". I put this in a GitHub Environment called dev so, later, I can have separate federated environments for dev and prod.
 
 **Testing**
+- Verify the .github/*.yml env variables match your configuration
+- You might want to comment out "on: push: paths:" from yml files to force all CI/CD to run
 - Open Container App console in Azure portal and curl the APIs, view the logs
 - Test APIs that were imported into APIM
 
@@ -58,9 +63,10 @@ After provisioning Me (below) we'll configure the environment to enable GitHub A
 : Container Apps Environment is external. Container Apps restrict access via IP only granting access to APIM. The containers have curl installed for quick API checks but you can toggle Ingress to allow public access. The APIs "talk" to each other and to Azure Key Vault. APIM connects to the Container Apps as Backend Services.
 
 ### Working on 
-- Better micro-services, front-ends, Event Bus, aggregation, and SignalR
+- Initial microfrontend solution and basic connectivity
 
 ### TO DO
+- Better micro-services, front-ends, Event Bus, aggregation, and SignalR
 - Script initial Docker image build and push
 
 [^1]: The Azure Container Apps Managed Environment creates an additional Resource Group for Kubernetes that it controls

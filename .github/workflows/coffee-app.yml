@@ -1,0 +1,74 @@
+name: coffee-app - Build and deploy Angular application
+on:
+  push:
+    branches:
+    - main
+  #  paths:
+  #  - frontends/micro-frontend/coffee-app**
+# Permission to support Azure login using OIDC
+permissions:
+  id-token: write
+env:  
+  STORAGE_ACCOUNT_NAME: stmedev
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - 
+      name: Checkout to the branch
+      uses: actions/checkout@v3
+    - 
+      name: Install Node.js
+      uses: actions/setup-node@v3
+      with: 
+        node-version: 16
+    -
+      name: Build application
+      working-directory: frontends/micro-frontend/coffee-app 
+      run: npm run build:single-spa:coffee-app
+    - 
+      name: Archive production artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: coffee-app-dist
+        path: |
+            frontends/micro-frontend/coffee-app/dist
+
+  deploy:
+    runs-on: ubuntu-latest
+    # Set Git Environments
+    environment: dev
+    needs: build
+    steps:
+    - 
+      uses: actions/checkout@v3
+    - 
+      name: Azure Login using OIDC
+      uses: ./.github/workflows/composite/azure-oidc-login
+      with:
+        tenant_id: ${{ secrets.AZURE_TENANT_ID }}
+        subscription_id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+        client_id: ${{ secrets.AZURE_CLIENT_ID }} # See Readme for the correct Client Id to reference
+    - 
+      name: Download artifact
+      uses: actions/download-artifact@v3
+      with:
+        name: coffee-app-dist    
+    - 
+      name: Test 2
+      shell: bash
+      #working-directory: frontends/micro-frontend
+      run: |
+        pwd
+        ls
+    - 
+      name: Deploy to Azure Container App
+      uses: azure/CLI@v1
+      with:
+        inlineScript: >
+          az storage blob upload-batch --overwrite -d angular-microapp --account-name ${{ env.STORAGE_ACCOUNT_NAME }} --account-key $(accountkey) -s "$(Agent.BuildDirectory)\\drop\\dist"
+    - 
+      name: logout
+      run: >
+        az logout

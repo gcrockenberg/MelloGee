@@ -1,5 +1,5 @@
 {
-  "name": "@me/react-app",
+  "name": "@me/catalog-app",
   "scripts": {
     "start": "webpack serve",
     "start:standalone": "webpack serve --env standalone",
@@ -60,5 +60,5 @@
     "@types/react": "^17.0.19",
     "@types/react-dom": "^17.0.9"
   },
-  "types": "dist/me-react-app.d.ts"
+  "types": "dist/me-catalog-app.d.ts"
 }
