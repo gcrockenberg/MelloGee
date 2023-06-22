@@ -1,7 +1,8 @@
 export default function Root(props) {
   return (
     <section>
-      {props.name} is mounted!
+      <h1>Deployments can take 10 minutes to propagate to CDN</h1>
+      {props.name} is mounted! 
       <br />
       <a href="/welcome">Go to single-spa welcome</a>
       <br />
