@@ -83,7 +83,7 @@ jobs:
       uses: azure/CLI@v1
       with:
         inlineScript: >
-          az storage blob upload-batch --overwrite true -d $web --account-name ${{ env.STORAGE_ACCOUNT_NAME }} --account-key ${{ secrets.STORAGE_ACCOUNT_KEY }} -s dist
+          az storage blob upload-batch --overwrite true -d ${{ '$web' }} --account-name ${{ env.STORAGE_ACCOUNT_NAME }} --account-key ${{ secrets.STORAGE_ACCOUNT_KEY }} -s dist
     - 
       name: logout
       run: >
