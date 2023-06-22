@@ -37,7 +37,7 @@ jobs:
       with:
         name: coffee-app-dist
         path: |
-            frontends/micro-frontend/coffee-app/dist
+            frontends/micro-frontend/coffee-app/dist/
 
   deploy:
     runs-on: ubuntu-latest
@@ -58,11 +58,11 @@ jobs:
       name: Download artifact
       uses: actions/download-artifact@v3
       with:
-        name: coffee-app-dist    
+        name: coffee-app-dist
+        path: dist
     - 
       name: Test 2
       shell: bash
-      working-directory: frontends/micro-frontend/coffee-app
       run: |
         pwd
         ls
