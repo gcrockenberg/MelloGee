@@ -11,7 +11,7 @@ permissions:
   id-token: write
 env:  
   STORAGE_ACCOUNT_NAME: stmedev
-  STORAGE_CONTAINER: $web
+  #STORAGE_CONTAINER: $web   # $ in name is tricky
   WORKING_DIRECTORY: frontends/micro-frontend
 
 jobs:
@@ -34,6 +34,12 @@ jobs:
       name: Build application
       working-directory: ${{ env.WORKING_DIRECTORY }} 
       run: npm run build:webpack
+    - 
+        name: Sync importmap.json
+        shell: bash
+        working-directory: ${{ env.WORKING_DIRECTORY }}
+        run: |
+          rsync importmap.json dist
     - 
       name: Archive production artifacts
       uses: actions/upload-artifact@v3
@@ -77,7 +83,7 @@ jobs:
       uses: azure/CLI@v1
       with:
         inlineScript: >
-          az storage blob upload-batch --overwrite true -d ${{ env.STORAGE_CONTAINER }} --account-name ${{ env.STORAGE_ACCOUNT_NAME }} --account-key ${{ secrets.STORAGE_ACCOUNT_KEY }} -s dist
+          az storage blob upload-batch --overwrite true -d $web --account-name ${{ env.STORAGE_ACCOUNT_NAME }} --account-key ${{ secrets.STORAGE_ACCOUNT_KEY }} -s dist
     - 
       name: logout
       run: >
