@@ -1,17 +1,18 @@
-name: catalog-app - Build and deploy React application
+name: Single-spa micro-frontend - Build and deploy the root config
 on:
   push:
     branches:
     - main
-    paths:
-    - frontends/micro-frontend/catalog-app**
+    #paths:
+    #- frontends/micro-frontend/src**
+    #- frontends/micro-frontend/importmap.json
 # Permission to support Azure login using OIDC
 permissions:
   id-token: write
 env:  
   STORAGE_ACCOUNT_NAME: stmedev
-  STORAGE_CONTAINER: catalog-app
-  WORKING_DIRECTORY: frontends/micro-frontend/catalog-app
+  STORAGE_CONTAINER: $web
+  WORKING_DIRECTORY: frontends/micro-frontend
 
 jobs:
   build:
@@ -37,7 +38,7 @@ jobs:
       name: Archive production artifacts
       uses: actions/upload-artifact@v3
       with:
-        name: coffee-app-dist
+        name: root-config-dist
         path: |
             ${{ env.WORKING_DIRECTORY }}/dist/
 
@@ -56,7 +57,7 @@ jobs:
       name: Download artifacts
       uses: actions/download-artifact@v3
       with:
-        name: coffee-app-dist
+        name: root-config-dist
         path: dist
     # - 
     #   name: Test 2
