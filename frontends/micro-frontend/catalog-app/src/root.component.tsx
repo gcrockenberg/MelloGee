@@ -5,9 +5,9 @@ export default function Root(props) {
       <h2>2023.06.23 25:26</h2>
       {props.name} is mounted! 
       <br />
-      <a href="/welcome">Go to single-spa welcome</a>
+      <a href="#/welcome">Go to single-spa welcome</a>
       <br />
-      <a href="/angular">Go to Angular app</a>
+      <a href="#/angular">Go to Angular app</a>
     </section>
   );
 }
