@@ -86,7 +86,7 @@ resource containerAppsManagedEnvironment 'Microsoft.App/managedEnvironments@2022
   }
 }
 
-module apiManagement 'modules/apim.bicep' = {
+module apiManagement 'modules/apimGateway.bicep' = {
   name: 'apiManagementTemplate'
   params: {
     environmentType: environmentType
@@ -104,8 +104,8 @@ module keyVaultForSolution 'modules/keyVault.bicep' = {
   }
 }
 
-module containerAppModule 'modules/containerApp.bicep' = [for (microservice, index) in microservices: {
-  name: 'containerAppModule-${index}'
+module containerAppModule 'modules/containerApps.bicep' = [for (microservice, index) in microservices: {
+  name: 'containerApp-${index}'
   params: {
     apimIpAddress: apiManagement.outputs.ipAddress
     apimName: apiManagement.outputs.name
