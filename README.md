@@ -63,9 +63,10 @@ After provisioning Me (below) we'll configure the environment to enable GitHub A
 : Container Apps Environment is external. Container Apps restrict access via IP only granting access to APIM. The containers have curl installed for quick API checks but you can toggle Ingress to allow public access. The APIs "talk" to each other and to Azure Key Vault. APIM connects to the Container Apps as Backend Services.
 
 ### Working on 
-- Initial microfrontend solution and basic connectivity
+- Bicep provisioning of web site hosting infrastructure (Storage Account and CDN)
 
 ### TO DO
+- Implement semantic-release versioning for modules, update CDN cache strategy
 - Better micro-services, front-ends, Event Bus, aggregation, and SignalR
 - Script initial Docker image build and push
 
