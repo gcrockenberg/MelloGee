@@ -132,3 +132,12 @@ module githubActionsModule 'modules/githubActions.bicep' = {
   }
 }
 
+module singleSpaStaticWebsiteModule 'modules/singleSpaStaticWeb.bicep' = {
+  name: 'singleSpaStaticWebsiteTemplate'
+  params: {
+    environmentType: environmentType
+    location: location
+    solutionName: solutionName
+  }
+}
+

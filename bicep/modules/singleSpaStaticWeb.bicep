@@ -5,17 +5,17 @@
   OWNER TEAM: Gerard C.
 */
 @description('The name of the app or solution.')
-param solutionName string = 'me'
+param solutionName string
 
 @description('The type of environment you want to provision. Allowed values are dev and prod.')
 @allowed([
   'dev'
   'prod'
 ])
-param environmentType string = 'dev'
+param environmentType string
 
 @description('The location into which your Azure resources should be deployed.')
-param location string = resourceGroup().location
+param location string
 
 
 resource storageAccount 'Microsoft.Storage/storageAccounts@2022-09-01' = {
@@ -219,7 +219,7 @@ resource cdnEndpoint 'Microsoft.Cdn/profiles/endpoints@2022-11-01-preview' = {
                 selector: 'Origin'
                 negateCondition: false
                 matchValues: [
-                  storageAccount.properties.primaryEndpoints.web
+                  take(storageAccount.properties.primaryEndpoints.web, length(storageAccount.properties.primaryEndpoints.web) - 1)
                 ]
                 transforms: []
               }
@@ -232,7 +232,7 @@ resource cdnEndpoint 'Microsoft.Cdn/profiles/endpoints@2022-11-01-preview' = {
                 typeName: 'DeliveryRuleHeaderActionParameters'
                 headerAction: 'Overwrite'
                 headerName: 'Access-Control-Allow-Origin'
-                value: storageAccount.properties.primaryEndpoints.web
+                value: take(storageAccount.properties.primaryEndpoints.web, length(storageAccount.properties.primaryEndpoints.web) - 1)
               }
             }
           ]
