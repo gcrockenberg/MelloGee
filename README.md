@@ -19,7 +19,7 @@ These steps were established on my Windows 10 machine
 : Deploying Me to Azure requires a few things
 1. An Azure account [(Free is fine)][def]
 2. [az CLI](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli)
-3. [az containerapp extension](https://learn.microsoft.com/en-us/azure/container-apps/containerapp-up) - Make sure namespaces are registered
+3. [Az PowerShell](https://learn.microsoft.com/en-us/powershell/azure/install-azps-windows?view=azps-10.0.0&tabs=powershell&pivots=windows-psgallery)
 
 **Fork Me**
 : Me uses GitHub Actions for CI/CD so you'll need your own copy
