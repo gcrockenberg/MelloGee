@@ -26,7 +26,7 @@ param skuName string = 'standard'
 @description('Specifies the name of the secret that you want to create.')
 param secretName string = 'KeyVaultConnectionTest'
 
-@description('Specifies the value of the secret that you want to create.')
+@description('Hardcoded just for testing purposes')
 @secure()
 param secretValue string = 'Successfully connected to key vault ...'
 
@@ -61,3 +61,4 @@ resource keyVaultSecret 'Microsoft.KeyVault/vaults/secrets@2023-02-01' = {
 }
 
 output id string = keyVault.id
+output name string = keyVault.name

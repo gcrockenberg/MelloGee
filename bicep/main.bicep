@@ -66,6 +66,7 @@ module subnetForManagedEnvironment 'modules/newInfrastructureSubnetTemplate.bice
   }
 }
 
+
 resource containerAppsManagedEnvironment 'Microsoft.App/managedEnvironments@2022-11-01-preview' = {
   name: 'env-${solutionName}-${environmentType}-${location}'
   location: location
@@ -86,7 +87,8 @@ resource containerAppsManagedEnvironment 'Microsoft.App/managedEnvironments@2022
   }
 }
 
-module apiManagement 'modules/apimGateway.bicep' = {
+
+module apiManagementGateway 'modules/apiManagementGateway.bicep' = {
   name: 'apiManagementTemplate'
   params: {
     environmentType: environmentType
@@ -95,20 +97,23 @@ module apiManagement 'modules/apimGateway.bicep' = {
   }
 }
 
-var keyVaultName = 'kv-${solutionName}-${environmentType}-${location}'
+
+@description('Key Vault to demo connectivity from Container App')
 module keyVaultForSolution 'modules/keyVault.bicep' = {
   name: 'keyVaultTemplate'
   params: {
-    keyVaultName: keyVaultName
+    keyVaultName: 'kv-${solutionName}-${environmentType}-${location}'
     location: location
   }
 }
 
+
+@description('Iterate and provision each containerized microservice')
 module containerAppModule 'modules/containerApps.bicep' = [for (microservice, index) in microservices: {
   name: 'containerApp-${index}'
   params: {
-    apimIpAddress: apiManagement.outputs.ipAddress
-    apimName: apiManagement.outputs.name
+    apimIpAddress: apiManagementGateway.outputs.ipAddress
+    apimName: apiManagementGateway.outputs.name
     apiPath: microservice.apiPath
     connectKeyVault: microservice.connectKeyVault
     containerAppName: microservice.containerAppName
@@ -117,7 +122,7 @@ module containerAppModule 'modules/containerApps.bicep' = [for (microservice, in
     dockerHubUsername: dockerHubUsername
     dockerImageName: microservice.dockerImageName
     keyVaultId: keyVaultForSolution.outputs.id
-    keyVaultName: keyVaultName
+    keyVaultName: keyVaultForSolution.outputs.name
     location: location
   }
 }]
@@ -125,6 +130,7 @@ module containerAppModule 'modules/containerApps.bicep' = [for (microservice, in
 module githubActionsModule 'modules/githubActions.bicep' = {
   name: 'githubActionsTemplate'
   params: {
+    containerAppManagedEnvironmentName: containerAppsManagedEnvironment.name
     environmentType: environmentType
     githubOrganizationOrUsername: githubOrganizationOrUsername
     location: location
@@ -141,3 +147,4 @@ module singleSpaStaticWebsiteModule 'modules/singleSpaStaticWeb.bicep' = {
   }
 }
 
+output nextSteps string = 'Update GitHub Actions secrets'

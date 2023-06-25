@@ -3,8 +3,8 @@ on:
   push:
     branches:
     - main
-    paths:
-    - Services/Coffee**
+  #  paths:
+  #  - Services/Coffee**
 # Permission to support Azure login using OIDC
 permissions:
   id-token: write

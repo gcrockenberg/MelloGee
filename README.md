@@ -7,6 +7,7 @@ A personal project to provide backend and frontend examples of a microservice ba
 - [Azure API Management](https://azure.microsoft.com/en-us/products/api-management/)
 - Docker Container Registry
 - GitHub Actions CI/CD
+- [Single-spa micro-frontend](https://single-spa.js.org/)
 
 ![Me architecture](images/Me%20Architecture.png)
 
@@ -16,7 +17,7 @@ These steps were established on my Windows 10 machine
 ## Steps for using Me
 ### Azure
 **Prereqs**
-: Deploying Me to Azure requires a few things
+: Deploying Me to Azure requires:
 1. An Azure account [(Free is fine)][def]
 2. [az CLI](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli)
 3. [Az PowerShell](https://learn.microsoft.com/en-us/powershell/azure/install-azps-windows?view=azps-10.0.0&tabs=powershell&pivots=windows-psgallery)
@@ -24,7 +25,7 @@ These steps were established on my Windows 10 machine
 **Fork Me**
 : Me uses GitHub Actions for CI/CD so you'll need your own copy
 
-After provisioning Me (below) we'll configure the environment to enable GitHub Actions to deploy the Container Apps
+After provisioning the Me infrastructure (below) we'll configure the GitHub environment to enable Actions to deploy the Container Apps and micro-frontends.
 
 **Clone Me**
 : So you can run the scripts
@@ -50,14 +51,14 @@ After provisioning Me (below) we'll configure the environment to enable GitHub A
 
 **GitHub Actions CI/CD Environment Secrets (dev)**
 : The following Environment Secrets support the beginning of CI/CD dev/prod isolation
-- STORAGE_ACCOUNT_KEY - to deploy the micro-frontend modules
-- AZURE_CLIENT_ID - User Assigned Identity provisioned above -> Settings -> Properties (Supports OIDC login) DON'T USE CLIENT ID DISPLAYED UNDER "Overview". I put this in a GitHub Environment called dev so, later, I can have separate federated environments for dev and prod.
+- STORAGE_ACCOUNT_KEY - Storage Account provisioned above. Used to deploy the micro-frontends
+- AZURE_CLIENT_ID - User Assigned Identity "uai-GitHubOIDC" provisioned above -> Settings -> Properties (Supports OIDC login) DON'T USE CLIENT ID DISPLAYED UNDER "Overview". 
 
 **Testing**
 - Verify the .github/*.yml env variables match your configuration
-- You might want to comment out "on: push: paths:" from yml files to force all CI/CD to run
-- Open Container App console in Azure portal and curl the APIs, view the logs
+- You might want to comment out "on: push: paths:" from GitHub yml files to force all CI/CD to run
 - Test APIs that were imported into APIM
+- Open Container App console in Azure portal and curl the APIs, view the logs. They are configured to scale to 0. You can an APIM call to wake them.
 
 **That's it so far**
 : Container Apps Environment is external. Container Apps restrict access via IP only granting access to APIM. The containers have curl installed for quick API checks but you can toggle Ingress to allow public access. The APIs "talk" to each other and to Azure Key Vault. APIM connects to the Container Apps as Backend Services.
@@ -66,7 +67,7 @@ After provisioning Me (below) we'll configure the environment to enable GitHub A
 - Create a UI header that opens each application. Each application calls respective API.
 
 ### TO DO
-- Implement semantic-release versioning for modules, update CDN cache strategy
+- Implement semantic-release versioning for modules, update CDN cache strategy which is currently turned off for dev
 - Better micro-services, front-ends, Event Bus, aggregation, and SignalR
 - Script initial Docker image build and push
 

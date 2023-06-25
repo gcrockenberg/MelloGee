@@ -79,7 +79,7 @@
     {
       "type": "Microsoft.ManagedIdentity/userAssignedIdentities",
       "apiVersion": "2018-11-30",
-      "name": "DeploymentScript",
+      "name": "BicepDeploymentScript",
       "location": "[parameters('location')]"
     },
     {
@@ -100,7 +100,7 @@
     {
       "type": "Microsoft.Resources/deploymentScripts",
       "apiVersion": "2020-10-01",
-      "name": "deploymentScript",
+      "name": "bicepDeploymentScript",
       "location": "[parameters('location')]",
       "kind": "AzurePowerShell",
       "identity": {

@@ -23,7 +23,6 @@ resource storageAccount 'Microsoft.Storage/storageAccounts@2022-09-01' = {
   location: location
   sku: {
     name: 'Standard_LRS'
-    tier: 'Standard'
   }
   kind: 'StorageV2'
   properties: {
@@ -59,13 +58,10 @@ resource storageAccount 'Microsoft.Storage/storageAccounts@2022-09-01' = {
   }
 }
 
+
 resource blobService 'Microsoft.Storage/storageAccounts/blobServices@2022-09-01' = {
   parent: storageAccount
   name: 'default'
-  sku: {
-    name: 'Standard_LRS'
-    tier: 'Standard'
-  }
   properties: {
     changeFeed: {
       enabled: false
@@ -87,18 +83,6 @@ resource blobService 'Microsoft.Storage/storageAccounts/blobServices@2022-09-01'
   }
 }
 
-resource blobServiceWebContainer 'Microsoft.Storage/storageAccounts/blobServices/containers@2022-09-01' = {
-  parent: blobService
-  name: '$web'
-  properties: {
-    immutableStorageWithVersioning: {
-      enabled: false
-    }
-    defaultEncryptionScope: '$account-encryption-key'
-    denyEncryptionScopeOverride: false
-    publicAccess: 'None'
-  }
-}
 
 resource blobServiceCatalogContainer 'Microsoft.Storage/storageAccounts/blobServices/containers@2022-09-01' = {
   parent: blobService
@@ -112,6 +96,7 @@ resource blobServiceCatalogContainer 'Microsoft.Storage/storageAccounts/blobServ
     publicAccess: 'Container'
   }
 }
+
 
 resource blobServiceCoffeeContainer 'Microsoft.Storage/storageAccounts/blobServices/containers@2022-09-01' = {
   parent: blobService
@@ -141,7 +126,7 @@ resource cdnEndpoint 'Microsoft.Cdn/profiles/endpoints@2022-11-01-preview' = {
   name: '${solutionName}-cdn'
   location: 'Global'
   properties: {
-    originHostHeader: '${storageAccount.name}.blob.core.windows.net'
+    originHostHeader: '${storageAccount.name}.blob.${environment().suffixes.storage}'
     contentTypesToCompress: [
       'application/eot'
       'application/font'
@@ -193,10 +178,10 @@ resource cdnEndpoint 'Microsoft.Cdn/profiles/endpoints@2022-11-01-preview' = {
       {
         name: '${storageAccount.name}-blob-core-windows-net'
         properties: {
-          hostName: '${storageAccount.name}.blob.core.windows.net'
+          hostName: '${storageAccount.name}.blob.${environment().suffixes.storage}'
           httpPort: 80
           httpsPort: 443
-          originHostHeader: '${storageAccount.name}.blob.core.windows.net'
+          originHostHeader: '${storageAccount.name}.blob.${environment().suffixes.storage}'
           priority: 1
           weight: 1000
           enabled: true
@@ -272,43 +257,49 @@ resource cdnEndpoint 'Microsoft.Cdn/profiles/endpoints@2022-11-01-preview' = {
   }
 }
 
+
 resource cdnEndpointOrigin 'Microsoft.Cdn/profiles/endpoints/origins@2022-11-01-preview' = {
   parent: cdnEndpoint
   name: '${storageAccount.name}-blob-core-windows-net'
   properties: {
-    hostName: '${storageAccount.name}.blob.core.windows.net'
+    hostName: '${storageAccount.name}.blob.${environment().suffixes.storage}'
     httpPort: 80
     httpsPort: 443
-    originHostHeader: '${storageAccount.name}.blob.core.windows.net'
+    originHostHeader: '${storageAccount.name}.blob.${environment().suffixes.storage}'
     priority: 1
     weight: 1000
     enabled: true
   }
 }
 
-resource contributorRoleDefinition 'Microsoft.Authorization/roleDefinitions@2018-01-01-preview' existing = {
+
+resource storageAccountContributorRoleDefinition 'Microsoft.Authorization/roleDefinitions@2018-01-01-preview' existing = {
   scope: subscription()
   // This is the Storage Account Contributor role, which is the minimum role permission we can give. See https://docs.microsoft.com/en-us/azure/role-based-access-control/built-in-roles#:~:text=17d1049b-9a84-46fb-8f53-869881c3d3ab
   name: '17d1049b-9a84-46fb-8f53-869881c3d3ab'
 }
 
+
 resource managedIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2018-11-30' = {
-  name: 'DeploymentScript'
+  name: 'uai-BicepDeployment'
   location: location
 }
 
+
 resource roleAssignment 'Microsoft.Authorization/roleAssignments@2020-04-01-preview' = {
   scope: storageAccount
-  name: guid(resourceGroup().id, managedIdentity.id, contributorRoleDefinition.id)
+  name: guid(resourceGroup().id, managedIdentity.id, storageAccountContributorRoleDefinition.id)
   properties: {
-    roleDefinitionId: contributorRoleDefinition.id
+    roleDefinitionId: storageAccountContributorRoleDefinition.id
     principalId: managedIdentity.properties.principalId
     principalType: 'ServicePrincipal'
   }
 }
 
+
+@description('Using Az Powershell because bicep does not support enabling static website on Storage Account')
 resource deploymentScript 'Microsoft.Resources/deploymentScripts@2020-10-01' = {
-  name: 'deploymentScript'
+  name: 'bicepDeploymentScript'
   location: location
   kind: 'AzurePowerShell'
   identity: {
