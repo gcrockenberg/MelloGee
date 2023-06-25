@@ -1,3 +1,10 @@
+/*
+  SYNOPSIS: Me
+  DESCRIPTION: Provision the resources to allow GitHub CI/CD to deploy to Azure. Includes Container Apps and static websites.
+  VERSION: 1.0.0
+  OWNER TEAM: Gerard C.
+*/
+
 param containerAppManagedEnvironmentName string
 
 @description('The name of the app or solution.')
@@ -38,7 +45,7 @@ resource containerAppManagedEnvironment 'Microsoft.App/managedEnvironments@2022-
 // https://learn.microsoft.com/en-us/azure/role-based-access-control/troubleshooting?tabs=bicep#symptom---assigning-a-role-to-a-new-principal-sometimes-fails
 @description('The default scope is the current Resource Group')
 resource roleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
-  scope: containerAppManagedEnvironment
+  scope: resourceGroup()  // Deploys to Container App Environment and Storage Account
   name: guid(resourceGroup().id, userAssignedIdentity.id, contributorRoleDefinition.id)
   properties: {
     roleDefinitionId: contributorRoleDefinition.id
