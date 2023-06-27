@@ -8,27 +8,28 @@
 
   <!-- Example layouts you might find helpful:
 
-  <nav>
-    <application name="@org/navbar"></application>
-  </nav>
   <route path="settings">
     <application name="@org/settings"></application>
   </route>
 
   -->
 
+  <nav>
+    <application name="@me/navigation-app"></application>
+  </nav>
+
   <main>
     <route path="#/angular">
       <application name="@me/coffee-app"></application>
     </route>
-    <route path="#/welcome">
+    <route default>
       <application name="@single-spa/welcome"></application>
     </route>
     <!-- <route default>
       <application name="@single-spa/welcome"></application>
     </route> -->
 
-    <route default>
+    <route path="#/react">
       <application name="@me/catalog-app"></application>
     </route>
   </main>

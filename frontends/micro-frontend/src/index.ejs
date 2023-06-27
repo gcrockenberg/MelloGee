@@ -43,7 +43,7 @@
   <link rel="preload" href="https://cdn.jsdelivr.net/npm/single-spa@5.9.0/lib/system/single-spa.min.js" as="script">
 
   <!-- Add your organization's prod import map URL to this script's src  -->
-  <script type="systemjs-importmap" src="/importmap.json"></script>
+  <!-- <script type="systemjs-importmap" src="/importmap.json"></script> -->
 
   <% if (isLocal) { %>
   <script type="systemjs-importmap">
@@ -51,6 +51,7 @@
       "imports": {
         "@single-spa/welcome": "https://unpkg.com/single-spa-welcome/dist/single-spa-welcome.js",
         "@me/root-config": "//localhost:9000/me-root-config.js",
+        "@me/navigation-app": "//localhost:8080/main.js",
         "@me/catalog-app": "https://me-cdn.azureedge.net/catalog-app/me-catalog-app.js?v=1",
         "@me/coffee-app": "https://me-cdn.azureedge.net/coffee-app/main.js"
       }

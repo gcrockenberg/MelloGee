@@ -18,9 +18,8 @@ These steps were established on my Windows 10 machine
 ### Azure
 **Prereqs**
 : Deploying Me to Azure requires:
-1. An Azure account [(Free is fine)][def]
+1. Azure account [(Free is fine)][def]
 2. [az CLI](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli)
-3. [Az PowerShell](https://learn.microsoft.com/en-us/powershell/azure/install-azps-windows?view=azps-10.0.0&tabs=powershell&pivots=windows-psgallery)
 
 **Fork Me**
 : Me uses GitHub Actions for CI/CD so you'll need your own copy
@@ -52,13 +51,14 @@ After provisioning the Me infrastructure (below) we'll configure the GitHub envi
 **GitHub Actions CI/CD Environment Secrets (dev)**
 : The following Environment Secrets support the beginning of CI/CD dev/prod isolation
 - STORAGE_ACCOUNT_KEY - Storage Account provisioned above. Used to deploy the micro-frontends
-- AZURE_CLIENT_ID - User Assigned Identity "uai-GitHubOIDC" provisioned above -> Settings -> Properties (Supports OIDC login) DON'T USE CLIENT ID DISPLAYED UNDER "Overview". 
+- AZURE_CLIENT_ID - User Assigned Identity "uai-GitHubOIDC" provisioned above -> Settings -> Properties. I have seen the Client Id under "Overview" not match.
 
 **Testing**
 - Verify the .github/*.yml env variables match your configuration
 - You might want to comment out "on: push: paths:" from GitHub yml files to force all CI/CD to run
 - Test APIs that were imported into APIM
 - Open Container App console in Azure portal and curl the APIs, view the logs. They are configured to scale to 0. You can an APIM call to wake them.
+- Navigate to single-spa micro-frontend. Storage Account -> Static website -> Primary endpoint. Allow 10 minutes for CDN to propagate.
 
 **That's it so far**
 : Container Apps Environment is external. Container Apps restrict access via IP only granting access to APIM. The containers have curl installed for quick API checks but you can toggle Ingress to allow public access. The APIs "talk" to each other and to Azure Key Vault. APIM connects to the Container Apps as Backend Services.
