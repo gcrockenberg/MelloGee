@@ -138,6 +138,17 @@ module githubActionsModule 'modules/githubActions.bicep' = {
   }
 }
 
+
+module storageWebsiteHostingModule 'modules/storageWebsiteHosting.bicep' = {
+  name: 'storageWebsiteHostingTemplate'
+  params: {
+    environmentType: environmentType
+    location: location
+    solutionName: solutionName
+  }
+}
+
+
 // Putting micro-frontend on hold to focus on a pure, full-bleed Angular solution
 // @description('Single-spa micro-frontend solution')
 // module singleSpaStaticWebsiteModule 'modules/singleSpaStaticWeb.bicep' = {
