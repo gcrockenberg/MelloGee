@@ -1,0 +1,68 @@
+<!-- With background -->
+<div class="relative h-full w-full bg-[url('assets/images/hero.jpg')] bg-no-repeat bg-center bg-fixed bg-cover">
+    <!-- Full black background, add opacity when the screen is large else plain, dark black -->
+    <div class="bg-black w-full h-full lg:bg-opacity-50">
+        <!-- Navigation -->
+        <nav class="px-12 py-5">
+            <!-- Top logo -->
+            <!-- <img src="assets/images/logo.png" alt="Logo" class="h-12" />   -->
+            <img class="object-cover w-40 h-40 mx-2 rounded-full border-8"
+                src="{{ isLogin ? 'assets/images/GerardAvatarWink.jpg' : 'assets/images/GerardAvatarSus.jpg' }}"
+                alt="avatar">
+        </nav>
+        <!-- Centered space for the remainder of elements -->
+        <div class="flex justify-center">
+            <!-- Login form container with width defined by screen breakpoint -->
+<!---------- DO I NEED TO ADD "self-centered" below with "justify-center" above? --------------------------------------------------------->
+            <div class="bg-black bg-opacity-70 px-16 py-16 mt-2 lg:w-2/5 lg:max-w-md rounded-md w-full">
+                <!-- Title -->
+                <h2 class="text-white text-4xl mb-8 font-semibold">
+                    {{ isLogin ? 'Sign in' : 'Register' }}
+                </h2>
+                <form (ngSubmit)="onSubmit()" [formGroup]="form">
+                <!-- Inputs in column layout -->
+                <div class="flex flex-col gap-4">
+                    <app-input
+                        *ngIf="!isLogin" 
+                        formControlName="username"
+                        label="Username" 
+                        id="name"  />
+                    <app-input 
+                        formControlName="email"
+                        autocomplete="email" 
+                        required
+                        label="Email" 
+                        id="email" 
+                        type="email" 
+                    />
+                    <app-input 
+                        formControlName="password" 
+                        autocomplete="current-password" 
+                        required 
+                        label="Password" 
+                        id="password" 
+                        type="password" />
+                </div>
+                <button 
+                    *ngIf="isLogin"
+                    type="submit" 
+                    class="bg-red-600 py-3 text-white rounded-md w-full mt-10 hover:bg-red-700 transition">
+                    Login
+                </button>
+                <button
+                    *ngIf="!isLogin"  
+                    class="bg-red-600 py-3 text-white rounded-md w-full mt-10 hover:bg-red-700 transition"
+                    (click)="createAccount()">
+                    Sign up
+                </button>
+                <p class="text-neutral-500 mt-12">
+                    {{ isLogin ? 'First time using Me?' : 'Already know Me?' }}
+                    <span class="text-white ml-1 hover:underline cursor-pointer" (click)="toggleIsLogin()">
+                        {{ isLogin ? 'Identify yourself' : 'Sign in' }}
+                    </span>
+                </p>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

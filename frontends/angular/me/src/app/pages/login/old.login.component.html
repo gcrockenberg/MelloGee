@@ -1,0 +1,51 @@
+<div class="flex items-center justify-center py-12">
+    <div class="w-full max-w-md space-y-8 px-4">
+        <div>
+            <img class="mx-auto object-cover w-40 h-40 mx-2 rounded-full border-8"
+                src="https://images.unsplash.com/profile-1687882679482-246726af6f90image?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80"
+                alt="Me Image" />
+            <h2 class="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">Authentication demo</h2>
+        </div>
+
+        <!-- FORM -->
+        <!-- <form class="mt-8 space-y-6" (ngSubmit)="onSubmit()" [formGroup]="form"> -->
+        <form class="space-y-6" (ngSubmit)="onSubmit()" [formGroup]="form">
+            <div>
+                <label for="email" class="block text-sm font-medium leading-6 text-gray-900">Email address</label>
+                <div class="mt-2">
+                    <input formControlName="email" id="email" name="email" type="email" autocomplete="email" required
+                        class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                </div>
+            </div>
+
+            <div>
+                <div class="flex items-center justify-between">
+                    <label for="password" class="block text-sm font-medium leading-6 text-gray-900">Password</label>
+                    <div class="text-sm">
+                        <a href="#" class="font-semibold text-indigo-600 hover:text-indigo-500">Forgot password?</a>
+                    </div>
+                </div>
+                <div class="mt-2">
+                    <input formControlName="password" id="password" name="password" type="password"
+                        autocomplete="current-password" required
+                        class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                </div>
+            </div>
+
+            <!-- BUTTONS -->
+            <div class="flex gap-2">
+                <button type="button" [disabled]="form.invalid" (click)="createAccount()"
+                    class="group relative flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                    Create Account
+                </button>
+                <button type="submit" [disabled]="form.invalid"
+                    class="group relative flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                    Sign in
+                </button>
+            </div>
+            {{ error }}
+        </form>
+        
+    </div>
+
+</div>
