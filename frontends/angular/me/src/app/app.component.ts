@@ -8,8 +8,7 @@ import {
   MSAL_GUARD_CONFIG,
   MsalGuardConfiguration,
   MsalService,
-  MsalBroadcastService,
-  MsalGuard
+  MsalBroadcastService
 } from '@azure/msal-angular';
 import { AccountInfo, AuthenticationResult, EventMessage, EventType, InteractionStatus, InteractionType, PopupRequest, RedirectRequest, SsoSilentRequest } from '@azure/msal-browser';
 import { b2cPolicies } from './auth-config';
@@ -217,6 +216,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
 
   login(userFlowRequest?: RedirectRequest | PopupRequest) {
+    console.log('redirectUri: ', window.location.origin);
     if (this.msalGuardConfig.interactionType === InteractionType.Popup) {
       if (this.msalGuardConfig.authRequest) {
         this.authService.loginPopup({ ...this.msalGuardConfig.authRequest, ...userFlowRequest } as PopupRequest)

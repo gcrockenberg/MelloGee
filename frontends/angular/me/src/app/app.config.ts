@@ -1,6 +1,6 @@
 import { ApplicationConfig, importProvidersFrom } from '@angular/core';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http'
-import { AppRoutingModule } from './app-routing.module';
+//import { AppRoutingModule } from './app-routing.module';
 
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
@@ -15,6 +15,9 @@ import {
 } from '@azure/msal-angular';
 import { IPublicClientApplication, InteractionType, PublicClientApplication } from '@azure/msal-browser';
 import { loginRequest, msalConfig } from './auth-config';
+import { provideRouter } from '@angular/router';
+import { routes } from './app.routes';
+import { HashLocationStrategy, LocationStrategy } from '@angular/common';
 
 
 /**
@@ -41,9 +44,11 @@ function MSALGuardConfigFactory(): MsalGuardConfiguration {
 
 export const appConfig: ApplicationConfig = {
   providers: [
+    Location,
+    { provide: LocationStrategy, useClass: HashLocationStrategy },
     importProvidersFrom(
       BrowserModule,
-      AppRoutingModule,
+//      AppRoutingModule, // This module breaks HashLocationStrategy which is needed for production deployment
       FormsModule,
       MsalModule
     ),
@@ -58,6 +63,7 @@ export const appConfig: ApplicationConfig = {
     MsalService,
     MsalGuard,
     MsalBroadcastService,
+    provideRouter(routes),
     provideHttpClient(withInterceptorsFromDi())
   ]
 };

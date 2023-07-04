@@ -9,6 +9,10 @@ import { PrivacyComponent } from './pages/privacy/privacy.component';
 export const routes: Routes = [
     {
         path: '',
+        component: MainComponent
+    },
+    {
+        path: 'login',
         component: LoginComponent
     },
     {
