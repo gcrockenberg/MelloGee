@@ -7,12 +7,12 @@ A personal project to provide backend and frontend examples of a microservice ba
 - [Azure API Management](https://azure.microsoft.com/en-us/products/api-management/)
 - Docker Container Registry
 - GitHub Actions CI/CD
-- [Single-spa micro-frontend](https://single-spa.js.org/)
+- [AAD B2C](https://learn.microsoft.com/en-us/azure/active-directory-b2c/) - Customer identity access management (CIAM)
 
 ![Me architecture](images/Me%20Architecture.png)
 
 ## Notes
-These steps were established on my Windows 10 machine
+These steps were established on my Windows 10 machine. CIAM currently requires manual provision and config.
 
 ## Steps for using Me
 ### Azure
@@ -64,7 +64,7 @@ After provisioning the Me infrastructure (below) we'll configure the GitHub envi
 : Container Apps Environment is external. Container Apps restrict access via IP only granting access to APIM. The containers have curl installed for quick API checks but you can toggle Ingress to allow public access. The APIs "talk" to each other and to Azure Key Vault. APIM connects to the Container Apps as Backend Services.
 
 ### Working on 
-- Create a UI header that opens each application. Each application calls respective API.
+- Angular UI work
 
 ### TO DO
 - Implement semantic-release versioning for modules, update CDN cache strategy which is currently turned off for dev

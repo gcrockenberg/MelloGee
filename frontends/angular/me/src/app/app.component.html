@@ -1,2 +1,26 @@
-<!--ngIf is to avoid reload during acquireTokenSilent() because of hidden iframe -->
-<router-outlet *ngIf="!isIframe"></router-outlet>
+<!-- With background -->
+<div class="relative h-full w-full bg-[url('assets/images/hero.jpg')] bg-no-repeat bg-center bg-fixed bg-cover">
+    <!-- Full black background, add opacity when the screen is large else plain, dark black -->
+    <div class="bg-black w-full h-full lg:bg-opacity-50">
+        <!-- Navigation -->
+        <nav class="px-12 py-5 flex flex-row justify-between items-start">
+            <!-- Top logo -->
+            <!-- <img src="assets/images/logo.png" alt="Logo" class="h-12" />   -->
+            <img class="object-cover w-40 h-40 rounded-full border-8 border-black"
+                src="{{ isLogin ? 'assets/images/GerardAvatarWink.jpg' : 'assets/images/GerardAvatarSus.jpg' }}"
+                alt="avatar">
+            <button *ngIf="!isLogin"
+                class="bg-red-600 px-6 py-3 text-white rounded-md hover:bg-red-700 transition"
+                (click)="login()">
+                Sign In
+            </button>
+            <button *ngIf="isLogin"
+                class="bg-red-600 px-6 py-3 text-white rounded-md hover:bg-red-700 transition"
+                (click)="logout()">
+                Sign Out
+            </button>
+        </nav>
+        <!--ngIf is to avoid reload during acquireTokenSilent() because of hidden iframe -->
+        <router-outlet *ngIf="!isIframe"></router-outlet>
+    </div>
+</div>
