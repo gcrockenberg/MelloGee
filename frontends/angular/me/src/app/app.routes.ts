@@ -2,14 +2,31 @@ import { Routes } from '@angular/router';
 import { MsalGuard, MsalRedirectComponent } from '@azure/msal-angular';
 import { LoginComponent } from './pages/login/login.component';
 import { MainComponent } from './pages/main/main.component';
-import { LayoutTestComponent } from './pages/layout-test/layout-test.component';
 import { DeleteMyDataComponent } from './pages/delete-my-data/delete-my-data.component';
 import { PrivacyComponent } from './pages/privacy/privacy.component';
+import { CategoryComponent } from './pages/category/category.component';
+import { CoffeeComponent } from './pages/coffee/coffee.component';
+import { SecureComponent } from './pages/secure/secure.component';
 
 export const routes: Routes = [
     {
         path: '',
         component: MainComponent
+    },
+    {
+        path: 'category',
+        component: CategoryComponent
+    },
+    {
+        path: 'coffee',
+        component: CoffeeComponent
+    },
+    {
+        path: 'secure',
+        component: SecureComponent,
+        canActivate: [
+            MsalGuard
+        ]
     },
     {
         path: 'login',
@@ -25,19 +42,12 @@ export const routes: Routes = [
         component: MainComponent
     },
     {
-        path: 'test',
-        component: LayoutTestComponent
-    },
-    {
         path: 'delete-my-data',
         component: DeleteMyDataComponent
     },
     {   // Using MsalGuard
         path: 'privacy',
-        component: PrivacyComponent,
-        canActivate: [
-            MsalGuard
-        ]
+        component: PrivacyComponent        
     },
     {   // loadComponent format
         path: 'tos',

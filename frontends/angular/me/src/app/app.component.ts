@@ -3,7 +3,7 @@ import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { Subject, of } from 'rxjs';
 import { catchError, concatMap, filter, takeUntil } from 'rxjs/operators';
-import { IdTokenClaims, PromptValue } from '@azure/msal-common';
+import { PromptValue } from '@azure/msal-common';
 import {
   MSAL_GUARD_CONFIG,
   MsalGuardConfiguration,
@@ -11,25 +11,20 @@ import {
   MsalBroadcastService
 } from '@azure/msal-angular';
 import { AccountInfo, AuthenticationResult, EventMessage, EventType, InteractionStatus, InteractionType, PopupRequest, RedirectRequest, SsoSilentRequest } from '@azure/msal-browser';
-import { b2cPolicies } from './auth-config';
-
-
-type IdTokenClaimsWithPolicyId = IdTokenClaims & {
-  acr?: string,
-  tfp?: string,
-};
+import { IdTokenClaimsWithPolicyId, b2cPolicies } from './auth-config';
+import { HeaderComponent } from "./shared/components/header/header.component";
 
 
 @Component({
-  selector: 'app-root',
-  standalone: true,
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss'],
-  //changeDetection: ChangeDetectionStrategy.OnPush,  // If I want to manually control change detection
-  imports: [
-    NgIf,
-    RouterOutlet
-  ]
+    selector: 'app-root',
+    standalone: true,
+    templateUrl: './app.component.html',
+    styleUrls: ['./app.component.scss'],
+    imports: [
+        NgIf,
+        RouterOutlet,
+        HeaderComponent
+    ]
 })
 export class AppComponent implements OnInit, OnDestroy {
   private readonly _destroying$ = new Subject<void>();
