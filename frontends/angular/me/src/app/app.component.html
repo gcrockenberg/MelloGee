@@ -7,8 +7,11 @@
         <nav class="fixed top-0 left-0 right-0 z-[60] px-12 py-5 transition-all duration-300 text-[color:white] flex flex-row justify-between items-start">
             <!-- Top logo -->
             <!-- <img src="assets/images/logo.png" alt="Logo" class="h-12" />   -->
-            <img class="object-cover w-40 h-40 rounded-full border-8 border-black"
+            <!-- <img class="object-cover w-40 h-40 rounded-full border-8 border-black"
                 src="{{ isLogin ? 'assets/images/GerardAvatarWink.jpg' : 'assets/images/GerardAvatarSus.jpg' }}"
+                alt="avatar"> -->
+            <img class="object-cover w-40 h-40 rounded-full border-8 border-black"
+                src="assets/images/GerardAvatarPray.jpg" 
                 alt="avatar">
             <button *ngIf="!isLogin" class="bg-red-600 px-6 py-3 text-white rounded-md hover:bg-red-700 transition"
                 (click)="login()">

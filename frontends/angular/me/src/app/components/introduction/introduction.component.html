@@ -1,12 +1,11 @@
 <div class="flex flex-nowrap">
     <video aria-hidden="true"
-        class="relative z-20 h-full w-full object-cover transition-opacity duration-300 pointer  visible opacity-100"
-        autoplay="" loop="" playsinline="">
-        <source src="assets/videos/rave1.mov" type="video/mp4"> Your browser does not support the video tag.
+        class="relative z-20 h-full w-full object-cover transition-opacity duration-300 pointer visible opacity-100"
+        autoplay loop muted oncanplay="this.play()" onloadedmetadata="this.muted = true">
+        <source src="assets/videos/rave1.mp4" > Your browser does not support the video tag.
     </video>
 </div>
 <div class="absolute top-0 right-0 bottom-0 left-0 z-[20] pointer-events-none">
-
     <section class="cover bg-blue-teal-gradient relative px-4 sm:px-8 lg:px-16 xl:px-40 2xl:px-64 overflow-hidden py-48 flex
                   items-center w-full h-screen">
         <!-- <div class="w-full h-screen absolute top-0 left-0 z-0">
