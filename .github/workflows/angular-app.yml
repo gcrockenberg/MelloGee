@@ -25,6 +25,10 @@ jobs:
       with: 
         node-version: 16
     -
+      name: Install Angular cli
+      working-directory: ${{ env.WORKING_DIRECTORY }} 
+      run: npm install -g @angular/cli@latest
+    -
       name: Npm install
       working-directory: ${{ env.WORKING_DIRECTORY }} 
       run: npm install
