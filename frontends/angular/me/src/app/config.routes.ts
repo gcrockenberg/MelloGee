@@ -45,7 +45,7 @@ export const routes: Routes = [
         path: 'delete-my-data',
         component: DeleteMyDataComponent
     },
-    {   // Using MsalGuard
+    { 
         path: 'privacy',
         component: PrivacyComponent        
     },
