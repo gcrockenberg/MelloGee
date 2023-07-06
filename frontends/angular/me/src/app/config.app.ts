@@ -11,35 +11,11 @@ import {
   MsalService,
   MsalGuard,
   MsalBroadcastService,
-  MsalGuardConfiguration
 } from '@azure/msal-angular';
-import { IPublicClientApplication, InteractionType, PublicClientApplication } from '@azure/msal-browser';
-import { loginRequest, msalConfig } from './auth-config';
 import { provideRouter } from '@angular/router';
-import { routes } from './app.routes';
+import { routes } from './config.routes';
 import { HashLocationStrategy, LocationStrategy } from '@angular/common';
-
-
-/**
- * Here we pass the configuration parameters to create an MSAL instance.
- * For more info, visit: https://github.com/AzureAD/microsoft-authentication-library-for-js/blob/dev/lib/msal-angular/docs/v2-docs/configuration.md
- */
-function MSALInstanceFactory(): IPublicClientApplication {
-  return new PublicClientApplication(msalConfig);
-}
-
-
-/**
- * Set your default interaction type for MSALGuard here. If you have any
- * additional scopes you want the user to consent upon login, add them here as well.
- */
-function MSALGuardConfigFactory(): MsalGuardConfiguration {
-  return {
-    // Popup detects when user cancels the flow, Redirect does not which leaves inconsistent state.
-    interactionType: InteractionType.Popup,
-    authRequest: loginRequest
-  };
-}
+import { MSALGuardConfigFactory, MSALInstanceFactory } from './config.auth';
 
 
 export const appConfig: ApplicationConfig = {

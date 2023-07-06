@@ -11,8 +11,9 @@ import {
   MsalBroadcastService
 } from '@azure/msal-angular';
 import { AccountInfo, AuthenticationResult, EventMessage, EventType, InteractionStatus, InteractionType, PopupRequest, RedirectRequest, SsoSilentRequest } from '@azure/msal-browser';
-import { IdTokenClaimsWithPolicyId, b2cPolicies } from './auth-config';
+import { IdTokenClaimsWithPolicyId } from './config.auth';
 import { HeaderComponent } from "./shared/components/header/header.component";
+import { environment } from 'src/environments/environment';
 
 
 @Component({
@@ -34,23 +35,19 @@ export class AppComponent implements OnInit, OnDestroy {
   isLogin: boolean = false; // TODO: Make dynamic
 
 
-  constructor(@Inject(MSAL_GUARD_CONFIG) private msalGuardConfig: MsalGuardConfiguration,
+  constructor(
+    @Inject(MSAL_GUARD_CONFIG) private msalGuardConfig: MsalGuardConfiguration,
     //private cd: ChangeDetectorRef,  // To manually control change detection
     private authService: MsalService,
     private msalBroadcastService: MsalBroadcastService,
-   ) {
-
-  }
+   ) { }
 
 
   ngOnInit(): void {
     this.isIframe = window !== window.parent && !window.opener;
     this.setIsLogin();
 
-    this._initAuthService();
-
     this.authService.instance.enableAccountStorageEvents(); // Optional - This will enable ACCOUNT_ADDED and ACCOUNT_REMOVED events emitted when a user logs in or out of another tab or window
-
     /**
      * You can subscribe to MSAL events as shown below. For more info,
      * visit: https://github.com/AzureAD/microsoft-authentication-library-for-js/blob/dev/lib/msal-angular/docs/v2-docs/events.md
@@ -60,7 +57,6 @@ export class AppComponent implements OnInit, OnDestroy {
         filter((msg: EventMessage) => msg.eventType === EventType.ACCOUNT_ADDED || msg.eventType === EventType.ACCOUNT_REMOVED),
       )
       .subscribe((result: EventMessage) => {
-        console.log('--> Account added msalBroadcastEvent:', result);
         if (this.authService.instance.getAllAccounts().length === 0) {
           window.location.pathname = "/";
         } else {
@@ -74,7 +70,6 @@ export class AppComponent implements OnInit, OnDestroy {
         takeUntil(this._destroying$)
       )
       .subscribe(() => {
-        console.log('--> Login in progress msalBroadcastEvent');
         this.setIsLogin();
         this.checkAndSetActiveAccount();
       })
@@ -87,11 +82,10 @@ export class AppComponent implements OnInit, OnDestroy {
         takeUntil(this._destroying$)
       )
       .subscribe((result: EventMessage) => {
-        console.log('--> Login success msalBroadcastEvent:', result);
         let payload = result.payload as AuthenticationResult;
         let idtoken = payload.idTokenClaims as IdTokenClaimsWithPolicyId;
 
-        if (idtoken.acr === b2cPolicies.names.signUpSignIn || idtoken.tfp === b2cPolicies.names.signUpSignIn) {
+        if (idtoken.acr === environment.b2cPolicies.names.signUpSignIn || idtoken.tfp === environment.b2cPolicies.names.signUpSignIn) {
           this.authService.instance.setActiveAccount(payload.account);
         }
 
@@ -100,19 +94,19 @@ export class AppComponent implements OnInit, OnDestroy {
          * from SUSI flow. "acr" claim in the id token tells us the policy (NOTE: newer policies may use the "tfp" claim instead).
          * To learn more about B2C tokens, visit https://docs.microsoft.com/en-us/azure/active-directory-b2c/tokens-overview
          */
-        if (idtoken.acr === b2cPolicies.names.editProfile || idtoken.tfp === b2cPolicies.names.editProfile) {
+        if (idtoken.acr === environment.b2cPolicies.names.editProfile || idtoken.tfp === environment.b2cPolicies.names.editProfile) {
 
           // retrieve the account from initial sing-in to the app
           const originalSignInAccount = this.authService.instance.getAllAccounts()
             .find((account: AccountInfo) =>
               account.idTokenClaims?.oid === idtoken.oid
               && account.idTokenClaims?.sub === idtoken.sub
-              && ((account.idTokenClaims as IdTokenClaimsWithPolicyId).acr === b2cPolicies.names.signUpSignIn
-                || (account.idTokenClaims as IdTokenClaimsWithPolicyId).tfp === b2cPolicies.names.signUpSignIn)
+              && ((account.idTokenClaims as IdTokenClaimsWithPolicyId).acr === environment.b2cPolicies.names.signUpSignIn
+                || (account.idTokenClaims as IdTokenClaimsWithPolicyId).tfp === environment.b2cPolicies.names.signUpSignIn)
             );
 
           let signUpSignInFlowRequest: SsoSilentRequest = {
-            authority: b2cPolicies.authorities.signUpSignIn.authority,
+            authority: environment.b2cPolicies.authorities.signUpSignIn.authority,
             account: originalSignInAccount
           };
 
@@ -127,9 +121,9 @@ export class AppComponent implements OnInit, OnDestroy {
          * you can replace the code below with the same pattern used for handling the return from
          * profile edit flow (see above ln. 74-92).
          */
-        if (idtoken.acr === b2cPolicies.names.resetPassword || idtoken.tfp === b2cPolicies.names.resetPassword) {
+        if (idtoken.acr === environment.b2cPolicies.names.resetPassword || idtoken.tfp === environment.b2cPolicies.names.resetPassword) {
           let signUpSignInFlowRequest: RedirectRequest | PopupRequest = {
-            authority: b2cPolicies.authorities.signUpSignIn.authority,
+            authority: environment.b2cPolicies.authorities.signUpSignIn.authority,
             prompt: PromptValue.LOGIN, // force user to reauthenticate with their new password
             scopes: []
           };
@@ -146,51 +140,17 @@ export class AppComponent implements OnInit, OnDestroy {
         takeUntil(this._destroying$)
       )
       .subscribe((result: EventMessage) => {
-        console.log('--> Login failed msalBroadcastEvent:', result);
         // Checking for the forgot password error. Learn more about B2C error codes at
         // https://learn.microsoft.com/azure/active-directory-b2c/error-codes
         if (result.error && result.error.message.indexOf('AADB2C90118') > -1) {
           let resetPasswordFlowRequest: RedirectRequest | PopupRequest = {
-            authority: b2cPolicies.authorities.resetPassword.authority,
+            authority: environment.b2cPolicies.authorities.resetPassword.authority,
             scopes: [],
           };
 
           this.login(resetPasswordFlowRequest);
         };
       });
-  }
-
-
-  private _initAuthService() {
-    this.authService.initialize().pipe(
-      concatMap(() => {
-        return this.authService.handleRedirectObservable();
-      }),
-      concatMap(() => {
-        if (!this.authService.instance.getAllAccounts().length) {
-          this.authService
-            .getLogger()
-            .verbose('Guard - no accounts retrieved, no state, cannot load');
-          return of(false);
-        }
-
-        this.authService
-          .getLogger()
-          .verbose('Guard - at least 1 account exists, can activate or load');
-
-        return of(true);
-      }),
-      catchError((error: Error) => {
-        this.authService
-          .getLogger()
-          .error('Guard - error while logging in, unable to activate');
-        this.authService
-          .getLogger()
-          .errorPii(`Guard - error: ${error.message}`);
-        
-        return of(false);
-      })
-    );
   }
 
 
@@ -207,6 +167,16 @@ export class AppComponent implements OnInit, OnDestroy {
       // add your code for handling multiple accounts here
       this.authService.instance.setActiveAccount(accounts[0]);
     }
+  }
+
+
+  editProfile() {
+    let editProfileFlowRequest: RedirectRequest | PopupRequest = {
+      authority: environment.b2cPolicies.authorities.editProfile.authority,
+      scopes: [],
+    };
+
+    this.login(editProfileFlowRequest);
   }
 
 
@@ -236,7 +206,14 @@ export class AppComponent implements OnInit, OnDestroy {
 
 
   logout() {
-    this.authService.logout();
+    //this.authService.logout();
+    if (this.msalGuardConfig.interactionType === InteractionType.Popup) {
+      this.authService.logoutPopup({
+        mainWindowRedirectUri: "/"
+      });
+    } else {
+      this.authService.logoutRedirect();
+    }
   }
 
 
