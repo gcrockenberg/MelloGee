@@ -5,7 +5,7 @@
   OWNER TEAM: Gerard C.
 */
 
-param containerAppManagedEnvironmentName string
+//param containerAppManagedEnvironmentName string
 
 @description('The name of the app or solution.')
 param solutionName string
@@ -36,13 +36,14 @@ resource contributorRoleDefinition 'Microsoft.Authorization/roleDefinitions@2018
 }
 
 
-resource containerAppManagedEnvironment 'Microsoft.App/managedEnvironments@2022-11-01-preview' existing = {
-  name: containerAppManagedEnvironmentName
-}
+// resource containerAppManagedEnvironment 'Microsoft.App/managedEnvironments@2022-11-01-preview' existing = {
+//   name: containerAppManagedEnvironmentName
+// }
 
 
 // https://learn.microsoft.com/en-us/azure/azure-resource-manager/bicep/scenarios-rbac
 // https://learn.microsoft.com/en-us/azure/role-based-access-control/troubleshooting?tabs=bicep#symptom---assigning-a-role-to-a-new-principal-sometimes-fails
+// Troubleshoot: https://stackoverflow.com/questions/61637124/azure-devops-pipeline-error-tenant-id-application-id-principal-id-and-scope
 @description('The default scope is the current Resource Group')
 resource roleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
   scope: resourceGroup()  // Deploys to Container App Environment and Storage Account

@@ -7,12 +7,12 @@ A personal project to provide backend and frontend examples of a microservice ba
 - [Azure API Management](https://azure.microsoft.com/en-us/products/api-management/)
 - Docker Container Registry
 - GitHub Actions CI/CD
-- [AAD B2C](https://learn.microsoft.com/en-us/azure/active-directory-b2c/) - Customer identity access management (CIAM)
+- [AAD B2C](https://learn.microsoft.com/en-us/azure/active-directory-b2c/) - Customer identity access management (CIAM). This infrastructure is not part of automated provisioning. It requires manual provision and config.
 
 ![Me architecture](images/Me%20Architecture.png)
 
 ## Notes
-These steps were established on my Windows 10 machine. AAD B2C CIAM currently requires manual provision and config.
+These steps were established on my Windows 10 machine.
 
 ## Steps for using Me
 ### Azure
