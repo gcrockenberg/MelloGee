@@ -1,11 +1,12 @@
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Subject, filter, takeUntil } from 'rxjs';
 import { PromptValue } from '@azure/msal-common';
-import { MSAL_GUARD_CONFIG, MsalBroadcastService, MsalGuardConfiguration, MsalService } from '@azure/msal-angular';
+import { MsalBroadcastService, MsalService } from '@azure/msal-angular';
 import { AccountInfo, AuthenticationResult, EventMessage, EventType, InteractionStatus, InteractionType, PopupRequest, RedirectRequest, SsoSilentRequest } from '@azure/msal-browser';
 import { IdTokenClaimsWithPolicyId } from 'src/app/config.auth';
 import { environment } from 'src/environments/environment';
+
 
 @Component({
   selector: 'app-header',

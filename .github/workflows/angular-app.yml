@@ -33,6 +33,10 @@ jobs:
       working-directory: ${{ env.WORKING_DIRECTORY }} 
       run: npm install
     -
+      name: Run tests
+      working-directory: ${{ env.WORKING_DIRECTORY }} 
+      run: ng test --no-watch --no-progress
+    -
       name: Build application
       working-directory: ${{ env.WORKING_DIRECTORY }} 
       run: ng build --configuration production

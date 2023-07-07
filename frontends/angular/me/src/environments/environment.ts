@@ -3,13 +3,8 @@
 // The list of file replacements can be found in `angular.json`.
 
 import { InteractionType } from '@azure/msal-browser';
-import { IEnvironment } from './interfaces/IEnvironment';
+import { AuthRequestType, IEnvironment } from './interfaces/IEnvironment';
 
-const environmentOptions = {
-  loginRequest: {
-    scopes: [],
-  },
-};
 
 export const environment: IEnvironment = {
   production: false,
@@ -43,7 +38,7 @@ export const environment: IEnvironment = {
   msalGuardConfig: {
     // Popup detects when user cancels the flow, Redirect does not which leaves inconsistent state.
     interactionType: InteractionType.Popup,
-    authRequest: environmentOptions.loginRequest    // Scopes
+    authRequest: AuthRequestType.LoginRequest    // Scopes
   }
 };
 
