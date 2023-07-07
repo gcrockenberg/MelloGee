@@ -19,7 +19,7 @@ These steps were established on my Windows 10 machine.
 **Prereqs**
 : Deploying Me to Azure requires:
 1. Azure account [(Free is fine)][def]
-2. [az CLI](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli)
+2. [az CLI](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli) I used v2.50.0
 
 **Fork Me**
 : Me uses GitHub Actions for CI/CD so you'll need your own copy

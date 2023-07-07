@@ -3,8 +3,8 @@ on:
   push:
     branches:
     - main
-  #  paths:
-  #  - frontends/angular/me**
+    paths:
+    - frontends/angular/me**
 # Permission to support Azure login using OIDC
 permissions:
   id-token: write
@@ -75,7 +75,7 @@ jobs:
         subscription_id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
         client_id: ${{ secrets.AZURE_CLIENT_ID }} # See Readme for the correct Client Id to reference
     - 
-      name: Deploy to Azure Container App
+      name: Deploy to Azure Storage static website
       uses: azure/CLI@v1
       with:
         inlineScript: >

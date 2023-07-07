@@ -1,7 +1,5 @@
 import { ApplicationConfig, importProvidersFrom } from '@angular/core';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http'
-//import { AppRoutingModule } from './app-routing.module';
-
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import {
@@ -15,7 +13,8 @@ import {
 import { provideRouter } from '@angular/router';
 import { routes } from './config.routes';
 import { HashLocationStrategy, LocationStrategy } from '@angular/common';
-import { MSALGuardConfigFactory, MSALInstanceFactory } from './config.auth';
+import { MSALInstanceFactory } from './config.auth';
+import { environment } from 'src/environments/environment';
 
 
 export const appConfig: ApplicationConfig = {
@@ -34,7 +33,7 @@ export const appConfig: ApplicationConfig = {
     },
     {
       provide: MSAL_GUARD_CONFIG,
-      useFactory: MSALGuardConfigFactory
+      useFactory: () => { return environment.msalGuardConfig }
     },
     MsalService,
     MsalGuard,

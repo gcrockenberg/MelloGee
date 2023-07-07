@@ -22,7 +22,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   isLogin: boolean = false; // TODO: Make dynamic
 
 
-  constructor(@Inject(MSAL_GUARD_CONFIG) private msalGuardConfig: MsalGuardConfiguration,
+  constructor(
     //private cd: ChangeDetectorRef,  // To manually control change detection
     private authService: MsalService,
     private msalBroadcastService: MsalBroadcastService,
@@ -168,9 +168,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   login(userFlowRequest?: RedirectRequest | PopupRequest) {
     console.log('redirectUri: ', window.location.origin);
-    if (this.msalGuardConfig.interactionType === InteractionType.Popup) {
-      if (this.msalGuardConfig.authRequest) {
-        this.authService.loginPopup({ ...this.msalGuardConfig.authRequest, ...userFlowRequest } as PopupRequest)
+    if (environment.msalGuardConfig.interactionType === InteractionType.Popup) {
+      if (environment.msalGuardConfig.authRequest) {
+        this.authService.loginPopup({ ...environment.msalGuardConfig.authRequest, ...userFlowRequest } as PopupRequest)
           .subscribe((response: AuthenticationResult) => {
             this.authService.instance.setActiveAccount(response.account);
           });
@@ -181,9 +181,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
           });
       }
     } else {
-      if (this.msalGuardConfig.authRequest) {
-        console.log('authService.loginRedirect() params: ', { ...this.msalGuardConfig.authRequest, ...userFlowRequest });
-        this.authService.instance.loginRedirect({ ...this.msalGuardConfig.authRequest, ...userFlowRequest } as RedirectRequest);
+      if (environment.msalGuardConfig.authRequest) {
+        console.log('authService.loginRedirect() params: ', { ...environment.msalGuardConfig.authRequest, ...userFlowRequest });
+        this.authService.instance.loginRedirect({ ...environment.msalGuardConfig.authRequest, ...userFlowRequest } as RedirectRequest);
       } else {
         this.authService.instance.loginRedirect(userFlowRequest);
       }
@@ -193,7 +193,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   logout() {
     //this.authService.logout();
-    if (this.msalGuardConfig.interactionType === InteractionType.Popup) {
+    if (environment.msalGuardConfig.interactionType === InteractionType.Popup) {
       this.authService.logoutPopup({
         mainWindowRedirectUri: "/"
       });

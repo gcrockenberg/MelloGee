@@ -2,36 +2,49 @@
 // `ng build` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
 
-export const environment = {
-    production: false,
-    msalConfig: {
-        auth: {
-            clientId: '',
-        }
+import { InteractionType } from '@azure/msal-browser';
+import { IEnvironment } from './interfaces/IEnvironment';
+
+const environmentOptions = {
+  loginRequest: {
+    scopes: [],
+  },
+};
+
+export const environment: IEnvironment = {
+  production: false,
+  apiConfig: {
+    scopes: [''],
+    uri: '',
+  },
+  b2cPolicies: {
+    names: {
+      signUpSignIn: '',
+      resetPassword: '',
+      editProfile: '',
     },
-    apiConfig: {
-        scopes: [''],
-        uri: ''
+    authorities: {
+      signUpSignIn: {
+        authority: '',
+      },
+      resetPassword: {
+        authority: '',
+      },
+      editProfile: {
+        authority: '',
+      },
     },
-    b2cPolicies: {
-        names: {
-            signUpSignIn: '',
-            resetPassword: '',
-            editProfile: ''
-        },
-        authorities: {
-            signUpSignIn: {
-                authority: ''
-            },
-            resetPassword: {
-                authority: ''
-            },
-            editProfile: {
-                authority: ''
-            }
-        },
-        authorityDomain: ''
-    }
+    authorityDomain: '',
+  },
+  /**
+   * Set your default interaction type for MSALGuard here. If you have any
+   * additional scopes you want the user to consent upon login, add them here as well.
+   */
+  msalGuardConfig: {
+    // Popup detects when user cancels the flow, Redirect does not which leaves inconsistent state.
+    interactionType: InteractionType.Popup,
+    authRequest: environmentOptions.loginRequest    // Scopes
+  }
 };
 
 /*
@@ -42,4 +55,3 @@ export const environment = {
  * on performance if an error is thrown.
  */
 // import 'zone.js/plugins/zone-error';  // Included with Angular CLI.
-

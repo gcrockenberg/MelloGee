@@ -5,7 +5,7 @@ import { BottomNavigationComponent } from '../../shared/components/bottom-naviga
 import { HeaderComponent } from '../../shared/components/header/header.component'
 import { SidebarComponent } from '../../shared/components/sidebar/sidebar.component'
 import { RightSideComponent } from '../../components/right-side/right-side.component'
-import { AuthService } from 'src/app/services/auth/auth.service';
+//import { AuthService } from 'src/app/services/auth/auth.service';
 import { AboutComponent } from "../../components/about/about.component";
 import { IntroductionComponent } from "../../components/introduction/introduction.component";
 
@@ -27,10 +27,10 @@ import { IntroductionComponent } from "../../components/introduction/introductio
 export class MainComponent {
   userId: any = undefined;
 
-  constructor(private auth: AuthService) { 
-    auth.CurrentUser.subscribe(
-      (result) => this.userId = result!.id
-    );
-  }
+  // constructor(private auth: AuthService) { 
+  //   auth.CurrentUser.subscribe(
+  //     (result) => this.userId = result!.id
+  //   );
+  // }
 
 }

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, forwardRef, OnInit, Injector } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, forwardRef, OnInit, Injector, Inject, Optional, Self } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormsModule, NgControl } from '@angular/forms';
 
@@ -31,6 +31,7 @@ export class InputComponent implements ControlValueAccessor, OnInit {
   
 
   constructor(private readonly injector: Injector) { }
+
 
   changeValue(value: string): void { 
     this.value = value;
