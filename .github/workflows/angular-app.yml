@@ -35,7 +35,7 @@ jobs:
     -
       name: Run tests
       working-directory: ${{ env.WORKING_DIRECTORY }} 
-      run: ng test --no-watch --no-progress
+      run: ng test --no-watch --browsers=ChromeHeadless
     -
       name: Build application
       working-directory: ${{ env.WORKING_DIRECTORY }} 
