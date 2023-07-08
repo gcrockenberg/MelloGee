@@ -6,7 +6,7 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test --no-watch --no-progress"
+    "test": "ng test --no-watch --no-progress --browsers=ChromeHeadless"
   },
   "private": true,
   "dependencies": {
@@ -30,6 +30,7 @@
     "@angular/compiler-cli": "~16.1.3",
     "@tailwindcss/forms": "^0.5.3",
     "@types/jasmine": "~4.3.0",
+    "@wdio/schematics": "^1.2.1",
     "autoprefixer": "^10.4.14",
     "http-server": "^14.1.1",
     "jasmine-core": "~4.6.0",
