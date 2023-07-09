@@ -14,8 +14,8 @@ services:
       - "9901:9901"
       - "80:7777"
 #      - "10001:10001"    # Forget HTTPS in Container Environment
-  me-catalogservice-api:
-    image: me-catalogservice-api
+  catalogapi:
+    image: catalogapi
     build:
       context: .
       dockerfile: Services/CatalogService/Dockerfile
@@ -23,8 +23,8 @@ services:
     ports:
       - 8080:80
       - 8081:443
-  mg-coffee-api:
-    image: mg-coffee-api
+  coffeeapi:
+    image: coffeeapi
     build:
       context: .
       dockerfile: Services/Coffee/Coffee.API/Dockerfile
@@ -33,8 +33,8 @@ services:
 #    ports:
 #      - 8082:80
 #      - 8083:443
-  mg-tea-api:
-    image: mg-tea-api
+  teaapi:
+    image: teaapi
     build:
       context: .
       dockerfile: Services/Tea/Tea.API/Dockerfile

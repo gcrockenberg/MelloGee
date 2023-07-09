@@ -47,7 +47,7 @@
         htmlFor="{{ id }}">
         {{ label }}
     </label>
-    <div class="text-red-600 text-sm" *ngIf="(ngControl?.dirty || ngControl?.touched) && ngControl?.errors as errors">
+    <div class="text-red-600 text-sm" *ngIf="ngControl?.dirty && ngControl?.errors as errors">
         <div *ngIf="errors['maxlength']">Max length</div>
         <div *ngIf="errors['minlength']">Min length</div>
         <div *ngIf="errors['required']">Required</div>
