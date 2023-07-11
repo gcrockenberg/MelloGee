@@ -23,13 +23,14 @@ describe('Ensure that the app starts', () => {
     expect(canNavigate).toBe(true);
   });
 
-  it('should not navigate to guarded component', async () => {
-    const { router, run } = setup();
+  // Handled in e2e test
+  // it('should not navigate to guarded component', async () => {
+  //   const { router, run } = setup();
 
-    const canNavigate = await run(() => router.navigateByUrl('/secure'));
+  //   const canNavigate = await run(() => router.navigateByUrl('/secure'));
 
-    expect(canNavigate).toBe(false);
-  });
+  //   expect(canNavigate).toBe(false);
+  // });
 });
 
 function setup() {

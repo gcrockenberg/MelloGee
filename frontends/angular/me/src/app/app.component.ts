@@ -2,7 +2,6 @@ import { NgIf } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { HeaderComponent } from "./shared/components/header/header.component";
-import { LoginComponent } from "./pages/login/login.component";
 
 
 @Component({
@@ -13,8 +12,7 @@ import { LoginComponent } from "./pages/login/login.component";
     imports: [
         NgIf,
         RouterOutlet,
-        HeaderComponent,
-        LoginComponent
+        HeaderComponent
     ]
 })
 export class AppComponent implements OnInit { // OnDestroy {

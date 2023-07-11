@@ -14,6 +14,13 @@ services:
       - "9901:9901"
       - "80:7777"
 #      - "10001:10001"    # Forget HTTPS in Container Environment
+    deploy:
+      resources:
+        limits:
+          memory: 128MB
+        reservations:
+          memory: 64MB
+    memswap_limit: 128MB
   catalogapi:
     image: catalogapi
     build:
@@ -23,6 +30,13 @@ services:
     ports:
       - 8080:80
       - 8081:443
+    deploy:
+      resources:
+        limits:
+          memory: 128MB
+        reservations:
+          memory: 64MB
+    memswap_limit: 128MB
   coffeeapi:
     image: coffeeapi
     build:
@@ -33,6 +47,13 @@ services:
 #    ports:
 #      - 8082:80
 #      - 8083:443
+    deploy:
+      resources:
+        limits:
+          memory: 128MB
+        reservations:
+          memory: 64MB
+    memswap_limit: 128MB
   teaapi:
     image: teaapi
     build:
@@ -43,3 +64,10 @@ services:
 #    ports:
 #      - 8084:80
 #      - 8085:443
+    deploy:
+      resources:
+        limits:
+          memory: 128MB
+        reservations:
+          memory: 64MB
+    memswap_limit: 128MB

@@ -2,24 +2,33 @@ import { TestBed } from '@angular/core/testing';
 import { AppComponent } from './app.component';
 import { Component } from '@angular/core';
 import { HeaderComponent } from './shared/components/header/header.component';
-import { RouterOutlet } from '@angular/router';
+import { RouterOutlet, provideRouter } from '@angular/router';
 
 
-@Component({ selector: 'app-header', template: '' })
-class HeaderStubComponent { }
+@Component({
+  standalone: true,
+  selector: 'app-header',
+  template: ''
+})
+class MockHeaderComponent { }
 
-@Component({selector: 'router-outlet', template: ''})
-class RouterOutletStubComponent {
+@Component({
+  standalone: true,
+  selector: 'router-outlet',
+  template: ''
+})
+class MockRouterOutlet {
 }
 
 describe('AppComponent', () => {
   beforeEach(() =>
-    TestBed.configureTestingModule({
-      imports: [AppComponent],
-      providers: [
-        { provide: HeaderComponent, useClass: HeaderStubComponent },
-        { provide: RouterOutlet, useClass: RouterOutletStubComponent },
-      ],
+    TestBed.overrideComponent(AppComponent, {
+      add: {
+        imports: [MockHeaderComponent, MockRouterOutlet],
+      },
+      remove: {
+        imports: [HeaderComponent, RouterOutlet],
+      },
     })
   );
 
