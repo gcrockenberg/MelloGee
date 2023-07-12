@@ -41,7 +41,7 @@ export class DataService {
     }
 
     // return an observable with a user-facing error message
-    return throwError(error || 'server error');
+    return throwError(() => new Error(error || 'server error'));
   }
 
 
