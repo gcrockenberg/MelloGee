@@ -64,7 +64,7 @@ After provisioning the Me infrastructure (below) we'll configure the GitHub envi
 : Container Apps Environment is external. Container Apps restrict access via IP only granting access to APIM. The containers have curl installed for quick API checks but you can toggle Ingress to allow public access. The APIs "talk" to each other and to Azure Key Vault. APIM connects to the Container Apps as Backend Services.
 
 ### Working on 
-- [Angular UI work in progress](https://stmedev.z13.web.core.windows.net)
+- [Angular UI and API work in progress](https://stmedev.z13.web.core.windows.net)
 
 ### TO DO
 - Implement semantic-release versioning for modules, update CDN cache strategy which is currently turned off for dev

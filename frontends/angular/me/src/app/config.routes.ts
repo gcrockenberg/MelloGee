@@ -4,9 +4,8 @@ import { LoginComponent } from './pages/login/login.component';
 import { MainComponent } from './pages/main/main.component';
 import { DeleteMyDataComponent } from './pages/delete-my-data/delete-my-data.component';
 import { PrivacyComponent } from './pages/privacy/privacy.component';
-import { CategoryComponent } from './pages/category/category.component';
-import { CoffeeComponent } from './pages/coffee/coffee.component';
 import { SecureComponent } from './pages/secure/secure.component';
+import { CatalogComponent } from './pages/catalog/catalog.component';
 
 export const routes: Routes = [
     {
@@ -14,12 +13,8 @@ export const routes: Routes = [
         component: MainComponent
     },
     {
-        path: 'category',
-        component: CategoryComponent
-    },
-    {
-        path: 'coffee',
-        component: CoffeeComponent
+        path: 'catalog',
+        component: CatalogComponent
     },
     {
         path: 'secure',

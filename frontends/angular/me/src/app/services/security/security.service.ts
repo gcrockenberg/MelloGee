@@ -7,7 +7,7 @@ import { environment } from 'src/environments/environment';
 
 
 /**
- * TODO: Configure msalAuth to ALWAYS ask which account to use. Do not defult to the currently logged in user.
+ * TODO: Configure msalAuth to ALWAYS ask which account to use. Do not default to the currently logged in user.
  */
 @Injectable({
   providedIn: 'root'

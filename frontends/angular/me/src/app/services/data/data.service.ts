@@ -12,14 +12,14 @@ export class DataService {
     private _http: HttpClient
   ) { }
 
-  get(url: string, params?: any): Observable<Response> {
+  get<Type>(url: string, params?: any): Observable<Type> {
     let options = {};
     //this.setHeaders(options);
 
-    return this._http.get<Response>(url, options)
+    return this._http.get<Type>(url, options)
       .pipe(
         // retry(3), // retry a failed request up to 3 times
-        tap((response: Response) => {
+        tap((response: Type) => {
           return response;
         }),
         catchError(this.handleError)

@@ -12,30 +12,34 @@ export class ConfigurationService {
   serverSettings!: IConfiguration;
 
   // observable that is fired when settings are loaded from server
-  private _settingsLoadedSource = new Subject<void>();
+  private _settingsLoadedSource = new Subject<any>();
   settingsLoaded$ = this._settingsLoadedSource.asObservable();
   isReady: boolean = false;
 
-  constructor(private http: HttpClient, private storageService: StorageService) { }
+  constructor(private _http: HttpClient, private _storageService: StorageService) {
+    this.load();
+  }
 
   load() {
     const baseURI = document.baseURI.endsWith('/') ? document.baseURI : `${document.baseURI}/`;
     let url = `${baseURI}config.me.json`;
 
-    return this.http.get(url)
-      .pipe(
-        tap((response) => {
+    return this._http.get(url)
+      .subscribe({
+        next: (response) => {
           this.serverSettings = response as IConfiguration;
-          this.storageService.store(Constants.IDENTITY_URL, this.serverSettings.identityUrl);
-          this.storageService.store(Constants.PURCHASE_URL, this.serverSettings.purchaseUrl);
-          this.storageService.store(Constants.SIGNAL_R_HUB_URL, this.serverSettings.signalrHubUrl);
-          this.storageService.store(Constants.ACTIVATE_CAMPAIGN_DETAIL_FUNCTION, this.serverSettings.activateCampaignDetailFunction);
-          
+          this._storageService.store(Constants.IDENTITY_URL, this.serverSettings.identityUrl);
+          this._storageService.store(Constants.PURCHASE_URL, this.serverSettings.purchaseUrl);
+          this._storageService.store(Constants.SIGNAL_R_HUB_URL, this.serverSettings.signalrHubUrl);
+          this._storageService.store(Constants.ACTIVATE_CAMPAIGN_DETAIL_FUNCTION, this.serverSettings.activateCampaignDetailFunction);
+
           this.isReady = true;
-          this._settingsLoadedSource.next();
-        }),
-        catchError(this.handleError('--> load configuration'))
-      );
+          this._settingsLoadedSource.next(response);
+        },
+        error: (error) => {
+          this.handleError('load');
+        }
+      });
   }
 
   /**
