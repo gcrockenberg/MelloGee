@@ -9,7 +9,7 @@ A personal project to provide backend and frontend examples of a microservice ba
 - GitHub Actions CI/CD
 - [AAD B2C](https://learn.microsoft.com/en-us/azure/active-directory-b2c/) - Customer identity access management (CIAM). This infrastructure is not part of automated provisioning. It requires manual provision and config.
 
-![Me architecture](images/Me%20Architecture.png)
+![Me architecture](Images/Me%20Architecture.png)
 
 ## Notes
 These steps were established on my Windows 10 machine.

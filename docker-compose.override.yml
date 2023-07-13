@@ -28,8 +28,8 @@ services:
   catalog-api:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - Kestrel__Endpoints__HTTP__Url=http://0.0.0.0:80
-      - Kestrel__Endpoints__GRPC__Url=http://0.0.0.0:81
+      - Kestrel__Endpoints__HTTP__Url=http://+:80
+      - Kestrel__Endpoints__GRPC__Url=http://+:81
       - Kestrel__Endpoints__GRPC__Protocols=Http2
 #      - ConnectionStrings__CatalogDb=${ME_AZURE_CATALOG_DB:-Server=sqldata;Database=Me.Services.CatalogDb;User Id=sa;Password=Pass@word;Encrypt=False;TrustServerCertificate=true}
 #      - ConnectionStrings__EventBus=${ME_AZURE_SERVICE_BUS:-rabbitmq}

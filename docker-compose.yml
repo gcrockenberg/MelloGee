@@ -5,8 +5,8 @@ version: '3.4'
 services:
 # Explore switching to self-hosted App Gateway for local dev
 # https://learn.microsoft.com/en-us/azure/api-management/self-hosted-gateway-overview
-  mg-envoygateway:
-    image: mg-envoygateway
+  envoygateway:
+    image: envoygateway
     build: 
       context: .
       dockerfile: Gateways/Envoy/Dockerfile
@@ -47,6 +47,7 @@ services:
         reservations:
           memory: 64MB
     memswap_limit: 128MB
+
   coffeeapi:
     image: coffeeapi
     build:
