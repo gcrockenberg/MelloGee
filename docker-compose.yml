@@ -21,15 +21,25 @@ services:
         reservations:
           memory: 64MB
     memswap_limit: 128MB
+
+  catalog-api:
+    image: catalog-api
+    build:
+      context: .
+      dockerfile: Services/Catalog/Catalog.API/Dockerfile
+    deploy:
+      resources:
+        limits:
+          memory: 128MB
+        reservations:
+          memory: 64MB
+    memswap_limit: 128MB
+
   catalogapi:
     image: catalogapi
     build:
       context: .
       dockerfile: Services/CatalogService/Dockerfile
-# Direct, external access to API within composed environment
-    ports:
-      - 8080:80
-      - 8081:443
     deploy:
       resources:
         limits:
@@ -42,28 +52,6 @@ services:
     build:
       context: .
       dockerfile: Services/Coffee/Coffee.API/Dockerfile
-# Hide direct external access to the container
-# Gateway provides routed access within the composed environment
-#    ports:
-#      - 8082:80
-#      - 8083:443
-    deploy:
-      resources:
-        limits:
-          memory: 128MB
-        reservations:
-          memory: 64MB
-    memswap_limit: 128MB
-  teaapi:
-    image: teaapi
-    build:
-      context: .
-      dockerfile: Services/Tea/Tea.API/Dockerfile
-# Hide direct external access to the container
-# Gateway provides routed access within the composed environment
-#    ports:
-#      - 8084:80
-#      - 8085:443
     deploy:
       resources:
         limits:
