@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../../services/auth/auth.service';
 import { Router } from '@angular/router';
-import { InputComponent } from "../../components/input/input.component";
+import { InputComponent } from "../../shared/components/input/input.component";
 
 @Component({
     selector: 'app-login',

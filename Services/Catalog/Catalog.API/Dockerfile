@@ -16,7 +16,7 @@ RUN dotnet restore "Services/Catalog/Catalog.API/Catalog.API.csproj"
 COPY . .
 WORKDIR /src/Services/Catalog/Catalog.API
 RUN dotnet publish --no-restore -c Release -o /app
-
+COPY "Services/Catalog/Catalog.API/Pics" "/app/Pics"
 FROM build AS publish
 
 FROM base AS final

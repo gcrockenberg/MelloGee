@@ -6,6 +6,7 @@ public static class PicApi
         return routes.MapGet("api/v1/catalog/items/{catalogItemId:int}/pic",
             async (int catalogItemId, CatalogContext db, IWebHostEnvironment environment) =>
         {
+            Console.WriteLine($"Get pic for item: {catalogItemId}");
             var item = await db.CatalogItems.FindAsync(catalogItemId);
 
             if (item is null)

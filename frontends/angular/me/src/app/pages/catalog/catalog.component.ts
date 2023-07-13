@@ -8,21 +8,30 @@ import { ICatalog } from 'src/app/models/catalog/catalog.model';
 import { IPager } from 'src/app/models/utils/pager.model';
 import { ICatalogBrand } from 'src/app/models/catalog/catalog-brand.model';
 import { ICatalogType } from 'src/app/models/catalog/catalog-type.model';
+import { PagerComponent } from "../../shared/components/pager/pager.component";
+import { ICatalogItem } from 'src/app/models/catalog/catalog-item.model';
 
 @Component({
   selector: 'app-catalog',
   standalone: true,
-  imports: [CommonModule],
   templateUrl: './catalog.component.html',
-  styleUrls: ['./catalog.component.scss']
+  styleUrls: ['./catalog.component.scss'],
+  imports: [CommonModule, PagerComponent]
 })
 export class CatalogComponent implements OnInit {
   authenticated: boolean = false;
   errorReceived: boolean = false;
-  catalog!: ICatalog;
+  catalog: ICatalog = {
+    count: 0,
+    data: [],
+    pageIndex: 0,
+    pageSize: 0
+  };
   paginationInfo!: IPager;
   brands!: ICatalogBrand[];
   types!: ICatalogType[];
+  brandSelected!: number | null;
+  typeSelected!: number | null;
 
   constructor(
     private _catalogService: CatalogService,
@@ -47,6 +56,14 @@ export class CatalogComponent implements OnInit {
     // });
   }
 
+
+  addToCart(item: ICatalogItem) {
+    if (!this.authenticated) {
+      return;
+    }
+    console.log("--> addToCart():", item);
+    //this.basketService.addItemToBasket(item);
+  }
 
   loadData() {
     this.getBrands();
@@ -91,8 +108,38 @@ export class CatalogComponent implements OnInit {
           totalPages: Math.ceil(catalog.count / catalog.pageSize),
           items: catalog.pageSize
         };
-        console.log("--> loaded tems: ", this.paginationInfo.items);
+        console.log("--> loaded items: ", this.catalog.data);
       });
+  }
+
+
+  onBrandFilterChanged(event: any) {
+    event.preventDefault();
+    this.brandSelected = event.target.value;
+  }
+
+
+  onFilterApplied(event: any) {
+    event.preventDefault();
+
+    this.brandSelected = this.brandSelected && this.brandSelected.toString() != "null" ? this.brandSelected : null;
+    this.typeSelected = this.typeSelected && this.typeSelected.toString() != "null" ? this.typeSelected : null;
+    this.paginationInfo.actualPage = 0;
+    this.getCatalog(this.paginationInfo.itemsPage, this.paginationInfo.actualPage, this.brandSelected!, this.typeSelected!);
+  }
+
+
+  onPageChanged(value: any) {
+    console.log('catalog pager event fired' + value);
+    //    event.preventDefault();
+    this.paginationInfo.actualPage = value;
+    this.getCatalog(this.paginationInfo.itemsPage, value);
+  }
+
+
+  onTypeFilterChanged(event: any) {
+    event.preventDefault();
+    this.typeSelected = event.target.value;
   }
 
 
