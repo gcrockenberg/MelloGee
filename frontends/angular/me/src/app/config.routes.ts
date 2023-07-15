@@ -6,6 +6,7 @@ import { DeleteMyDataComponent } from './pages/delete-my-data/delete-my-data.com
 import { PrivacyComponent } from './pages/privacy/privacy.component';
 import { SecureComponent } from './pages/secure/secure.component';
 import { CatalogComponent } from './pages/catalog/catalog.component';
+import { ProfileComponent } from './pages/profile/profile.component';
 
 export const routes: Routes = [
     {
@@ -26,6 +27,10 @@ export const routes: Routes = [
     {
         path: 'login',
         component: LoginComponent
+    },
+    {
+        path: 'profile',
+        component: ProfileComponent
     },
     {
         // Needed for handling redirect after login

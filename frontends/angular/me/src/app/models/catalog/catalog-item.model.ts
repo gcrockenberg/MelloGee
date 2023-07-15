@@ -1,12 +1,12 @@
 export interface ICatalogItem {
     id: number;
     name: string;
-    description: string;
+    description: string | undefined;
     price: number;
     pictureUri: string;
     catalogBrandId: number;
-    catalogBrand: string;
+    catalogBrand: string | undefined;
     catalogTypeId: number;
-    catalogType: string;
+    catalogType: string | undefined;
     units: number;
 }

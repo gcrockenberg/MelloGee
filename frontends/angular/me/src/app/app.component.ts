@@ -2,6 +2,7 @@ import { NgIf } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { HeaderComponent } from "./shared/components/header/header.component";
+import { NavbarComponent } from "./shared/components/navbar/navbar.component";
 
 
 @Component({
@@ -12,7 +13,8 @@ import { HeaderComponent } from "./shared/components/header/header.component";
     imports: [
         NgIf,
         RouterOutlet,
-        HeaderComponent
+        HeaderComponent,
+        NavbarComponent
     ]
 })
 export class AppComponent implements OnInit { // OnDestroy {

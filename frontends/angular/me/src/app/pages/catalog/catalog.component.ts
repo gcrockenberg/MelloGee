@@ -10,13 +10,15 @@ import { ICatalogBrand } from 'src/app/models/catalog/catalog-brand.model';
 import { ICatalogType } from 'src/app/models/catalog/catalog-type.model';
 import { PagerComponent } from "../../shared/components/pager/pager.component";
 import { ICatalogItem } from 'src/app/models/catalog/catalog-item.model';
+import { CatalogItemsComponent } from "../../components/catalog-items/catalog-items.component";
+import { CatalogItemModalComponent } from "../../components/catalog-item-modal/catalog-item-modal.component";
 
 @Component({
-  selector: 'app-catalog',
-  standalone: true,
-  templateUrl: './catalog.component.html',
-  styleUrls: ['./catalog.component.scss'],
-  imports: [CommonModule, PagerComponent]
+    selector: 'app-catalog',
+    standalone: true,
+    templateUrl: './catalog.component.html',
+    styleUrls: ['./catalog.component.scss'],
+    imports: [CommonModule, PagerComponent, CatalogItemsComponent, CatalogItemModalComponent]
 })
 export class CatalogComponent implements OnInit {
   authenticated: boolean = false;
