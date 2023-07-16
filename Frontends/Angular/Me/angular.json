@@ -38,6 +38,11 @@
                 "glob": "config.me.json",
                 "input": ".",
                 "output": "/"
+              },
+              {
+                "glob": "staticwebapp.config.json",
+                "input": ".",
+                "output": "/"
               }
             ],
             "styles": [
@@ -121,6 +126,11 @@
               "src/assets",
               {
                 "glob": "config.me.json",
+                "input": ".",
+                "output": "/"
+              },
+              {
+                "glob": "staticwebapp.config.json",
                 "input": ".",
                 "output": "/"
               }
