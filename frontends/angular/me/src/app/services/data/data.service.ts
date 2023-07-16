@@ -3,6 +3,10 @@ import { Injectable } from '@angular/core';
 import { Observable, catchError, tap, throwError } from 'rxjs';
 import { SecurityService } from '../security/security.service';
 
+/**
+ * Angular Universal SSR does not support http calls from the server
+ * If using SSR wrap http calls with 'if (typeof window !== "undefined") so they don't execute on the server
+ */
 @Injectable({
   providedIn: 'root'
 })

@@ -73,7 +73,8 @@
                     </p>
 
                     <div class="flex flex-row mt-4 gap-2 items-center">
-                        <p class="text-white text-[10px] lg:text-sm">{{item.price}}</p>
+                        <!-- https://en.wikipedia.org/wiki/ISO_4217 -->
+                        <p class="text-white text-[10px] lg:text-sm">{{item.price | currency : 'USD' : true}}</p>
                     </div>
                     <div class="flex flex-row mt-4 gap-2 items-center">
                         <p class="text-white text-[10px] lg:text-sm">{{item.name}}</p>

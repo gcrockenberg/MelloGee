@@ -7,6 +7,8 @@ import { PrivacyComponent } from './pages/privacy/privacy.component';
 import { SecureComponent } from './pages/secure/secure.component';
 import { CatalogComponent } from './pages/catalog/catalog.component';
 import { ProfileComponent } from './pages/profile/profile.component';
+import { ThreeDComponent } from './pages/3D/three-d/three-d.component';
+import { NotFoundComponent } from './pages/not-found/not-found/not-found.component';
 
 export const routes: Routes = [
     {
@@ -16,6 +18,10 @@ export const routes: Routes = [
     {
         path: 'catalog',
         component: CatalogComponent
+    },
+    {
+        path: '3D',
+        component: ThreeDComponent
     },
     {
         path: 'secure',
@@ -53,6 +59,11 @@ export const routes: Routes = [
         path: 'tos',
         loadComponent: () => import('./pages/tos/tos.component')
             .then((mod) => mod.TosComponent)
-    }
+    },
+    // Without wild card not found the home page will be loaded on bad routes
+    // {
+    //     path: '**',
+    //     component: NotFoundComponent
+    // }
 
 ];

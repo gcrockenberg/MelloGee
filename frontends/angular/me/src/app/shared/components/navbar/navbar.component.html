@@ -8,7 +8,7 @@
         items-center
         transition
         duration-500        
-        {{ showBackground ? 'bg-zinc-900 bg-opacity-90' : ''}}">
+        {{ showBackground() ? 'bg-zinc-900 bg-opacity-90' : '' }}">
         <a href="/">
             <img class="object-cover w-24 h-24 rounded-full border-2 border-zinc-800"
                 src="assets/images/GerardAvatarPray.png" alt="avatar">
@@ -19,18 +19,17 @@
             gap-7
             hidden
             lg:flex">
-            <app-navbar-item label="Home" href="/" />
-            <app-navbar-item label="Catalog" href="#/catalog" />
-            <app-navbar-item label="3D" />
-            <app-navbar-item label="Secure" href="#/secure" />
+            <app-navbar-item label="Catalog" href="/catalog" />
+            <app-navbar-item label="3D" href="/3D" />
+            <app-navbar-item label="Secure" href="/secure" />
         </div>
 
         <!-- Mobile -->
         <div (click)="setShowMobileMenu()"
             class="lg:hidden flex flex-row items-center gap-2 ml-8 cursor-pointer relative">
             <p class="text-white text-sm">Browse</p>
-            <ng-icon class="text-white transition {{ showMobileMenu ? 'rotate-180' : 'rotate-0' }}" name="bootstrapChevronDown" />
-            <app-mobile-menu [visible]="showMobileMenu" />
+            <ng-icon class="text-white transition {{ showMobileMenu() ? 'rotate-180' : 'rotate-0' }}" name="bootstrapChevronDown" />
+            <app-mobile-menu [visible]="showMobileMenu()" />
         </div>
         <!--End Mobile-->
 
@@ -45,8 +44,8 @@
                 <div class="w-6 h-6 lg:w-10 lg:h-10 rounded-md overflow-hidden">
                     <img src="/assets/images/default-blue.png" alt="Profile">
                 </div>
-                <ng-icon class="text-white transition {{ showAccountMenu ? 'rotate-180' : 'rotate-0' }}" name="bootstrapChevronDown" />
-                <app-account-menu [visible]="showAccountMenu" />
+                <ng-icon class="text-white transition {{ showAccountMenu() ? 'rotate-180' : 'rotate-0' }}" name="bootstrapChevronDown" />
+                <app-account-menu [visible]="showAccountMenu()" />
             </div>
         </div>
     </div>

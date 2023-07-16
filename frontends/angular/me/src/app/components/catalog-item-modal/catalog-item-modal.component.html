@@ -1,4 +1,4 @@
-<div *ngIf="isOpen" (click)="modalService.close()" class="
+<div *ngIf="isOpen()" (click)="modalService.close()" class="
     z-50 
     transition 
     duration-300 
@@ -58,10 +58,10 @@
                         lg:text-5xl
                         font-bold
                         mb-80">
-                        {{item?.name}}
+                        {{item.name}}
                     </p>
                     <div class="flex flex-row gap-4 items-center">
-                        <app-button-add-to-cart [itemId]="item?.id" />
+                        <app-button-add-to-cart [itemId]="item.id" />
                     </div>
                 </div>
             </div>
@@ -71,16 +71,16 @@
                     New
                 </p>
                 <p class="text-white text-lg">
-                    {{item?.price ?? 'price'}}
+                    {{item.price | currency : 'USD' : true}}
                 </p>
                 <p class="text-white text-lg">
-                    {{item?.description ?? 'description'}}
+                    {{item.description ?? 'description'}}
                 </p>
                 <p class="text-white text-lg">
-                    {{item?.catalogType ?? 'type'}}
+                    {{item.catalogType ?? 'type'}}
                 </p>
                 <p class="text-white text-lg">
-                    {{item?.catalogBrand ?? 'brand'}}
+                    {{item.catalogBrand ?? 'brand'}}
                 </p>
             </div>
 

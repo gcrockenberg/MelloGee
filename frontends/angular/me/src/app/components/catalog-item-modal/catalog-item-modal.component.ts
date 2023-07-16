@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, WritableSignal, signal } from '@angular/core';
 import { CommonModule, NgIf } from '@angular/common';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { bootstrapBagPlus, bootstrapXLg } from "@ng-icons/bootstrap-icons"
@@ -17,14 +17,12 @@ import { ICatalogItem } from 'src/app/models/catalog/catalog-item.model';
 })
 export class CatalogItemModalComponent implements IModal, OnInit, OnDestroy {
   @Input() id!: string;
-  isOpen: boolean = false;
+  isOpen: WritableSignal<boolean> = signal(false);
 
   item!: ICatalogItem;
   private _element: any;
 
-  constructor(public modalService: ModalService, private el: ElementRef) {
-    this._element = el;
-  }
+  constructor(public modalService: ModalService) { }
 
 
   ngOnInit() {
@@ -34,12 +32,12 @@ export class CatalogItemModalComponent implements IModal, OnInit, OnDestroy {
 
 
   open() {
-    this.isOpen = true;
+    this.isOpen.set(true);
   }
 
 
   close() {
-    this.isOpen = false;
+    this.isOpen.set(false);
   }
 
 
@@ -51,9 +49,6 @@ export class CatalogItemModalComponent implements IModal, OnInit, OnDestroy {
   ngOnDestroy(): void {
     // remove self from modal service
     this.modalService.remove(this);
-
-    // remove modal element from html
-    this._element.remove();
   }
 
 }

@@ -3,8 +3,11 @@ import { Component, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { HeaderComponent } from "./shared/components/header/header.component";
 import { NavbarComponent } from "./shared/components/navbar/navbar.component";
+import { BrowserUtils } from '@azure/msal-browser';
 
-
+/**
+ * Root bootstrap component instead of module
+ */
 @Component({
     selector: 'app-root',
     standalone: true,
@@ -26,7 +29,13 @@ export class AppComponent implements OnInit { // OnDestroy {
 
 
   ngOnInit(): void {
-    this.isIframe = window !== window.parent && !window.opener;
+    // Angular Universal does not support browser global obects on the server
+    if (typeof window !== "undefined") {  // Safety check
+      this.isIframe = window !== window.parent && !window.opener; 
+    }
+    console.log(`IsInIFrame: ${this.isIframe}`);
+    console.log(`IsInIFrame from Msal: ${BrowserUtils.isInIframe()}`);
+    console.log(`IsInPopup: ${BrowserUtils.isInPopup()}`);
   }
 
 }

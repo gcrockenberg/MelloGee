@@ -1,3 +1,4 @@
 <div class="text-white cursor-pointer hover:text-gray-300 transition">
-   <a [href]="href">{{ label }}</a>
+   <!-- <a [href]="href">{{ label }}</a> -->
+   <a routerLink="{{href}}" routerLinkActive="underline" ariaCurrentWhenActive="page" [routerLinkActiveOptions]="{exact: true}">{{ label }}</a>
 </div>

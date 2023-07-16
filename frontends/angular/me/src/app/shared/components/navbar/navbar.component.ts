@@ -1,4 +1,4 @@
-import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
+import { Component, HostListener, OnDestroy, OnInit, WritableSignal, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NavbarItemComponent } from "../navbar-item/navbar-item.component";
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
@@ -23,9 +23,9 @@ const TOP_OFFSET: number = 66;
     ]
 })
 export class NavbarComponent implements OnDestroy, OnInit {
-    showMobileMenu: boolean = false;
-    showAccountMenu: boolean = false;
-    showBackground: boolean = false;
+    showMobileMenu: WritableSignal<boolean> = signal(false);
+    showAccountMenu: WritableSignal<boolean> = signal(false);
+    showBackground: WritableSignal<boolean> = signal(false);
 
     constructor() { }
 
@@ -36,17 +36,17 @@ export class NavbarComponent implements OnDestroy, OnInit {
 
     @HostListener('window:scroll', [])
     handleScroll() {
-        this.showBackground = (window.scrollY > TOP_OFFSET);
+        this.showBackground.set(window.scrollY > TOP_OFFSET);
     }
 
 
     setShowAccountMenu() {
-        this.showAccountMenu = !this.showAccountMenu;
+        this.showAccountMenu.set(!this.showAccountMenu());
     }
 
 
     setShowMobileMenu() {
-        this.showMobileMenu = !this.showMobileMenu;
+        this.showMobileMenu.set(!this.showMobileMenu());
     }
 
 
