@@ -4,8 +4,8 @@ on:
   push:
     branches:
       - main
-    paths:
-      - Frontends/Angular/Me**
+#    paths:
+#      - Frontends/Angular/Me**
 #  pull_request:
 #    types: [opened, synchronize, reopened, closed]
 #    branches:
