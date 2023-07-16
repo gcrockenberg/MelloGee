@@ -130,7 +130,6 @@ module containerAppModule 'modules/containerApps.bicep' = [for (microservice, in
 module githubActionsModule 'modules/githubActions.bicep' = {
   name: 'githubActionsTemplate'
   params: {
-    containerAppManagedEnvironmentName: containerAppsManagedEnvironment.name
     environmentType: environmentType
     githubOrganizationOrUsername: githubOrganizationOrUsername
     location: location
@@ -139,14 +138,18 @@ module githubActionsModule 'modules/githubActions.bicep' = {
 }
 
 
-module storageWebsiteHostingModule 'modules/storageWebsiteHosting.bicep' = {
-  name: 'storageWebsiteHostingTemplate'
-  params: {
-    environmentType: environmentType
-    location: location
-    solutionName: solutionName
-  }
-}
+
+// Angular SPA routing requires more from server than pure static hosting
+// Switched to static web app
+// @description('Static web site hosted from Blob storage')
+// module storageWebsiteHostingModule 'modules/storageWebsiteHosting.bicep' = {
+//   name: 'storageWebsiteHostingTemplate'
+//   params: {
+//     environmentType: environmentType
+//     location: location
+//     solutionName: solutionName
+//   }
+// }
 
 
 // Putting micro-frontend on hold to focus on a pure, full-bleed Angular solution
