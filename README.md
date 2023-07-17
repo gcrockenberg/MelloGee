@@ -61,9 +61,9 @@ After provisioning the Me infrastructure (below) we'll configure the GitHub envi
 
 **Testing**
 - Verify the .github/*.yml env variables match your configuration
-- You might want to comment out "on: push: paths:" from GitHub yml files to force all CI/CD to run
+- You might want to comment out "on: push: paths:" from GitHub yml files to force CI/CD to run
 - Test APIs that were imported into APIM
-- Open Container App console in Azure portal and curl the APIs, view the logs. They are configured to scale to 0. You can an APIM call to wake them.
+- Open Container App console in Azure portal and curl the APIs, view the logs. They are configured to scale to 0. You can make an APIM call to wake them.
 - Navigate to your static web app.
 
 **That's it so far**
