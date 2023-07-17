@@ -20,7 +20,8 @@ These steps were established on my Windows 10 machine.
 1. docker-compose up
 2. cd Frontends/Angular/Me
 3. npm install
-4. npm run swa
+4. npm run start (for Node server)
+5. npm run swa   (for Azure Static Web App emulator)
 
 ### Azure
 **Prereqs**
