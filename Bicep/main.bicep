@@ -32,7 +32,7 @@ param githubOrganizationOrUsername string
 @description('The Container App microservices')
 var microservices = [
   {
-    apiPath: 'catalog'
+    apiPath: 'c'
     connectKeyVault: false
     containerAppName: '${solutionName}-catalog-api'
     dockerImageName: '${dockerHubUsername}/catalog-api:latest'
