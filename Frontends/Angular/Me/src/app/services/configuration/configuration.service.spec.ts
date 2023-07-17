@@ -1,7 +1,7 @@
 import { ConfigurationService } from './configuration.service';
 import { HttpClient } from '@angular/common/http';
 import { StorageService } from '../storage/storage.service';
-import config from '../../../../config.me.json';
+import config from 'src/assets.dev/config.me.json';
 import { asyncData } from 'src/app/testing/async-observable-helpers';
 
 describe('ConfigurationService', () => {
