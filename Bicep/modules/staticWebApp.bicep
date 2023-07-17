@@ -1,3 +1,11 @@
+/*
+  SYNOPSIS: Me
+  DESCRIPTION: Provision the Me Azure Static Web App to host the Angular SPA
+  https://learn.microsoft.com/en-us/shows/azure-tips-and-tricks-static-web-apps/how-to-configure-routing-in-azure-static-web-apps-6-of-16--azure-tips-and-tricks-static-web-apps
+  VERSION: 1.0.0
+  OWNER TEAM: Gerard C.
+*/
+
 param solutionName string
 
 // NOTE: Static Web App not available in eastus

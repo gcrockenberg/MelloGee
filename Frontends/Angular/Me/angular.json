@@ -68,6 +68,10 @@
                 {
                   "replace": "src/environments/environment.ts",
                   "with": "src/environments/environment.prod.ts"
+                },
+                {
+                  "replace": "config.me.json",
+                  "with": "config.me.prod.json"
                 }
               ],
               "outputHashing": "all"
@@ -83,6 +87,10 @@
                 {
                   "replace": "src/environments/environment.ts",
                   "with": "src/environments/environment.dev.ts"
+                },
+                {
+                  "replace": "config.me.json",
+                  "with": "config.me.dev.json"
                 }
               ]
             }
@@ -114,6 +122,10 @@
               {
                 "replace": "src/environments/environment.ts",
                 "with": "src/environments/environment.prod.ts"
+              },
+              {
+                "replace": "config.me.json",
+                "with": "config.me.dev.json"
               }
             ],
             "polyfills": [

@@ -15,6 +15,13 @@ A personal project to provide backend and frontend examples of a microservice ba
 These steps were established on my Windows 10 machine.
 
 ## Steps for using Me
+
+### Local
+1. docker-compose up
+2. cd Frontends/Angular/Me
+3. npm install
+4. npm run swa
+
 ### Azure
 **Prereqs**
 : Deploying Me to Azure requires:
@@ -47,6 +54,7 @@ After provisioning the Me infrastructure (below) we'll configure the GitHub envi
 - DOCKERHUB_USERNAME
 - AZURE_SUBSCRIPTION_ID - Azure Container App Revisions will pull images from Docker (Supports OIDC login)
 - AZURE_TENANT_ID - (Supports OIDC login)
+- [STATIC_WEB_APP_DEPLOY_TOKEN](https://learn.microsoft.com/en-us/azure/static-web-apps/deployment-token-management)
 
 **GitHub Actions CI/CD Environment Secrets (dev)**
 : The following Environment Secrets support the beginning of CI/CD dev/prod isolation

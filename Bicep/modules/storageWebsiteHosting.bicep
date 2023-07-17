@@ -1,6 +1,6 @@
 /*
   SYNOPSIS: Me
-  DESCRIPTION: Provision the Me single-spa static web hosting infrastructure
+  DESCRIPTION: Provision the Me single-spa static web into Azure Blob static web site hosting
   VERSION: 1.0.0
   OWNER TEAM: Gerard C.
 */

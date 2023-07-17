@@ -4,12 +4,15 @@ on:
   push:
     branches:
       - main
-#    paths:
-#      - Frontends/Angular/Me**
+    paths:
+      - Frontends/Angular/Me**
 #  pull_request:
 #    types: [opened, synchronize, reopened, closed]
 #    branches:
 #      - main
+
+env:
+  APP_LOCATION: /Frontends/Angular/Me
 
 jobs:
   build_and_deploy_job:
@@ -29,7 +32,8 @@ jobs:
           action: "upload"
           ###### Repository/Build Configurations - These values can be configured to match your app requirements. ######
           # For more information regarding Static Web App workflow configurations, please visit: https://aka.ms/swaworkflowconfig
-          app_location: "/Frontends/Angular/Me" # App source code path
+          app_build_command: ng build --configuration production
+          app_location: ${{ env.APP_LOCATION }} # App source code path
           api_location: "api" # Api source code path - optional
           output_location: "dist/me" # Built app content directory - optional
           ###### End of Repository/Build Configurations ######
@@ -43,6 +47,7 @@ jobs:
         id: closepullrequest
         uses: Azure/static-web-apps-deploy@v1
         with:
+          app_location: ${{ env.APP_LOCATION }} # App source code path
           azure_static_web_apps_api_token: ${{ secrets.STATIC_WEB_APP_DEPLOY_TOKEN }}
           action: "close"
       

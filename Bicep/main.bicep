@@ -32,6 +32,12 @@ param githubOrganizationOrUsername string
 @description('The Container App microservices')
 var microservices = [
   {
+    apiPath: 'catalog'
+    connectKeyVault: false
+    containerAppName: '${solutionName}-catalog-api'
+    dockerImageName: '${dockerHubUsername}/catalog-api:latest'
+  }
+  {
     apiPath: 'cof'
     connectKeyVault: false
     containerAppName: '${solutionName}-coffee-api'
@@ -40,7 +46,7 @@ var microservices = [
   {
     apiPath: 'cat'
     connectKeyVault: true
-    containerAppName: '${solutionName}-catalog-api'
+    containerAppName: '${solutionName}-catalogapi'
     dockerImageName: '${dockerHubUsername}/catalogapi:latest'
   }
 ]
@@ -88,14 +94,14 @@ resource containerAppsManagedEnvironment 'Microsoft.App/managedEnvironments@2022
 }
 
 
-module apiManagementGateway 'modules/apiManagementGateway.bicep' = {
-  name: 'apiManagementTemplate'
-  params: {
-    environmentType: environmentType
-    location: location
-    solutionName: solutionName
-  }
-}
+// module apiManagementGateway 'modules/apiManagementGateway.bicep' = {
+//   name: 'apiManagementTemplate'
+//   params: {
+//     environmentType: environmentType
+//     location: location
+//     solutionName: solutionName
+//   }
+// }
 
 
 @description('Key Vault to demo connectivity from Container App')
@@ -112,8 +118,9 @@ module keyVaultForSolution 'modules/keyVault.bicep' = {
 module containerAppModule 'modules/containerApps.bicep' = [for (microservice, index) in microservices: {
   name: 'containerApp-${index}'
   params: {
-    apimIpAddress: apiManagementGateway.outputs.ipAddress
-    apimName: apiManagementGateway.outputs.name
+    //apimIpAddress: apiManagementGateway.outputs.ipAddress
+    //apimName: apiManagementGateway.outputs.name
+    apimName: 'me-dev'
     apiPath: microservice.apiPath
     connectKeyVault: microservice.connectKeyVault
     containerAppName: microservice.containerAppName
@@ -137,6 +144,13 @@ module githubActionsModule 'modules/githubActions.bicep' = {
   }
 }
 
+
+module staticWebAppModule 'modules/staticWebApp.bicep' = {
+  name: 'staticWebAppTemplate'
+  params: {
+    solutionName: solutionName
+  }
+}
 
 
 // Angular SPA routing requires more from server than pure static hosting

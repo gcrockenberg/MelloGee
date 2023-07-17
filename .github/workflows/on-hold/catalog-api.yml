@@ -4,7 +4,7 @@ on:
     branches:
     - main
     paths:
-    - Services/Catalog/Catalog.API**
+    - Services/CatalogService**
 # Permission to support Azure login using OIDC
 permissions:
   id-token: write
@@ -14,8 +14,8 @@ env:
   CONTAINER_APP_CONTAINER_NAME: container-main
   CONTAINER_APP_NAME: me-catalog-api
   CONTAINER_REGISTRY_LOGIN_SERVER: registry.hub.docker.com
-  DOCKER_FILE_PATH: Services/Catalog/Catalog.API/Dockerfile
-  PROJECT_NAME_FOR_DOCKER: catalog-api
+  DOCKER_FILE_PATH: Services/CatalogService/Dockerfile
+  PROJECT_NAME_FOR_DOCKER: catalogapi
 jobs:
   build:
     runs-on: ubuntu-latest

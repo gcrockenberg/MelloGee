@@ -3,6 +3,10 @@ WORKDIR /app
 EXPOSE 80
 EXPOSE 443
 
+ENV Kestrel__Endpoints__HTTP__Url=http://+:80
+ENV Kestrel__Endpoints__GRPC__Url=http://+:81
+ENV Kestrel__Endpoints__GRPC__Protocols=Http2
+
 FROM mcr.microsoft.com/dotnet/sdk:8.0.100-preview.6 AS build
 WORKDIR /src
 

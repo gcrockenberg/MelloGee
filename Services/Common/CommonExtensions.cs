@@ -38,7 +38,7 @@ public static class CommonExtensions
 
 //        builder.Services.AddDefaultAuthentication(builder.Configuration);
 
-//        builder.Services.AddDefaultOpenApi(builder.Configuration);
+        builder.Services.AddDefaultOpenApi(builder.Configuration);
 
         // Add the accessor
         builder.Services.AddHttpContextAccessor();

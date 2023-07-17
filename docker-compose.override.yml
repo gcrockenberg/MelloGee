@@ -21,9 +21,9 @@ services:
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
 # Hide direct external access to the container
 # Gateway provides routed access within the composed environment
-#    ports:
-#      - 8082:80
-#      - 8083:443
+    ports:
+      - 8082:80
+      - 8083:443
 
   catalog-api:
     environment:

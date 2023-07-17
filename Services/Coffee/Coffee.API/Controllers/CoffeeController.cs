@@ -21,7 +21,7 @@ public class CoffeeController : ControllerBase
     [HttpGet]
     public ActionResult Get()
     {
-        Console.WriteLine("--> Getting coffee ...");
+        Console.WriteLine($"--> Getting coffee for {Request.HttpContext.Connection.RemoteIpAddress?.ToString()}...");
         var random = new Random();
 
         return Ok(Coffees[random.Next(Coffees.Length)]);

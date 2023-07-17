@@ -18,15 +18,15 @@ param solutionName string
 param environmentType string = 'dev'
 param location string = 'eastus'
 
-param tier string = 'Developer'
-param capacity int = 1
+param tier string = 'Consumption'
+param capacity int = 0
 param adminEmail string = 'gcrockenberg@hotmail.com'
 param organizationName string = 'Myoptyx'
 param customProperties object = {}
 param tagsByResource object = {} 
 var apimName = environmentType == 'dev' ? '${solutionName}-dev' : solutionName
 
-resource apim 'Microsoft.ApiManagement/service@2022-09-01-preview' = {
+resource apim 'Microsoft.ApiManagement/service@2023-03-01-preview' = {
   name: apimName
   location: location
   sku: {
@@ -44,6 +44,6 @@ resource apim 'Microsoft.ApiManagement/service@2022-09-01-preview' = {
   }
 }
 
-output ipAddress string = apim.properties.publicIPAddresses[0]
+//output ipAddress string = apim.properties.publicIPAddresses[0]
 output name string = apim.name
 
