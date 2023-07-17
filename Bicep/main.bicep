@@ -94,14 +94,14 @@ resource containerAppsManagedEnvironment 'Microsoft.App/managedEnvironments@2022
 }
 
 
-// module apiManagementGateway 'modules/apiManagementGateway.bicep' = {
-//   name: 'apiManagementTemplate'
-//   params: {
-//     environmentType: environmentType
-//     location: location
-//     solutionName: solutionName
-//   }
-// }
+module apiManagementGateway 'modules/apiManagementGateway.bicep' = {
+  name: 'apiManagementTemplate'
+  params: {
+    environmentType: environmentType
+    location: location
+    solutionName: solutionName
+  }
+}
 
 
 @description('Key Vault to demo connectivity from Container App')
@@ -118,9 +118,9 @@ module keyVaultForSolution 'modules/keyVault.bicep' = {
 module containerAppModule 'modules/containerApps.bicep' = [for (microservice, index) in microservices: {
   name: 'containerApp-${index}'
   params: {
-    //apimIpAddress: apiManagementGateway.outputs.ipAddress
-    //apimName: apiManagementGateway.outputs.name
-    apimName: 'me-dev'
+    apimIpAddress: apiManagementGateway.outputs.ipAddress
+    apimName: apiManagementGateway.outputs.name
+    //apimName: 'me-dev'
     apiPath: microservice.apiPath
     connectKeyVault: microservice.connectKeyVault
     containerAppName: microservice.containerAppName

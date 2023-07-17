@@ -6,7 +6,7 @@
 */
 
 param apimName string
-//param apimIpAddress string
+param apimIpAddress string
 param apiPath string
 param connectKeyVault bool
 param containerAppName string
@@ -110,14 +110,13 @@ resource containerApp 'Microsoft.App/containerApps@2022-11-01-preview' = {
         stickySessions: {
           affinity: 'none'
         }
-        ipSecurityRestrictions: ipSecurityRestrictions
-        // [
-        //   {
-        //     name: 'allow-apim-access'
-        //     action: 'Allow'
-        //     ipAddressRange: '${apimIpAddress}/32' 
-        //   }
-        // ]
+        ipSecurityRestrictions:[   //ipSecurityRestrictions
+          {
+            name: 'allow-apim-access'
+            action: 'Allow'
+            ipAddressRange: '${apimIpAddress}/32' 
+          }
+        ]
       }
     }
     template: {

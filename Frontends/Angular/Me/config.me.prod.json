@@ -1,6 +1,6 @@
 {
-  "identityUrl": "http://localhost:5223",
+  "identityUrl": "https://me-dev.azure-api.net",
   "purchaseUrl": "https://me-dev.azure-api.net",
-  "signalrHubUrl": "http://localhost:5229",
+  "signalrHubUrl": "https://me-dev.azure-api.net",
   "activateCampaignDetailFunction": false
 }
