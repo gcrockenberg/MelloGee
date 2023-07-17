@@ -34,8 +34,9 @@ app.MapControllers();
 
 // REVIEW: This is done for development east but shouldn't be here in production
 var settings = app.Services.GetService<IOptions<CatalogSettings>>();
-if (settings.Value.InMemoryDatabase)
+if (settings is null || settings.Value.InMemoryDatabase)
 {
+    // Default to InMemDb 
     PrepDb.PrepPopulation(app, app.Logger);
 }
 else

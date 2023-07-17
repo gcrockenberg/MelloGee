@@ -22,7 +22,7 @@ public class CatalogController : ControllerBase
     [ProducesResponseType(typeof(PaginatedItemsViewModel<CatalogItem>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(IEnumerable<CatalogItem>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> ItemsAsync([FromQuery] int pageSize = 10, [FromQuery] int pageIndex = 0, string ids = null)
+    public async Task<IActionResult> ItemsAsync([FromQuery] int pageSize = 10, [FromQuery] int pageIndex = 0, string? ids = null)
     {
         if (!string.IsNullOrEmpty(ids))
         {
@@ -69,16 +69,16 @@ public class CatalogController : ControllerBase
         var baseUri = _settings.PicBaseUrl;
         var azureStorageEnabled = _settings.AzureStorageEnabled;
 
-        item.FillProductUrl(baseUri, azureStorageEnabled: azureStorageEnabled);
-
         if (item != null)
         {
+            item.FillProductUrl(baseUri, azureStorageEnabled: azureStorageEnabled);
+
             return item;
         }
 
         return NotFound();
     }
-    
+
 
     // GET api/v1/[controller]/items/withname/samplename[?pageSize=3&pageIndex=10]
     [HttpGet]
@@ -197,13 +197,13 @@ public class CatalogController : ControllerBase
         if (raiseProductPriceChangedEvent) // Save product's data and publish integration event through the Event Bus if price has changed
         {
             //Create Integration Event to be published through the Event Bus
-//GMC            var priceChangedEvent = new ProductPriceChangedIntegrationEvent(catalogItem.Id, productToUpdate.Price, oldPrice);
+            //GMC            var priceChangedEvent = new ProductPriceChangedIntegrationEvent(catalogItem.Id, productToUpdate.Price, oldPrice);
 
             // Achieving atomicity between original Catalog database operation and the IntegrationEventLog thanks to a local transaction
-//GMC            await _catalogIntegrationEventService.SaveEventAndCatalogContextChangesAsync(priceChangedEvent);
+            //GMC            await _catalogIntegrationEventService.SaveEventAndCatalogContextChangesAsync(priceChangedEvent);
 
             // Publish through the Event Bus and mark the saved event as published
-//GMC            await _catalogIntegrationEventService.PublishThroughEventBusAsync(priceChangedEvent);
+            //GMC            await _catalogIntegrationEventService.PublishThroughEventBusAsync(priceChangedEvent);
         }
         else // Just save the updated product because the Product's Price hasn't changed.
         {

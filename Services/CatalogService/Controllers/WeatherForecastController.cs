@@ -35,7 +35,7 @@ namespace CatalogService.Controllers
             }
             catch (Exception ex)
             {
-                Console.WriteLine("--> Could not get coffee");
+                Console.WriteLine($"--> Could not get coffee: {ex.Message}");
             }
 
             return Enumerable.Range(1, 5).Select(index => new WeatherForecast

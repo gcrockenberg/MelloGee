@@ -6,23 +6,23 @@ public class CatalogItem
 {
     public int Id { get; set; }
 
-    public string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
 
-    public string Description { get; set; }
+    public string Description { get; set; } = string.Empty;
 
     public decimal Price { get; set; }
 
-    public string PictureFileName { get; set; }
+    public string PictureFileName { get; set; } = string.Empty;
 
-    public string PictureUri { get; set; }
+    public string PictureUri { get; set; } = string.Empty;
 
     public int CatalogTypeId { get; set; }
 
-    public CatalogType CatalogType { get; set; }
+    public CatalogType CatalogType { get; set; } = new();
 
     public int CatalogBrandId { get; set; }
 
-    public CatalogBrand CatalogBrand { get; set; }
+    public CatalogBrand CatalogBrand { get; set; } = new();
 
     // Quantity in stock
     public int AvailableStock { get; set; }

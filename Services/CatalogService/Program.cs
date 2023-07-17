@@ -46,7 +46,7 @@ try
 }
 catch (Exception ex)
 {
-    Console.WriteLine("--> KeyVaultTest: Key Vault is unavailable.");
+    Console.WriteLine($"--> KeyVaultTest: Key Vault is unavailable: {ex.Message}");
 }
 
 builder.Services.AddHttpClient<ICoffeeDataClient, HttpCoffeeDataClient>();
@@ -96,7 +96,7 @@ app.Run();
 /// </summary>
 public partial class Program
 {
-    public static string Namespace = typeof(Program).Assembly.GetName().Name;
+    public static string Namespace = typeof(Program).Assembly.GetName().Name ?? string.Empty;
     public static string AppName = Namespace.Substring(Namespace.LastIndexOf('.', Namespace.LastIndexOf('.') - 1) + 1);
 }
 

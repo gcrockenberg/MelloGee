@@ -6,7 +6,11 @@ public static class PrepDb
     {
         using(var serviceScope = app.ApplicationServices.CreateScope())
         {
-            SeedData(serviceScope.ServiceProvider.GetService<CatalogContext>(), logger);
+            CatalogContext? context = serviceScope.ServiceProvider.GetService<CatalogContext>();
+            if (context is not null)
+            {
+                _ = SeedData(context, logger);
+            }
         }        
     }
 

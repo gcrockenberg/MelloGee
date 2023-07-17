@@ -31,7 +31,7 @@ public static class LinqSelectExtensions
 
     public class SelectTryResult<TSource, TResult>
     {
-        internal SelectTryResult(TSource source, TResult result, Exception exception)
+        internal SelectTryResult(TSource source, TResult result, Exception? exception)
         {
             Source = source;
             Result = result;
@@ -40,6 +40,6 @@ public static class LinqSelectExtensions
 
         public TSource Source { get; private set; }
         public TResult Result { get; private set; }
-        public Exception CaughtException { get; private set; }
+        public Exception? CaughtException { get; private set; }
     }
 }

@@ -2,7 +2,7 @@ namespace Me.Services.Catalog.API.Data;
 
 public class CatalogContextSeed
 {
-    public async Task SeedAsync(CatalogContext context, IWebHostEnvironment env, IOptions<CatalogSettings> settings, ILogger<CatalogContextSeed> logger)
+    public async Task SeedAsync(CatalogContext context, IWebHostEnvironment env, IOptions<CatalogSettings> settings, ILogger<CatalogContextSeed>? logger)
     {
         var policy = CreatePolicy(logger, nameof(CatalogContextSeed));
 
@@ -44,7 +44,7 @@ public class CatalogContextSeed
     }
 
 
-    private IEnumerable<CatalogBrand> GetCatalogBrandsFromFile(string contentRootPath, ILogger<CatalogContextSeed> logger)
+    private IEnumerable<CatalogBrand> GetCatalogBrandsFromFile(string contentRootPath, ILogger<CatalogContextSeed>? logger)
     {
         string csvFileCatalogBrands = Path.Combine(contentRootPath, "Setup", "CatalogBrands.csv");
 
@@ -61,14 +61,18 @@ public class CatalogContextSeed
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "Error reading CSV headers");
+            logger?.LogError(ex, "Error reading CSV headers");
             return GetPreconfiguredCatalogBrands();
         }
 
         return File.ReadAllLines(csvFileCatalogBrands)
                                     .Skip(1) // skip header row
                                     .SelectTry(CreateCatalogBrand)
-                                    .OnCaughtException(ex => { logger.LogError(ex, "Error creating brand while seeding database"); return null; })
+                                    .OnCaughtException(ex =>
+                                    {
+                                        logger?.LogError(ex, "Error creating brand while seeding database");
+                                        return null!;   // Skip this one
+                                    })
                                     .Where(x => x != null);
     }
 
@@ -102,7 +106,7 @@ public class CatalogContextSeed
     }
 
 
-    private IEnumerable<CatalogType> GetCatalogTypesFromFile(string contentRootPath, ILogger<CatalogContextSeed> logger)
+    private IEnumerable<CatalogType> GetCatalogTypesFromFile(string contentRootPath, ILogger<CatalogContextSeed>? logger)
     {
         string csvFileCatalogTypes = Path.Combine(contentRootPath, "Setup", "CatalogTypes.csv");
 
@@ -119,14 +123,18 @@ public class CatalogContextSeed
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "Error reading CSV headers");
+            logger?.LogError(ex, "Error reading CSV headers");
             return GetPreconfiguredCatalogTypes();
         }
 
         return File.ReadAllLines(csvFileCatalogTypes)
                                     .Skip(1) // skip header row
                                     .SelectTry(x => CreateCatalogType(x))
-                                    .OnCaughtException(ex => { logger.LogError(ex, "Error creating catalog type while seeding database"); return null; })
+                                    .OnCaughtException(ex =>
+                                    {
+                                        logger?.LogError(ex, "Error creating catalog type while seeding database");
+                                        return null!;   // Skip this one
+                                    })
                                     .Where(x => x != null);
     }
 
@@ -159,7 +167,7 @@ public class CatalogContextSeed
     }
 
 
-    private IEnumerable<CatalogItem> GetCatalogItemsFromFile(string contentRootPath, CatalogContext context, ILogger<CatalogContextSeed> logger)
+    private IEnumerable<CatalogItem> GetCatalogItemsFromFile(string contentRootPath, CatalogContext context, ILogger<CatalogContextSeed>? logger)
     {
         string csvFileCatalogItems = Path.Combine(contentRootPath, "Setup", "CatalogItems.csv");
 
@@ -177,7 +185,7 @@ public class CatalogContextSeed
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "Error reading CSV headers");
+            logger?.LogError(ex, "Error reading CSV headers");
             return GetPreconfiguredItems();
         }
 
@@ -188,7 +196,11 @@ public class CatalogContextSeed
                     .Skip(1) // skip header row
                     .Select(row => Regex.Split(row, ",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)"))
                     .SelectTry(column => CreateCatalogItem(column, csvheaders, catalogTypeIdLookup, catalogBrandIdLookup))
-                    .OnCaughtException(ex => { logger.LogError(ex, "Error creating catalog item while seeding database"); return null; })
+                    .OnCaughtException(ex =>
+                    {
+                        logger?.LogError(ex, "Error creating catalog item while seeding database");
+                        return null!;   // Skip this one 
+                    })
                     .Where(x => x != null);
     }
 
@@ -320,8 +332,9 @@ public class CatalogContextSeed
     }
 
 
-    private string[] GetHeaders(string csvfile, string[] requiredHeaders, string[] optionalHeaders = null)
+    private string[] GetHeaders(string csvfile, string[] requiredHeaders, string[] optionalHeaders = null!)
     {
+        optionalHeaders ??= new string[0];
         string[] csvheaders = File.ReadLines(csvfile).First().ToLowerInvariant().Split(',');
 
         if (csvheaders.Count() < requiredHeaders.Count())
@@ -329,12 +342,9 @@ public class CatalogContextSeed
             throw new Exception($"requiredHeader count '{requiredHeaders.Count()}' is bigger then csv header count '{csvheaders.Count()}' ");
         }
 
-        if (optionalHeaders != null)
+        if (csvheaders.Count() > (requiredHeaders.Count() + optionalHeaders.Count()))
         {
-            if (csvheaders.Count() > (requiredHeaders.Count() + optionalHeaders.Count()))
-            {
-                throw new Exception($"csv header count '{csvheaders.Count()}'  is larger then required '{requiredHeaders.Count()}' and optional '{optionalHeaders.Count()}' headers count");
-            }
+            throw new Exception($"csv header count '{csvheaders.Count()}'  is larger then required '{requiredHeaders.Count()}' and optional '{optionalHeaders.Count()}' headers count");
         }
 
         foreach (var requiredHeader in requiredHeaders)
@@ -365,7 +375,7 @@ public class CatalogContextSeed
     }
 
 
-    private AsyncRetryPolicy CreatePolicy(ILogger<CatalogContextSeed> logger, string prefix, int retries = 3)
+    private AsyncRetryPolicy CreatePolicy(ILogger<CatalogContextSeed>? logger, string prefix, int retries = 3)
     {
         return Policy.Handle<SqlException>().
             WaitAndRetryAsync(
@@ -373,7 +383,7 @@ public class CatalogContextSeed
                 sleepDurationProvider: retry => TimeSpan.FromSeconds(5),
                 onRetry: (exception, timeSpan, retry, ctx) =>
                 {
-                    logger.LogWarning(exception, "[{prefix}] Error seeding database (attempt {retry} of {retries})", prefix, retry, retries);
+                    logger?.LogWarning(exception, "[{prefix}] Error seeding database (attempt {retry} of {retries})", prefix, retry, retries);
                 }
             );
     }

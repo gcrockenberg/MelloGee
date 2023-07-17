@@ -2,9 +2,9 @@ namespace Me.Services.Catalog.API;
 
 public class CatalogSettings
 {
-    public string PicBaseUrl { get; set; }
+    public string PicBaseUrl { get; set; } = string.Empty;
 
-    public string EventBusConnection { get; set; }
+    public string EventBusConnection { get; set; } = string.Empty;
 
     public bool UseCustomizationData { get; set; }
 
