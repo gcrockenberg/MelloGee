@@ -26,8 +26,6 @@ describe('ConfigurationService', () => {
   it('should return expected configuration (HttpClient called once)', (done: DoneFn) => {
     configurationService.settingsLoaded$.subscribe({
       next: result => {
-        console.log(`--> Result IS configuration: ${result === config}`);
-
         expect(result)
           .withContext('expected configuration')
           .toEqual(config);

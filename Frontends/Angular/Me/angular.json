@@ -31,20 +31,6 @@
               "zone.js"
             ],
             "tsConfig": "tsconfig.app.json",
-            "assets": [
-              "src/favicon.ico",
-              "src/assets",
-              {
-                "glob": "config.me.json",
-                "input": ".",
-                "output": "/"
-              },
-              {
-                "glob": "staticwebapp.config.json",
-                "input": ".",
-                "output": "/"
-              }
-            ],
             "styles": [
               "src/styles.scss"
             ],
@@ -52,6 +38,20 @@
           },
           "configurations": {
             "production": {
+              "assets": [
+                "src/favicon.ico",
+                "src/assets",
+                {
+                  "glob": "config.me.json",
+                  "input": "src/assets.prod",
+                  "output": "/"
+                },
+                {
+                  "glob": "staticwebapp.config.json",
+                  "input": ".",
+                  "output": "/"
+                }
+              ],  
               "budgets": [
                 {
                   "type": "initial",
@@ -68,15 +68,25 @@
                 {
                   "replace": "src/environments/environment.ts",
                   "with": "src/environments/environment.prod.ts"
-                },
-                {
-                  "replace": "config.me.json",
-                  "with": "config.me.prod.json"
                 }
               ],
               "outputHashing": "all"
             },
             "development": {
+              "assets": [
+                "src/favicon.ico",
+                "src/assets",
+                {
+                  "glob": "config.me.json",
+                  "input": "src/assets.dev",
+                  "output": "/"
+                },
+                {
+                  "glob": "staticwebapp.config.json",
+                  "input": ".",
+                  "output": "/"
+                }
+              ],  
               "buildOptimizer": false,
               "optimization": false,
               "vendorChunk": true,
@@ -87,10 +97,6 @@
                 {
                   "replace": "src/environments/environment.ts",
                   "with": "src/environments/environment.dev.ts"
-                },
-                {
-                  "replace": "config.me.json",
-                  "with": "config.me.dev.json"
                 }
               ]
             }
@@ -122,10 +128,6 @@
               {
                 "replace": "src/environments/environment.ts",
                 "with": "src/environments/environment.prod.ts"
-              },
-              {
-                "replace": "config.me.json",
-                "with": "config.me.dev.json"
               }
             ],
             "polyfills": [
