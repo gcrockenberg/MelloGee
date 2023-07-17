@@ -18,7 +18,7 @@ param solutionName string
 param environmentType string = 'dev'
 param location string = 'eastus'
 
-param tier string = 'Developer'   //'Consumption'
+param tier string = 'Developer' // 'Consumption' 
 param capacity int = 1
 param adminEmail string = 'gcrockenberg@hotmail.com'
 param organizationName string = 'Myoptyx'

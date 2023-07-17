@@ -6,7 +6,7 @@
 */
 
 param apimName string
-param apimIpAddress string
+param apimIpAddress string =''
 param apiPath string
 param connectKeyVault bool
 param containerAppName string
@@ -75,23 +75,23 @@ resource apim 'Microsoft.ApiManagement/service@2022-09-01-preview' existing = {
 // The following ranges support using Consumption plan by allowing the whole data center
 // See https://learn.microsoft.com/en-us/azure/api-management/api-management-howto-ip-addresses#ip-addresses-of-consumption-tier-api-management-service
 // See ServiceTags_Public_20230710.json under ApiManagement.EastUS
-var eastusDataCenterIPRanges = [
-  '20.237.68.147/32'
-  '13.82.71.152/32'
-  '20.88.154.20/31'
-  '40.71.10.204/31'
-  '40.71.13.128/28'
-  '40.117.134.189/32'
-  '40.121.13.26/32'
-  '52.224.186.99/32'
-  //'2603:1030:210:402::178/125'
-]
-var ipSecurityRestrictions = [for (ipRange, i) in eastusDataCenterIPRanges: {
-  name: 'allow-apim-access_${i}'
-  action: 'Allow'
-  ipAddressRange: ipRange
-  description: 'Allow request from data center ip range ${i}'
-}]
+// var eastusDataCenterIPRanges = [
+//   '20.237.68.147/32'
+//   '13.82.71.152/32'
+//   '20.88.154.20/31'
+//   '40.71.10.204/31'
+//   '40.71.13.128/28'
+//   '40.117.134.189/32'
+//   '40.121.13.26/32'
+//   '52.224.186.99/32'
+//   //'2603:1030:210:402::178/125'
+// ]
+// var ipSecurityRestrictions = [for (ipRange, i) in eastusDataCenterIPRanges: {
+//   name: 'allow-apim-access_${i}'
+//   action: 'Allow'
+//   ipAddressRange: ipRange
+//   description: 'Allow request from data center ip range ${i}'
+// }]
 @description('Provision container app - CI/CD completes the api deployment')
 resource containerApp 'Microsoft.App/containerApps@2022-11-01-preview' = {
   name: containerAppName
@@ -110,7 +110,7 @@ resource containerApp 'Microsoft.App/containerApps@2022-11-01-preview' = {
         stickySessions: {
           affinity: 'none'
         }
-        ipSecurityRestrictions:[   //ipSecurityRestrictions
+        ipSecurityRestrictions:[ //ipSecurityRestrictions 
           {
             name: 'allow-apim-access'
             action: 'Allow'
