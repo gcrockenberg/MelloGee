@@ -1,6 +1,6 @@
 # 'Me', a technology demonstration
 
-A personal project to provide backend and frontend examples of a microservice based solution hosted in Azure.
+A personal project that I started May 2020 to demonstrate backend and frontend aspects of a microservice based solution hosted in Azure.
 
 ## Environment
 - [Azure Container Apps](https://learn.microsoft.com/en-us/azure/container-apps/) - IaaS, easy orchestration, scalable, pay-as-you-go
