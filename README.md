@@ -32,7 +32,7 @@ These steps were established on my Windows 10 machine.
 **Fork Me**
 : Me uses GitHub Actions for CI/CD so you'll need your own copy
 
-After provisioning the Me infrastructure (below) we'll configure the GitHub environment to enable Actions to deploy the Container Apps and micro-frontends.
+After provisioning the Me infrastructure (below) we'll configure the GitHub environment to enable Actions to deploy the Container Apps and Angular frontends.
 
 **Clone Me**
 : So you can run the scripts
