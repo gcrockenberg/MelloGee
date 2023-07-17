@@ -37,18 +37,18 @@ var microservices = [
     containerAppName: '${solutionName}-catalog-api'
     dockerImageName: '${dockerHubUsername}/catalog-api:latest'
   }
-  {
-    apiPath: 'cof'
-    connectKeyVault: false
-    containerAppName: '${solutionName}-coffee-api'
-    dockerImageName: '${dockerHubUsername}/coffeeapi:latest'
-  }
-  {
-    apiPath: 'cat'
-    connectKeyVault: true
-    containerAppName: '${solutionName}-catalogapi'
-    dockerImageName: '${dockerHubUsername}/catalogapi:latest'
-  }
+  // {
+  //   apiPath: 'cof'
+  //   connectKeyVault: false
+  //   containerAppName: '${solutionName}-coffee-api'
+  //   dockerImageName: '${dockerHubUsername}/coffeeapi:latest'
+  // }
+  // {
+  //   apiPath: 'cat'
+  //   connectKeyVault: true
+  //   containerAppName: '${solutionName}-catalogapi'
+  //   dockerImageName: '${dockerHubUsername}/catalogapi:latest'
+  // }
 ]
 
 resource workspaceForManagedEnvionment 'Microsoft.OperationalInsights/workspaces@2022-10-01' = {

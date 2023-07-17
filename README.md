@@ -38,11 +38,9 @@ After provisioning the Me infrastructure (below) we'll configure the GitHub envi
 : So you can run the scripts
 
 **Push initial images to Docker**
-: So that Docker has a latest version of them. The provisioning that follows will pull them and import the APIs into APIM.
-1. docker build -t *your-docker-login*/catalogapi . -f Services\CatalogService\Dockerfile
-2. docker push *your-docker-login*/catalogapi
-3. docker build -t *your-docker-login*/coffeeapi . -f Services\Coffee\Coffee.API\Dockerfile
-4. docker push *your-docker-login*/coffeeapi
+: So that Docker has a latest version of the initial API. The provisioning that follows will pull them and import the APIs into APIM.
+1. docker build -t *your-docker-login*/catalog-api . -f Services\Catalog\Catalog.API\Dockerfile
+2. docker push *your-docker-login*/catalog-api
 
 **Provision Me**
 : Create the Azure infrastructure for Me in an Azure Resource Group of your choosing [^1]
