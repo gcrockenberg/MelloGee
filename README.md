@@ -43,7 +43,7 @@ After provisioning the Me infrastructure (below) we'll configure the GitHub envi
 2. docker push *your-docker-login*/catalog-api
 
 **Provision Me**
-: Create the Azure infrastructure for Me in an Azure Resource Group of your choosing [^1]
+: Create the Azure infrastructure for Me in an Azure Resource Group of your choosing [^1]. Confirm the Azure resources are all available in the location you choose (I used eastus).
 1. az configure --defaults group=*my-resource-group*
 2. az deployment group create --template-file bicep/main.bicep
 
@@ -57,7 +57,6 @@ After provisioning the Me infrastructure (below) we'll configure the GitHub envi
 
 **GitHub Actions CI/CD Environment Secrets (dev)**
 : The following Environment Secrets support the beginning of CI/CD dev/prod isolation
-- STORAGE_ACCOUNT_KEY - Storage Account provisioned above. Used to deploy the micro-frontends
 - AZURE_CLIENT_ID - User Assigned Identity "uai-GitHubOIDC" provisioned above -> Settings -> Properties. I have seen the Client Id under "Overview" not match.
 
 **Testing**
@@ -65,7 +64,7 @@ After provisioning the Me infrastructure (below) we'll configure the GitHub envi
 - You might want to comment out "on: push: paths:" from GitHub yml files to force all CI/CD to run
 - Test APIs that were imported into APIM
 - Open Container App console in Azure portal and curl the APIs, view the logs. They are configured to scale to 0. You can an APIM call to wake them.
-- Navigate to single-spa micro-frontend. Storage Account -> Static website -> Primary endpoint. Allow 10 minutes for CDN to propagate.
+- Navigate to your static web app.
 
 **That's it so far**
 : Container Apps Environment is external. Container Apps restrict access via IP only granting access to APIM. The containers have curl installed for quick API checks but you can toggle Ingress to allow public access. The APIs "talk" to each other and to Azure Key Vault. APIM connects to the Container Apps as Backend Services.
