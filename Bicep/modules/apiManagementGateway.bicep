@@ -18,8 +18,8 @@ param solutionName string
 param environmentType string = 'dev'
 param location string = 'eastus'
 
-param tier string = 'Developer' // 'Consumption' 
-param capacity int = 1
+param tier string = 'Consumption'  //'Developer'
+param capacity int = 0             // Consumption requires 0 otherwise 1 @ $.07/hour
 param adminEmail string = 'gcrockenberg@hotmail.com'
 param organizationName string = 'Myoptyx'
 param customProperties object = {}
@@ -44,6 +44,6 @@ resource apim 'Microsoft.ApiManagement/service@2023-03-01-preview' = {
   }
 }
 
-output ipAddress string = apim.properties.publicIPAddresses[0]
+//output ipAddress string = apim.properties.publicIPAddresses[0]
 output name string = apim.name
 

@@ -118,7 +118,7 @@ module keyVaultForSolution 'modules/keyVault.bicep' = {
 module containerAppModule 'modules/containerApps.bicep' = [for (microservice, index) in microservices: {
   name: 'containerApp-${index}'
   params: {
-    apimIpAddress: apiManagementGateway.outputs.ipAddress
+    //apimIpAddress: apiManagementGateway.outputs.ipAddress
     apimName: apiManagementGateway.outputs.name
     //apimName: 'me-dev'
     apiPath: microservice.apiPath
