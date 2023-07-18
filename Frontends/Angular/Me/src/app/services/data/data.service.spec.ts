@@ -24,9 +24,9 @@ describe('DataService', () => {
       description: 'description',
       price: 1,
       units: 1,
-      catalogBrand: 'brand',
+      catalogBrand: { id: 1, brand: "foo" },
       catalogBrandId: 1,
-      catalogType: 'type',
+      catalogType: { id: 1, type: "bar"},
       catalogTypeId: 1,
       pictureUri: 'uri'
     }
