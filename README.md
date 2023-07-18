@@ -8,6 +8,7 @@ A personal project that I started May 2023 to demonstrate backend and frontend a
 - Docker Container Registry
 - GitHub Actions CI/CD
 - [AAD B2C](https://learn.microsoft.com/en-us/azure/active-directory-b2c/) - Customer identity access management (CIAM). This infrastructure is not part of automated provisioning. It requires manual provision and config.
+- Angular SPA with Tailwind CSS
 
 ![Me architecture](Images/Me%20Architecture.png)
 
@@ -70,7 +71,7 @@ After provisioning the Me infrastructure (below) we'll configure the GitHub envi
 : Container Apps Environment is external. Container Apps restrict access via IP only granting access to APIM. The containers have curl installed for quick API checks but you can toggle Ingress to allow public access. The APIs "talk" to each other and to Azure Key Vault. APIM connects to the Container Apps as Backend Services.
 
 ### Working on 
-- [Angular UI and API work in progress](https://lively-sand-0b139e20f.3.azurestaticapps.net)
+- [Angular UI and API work in progress](https://green-wave-08182290f.3.azurestaticapps.net)
 
 ### TO DO
 - Implement semantic-release versioning for modules, update CDN cache strategy which is currently turned off for dev
