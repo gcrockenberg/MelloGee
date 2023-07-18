@@ -1,5 +1,4 @@
 global using Azure.Core;
-global using Azure.Core.Diagnostics;
 global using Azure.Identity;
 global using CatalogService.Database;
 global using CatalogService.Model;

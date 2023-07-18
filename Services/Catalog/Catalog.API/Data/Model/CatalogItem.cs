@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations.Schema;
 using Me.Services.Catalog.API.Exceptions;
 
 namespace Me.Services.Catalog.API.Model;
@@ -21,7 +22,7 @@ public class CatalogItem
     public CatalogType CatalogType { get; set; } = new();
 
     public int CatalogBrandId { get; set; }
-
+    
     public CatalogBrand CatalogBrand { get; set; } = new();
 
     // Quantity in stock

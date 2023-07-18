@@ -11,9 +11,11 @@ class CatalogItemEntityTypeConfiguration
     {
         builder.ToTable("Catalog");
 
-        builder.Property(ci => ci.Id)
-            .UseHiLo("catalog_hilo")
-            .IsRequired();
+        builder.HasKey(ci => ci.Id);
+
+        // builder.Property(ci => ci.Id)
+        //     .UseHiLo("catalog_hilo")
+        //     .IsRequired();
 
         builder.Property(ci => ci.Name)
             .IsRequired(true)

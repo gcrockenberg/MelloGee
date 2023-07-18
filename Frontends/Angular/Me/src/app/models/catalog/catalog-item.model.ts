@@ -1,3 +1,6 @@
+import { ICatalogBrand } from "./catalog-brand.model";
+import { ICatalogType } from "./catalog-type.model";
+
 export interface ICatalogItem {
     id: number;
     name: string;
@@ -5,8 +8,8 @@ export interface ICatalogItem {
     price: number;
     pictureUri: string;
     catalogBrandId: number;
-    catalogBrand: string | undefined;
+    catalogBrand: ICatalogBrand;
     catalogTypeId: number;
-    catalogType: string | undefined;
+    catalogType: ICatalogType;
     units: number;
 }
