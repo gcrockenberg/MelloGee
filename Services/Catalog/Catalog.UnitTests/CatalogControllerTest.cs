@@ -29,21 +29,21 @@ public class CatalogControllerTest
         _ = PrepDb(catalogContext);
     }
 
+
     private async Task PrepDb(CatalogContext catalogContext)
-    { 
+    {
         await catalogContext.CatalogTypes.AddRangeAsync(CatalogContextSeed.GetPreconfiguredCatalogTypes());
         await catalogContext.CatalogBrands.AddRangeAsync(CatalogContextSeed.GetPreconfiguredCatalogBrands());
 
         foreach (CatalogItem item in GetFakeCatalogItems())
         {
-            item.CatalogType = catalogContext.CatalogTypes.Where(t => t.Id == item.CatalogTypeId).FirstOrDefault();
-            item.CatalogBrand = catalogContext.CatalogBrands.Where(b => b.Id == item.CatalogBrandId).FirstOrDefault();
-            catalogContext.CatalogItems.Add(item);
-            catalogContext.SaveChanges();             
+            item.CatalogType = await catalogContext.CatalogTypes.Where(t => t.Id == item.CatalogTypeId).FirstOrDefaultAsync();
+            item.CatalogBrand = await catalogContext.CatalogBrands.Where(b => b.Id == item.CatalogBrandId).FirstOrDefaultAsync();
+            await catalogContext.CatalogItems.AddAsync(item);
+            await catalogContext.SaveChangesAsync();
         }
-        await catalogContext.CatalogItems.AddRangeAsync(GetFakeCatalogItems());
-        await catalogContext.SaveChangesAsync();
     }
+
 
     [Fact]
     public async Task Get_catalog_items_success()
@@ -54,7 +54,7 @@ public class CatalogControllerTest
         var pageSize = 4;
         var pageIndex = 1;
 
-        var expectedItemsInPage = 2;
+        var expectedItemsInPage1 = 2;
         var expectedTotalItems = 6;
 
         var catalogContext = new CatalogContext(_dbOptions);
@@ -64,30 +64,34 @@ public class CatalogControllerTest
 
         //Act
         var orderController = new CatalogController(catalogContext, catalogSettings);
-                                                     //, integrationServicesMock.Object);
+        //, integrationServicesMock.Object);
         var actionResult = await orderController.ItemsByTypeIdAndBrandIdAsync(
-                typesFilterApplied, 
-                brandFilterApplied, 
-                pageSize, 
+                typesFilterApplied,
+                brandFilterApplied,
+                pageSize,
                 pageIndex);
-        
+
         var page = Assert.IsAssignableFrom<PaginatedItemsViewModel<CatalogItem>>(actionResult.Value);
+        var data = page.Data.ToList();
 
         //Assert
         Assert.IsType<ActionResult<PaginatedItemsViewModel<CatalogItem>>>(actionResult);
-        try
-        {
-            Assert.Equal(expectedTotalItems, page.Count);
-        }
-        catch (XunitException e)
-        {
-            output.WriteLine($"{e.Message}: Unexpected page.Count");
-            throw;
-        }
-        
+        Assert.Equal(expectedTotalItems, page.Count);
         Assert.Equal(pageIndex, page.PageIndex);
         Assert.Equal(pageSize, page.PageSize);
-        Assert.Equal(expectedItemsInPage, page.Data.Count());
+        Assert.Equal(expectedItemsInPage1, page.Data.Count());
+        Assert.NotNull(data[0].CatalogType);
+        Assert.NotNull(data[0].CatalogType.Type);
+        Assert.NotEmpty(data[0].CatalogType.Type);
+        // try
+        // {
+        //     Assert.Fail($"Catalog item type: {data[0].CatalogType.Type}");           
+        // }
+        // catch (XunitException e)
+        // {
+        //     output.WriteLine($"{e.Message}: Unexpected page index");
+        //     throw;
+        // }
     }
 
 
@@ -129,7 +133,7 @@ public class CatalogControllerTest
             },
             new()
             {
-                Id = 5,
+                //Id = 5,
                 Name = "fakeItemE",
                 CatalogTypeId = 2,
                 CatalogBrandId = 1,
@@ -137,7 +141,7 @@ public class CatalogControllerTest
             },
             new()
             {
-                Id = 6,
+                //Id = 6,
                 Name = "fakeItemF",
                 CatalogTypeId = 2,
                 CatalogBrandId = 1,

@@ -40,6 +40,8 @@ public class CatalogController : ControllerBase
             .LongCountAsync();
 
         var itemsOnPage = await _catalogContext.CatalogItems
+            .Include(item => item.CatalogBrand)
+            .Include(item => item.CatalogType)
             .OrderBy(c => c.Name)
             .Skip(pageSize * pageIndex)
             .Take(pageSize)
@@ -106,7 +108,9 @@ public class CatalogController : ControllerBase
     [Route("items/type/{catalogTypeId}/brand/{catalogBrandId:int?}")]
     public async Task<ActionResult<PaginatedItemsViewModel<CatalogItem>>> ItemsByTypeIdAndBrandIdAsync(int catalogTypeId, int? catalogBrandId, [FromQuery] int pageSize = 10, [FromQuery] int pageIndex = 0)
     {
-        var root = (IQueryable<CatalogItem>)_catalogContext.CatalogItems;
+        var root = (IQueryable<CatalogItem>)_catalogContext.CatalogItems
+            .Include(item => item.CatalogBrand)
+            .Include(item => item.CatalogType);
 
         root = root.Where(ci => ci.CatalogTypeId == catalogTypeId);
 

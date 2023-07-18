@@ -39,13 +39,17 @@ describe('DataService', () => {
     dataService.get<ICatalogItem>('http://localhost/c/api/v1/catalog/items')
       .subscribe({
         next: async result => {
-          console.log(`--> Result IS catalogItem: ${result === catalogItem}`);
+          //console.log(`--> Result IS catalogItem: ${result === catalogItem}`);
 
           expect(result)
             .withContext('expected catalog item')
             .toEqual(jasmine.objectContaining(catalogItem));
 
-          catalogItem.id = 2;
+          expect(result.catalogType.type)
+            .withContext('expect catalog item type')
+            .toEqual("bar");
+          
+          catalogItem.id = 2;          
           expect(result)
             .withContext('not expected catalog item')
             .not
