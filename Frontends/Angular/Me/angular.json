@@ -34,7 +34,9 @@
             "styles": [
               "src/styles.scss"
             ],
-            "scripts": []
+            "scripts": [
+              
+            ]
           },
           "configurations": {
             "production": {
@@ -76,15 +78,16 @@
               "assets": [
                 "src/favicon.ico",
                 "src/assets",
+                "src/staticwebapp.config.json",
                 {
                   "glob": "config.me.json",
                   "input": "src/assets.dev",
                   "output": "/"
                 },
                 {
-                  "glob": "staticwebapp.config.json",
-                  "input": ".",
-                  "output": "/"
+                  "glob": "**/*",
+                  "input": "external",
+                  "output": "/external"
                 }
               ],  
               "buildOptimizer": false,
