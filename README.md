@@ -12,7 +12,6 @@ A personal project that I started May 2023 to demonstrate backend and frontend a
 
 ![Me architecture](Images/Me%20Architecture.png)
 
-
 ## Notes
 - The steps below were established on my Windows 10 machine 
 - For demo purposes the Azure hosting is configured with free or consumption plans so performance will be poor

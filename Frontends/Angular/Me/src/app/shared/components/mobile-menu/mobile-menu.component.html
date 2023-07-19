@@ -2,16 +2,13 @@
     <div class="flex flex-col gap-4">
 
         <div class="px-3 text-center text-white hover:underline">
-            Home
+            <a routerLink="catalog" routerLinkActive="underline" ariaCurrentWhenActive="page" [routerLinkActiveOptions]="{exact: true}">Catalog</a>
         </div>
         <div class="px-3 text-center text-white hover:underline">
-            Catalog
+            <a routerLink="3D" routerLinkActive="underline" ariaCurrentWhenActive="page" [routerLinkActiveOptions]="{exact: true}">3D</a>
         </div>
         <div class="px-3 text-center text-white hover:underline">
-            3D
-        </div>
-        <div class="px-3 text-center text-white hover:underline">
-            Secure
+            <a routerLink="secure" routerLinkActive="underline" ariaCurrentWhenActive="page" [routerLinkActiveOptions]="{exact: true}">Secure</a>
         </div>
         
     </div>
