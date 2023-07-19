@@ -12,8 +12,15 @@ A personal project that I started May 2023 to demonstrate backend and frontend a
 
 ![Me architecture](Images/Me%20Architecture.png)
 
+
 ## Notes
-These steps were established on my Windows 10 machine.
+- The steps below were established on my Windows 10 machine 
+- For demo purposes the Azure hosting is configured with free or consumption plans so performance will be poor
+- The Azure resources can be scaled and set for auto scaling to meet demand
+- For global scaling the solution can be configured as a geode or stamped pattern
+
+### Currently working on 
+- [Angular UI and API](https://green-wave-08182290f.3.azurestaticapps.net)
 
 ## Steps for using Me
 
@@ -69,9 +76,6 @@ After provisioning the Me infrastructure (below) we'll configure the GitHub envi
 
 **That's it so far**
 : Container Apps Environment is external. Container Apps restrict access via IP only granting access to APIM. The containers have curl installed for quick API checks but you can toggle Ingress to allow public access. The APIs "talk" to each other and to Azure Key Vault. APIM connects to the Container Apps as Backend Services.
-
-### Working on 
-- [Angular UI and API work in progress](https://green-wave-08182290f.3.azurestaticapps.net)
 
 ### TO DO
 - Implement semantic-release versioning for modules, update CDN cache strategy which is currently turned off for dev
