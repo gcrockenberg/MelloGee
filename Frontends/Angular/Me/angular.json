@@ -34,31 +34,30 @@
             "styles": [
               "src/styles.scss"
             ],
-            "scripts": [
-              
-            ]
+            "scripts": []
           },
           "configurations": {
             "production": {
               "assets": [
                 "src/favicon.ico",
                 "src/assets",
+                "src/staticwebapp.config.json",
                 {
                   "glob": "config.me.json",
                   "input": "src/assets.prod",
                   "output": "/"
                 },
                 {
-                  "glob": "staticwebapp.config.json",
-                  "input": ".",
-                  "output": "/"
+                  "glob": "**/*",
+                  "input": "external",
+                  "output": "/external"
                 }
-              ],  
+              ],
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "500kb",
-                  "maximumError": "1mb"
+                  "maximumWarning": "3mb",
+                  "maximumError": "5mb"
                 },
                 {
                   "type": "anyComponentStyle",
@@ -89,7 +88,7 @@
                   "input": "external",
                   "output": "/external"
                 }
-              ],  
+              ],
               "buildOptimizer": false,
               "optimization": false,
               "vendorChunk": true,
@@ -141,15 +140,16 @@
             "assets": [
               "src/favicon.ico",
               "src/assets",
+              "src/staticwebapp.config.json",
               {
                 "glob": "config.me.json",
-                "input": ".",
+                "input": "src/assets.dev",
                 "output": "/"
               },
               {
-                "glob": "staticwebapp.config.json",
-                "input": ".",
-                "output": "/"
+                "glob": "**/*",
+                "input": "external",
+                "output": "/external"
               }
             ],
             "styles": [
