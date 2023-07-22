@@ -18,7 +18,7 @@ export class DataService {
 
   constructor(
     private _http: HttpClient,
-    private _securityService: SecurityService
+    //private _securityService: SecurityService
   ) { }
 
   

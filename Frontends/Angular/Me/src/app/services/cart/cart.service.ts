@@ -58,10 +58,7 @@ export class CartService {
 
   getCart(): Observable<ICart> {
     let url: string = this._cartUrl + 'foo';
-    console.log(`cartComponent url: ${url}`);
-    console.log(`cartComponent isAuthorized: ${this._securityService.IsAuthorized}`);
-    console.log('local storage:', localStorage.getItem("token"));
-
+    
     return this._dataService.get(url)
       .pipe<ICart>(tap((response: any) => {
         if (response.status === 204) {

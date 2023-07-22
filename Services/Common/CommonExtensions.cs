@@ -1,6 +1,10 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using Azure.Identity;
 using HealthChecks.UI.Client;
+using Me.Services.EventBus;
+using Me.Services.EventBus.Abstractions;
+using Me.Services.EventBusRabbitMQ;
+using Me.Services.EventBusServiceBus;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
@@ -15,7 +19,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Configuration;
 using Microsoft.Identity.Web;
 using Microsoft.OpenApi.Models;
-//using RabbitMQ.Client;
+using RabbitMQ.Client;
 
 namespace Me.Services.Common;
 
@@ -33,7 +37,7 @@ public static class CommonExtensions
         builder.Services.AddDefaultHealthChecks(builder.Configuration);
 
         // Add the event bus
-        //        builder.Services.AddEventBus(builder.Configuration);
+        builder.Services.AddEventBus(builder.Configuration);
 
 
         builder.Services.AddDefaultAuthentication(builder.Configuration);
@@ -45,6 +49,7 @@ public static class CommonExtensions
 
         return builder;
     }
+
 
     public static WebApplication UseServiceDefaults(this WebApplication app)
     {
@@ -77,6 +82,7 @@ public static class CommonExtensions
         return app;
     }
 
+
     // public static async Task<bool> CheckHealthAsync(this WebApplication app)
     // {
     //     app.Logger.LogInformation("Running health checks...");
@@ -100,6 +106,7 @@ public static class CommonExtensions
 
     //     return true;
     // }
+
 
     public static IApplicationBuilder UseDefaultOpenApi(this WebApplication app, IConfiguration configuration)
     {
@@ -146,6 +153,7 @@ public static class CommonExtensions
         return app;
     }
 
+
     public static IServiceCollection AddDefaultOpenApi(this IServiceCollection services, IConfiguration configuration)
     {
         var openApi = configuration.GetSection("OpenApi");
@@ -186,13 +194,13 @@ public static class CommonExtensions
                 Description = document.GetRequiredValue("Description")
             });
 
-            var identitySection = configuration.GetSection("Identity");
+            // var identitySection = configuration.GetSection("Identity");
 
-            if (!identitySection.Exists())
-            {
-                // No identity section, so no authentication open api definition
-                return;
-            }
+            // if (!identitySection.Exists())
+            // {
+            //     // No identity section, so no authentication open api definition
+            //     return;
+            // }
 
             // {
             //   "Identity": {
@@ -224,6 +232,7 @@ public static class CommonExtensions
             // options.OperationFilter<AuthorizeCheckOperationFilter>();
         });
     }
+
 
     public static IServiceCollection AddDefaultAuthentication(this IServiceCollection services, IConfiguration configuration)
     {
@@ -278,6 +287,7 @@ public static class CommonExtensions
         return services;
     }
 
+
     public static ConfigurationManager AddKeyVault(this ConfigurationManager configuration)
     {
         // {
@@ -307,6 +317,7 @@ public static class CommonExtensions
         return configuration;
     }
 
+
     public static IServiceCollection AddApplicationInsights(this IServiceCollection services, IConfiguration configuration)
     {
         var appInsightsSection = configuration.GetSection("ApplicationInsights");
@@ -321,6 +332,7 @@ public static class CommonExtensions
         //services.AddApplicationInsightsKubernetesEnricher();
         return services;
     }
+
 
     public static IHealthChecksBuilder AddDefaultHealthChecks(this IServiceCollection services, IConfiguration configuration)
     {
@@ -357,106 +369,107 @@ public static class CommonExtensions
         //GMC        };
     }
 
-    //GMC    public static IServiceCollection AddEventBus(this IServiceCollection services, IConfiguration configuration)
-    //GMC    {
-    //  {
-    //    "ConnectionStrings": {
-    //      "EventBus": "..."
-    //    },
+    public static IServiceCollection AddEventBus(this IServiceCollection services, IConfiguration configuration)
+    {
+        //  {
+        //    "ConnectionStrings": {
+        //      "EventBus": "..."
+        //    },
 
-    // {
-    //   "EventBus": {
-    //     "ProviderName": "ServiceBus | RabbitMQ",
-    //     ...
-    //   }
-    // }
+        // {
+        //   "EventBus": {
+        //     "ProviderName": "ServiceBus | RabbitMQ",
+        //     ...
+        //   }
+        // }
 
-    // {
-    //   "EventBus": {
-    //     "ProviderName": "ServiceBus",
-    //     "SubscriptionClientName": "eshop_event_bus"
-    //   }
-    // }
+        // {
+        //   "EventBus": {
+        //     "ProviderName": "ServiceBus",
+        //     "SubscriptionClientName": "eshop_event_bus"
+        //   }
+        // }
 
-    // {
-    //   "EventBus": {
-    //     "ProviderName": "RabbitMQ",
-    //     "SubscriptionClientName": "...",
-    //     "UserName": "...",
-    //     "Password": "...",
-    //     "RetryCount": 1
-    //   }
-    // }
+        // {
+        //   "EventBus": {
+        //     "ProviderName": "RabbitMQ",
+        //     "SubscriptionClientName": "...",
+        //     "UserName": "...",
+        //     "Password": "...",
+        //     "RetryCount": 1
+        //   }
+        // }
 
-    //GMC        var eventBusSection = configuration.GetSection("EventBus");
+        var eventBusSection = configuration.GetSection("EventBus");
 
-    //GMC        if (!eventBusSection.Exists())
-    //GMC        {
-    //GMC            return services;
-    //GMC        }
+        if (!eventBusSection.Exists())
+        {
+            return services;
+        }
 
-    //GMC        if (string.Equals(eventBusSection["ProviderName"], "ServiceBus", StringComparison.OrdinalIgnoreCase))
-    //GMC        {
-    //GMC            services.AddSingleton<IServiceBusPersisterConnection>(sp =>
-    //GMC            {
-    //GMC                var serviceBusConnectionString = configuration.GetRequiredConnectionString("EventBus");
+        if (string.Equals(eventBusSection["ProviderName"], "ServiceBus", StringComparison.OrdinalIgnoreCase))
+        {
+            services.AddSingleton<IServiceBusPersisterConnection>(sp =>
+            {
+                var serviceBusConnectionString = configuration.GetRequiredConnectionString("EventBus");
 
-    //GMC                return new DefaultServiceBusPersisterConnection(serviceBusConnectionString);
-    //GMC            });
+                return new DefaultServiceBusPersisterConnection(serviceBusConnectionString);
+            });
 
-    //GMC            services.AddSingleton<IEventBus, EventBusServiceBus>(sp =>
-    //GMC            {
-    //GMC                var serviceBusPersisterConnection = sp.GetRequiredService<IServiceBusPersisterConnection>();
-    //GMC                var logger = sp.GetRequiredService<ILogger<EventBusServiceBus>>();
-    //GMC                var eventBusSubscriptionsManager = sp.GetRequiredService<IEventBusSubscriptionsManager>();
-    //GMC                string subscriptionName = eventBusSection.GetRequiredValue("SubscriptionClientName");
+            services.AddSingleton<IEventBus, EventBusServiceBusImpl>(sp =>
+            {
+                var serviceBusPersisterConnection = sp.GetRequiredService<IServiceBusPersisterConnection>();
+                var logger = sp.GetRequiredService<ILogger<EventBusServiceBusImpl>>();
+                var eventBusSubscriptionsManager = sp.GetRequiredService<IEventBusSubscriptionsManager>();
+                string subscriptionName = eventBusSection.GetRequiredValue("SubscriptionClientName");
 
-    //GMC                return new EventBusServiceBus(serviceBusPersisterConnection, logger,
-    //GMC                    eventBusSubscriptionsManager, sp, subscriptionName);
-    //GMC            });
-    //GMC        }
-    //GMC        else
-    //GMC        {
-    //GMC            services.AddSingleton<IRabbitMQPersistentConnection>(sp =>
-    //GMC            {
-    //GMC                var logger = sp.GetRequiredService<ILogger<DefaultRabbitMQPersistentConnection>>();
+                return new EventBusServiceBusImpl(serviceBusPersisterConnection, logger,
+                    eventBusSubscriptionsManager, sp, subscriptionName);
+            });
+        }
+        else
+        {
+            services.AddSingleton<IRabbitMQPersistentConnection>(sp =>
+            {
+                var logger = sp.GetRequiredService<ILogger<DefaultRabbitMQPersistentConnection>>();
 
-    //GMC                var factory = new ConnectionFactory()
-    //GMC                {
-    //GMC                    HostName = configuration.GetRequiredConnectionString("EventBus"),
-    //GMC                    DispatchConsumersAsync = true
-    //GMC                };
+                var factory = new ConnectionFactory()
+                {
+                    HostName = configuration.GetRequiredConnectionString("EventBus"),
+                    DispatchConsumersAsync = true
+                };
 
-    //GMC                if (!string.IsNullOrEmpty(eventBusSection["UserName"]))
-    //GMC                {
-    //GMC                    factory.UserName = eventBusSection["UserName"];
-    //GMC                }
+                if (!string.IsNullOrEmpty(eventBusSection["UserName"]))
+                {
+                    factory.UserName = eventBusSection["UserName"];
+                }
 
-    //GMC                if (!string.IsNullOrEmpty(eventBusSection["Password"]))
-    //GMC                {
-    //GMC                    factory.Password = eventBusSection["Password"];
-    //GMC                }
+                if (!string.IsNullOrEmpty(eventBusSection["Password"]))
+                {
+                    factory.Password = eventBusSection["Password"];
+                }
 
-    //GMC                var retryCount = eventBusSection.GetValue("RetryCount", 5);
+                var retryCount = eventBusSection.GetValue("RetryCount", 5);
 
-    //GMC                return new DefaultRabbitMQPersistentConnection(factory, logger, retryCount);
-    //GMC            });
+                return new DefaultRabbitMQPersistentConnection(factory, logger, retryCount);
+            });
 
-    //GMC            services.AddSingleton<IEventBus, EventBusRabbitMQ>(sp =>
-    //GMC            {
-    //GMC                var subscriptionClientName = eventBusSection.GetRequiredValue("SubscriptionClientName");
-    //GMC                var rabbitMQPersistentConnection = sp.GetRequiredService<IRabbitMQPersistentConnection>();
-    //GMC                var logger = sp.GetRequiredService<ILogger<EventBusRabbitMQ>>();
-    //GMC                var eventBusSubscriptionsManager = sp.GetRequiredService<IEventBusSubscriptionsManager>();
-    //GMC                var retryCount = eventBusSection.GetValue("RetryCount", 5);
+            services.AddSingleton<IEventBus, EventBusRabbitMQImpl>(sp =>
+            {
+                var subscriptionClientName = eventBusSection.GetRequiredValue("SubscriptionClientName");
+                var rabbitMQPersistentConnection = sp.GetRequiredService<IRabbitMQPersistentConnection>();
+                var logger = sp.GetRequiredService<ILogger<EventBusRabbitMQImpl>>();
+                var eventBusSubscriptionsManager = sp.GetRequiredService<IEventBusSubscriptionsManager>();
+                var retryCount = eventBusSection.GetValue("RetryCount", 5);
 
-    //GMC                return new EventBusRabbitMQ(rabbitMQPersistentConnection, logger, sp, eventBusSubscriptionsManager, subscriptionClientName, retryCount);
-    //GMC            });
-    //GMC        }
+                return new EventBusRabbitMQImpl(rabbitMQPersistentConnection, logger, sp, eventBusSubscriptionsManager, subscriptionClientName, retryCount);
+            });
+        }
 
-    //GMC        services.AddSingleton<IEventBusSubscriptionsManager, InMemoryEventBusSubscriptionsManager>();
-    //GMC        return services;
-    //GMC    }
+        services.AddSingleton<IEventBusSubscriptionsManager, InMemoryEventBusSubscriptionsManager>();
+        return services;
+    }
+
 
     public static void MapDefaultHealthChecks(this IEndpointRouteBuilder routes)
     {

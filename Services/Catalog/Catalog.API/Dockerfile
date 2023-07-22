@@ -17,6 +17,8 @@ COPY "MeServices.sln" "MeServices.sln"
 
 COPY "Services/Common/Common.csproj" "Services/Common/Common.csproj"
 COPY "Services/EventBus/EventBus/EventBus.csproj" "Services/EventBus/EventBus/EventBus.csproj"
+COPY "Services/EventBus/EventBusServiceBus/EventBusServiceBus.csproj" "Services/EventBus/EventBusServiceBus/EventBusServiceBus.csproj"
+COPY "Services/EventBus/EventBusRabbitMQ/EventBusRabbitMQ.csproj" "Services/EventBus/EventBusRabbitMQ/EventBusRabbitMQ.csproj"
 COPY "Services/Catalog/Catalog.API/Catalog.API.csproj" "Services/Catalog/Catalog.API/Catalog.API.csproj"
 COPY "Services/Cart/Cart.API/Cart.API.csproj" "Services/Cart/Cart.API/Cart.API.csproj"
 COPY "Directory.Packages.props" "Directory.Packages.props"
