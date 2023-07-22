@@ -7,8 +7,8 @@ import { PrivacyComponent } from './pages/privacy/privacy.component';
 import { SecureComponent } from './pages/secure/secure.component';
 import { CatalogComponent } from './pages/catalog/catalog.component';
 import { ProfileComponent } from './pages/profile/profile.component';
-import { ThreeDComponent } from './pages/3D/three-d/three-d.component';
 import { NotFoundComponent } from './pages/not-found/not-found/not-found.component';
+import { CartComponent } from './pages/cart/cart/cart.component';
 
 export const routes: Routes = [
     {
@@ -20,8 +20,13 @@ export const routes: Routes = [
         component: CatalogComponent
     },
     {
+        path: 'cart',
+        component: CartComponent
+    },
+    {
         path: '3D',
-        component: ThreeDComponent
+        loadComponent: () => import('./pages/3D/three-d/three-d.component')
+            .then((mod) => mod.ThreeDComponent)
     },
     {
         path: 'secure',

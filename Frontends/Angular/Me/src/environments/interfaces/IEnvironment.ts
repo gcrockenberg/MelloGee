@@ -27,12 +27,15 @@ export const AuthRequestType = {
 };
 
 
+export interface IApiConfig {
+  uri: string;
+  scopes: string[];
+}
+
+
 export interface IEnvironment {
   production: boolean;
-  apiConfig: {
-    uri: string;
-    scopes: string[];
-  };
+  apiConfigs: IApiConfig[];
   b2cPolicies: {
     names: {
       signUpSignIn: string;

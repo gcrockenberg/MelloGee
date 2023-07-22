@@ -25,12 +25,12 @@ static_resources:
             - name: local_service
               domains: ["*"]
               routes:
-              - match:
-                  prefix: "/cof"
-                route:
-                  #host_rewrite_literal: www.google.com
-                  prefix_rewrite: "/coffee"
-                  cluster: coffee_service
+              # - match:
+              #     prefix: "/cof"
+              #   route:
+              #     #host_rewrite_literal: www.google.com
+              #     prefix_rewrite: "/coffee"
+              #     cluster: coffee_service
               - match:
                   prefix: "/c/api/v1/catalog"
                 route:
@@ -44,6 +44,20 @@ static_resources:
                     - safe_regex:
                         regex: .*\.envoyproxy\.io
                     allow_methods: "*"
+              - match:
+                  prefix: "/b/api/v1/cart"
+                route:
+                  prefix_rewrite: "/api/v1/cart"
+                  cluster: cart_service
+                typed_per_filter_config:
+                  envoy.filters.http.cors:
+                    "@type": type.googleapis.com/envoy.extensions.filters.http.cors.v3.CorsPolicy
+                    allow_origin_string_match:
+                    - contains: localhost
+                    - safe_regex:
+                        regex: .*\.envoyproxy\.io
+                    allow_methods: "*"
+                    allow_headers: "*"
           http_filters:
           - name: envoy.filters.http.cors
             typed_config:
@@ -111,21 +125,36 @@ static_resources:
               socket_address:
                 address: catalog-api  # docker-compose service name
                 port_value: 80        # HTTP behind gateway
-  - name: coffee_service
+  - name: cart_service
     connect_timeout: 30s
     type: LOGICAL_DNS
     # Comment out the following line to test on v6 networks
     dns_lookup_family: V4_ONLY
     lb_policy: ROUND_ROBIN
     load_assignment:
-      cluster_name: coffee_service
+      cluster_name: cart_service
       endpoints:
       - lb_endpoints:
         - endpoint:
             address:
               socket_address:
-                address: coffeeapi
-                port_value: 80
+                address: cart-api  # docker-compose service name
+                port_value: 80        # HTTP behind gateway
+  # - name: coffee_service
+  #   connect_timeout: 30s
+  #   type: LOGICAL_DNS
+  #   # Comment out the following line to test on v6 networks
+  #   dns_lookup_family: V4_ONLY
+  #   lb_policy: ROUND_ROBIN
+  #   load_assignment:
+  #     cluster_name: coffee_service
+  #     endpoints:
+  #     - lb_endpoints:
+  #       - endpoint:
+  #           address:
+  #             socket_address:
+  #               address: coffeeapi
+  #               port_value: 80
 #  - name: secure_coffee_service
 #    connect_timeout: 30s
 #    type: LOGICAL_DNS

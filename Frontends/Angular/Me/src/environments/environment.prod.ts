@@ -4,10 +4,15 @@ import { IEnvironment, AuthRequestType } from "./interfaces/IEnvironment";
 
 export const environment: IEnvironment = {
   production: true,
-  apiConfig: {
-    scopes: ['https://fabrikamb2c.onmicrosoft.com/helloapi/demo.read'],
-    uri: 'https://fabrikamb2chello.azurewebsites.net/hello',
-  },
+  apiConfigs: [
+    {
+      uri: 'https://me-dev.azure-api.net/b/api/v1/cart/*',
+      scopes: [
+        'https://meauth.onmicrosoft.com/cart/cart.read',
+        'https://meauth.onmicrosoft.com/cart/cart.write'
+      ]
+    }
+  ],
   b2cPolicies: {
     names: {
       signUpSignIn: 'B2C_1_susi_v2',

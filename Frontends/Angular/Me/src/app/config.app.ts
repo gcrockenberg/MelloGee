@@ -1,5 +1,5 @@
-import { ApplicationConfig, CUSTOM_ELEMENTS_SCHEMA, importProvidersFrom } from '@angular/core';
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http'
+import { ApplicationConfig, importProvidersFrom } from '@angular/core';
+import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http'
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import {
@@ -9,22 +9,20 @@ import {
   MsalService,
   MsalGuard,
   MsalBroadcastService,
+  MSAL_INTERCEPTOR_CONFIG,
+  MsalInterceptor
 } from '@azure/msal-angular';
-import { provideRouter, withDisabledInitialNavigation, withRouterConfig } from '@angular/router';
+import { provideRouter } from '@angular/router';
 import { routes } from './config.routes';
-import { HashLocationStrategy, LocationStrategy } from '@angular/common';
-import { MSALInstanceFactory } from './config.auth';
+import { MSALInstanceFactory, MSALInterceptorConfigFactory } from './config.auth';
 import { environment } from 'src/environments/environment';
-import { AppRoutingModule } from './app-routing.module';
 
 
 export const appConfig: ApplicationConfig = {
   providers: [
     Location,
-    // { provide: LocationStrategy, useClass: HashLocationStrategy }, // Server routing support enabled
     importProvidersFrom(
       BrowserModule,
-      //AppRoutingModule, // Use provideRoutes to enable tree shaking
       FormsModule,
       MsalModule
     ),
@@ -35,6 +33,15 @@ export const appConfig: ApplicationConfig = {
     {
       provide: MSAL_GUARD_CONFIG,
       useFactory: () => { return environment.msalGuardConfig }
+    },
+    {
+      provide: MSAL_INTERCEPTOR_CONFIG,
+      useFactory: MSALInterceptorConfigFactory
+    },
+    {
+      provide: HTTP_INTERCEPTORS, // Provides as HTTP Interceptor
+      useClass: MsalInterceptor,
+      multi: true
     },
     MsalService,
     MsalGuard,

@@ -1,7 +1,7 @@
 import { Injectable, DestroyRef, inject } from '@angular/core';
 import { MsalBroadcastService, MsalService } from '@azure/msal-angular';
-import { AccountInfo, AuthenticationResult, EventMessage, EventType, InteractionStatus, InteractionType, PopupRequest, PromptValue, RedirectRequest, SsoSilentRequest } from '@azure/msal-browser';
-import { Subject, filter, takeUntil } from 'rxjs';
+import { AccountInfo, AuthenticationResult, EventMessage, EventType, InteractionRequiredAuthError, InteractionStatus, InteractionType, PopupRequest, PromptValue, RedirectRequest, SsoSilentRequest } from '@azure/msal-browser';
+import { Subject, catchError, filter, firstValueFrom, of, takeUntil, tap } from 'rxjs';
 import { IdTokenClaimsWithPolicyId } from 'src/app/config.auth';
 import { environment } from 'src/environments/environment';
 
@@ -17,10 +17,11 @@ export class SecurityService {
   private _destroyRef = inject(DestroyRef);
 
   public IsAuthorized: boolean = false;
+  public UserData?: AccountInfo;
 
   constructor(
-    private authService: MsalService,
-    private msalBroadcastService: MsalBroadcastService,
+    private _msalInstance: MsalService,
+    private _msalBroadcastService: MsalBroadcastService,
   ) {
     this._destroyRef.onDestroy(() => this._OnDestroy());
     this._initialize();
@@ -41,22 +42,22 @@ export class SecurityService {
     console.log('redirectUri: ', window.location.origin);
     if (environment.msalGuardConfig.interactionType === InteractionType.Popup) {
       if (environment.msalGuardConfig.authRequest) {
-        this.authService.loginPopup({ ...environment.msalGuardConfig.authRequest, ...userFlowRequest } as PopupRequest)
+        this._msalInstance.loginPopup({ ...environment.msalGuardConfig.authRequest, ...userFlowRequest } as PopupRequest)
           .subscribe((response: AuthenticationResult) => {
-            this.authService.instance.setActiveAccount(response.account);
+            this._msalInstance.instance.setActiveAccount(response.account);
           });
       } else {
-        this.authService.loginPopup(userFlowRequest)
+        this._msalInstance.loginPopup(userFlowRequest)
           .subscribe((response: AuthenticationResult) => {
-            this.authService.instance.setActiveAccount(response.account);
+            this._msalInstance.instance.setActiveAccount(response.account);
           });
       }
     } else {
       if (environment.msalGuardConfig.authRequest) {
         console.log('authService.loginRedirect() params: ', { ...environment.msalGuardConfig.authRequest, ...userFlowRequest });
-        this.authService.instance.loginRedirect({ ...environment.msalGuardConfig.authRequest, ...userFlowRequest } as RedirectRequest);
+        this._msalInstance.instance.loginRedirect({ ...environment.msalGuardConfig.authRequest, ...userFlowRequest } as RedirectRequest);
       } else {
-        this.authService.instance.loginRedirect(userFlowRequest);
+        this._msalInstance.instance.loginRedirect(userFlowRequest);
       }
     }
   }
@@ -65,11 +66,11 @@ export class SecurityService {
   logout() {
     //this.authService.logout();
     if (environment.msalGuardConfig.interactionType === InteractionType.Popup) {
-      this.authService.logoutPopup({
+      this._msalInstance.logoutPopup({
         mainWindowRedirectUri: "/"
       });
     } else {
-      this.authService.logoutRedirect();
+      this._msalInstance.logoutRedirect();
     }
   }
 
@@ -80,12 +81,12 @@ export class SecurityService {
      * To use active account set here, subscribe to inProgress$ first in your component
      * Note: Basic usage demonstrated. Your app may require more complicated account selection logic
      */
-    let activeAccount = this.authService.instance.getActiveAccount();
+    let activeAccount = this._msalInstance.instance.getActiveAccount();
 
-    if (!activeAccount && this.authService.instance.getAllAccounts().length > 0) {
-      let accounts = this.authService.instance.getAllAccounts();
+    if (!activeAccount && this._msalInstance.instance.getAllAccounts().length > 0) {
+      let accounts = this._msalInstance.instance.getAllAccounts();
       // add your code for handling multiple accounts here
-      this.authService.instance.setActiveAccount(accounts[0]);
+      this._msalInstance.instance.setActiveAccount(accounts[0]);
     }
   }
 
@@ -94,24 +95,24 @@ export class SecurityService {
     this._setIsAuthorized();
 
     // Optional - This will enable ACCOUNT_ADDED and ACCOUNT_REMOVED events emitted when a user logs in or out of another tab or window
-    this.authService.instance.enableAccountStorageEvents();
+    this._msalInstance.instance.enableAccountStorageEvents();
     /**
      * You can subscribe to MSAL events as shown below. For more info,
      * visit: https://github.com/AzureAD/microsoft-authentication-library-for-js/blob/dev/lib/msal-angular/docs/v2-docs/events.md
      */
-    this.msalBroadcastService.msalSubject$
+    this._msalBroadcastService.msalSubject$
       .pipe(
         filter((msg: EventMessage) => msg.eventType === EventType.ACCOUNT_ADDED || msg.eventType === EventType.ACCOUNT_REMOVED),
       )
       .subscribe((result: EventMessage) => {
-        if (this.authService.instance.getAllAccounts().length === 0) {
+        if (this._msalInstance.instance.getAllAccounts().length === 0) {
           window.location.pathname = "/";
         } else {
           this._setIsAuthorized();
         }
       });
 
-    this.msalBroadcastService.inProgress$
+    this._msalBroadcastService.inProgress$
       .pipe(
         filter((status: InteractionStatus) => status === InteractionStatus.None),
         takeUntil(this._destroying$)
@@ -121,7 +122,7 @@ export class SecurityService {
         this._checkAndSetActiveAccount();
       })
 
-    this.msalBroadcastService.msalSubject$
+    this._msalBroadcastService.msalSubject$
       .pipe(
         filter((msg: EventMessage) => msg.eventType === EventType.LOGIN_SUCCESS
           || msg.eventType === EventType.ACQUIRE_TOKEN_SUCCESS
@@ -133,7 +134,7 @@ export class SecurityService {
         let idtoken = payload.idTokenClaims as IdTokenClaimsWithPolicyId;
 
         if (idtoken.acr === environment.b2cPolicies.names.signUpSignIn || idtoken.tfp === environment.b2cPolicies.names.signUpSignIn) {
-          this.authService.instance.setActiveAccount(payload.account);
+          this._msalInstance.instance.setActiveAccount(payload.account);
         }
 
         /**
@@ -144,7 +145,7 @@ export class SecurityService {
         if (idtoken.acr === environment.b2cPolicies.names.editProfile || idtoken.tfp === environment.b2cPolicies.names.editProfile) {
 
           // retrieve the account from initial sing-in to the app
-          const originalSignInAccount = this.authService.instance.getAllAccounts()
+          const originalSignInAccount = this._msalInstance.instance.getAllAccounts()
             .find((account: AccountInfo) =>
               account.idTokenClaims?.oid === idtoken.oid
               && account.idTokenClaims?.sub === idtoken.sub
@@ -158,7 +159,7 @@ export class SecurityService {
           };
 
           // silently login again with the signUpSignIn policy
-          this.authService.ssoSilent(signUpSignInFlowRequest);
+          this._msalInstance.ssoSilent(signUpSignInFlowRequest);
         }
 
         /**
@@ -181,7 +182,7 @@ export class SecurityService {
         return result;
       });
 
-    this.msalBroadcastService.msalSubject$
+    this._msalBroadcastService.msalSubject$
       .pipe(
         filter((msg: EventMessage) => msg.eventType === EventType.LOGIN_FAILURE || msg.eventType === EventType.ACQUIRE_TOKEN_FAILURE),
         takeUntil(this._destroying$)
@@ -201,8 +202,43 @@ export class SecurityService {
   }
 
   private _setIsAuthorized() {
-    this.IsAuthorized = this.authService.instance.getAllAccounts().length > 0;
+    let accountInfo: AccountInfo[] = this._msalInstance.instance.getAllAccounts();
+    this.IsAuthorized = accountInfo.length > 0;
+
+    // see https://github.com/AzureAD/microsoft-authentication-library-for-js/blob/dev/lib/msal-common/docs/Accounts.md
+    if (this.IsAuthorized) {
+      this.UserData = accountInfo[0];
+      // console.log(`homeAccountId: ${accountInfo[0].homeAccountId}`);
+      // console.log(`environment: ${accountInfo[0].environment}`);
+      // console.log(`tenantId: ${accountInfo[0].tenantId}`);
+      // console.log(`username: ${accountInfo[0].username}`);
+      // console.log(`localAccountId: ${accountInfo[0].localAccountId}`);
+      // console.log(`name: ${accountInfo[0].name}`);
+      // console.log(`idToken: ${accountInfo[0].idToken}`);
+      // console.log(`nativeAccountId: ${accountInfo[0].nativeAccountId}`);
+      // console.log('idTokenClaims: ', accountInfo[0].idTokenClaims);
+    }
   }
+
+/**
+ * Rely on MsalInterceptor to automatically acquires tokens for outgoing requests 
+ * that use the Angular http client to known protected resources.
+ * 
+ */
+  // async getToken(): Promise<string> {
+  //   const REQUEST = { scopes: ["https://meauth.onmicrosoft.com/cart/cart.read"] };
+  //   const authenticationResult: AuthenticationResult = await firstValueFrom(
+  //     this._msalInstance.acquireTokenSilent(REQUEST)
+  //       .pipe(
+  //         // retry(3), // retry a failed request up to 3 times
+  //         tap((response: AuthenticationResult) => {
+  //           return response.accessToken;
+  //         })
+  //       )
+  //   );
+    
+  //   return authenticationResult.accessToken;
+  // }
 
 
   // unsubscribe to events when component is destroyed

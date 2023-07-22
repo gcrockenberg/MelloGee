@@ -4,9 +4,11 @@
  * are used to initialize Angular and MSAL Angular configurations in
  * in app.module.ts file.
  */
-import { LogLevel, BrowserCacheLocation, IPublicClientApplication, PublicClientApplication } from '@azure/msal-browser';
+import { MsalInterceptorConfiguration } from '@azure/msal-angular';
+import { LogLevel, BrowserCacheLocation, IPublicClientApplication, PublicClientApplication, InteractionType } from '@azure/msal-browser';
 import { IdTokenClaims } from '@azure/msal-common';
 import { environment } from 'src/environments/environment';
+import { IApiConfig } from 'src/environments/interfaces/IEnvironment';
 
 const isIE = window.navigator.userAgent.indexOf("MSIE ") > -1 || window.navigator.userAgent.indexOf("Trident/") > -1;
 
@@ -51,5 +53,19 @@ export function MSALInstanceFactory(): IPublicClientApplication {
             }
         }
     );
+}
+
+
+export function MSALInterceptorConfigFactory(): MsalInterceptorConfiguration {
+    const protectedResourceMap = new Map<string, Array<string> | null>();
+  
+    environment.apiConfigs.forEach((apiConfig: IApiConfig) => {
+        protectedResourceMap.set(apiConfig.uri, apiConfig.scopes);
+    });    
+    
+    return {
+        interactionType: InteractionType.Popup,
+        protectedResourceMap
+    };
 }
 

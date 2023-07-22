@@ -3,10 +3,15 @@ import { IEnvironment, AuthRequestType } from "./interfaces/IEnvironment";
 
 export const environment: IEnvironment = {
   production: false,
-  apiConfig: {
-    scopes: ['https://fabrikamb2c.onmicrosoft.com/helloapi/demo.read'],
-    uri: 'https://fabrikamb2chello.azurewebsites.net/hello',
-  },
+  apiConfigs: [
+    {
+    uri: 'http://localhost/b/api/v1/cart/*',
+    scopes: [
+      'https://meauth.onmicrosoft.com/cart/cart.read',
+      'https://meauth.onmicrosoft.com/cart/cart.write'
+      ]
+    }
+  ],
   b2cPolicies: {
     names: {
       signUpSignIn: 'B2C_1_susi_v2',
@@ -32,6 +37,6 @@ export const environment: IEnvironment = {
   msalGuardConfig: {
     // Popup detects when user cancels the flow, Redirect does not which leaves inconsistent state.
     interactionType: InteractionType.Popup,
-    authRequest: AuthRequestType.LoginRequest,
+    authRequest: AuthRequestType.LoginRequest
   }
 };

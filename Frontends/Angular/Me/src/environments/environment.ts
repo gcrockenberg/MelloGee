@@ -8,7 +8,7 @@ import { AuthRequestType, IEnvironment } from './interfaces/IEnvironment';
 
 export const environment: IEnvironment = {
   production: false,
-  apiConfig: {
+  apiConfigs: {
     scopes: [''],
     uri: '',
   },

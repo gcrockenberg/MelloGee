@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
@@ -7,14 +9,20 @@ namespace Me.Services.Common;
 internal class AuthorizeCheckOperationFilter : IOperationFilter
 {
     private readonly IConfiguration _configuration;
+    private readonly ILogger<AuthorizeCheckOperationFilter> _logger;
 
-    public AuthorizeCheckOperationFilter(IConfiguration configuration)
+
+    public AuthorizeCheckOperationFilter(IConfiguration configuration, IServiceProvider sp)
     {
         _configuration = configuration;
+        _logger = sp.GetRequiredService<ILogger<AuthorizeCheckOperationFilter>>();
     }
+
 
     public void Apply(OpenApiOperation operation, OperationFilterContext context)
     {
+        _logger.LogInformation("--> Apply()");
+
         // Check for authorize attribute
         var hasAuthorize = false;
 
@@ -26,6 +34,7 @@ internal class AuthorizeCheckOperationFilter : IOperationFilter
 
         if (!hasAuthorize) return;
 
+        _logger.LogInformation("--> Apply() , Authorization check required");
         operation.Responses.TryAdd("401", new OpenApiResponse { Description = "Unauthorized" });
         operation.Responses.TryAdd("403", new OpenApiResponse { Description = "Forbidden" });
 

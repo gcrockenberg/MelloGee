@@ -3,6 +3,13 @@
 version: '3.4'
 
 services:
+
+  cartdata:
+    image: redis:alpine
+
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+
 # Explore switching to self-hosted App Gateway for local dev
 # https://learn.microsoft.com/en-us/azure/api-management/self-hosted-gateway-overview
   envoygateway:
@@ -35,11 +42,11 @@ services:
           memory: 64MB
     memswap_limit: 128MB
 
-  catalogapi:
-    image: catalogapi
+  cart-api:
+    image: cart-api
     build:
       context: .
-      dockerfile: Services/CatalogService/Dockerfile
+      dockerfile: Services/Cart/Cart.API/Dockerfile
     deploy:
       resources:
         limits:
@@ -48,15 +55,29 @@ services:
           memory: 64MB
     memswap_limit: 128MB
 
-  coffeeapi:
-    image: coffeeapi
-    build:
-      context: .
-      dockerfile: Services/Coffee/Coffee.API/Dockerfile
-    deploy:
-      resources:
-        limits:
-          memory: 128MB
-        reservations:
-          memory: 64MB
-    memswap_limit: 128MB
+
+  # catalogapi:
+  #   image: catalogapi
+  #   build:
+  #     context: .
+  #     dockerfile: Services/CatalogService/Dockerfile
+  #   deploy:
+  #     resources:
+  #       limits:
+  #         memory: 128MB
+  #       reservations:
+  #         memory: 64MB
+  #   memswap_limit: 128MB
+
+  # coffeeapi:
+  #   image: coffeeapi
+  #   build:
+  #     context: .
+  #     dockerfile: Services/Coffee/Coffee.API/Dockerfile
+  #   deploy:
+  #     resources:
+  #       limits:
+  #         memory: 128MB
+  #       reservations:
+  #         memory: 64MB
+  #   memswap_limit: 128MB

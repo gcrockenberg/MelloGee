@@ -1,36 +1,49 @@
 version: '3.4'
 
 services:
-  catalogapi:
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=https://+:443;http://+:80
-    volumes:
-      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
-  # Direct, external access to API within composed environment
-    ports:
-      - 8080:80
-      - 8081:443
 
-  coffeeapi:
-    environment:
-      ASPNETCORE_ENVIRONMENT: Development
-      ASPNETCORE_HTTPS_PORT: 8083
-      ASPNETCORE_URLS: "https://+:443;http://+:80"
+  cartdata:
+    ports:
+      - "6379:6379"
     volumes:
-      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - me-cartdata:/data
+
+  rabbitmq:
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+
+  # catalogapi:
+  #   environment:
+  #     - ASPNETCORE_ENVIRONMENT=Development
+  #     - ASPNETCORE_URLS=https://+:443;http://+:80
+  #   volumes:
+  #     - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+  # Direct, external access to API within composed environment
+    # ports:
+    #   - 8080:80
+    #   - 8081:443
+
+  # coffeeapi:
+  #   environment:
+  #     ASPNETCORE_ENVIRONMENT: Development
+  #     ASPNETCORE_HTTPS_PORT: 8083
+  #     ASPNETCORE_URLS: "https://+:443;http://+:80"
+  #   volumes:
+  #     - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
 # Hide direct external access to the container
 # Gateway provides routed access within the composed environment
-    ports:
-      - 8082:80
-      - 8083:443
+    # ports:
+    #   - 8082:80
+    #   - 8083:443
 
   catalog-api:
+  # Override environment defined in Dockerfile
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - Kestrel__Endpoints__HTTP__Url=http://+:80
-      - Kestrel__Endpoints__GRPC__Url=http://+:81
-      - Kestrel__Endpoints__GRPC__Protocols=Http2
+#      - Kestrel__Endpoints__HTTP__Url=http://+:80
+#      - Kestrel__Endpoints__GRPC__Url=http://+:81
+#      - Kestrel__Endpoints__GRPC__Protocols=Http2
 #      - ConnectionStrings__CatalogDb=${ME_AZURE_CATALOG_DB:-Server=sqldata;Database=Me.Services.CatalogDb;User Id=sa;Password=Pass@word;Encrypt=False;TrustServerCertificate=true}
 #      - ConnectionStrings__EventBus=${ME_AZURE_SERVICE_BUS:-rabbitmq}
       - PicBaseUrl=${ME_STORAGE_CATALOG_URL}
@@ -47,3 +60,27 @@ services:
       - "5101:80"
       - "9101:81"
 
+  cart-api:
+  # Override environment defined in Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+#      - Kestrel__Endpoints__HTTP__Url=http://+:80
+#      - Kestrel__Endpoints__GRPC__Url=http://+:81
+#      - Kestrel__Endpoints__GRPC__Protocols=Http2
+      - ConnectionStrings__Redis=cartdata
+#      - ConnectionStrings__EventBus=${ESHOP_AZURE_SERVICE_BUS:-rabbitmq}
+#      - Identity__Url=http://identity-api
+#      - Identity__ExternalUrl=http://${ESHOP_EXTERNAL_DNS_NAME_OR_IP}:5105
+#      - EventBus__UserName=${ME_SERVICE_BUS_USERNAME}
+#      - EventBus__Password=${ME_SERVICE_BUS_PASSWORD}
+#      - ApplicationInsights__InstrumentationKey=${INSTRUMENTATION_KEY}
+#      - OrchestratorType=${ORCHESTRATOR_TYPE}
+      - UseLoadTest=${USE_LOADTEST:-False}
+      - PATH_BASE=/cart-api
+    ports:
+      - "5103:80"
+      - "9103:81"
+
+volumes:
+  me-cartdata:
+    external: false

@@ -43,6 +43,7 @@ export class CatalogComponent implements OnInit {
     this.authenticated = _securityService.IsAuthorized;
   }
 
+  
   ngOnInit(): void {
     // Configuration Settings:
     if (this._configurationService.isReady)
@@ -66,6 +67,7 @@ export class CatalogComponent implements OnInit {
     console.log("--> addToCart():", item);
     //this.basketService.addItemToBasket(item);
   }
+
 
   loadData() {
     this.getBrands();
