@@ -1,7 +1,7 @@
 namespace Me.Services.Cart.API.Controllers;
 
 [Route("api/v1/[controller]")]
-[Authorize]
+//[Authorize]
 [ApiController]
 public class CartController : ControllerBase
 {
@@ -23,20 +23,39 @@ public class CartController : ControllerBase
     }
 
 
-    [HttpGet("{id}")]
-    public async Task<ActionResult<CustomerCart>> GetCartByIdAsync(string id)
+    [HttpGet("{sessionId}")]
+    public async Task<ActionResult<CustomerCart>> GetCartBySessionIdAsync(string sessionId)
     {
-        _logger.LogInformation($"--> GetCartByIdAsync(\"{id}\")");
-        var cart = await _repository.GetCartAsync(id);
+        string compositeId = sessionId + Request.HttpContext.Connection.RemoteIpAddress;
 
-        return Ok(cart ?? new CustomerCart(id));
+        var cart = await _repository.GetCartAsync(compositeId);
+        if (null != cart)
+        {
+            cart.BuyerId = sessionId;
+        }
+
+        return Ok(cart ?? new CustomerCart(sessionId));
     }
 
 
     [HttpPost]
-    public async Task<ActionResult<CustomerCart>> UpdateCartAsync([FromBody] CustomerCart value)
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<CustomerCart>> UpdateCartAsync([FromBody] CustomerCart cart)
     {
-        return Ok(await _repository.UpdateCartAsync(value));
+        string originalBuyerId = cart.BuyerId;
+
+        cart.BuyerId = originalBuyerId + Request.HttpContext.Connection.RemoteIpAddress;
+
+        if (null == cart || string.IsNullOrEmpty(cart.BuyerId))
+        {
+            return BadRequest();
+        }
+
+        cart = await _repository.UpdateCartAsync(cart);
+        cart.BuyerId = originalBuyerId;
+
+        return Ok(cart);
     }
 
 

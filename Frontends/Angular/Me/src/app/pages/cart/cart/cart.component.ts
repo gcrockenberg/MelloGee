@@ -21,16 +21,22 @@ export class CartComponent implements OnInit {
   constructor(private _cartService: CartService, private _configurationService: ConfigurationService) { }
 
 
-  async ngOnInit(): Promise<void> {
+  ngOnInit() {
+    console.log('Oninit');
     if (this._configurationService.isReady) {
-      (await this._cartService.getCart()).subscribe(cart => {
+      console.log('Config ready');
+      this._cartService.getCart().subscribe(cart => {
+        console.log('Got cart 1 !');
         this.cart = cart;
         this._calculateTotalPrice();
       });
     }
     else {
-      this._configurationService.settingsLoaded$.subscribe(async x => {
-        (await this._cartService.getCart()).subscribe(cart => {
+      console.log('Config not ready');
+      this._configurationService.settingsLoaded$.subscribe(x => {
+        console.log('Now config is ready');
+        this._cartService.getCart().subscribe(cart => {
+          console.log('Got cart 2 !');
           this.cart = cart;
           this._calculateTotalPrice();
         });

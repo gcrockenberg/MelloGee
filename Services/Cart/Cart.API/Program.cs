@@ -1,3 +1,5 @@
+using Me.Services.Cart;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();                               // Extension
@@ -27,7 +29,7 @@ if (app.Environment.IsDevelopment())
     // Since IdentityModel version 5.2.1 (or since Microsoft.AspNetCore.Authentication.JwtBearer version 2.2.0),
     // PII hiding in log files is enabled by default for GDPR concerns.
     // For debugging/development purposes, one can enable additional detail in exceptions by setting IdentityModelEventSource.ShowPII to true.
-    Microsoft.IdentityModel.Logging.IdentityModelEventSource.ShowPII = true;
+    //Microsoft.IdentityModel.Logging.IdentityModelEventSource.ShowPII = true;
     //app.UseDeveloperExceptionPage();
 
     // Swagger handled in UseServiceDefaults
@@ -35,7 +37,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
 app.UseAuthorization();
 

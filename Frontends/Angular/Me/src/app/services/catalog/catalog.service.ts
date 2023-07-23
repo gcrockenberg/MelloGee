@@ -18,7 +18,7 @@ export class CatalogService {
 
   constructor(
     private _configurationService: ConfigurationService,
-    private _dataService: DataService
+    private _dataService: DataService,
   ) {
     this._configurationService.settingsLoaded$.subscribe(x => {
       this.catalogUrl = this._configurationService.serverSettings.purchaseUrl + '/c/api/v1/catalog/items';

@@ -26,6 +26,7 @@ public class RedisCartRepository : ICartRepository
         return data?.Select(k => k.ToString());
     }
 
+
     public async Task<CustomerCart> GetCartAsync(string customerId)
     {
         var data = await _database.StringGetAsync(customerId);
@@ -34,9 +35,10 @@ public class RedisCartRepository : ICartRepository
         {
             return null;
         }
-
+        
         return JsonSerializer.Deserialize<CustomerCart>(data, JsonDefaults.CaseInsensitiveOptions);
     }
+
 
     public async Task<CustomerCart> UpdateCartAsync(CustomerCart cart)
     {
@@ -44,14 +46,12 @@ public class RedisCartRepository : ICartRepository
 
         if (!created)
         {
-            _logger.LogInformation("Problem occur persisting the item.");
             return null;
         }
 
-        _logger.LogInformation("Cart item persisted successfully.");
-
         return await GetCartAsync(cart.BuyerId);
     }
+
 
     private IServer GetServer()
     {

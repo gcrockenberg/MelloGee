@@ -24,12 +24,13 @@ A personal project that I started May 2023 to demonstrate backend and frontend a
 ## Steps for using Me
 
 ### Local
-1. docker-compose up
-2. cd Frontends/Angular/Me
-3. npm install
-4. npm run start (for Node server)
-5. npm run swa   (for Azure Static Web App emulator)
-
+```powershell
+docker-compose up
+cd Frontends/Angular/Me
+npm install
+npm run start (for Node server)
+npm run swa   (for Azure Static Web App emulator)
+```
 ### Azure
 **Prereqs**
 : Deploying Me to Azure requires:
@@ -46,14 +47,18 @@ After provisioning the Me infrastructure (below) we'll configure the GitHub envi
 
 **Push initial images to Docker**
 : So that Docker has a latest version of the initial API. The provisioning that follows will pull them and import the APIs into APIM.
-1. docker build -t *your-docker-login*/catalog-api . -f Services\Catalog\Catalog.API\Dockerfile
-2. docker push *your-docker-login*/catalog-api
-
+```
+docker build -t *your-docker-login*/catalog-api . -f Services\Catalog\Catalog.API\Dockerfile
+docker push *your-docker-login*/catalog-api
+docker build -t *your-docker-login*/cart-api . -f Services\Cart\Cart.API\Dockerfile
+docker push *your-docker-login*/cart-api
+```
 **Provision Me**
 : Create the Azure infrastructure for Me in an Azure Resource Group of your choosing [^1]. Confirm the Azure resources are all available in the location you choose (I used eastus).
-1. az configure --defaults group=*my-resource-group*
-2. az deployment group create --template-file bicep/main.bicep
-
+```
+az configure --defaults group=*my-resource-group*
+az deployment group create --template-file bicep/main.bicep
+```
 **GitHub Actions CI/CD Repository Secrets**
 : The following Repository Secrets support CI/CD deployments
 - [DOCKERHUB_TOKEN](https://docs.docker.com/docker-hub/access-tokens/) - Container images will be pushed to Docker

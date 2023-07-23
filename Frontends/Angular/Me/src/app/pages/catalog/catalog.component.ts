@@ -82,7 +82,6 @@ export class CatalogComponent implements OnInit {
         this.brands = brands;
         let allBrands: ICatalogBrand = { id: null, brand: 'All' };
         this.brands.unshift(allBrands);
-        console.log("--> loaded brands: ", this.brands);
       },
       error: (error) => this._handleError(error)
     });
@@ -94,7 +93,6 @@ export class CatalogComponent implements OnInit {
       this.types = types;
       let alltypes: ICatalogType = { id: null, type: 'All' };
       this.types.unshift(alltypes);
-      console.log("--> loaded types: ", this.types);
     });
   }
 
@@ -112,7 +110,6 @@ export class CatalogComponent implements OnInit {
           totalPages: Math.ceil(catalog.count / catalog.pageSize),
           items: catalog.pageSize
         };
-        console.log("--> loaded items: ", this.catalog.data);
       });
   }
 

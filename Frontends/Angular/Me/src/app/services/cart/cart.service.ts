@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { DataService } from '../data/data.service';
 import { ICart } from 'src/app/models/cart/cart.model';
 import { SecurityService } from '../security/security.service';
@@ -6,6 +6,10 @@ import { ConfigurationService } from '../configuration/configuration.service';
 import { Observable, firstValueFrom, tap } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { MsalService } from '@azure/msal-angular';
+import { ICatalogItem } from 'src/app/models/catalog/catalog-item.model';
+import { Guid } from 'src/guid';
+import { ICartItem } from 'src/app/models/cart/cart-item.model';
+import { CookieService } from 'ngx-cookie-service';
 
 @Injectable({
   providedIn: 'root'
@@ -13,10 +17,11 @@ import { MsalService } from '@azure/msal-angular';
 export class CartService {
   private _cartUrl: string = '';
   private _purchaseUrl: string = '';
-  // cart: ICart = {
-  //   buyerId: '',
-  //   items: []
-  // };
+  private _cookieService = inject(CookieService);
+  cart: ICart = {
+    buyerId: '',
+    items: []
+  };
 
 
   constructor(
@@ -25,12 +30,17 @@ export class CartService {
     private _configurationService: ConfigurationService,
     private _msalInstance: MsalService
   ) {
-    //    this.cart.items = [];
-
     // Init:
     //    if (this._securityService.IsAuthorized) {
     //      if (this._securityService.UserData) {
     //        this.cart.buyerId = this._securityService.UserData.localAccountId;
+    if (!this._cookieService.check('SessionId')) {
+      this._cookieService.set(
+        'SessionId',
+        Guid.newGuid(),
+        new Date().getDate() + 7
+      );
+    }
 
     // By default, SessionID values are stored a cookie.
     // Use that to manage Cart
@@ -56,17 +66,40 @@ export class CartService {
   }
 
 
-  getCart(): Observable<ICart> {
-    let url: string = this._cartUrl + 'foo';
-    
-    return this._dataService.get(url)
-      .pipe<ICart>(tap((response: any) => {
-        if (response.status === 204) {
-          return null;
-        }
+  addItemToCart(item: ICatalogItem): Observable<boolean> {
+    let newCartItem: ICartItem = {
+      pictureUrl: item.pictureUri,
+      productId: item.id,
+      productName: item.name,
+      quantity: 1,
+      unitPrice: item.price,
+      id: Guid.newGuid(),
+      oldUnitPrice: 0
+    };
+    let cartItem = this.cart.items.find(value => value.productId == newCartItem.productId);
 
-        return response;
-      }));
+    if (cartItem) {
+      cartItem.quantity++;
+    } else {
+      this.cart.items.push(newCartItem);
+    }
+
+    return this._setCart();
+  }
+
+
+  getCart(): Observable<ICart> {
+    let url: string = this._cartUrl + this._cookieService.get('SessionId');
+
+    return this._dataService.get(url)
+      .pipe<ICart>(
+        tap((response: any) => {
+          if (response.status === 204) {
+            return null;
+          }
+
+          return response;
+        }));
   }
 
 
@@ -78,5 +111,11 @@ export class CartService {
   // }
 
 
+  private _setCart(): Observable<boolean> {
+    this.cart.buyerId = this._cookieService.get('SessionId');
+
+    return this._dataService.post(this._cartUrl, this.cart).
+      pipe<boolean>(tap((response: any) => true));
+  }
 
 }

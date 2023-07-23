@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, catchError, tap, throwError } from 'rxjs';
+import { Observable, catchError, of, tap, throwError } from 'rxjs';
 import { SecurityService } from '../security/security.service';
 import { Guid } from 'src/guid';
 
@@ -18,15 +18,36 @@ export class DataService {
 
   constructor(
     private _http: HttpClient,
-    //private _securityService: SecurityService
+    private _securityService: SecurityService
   ) { }
 
-  
-  get<Type>(url: string, params?: any): Observable<Type> {
-    // let options = {};
-    // await this._setHeaders(options);
 
-    return this._http.get<Type>(url)
+  private doPost<Type>(url: string, data: any, needId: boolean, params?: any): Observable<Type> {
+    let options = {};
+    this._setHeaders(options, needId);
+
+    return this._http.post<Type>(url, data, options)
+      .pipe(
+        tap((response: Type) => {
+          console.log('Post response: ', response)
+          return response;
+        }),
+        catchError(this._handleError)
+      );
+  }
+
+
+  get<Type>(url: string, params?: any): Observable<Type> {
+    if (this._securityService.isSecurePath(url) && !this._securityService.IsAuthorized) {
+      console.log('--> Msal fails to invoke interactive login when calling secure API unauthenticated');
+      return of();
+    }      
+
+    let options = {};
+    this._setHeaders(options);
+
+    console.log(`DataService getting ${url}`);
+    return this._http.get<Type>(url, options)
       .pipe(
         // retry(3), // retry a failed request up to 3 times
         tap((response: Type) => {
@@ -37,7 +58,16 @@ export class DataService {
   }
 
 
+  post(url: string, data: any, params?: any): Observable<Response> {
+    let options = { };
+    this._setHeaders(options);
+
+    return this.doPost(url, data, false, params);
+  }
+
+
   private _handleError(error: any) {
+    console.log("Handle error: ", error);
     if (error.error instanceof ErrorEvent) {
       // A client-side or network error occurred. Handle it accordingly.
       console.error('Client side network error occurred:', error.error.message);
@@ -55,20 +85,24 @@ export class DataService {
   }
 
 
-  // private async _setHeaders(options: any, needId?: boolean) {
+  private async _setHeaders(options: any, needId?: boolean) {
+    console.log(`IsAuthenticated: ${this._securityService.IsAuthorized}`)
+  //  options["withCredentials"] = true;
   //   // if (needId && this.securityService) {
   //   //   options["headers"] = new HttpHeaders()
   //   //     .append('authorization', 'Bearer ' + this.securityService.GetToken())
   //   //     .append('x-requestid', Guid.newGuid());
   //   // }
   //   // else 
-    
+
+  //  = true and when I made the request I set withCredentials: true
   //   if (this._securityService.IsAuthorized) {
-  //     options["headers"] = new HttpHeaders()
+  //   options["headers"] = new HttpHeaders()
+  //     .append('withCredentials', 'true');
   //       .append('authorization', 'Bearer ' + await this._securityService.getToken())
   //       .append('x-requestid', Guid.newGuid());
   //   }
-  // }
+  }
 
 
 }

@@ -1,9 +1,20 @@
 import { Injectable, DestroyRef, inject } from '@angular/core';
 import { MsalBroadcastService, MsalService } from '@azure/msal-angular';
-import { AccountInfo, AuthenticationResult, EventMessage, EventType, InteractionRequiredAuthError, InteractionStatus, InteractionType, PopupRequest, PromptValue, RedirectRequest, SsoSilentRequest } from '@azure/msal-browser';
-import { Subject, catchError, filter, firstValueFrom, of, takeUntil, tap } from 'rxjs';
+import { Subject, filter, takeUntil } from 'rxjs';
 import { IdTokenClaimsWithPolicyId } from 'src/app/config.auth';
 import { environment } from 'src/environments/environment';
+import {
+  AccountInfo,
+  AuthenticationResult,
+  EventMessage,
+  EventType,
+  InteractionStatus,
+  InteractionType,
+  PopupRequest,
+  PromptValue,
+  RedirectRequest,
+  SsoSilentRequest
+} from '@azure/msal-browser';
 
 
 /**
@@ -39,7 +50,6 @@ export class SecurityService {
 
 
   login(userFlowRequest?: RedirectRequest | PopupRequest) {
-    console.log('redirectUri: ', window.location.origin);
     if (environment.msalGuardConfig.interactionType === InteractionType.Popup) {
       if (environment.msalGuardConfig.authRequest) {
         this._msalInstance.loginPopup({ ...environment.msalGuardConfig.authRequest, ...userFlowRequest } as PopupRequest)
@@ -200,6 +210,20 @@ export class SecurityService {
         };
       });
   }
+
+
+  isSecurePath (url: string): boolean
+  {
+    if (environment.apiConfigs.find((config) => {
+      let configUri = config.uri.replace('*', '');
+      url.startsWith(configUri);
+    })) {
+      return false;
+    }
+  
+    return true;
+  }
+
 
   private _setIsAuthorized() {
     let accountInfo: AccountInfo[] = this._msalInstance.instance.getAllAccounts();

@@ -4,6 +4,8 @@ import { ICatalogItem } from 'src/app/models/catalog/catalog-item.model';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { bootstrapBagPlus} from "@ng-icons/bootstrap-icons"
 import { ModalService } from 'src/app/services/modal/modal.service';
+import { CartService } from 'src/app/services/cart/cart.service';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-catalog-item-card',
@@ -16,5 +18,19 @@ import { ModalService } from 'src/app/services/modal/modal.service';
 export class CatalogItemCardComponent {
   @Input() item!: ICatalogItem;
 
-  constructor(public modalService: ModalService) { }
+  constructor(
+    public modalService: ModalService,
+    private _cartService: CartService) { }
+  
+  
+
+  async addToCart(item: ICatalogItem) {
+    console.log('AddtoCart: ', item);
+      // if (!this.authenticated) {
+      //     return;
+      // }
+    let result = await firstValueFrom(this._cartService.addItemToCart(item));
+
+    console.log(`AddtoCart result: ${result}`);
+  }
 }

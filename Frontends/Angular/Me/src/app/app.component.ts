@@ -33,9 +33,6 @@ export class AppComponent implements OnInit { // OnDestroy {
     if (typeof window !== "undefined") {  // Safety check
       this.isIframe = window !== window.parent && !window.opener; 
     }
-    console.log(`IsInIFrame: ${this.isIframe}`);
-    console.log(`IsInIFrame from Msal: ${BrowserUtils.isInIframe()}`);
-    console.log(`IsInPopup: ${BrowserUtils.isInPopup()}`);
   }
 
 }
