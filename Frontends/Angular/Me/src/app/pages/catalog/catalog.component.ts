@@ -46,26 +46,12 @@ export class CatalogComponent implements OnInit {
   
   ngOnInit(): void {
     // Configuration Settings:
-    if (this._configurationService.isReady)
-      this.loadData();
-    else
-      this._configurationService.settingsLoaded$.subscribe(x => {
-        this.loadData();
-      });
+    this.loadData();
 
     // Subscribe to login and logout observable
     // this.authSubscription = this.securityService.authenticationChallenge$.subscribe(res => {
     //     this.authenticated = res;
     // });
-  }
-
-
-  addToCart(item: ICatalogItem) {
-    if (!this.authenticated) {
-      return;
-    }
-    console.log("--> addToCart():", item);
-    //this.basketService.addItemToBasket(item);
   }
 
 

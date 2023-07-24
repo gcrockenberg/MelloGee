@@ -1,10 +1,11 @@
+// CORs is enforced by Gateway
+
 var builder = WebApplication.CreateBuilder(args);
 
-// From Common extensions
-builder.AddServiceDefaults();
+builder.AddServiceDefaults();                               // Extension
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddProblemDetails();
 
 // Application specific services from this project's extensions
 builder.Services.AddApplicationOptions(builder.Configuration);  // Loads CatalogSettings
@@ -19,15 +20,15 @@ var app = builder.Build();
 
 // Expose Swagger so APIM can import APIs
 // Configure the HTTP request pipeline.
-//if (app.Environment.IsDevelopment())
-//{
+if (app.Environment.IsDevelopment())
+{
     app.UseSwagger();
     app.UseSwaggerUI();
-//}
+}
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
-app.UseAuthorization();
+//app.UseAuthorization();
 
 app.MapPicApi();
 app.MapControllers();

@@ -22,15 +22,8 @@ export class CatalogItemCardComponent {
     public modalService: ModalService,
     private _cartService: CartService) { }
   
-  
 
-  async addToCart(item: ICatalogItem) {
-    console.log('AddtoCart: ', item);
-      // if (!this.authenticated) {
-      //     return;
-      // }
-    let result = await firstValueFrom(this._cartService.addItemToCart(item));
-
-    console.log(`AddtoCart result: ${result}`);
+  addToCart(item: ICatalogItem) {
+    this._cartService.addItemToCart(item).subscribe();
   }
 }

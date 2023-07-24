@@ -214,10 +214,12 @@ export class SecurityService {
 
   isSecurePath (url: string): boolean
   {
-    if (environment.apiConfigs.find((config) => {
+    let matchingSecurePath = environment.apiConfigs.find((config) => {
       let configUri = config.uri.replace('*', '');
-      url.startsWith(configUri);
-    })) {
+      return url.startsWith(configUri);
+    });
+
+    if (!matchingSecurePath) {
       return false;
     }
   

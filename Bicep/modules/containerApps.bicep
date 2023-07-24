@@ -5,13 +5,17 @@
   OWNER TEAM: Gerard C.
 */
 
+param addToAPIM bool
 param apimName string
-param apimIpAddress string =''
+//param apimIpAddress string =''
 param apiPath string
 param connectKeyVault bool
 param containerAppName string
 param containerAppManagedEnvironmentName string
 param dockerImageName string
+param minScale int
+param targetPort int
+param transport string
 
 @description('The location into which your Azure resources should be deployed.')
 param location string = resourceGroup().location
@@ -42,7 +46,7 @@ var containerResources = {
 
 @description('Allow scale to 0 for minimal cost during dev')
 var containerScale = {
-  minReplicas: 0
+  minReplicas: minScale
   maxReplicas: 1
 }
 
@@ -58,17 +62,17 @@ param containerRegistries array = [
   }
 ]
 
-resource containerAppManagedEnvironment 'Microsoft.App/managedEnvironments@2022-11-01-preview' existing = {
+resource containerAppManagedEnvironment 'Microsoft.App/managedEnvironments@2023-04-01-preview' existing = {
   name: containerAppManagedEnvironmentName
 }
 
 @description('This is the built-in Key Vault Secrets User role. See https://docs.microsoft.com/azure/role-based-access-control/built-in-roles#key-vault-secrets-user')
-resource keyVaultReaderRoleDefinition 'Microsoft.Authorization/roleDefinitions@2018-01-01-preview' existing = if (connectKeyVault) {
+resource keyVaultReaderRoleDefinition 'Microsoft.Authorization/roleDefinitions@2022-05-01-preview' existing = if (connectKeyVault) {
   scope: subscription()
   name: '4633458b-17de-408a-b874-0445c86b69e6'
 }
 
-resource apim 'Microsoft.ApiManagement/service@2022-09-01-preview' existing = {
+resource apim 'Microsoft.ApiManagement/service@2023-03-01-preview' existing = {
   name: apimName
 }
 
@@ -402,7 +406,7 @@ var ipSecurityRestrictionsForAPIMConsuptionPlan = [for (ipRange, i) in eastusDat
   description: 'Allow request from data center ip range ${i}'
 }]
 @description('Provision container app - CI/CD completes the api deployment')
-resource containerApp 'Microsoft.App/containerApps@2022-11-01-preview' = {
+resource containerApp 'Microsoft.App/containerApps@2023-04-01-preview' = {
   name: containerAppName
   location: location
   properties: {
@@ -412,14 +416,14 @@ resource containerApp 'Microsoft.App/containerApps@2022-11-01-preview' = {
       registries: containerRegistries
       activeRevisionsMode: 'Single'
       ingress: {
-        external: true
-        transport: 'Auto'
-        allowInsecure: true
-        targetPort: 80
+        external: addToAPIM
+        transport: transport
+        allowInsecure: (transport == 'http')
+        targetPort: targetPort
         stickySessions: {
           affinity: 'none'
         }
-        ipSecurityRestrictions: ipSecurityRestrictionsForAPIMConsuptionPlan   //[ 
+        ipSecurityRestrictions: (addToAPIM) ? ipSecurityRestrictionsForAPIMConsuptionPlan : []   //[ 
         //   {  // For APIM Developer plan
         //     name: 'allow-apim-access'
         //     action: 'Allow'
@@ -482,7 +486,7 @@ resource connectContainerAppToKeyVault 'Microsoft.ServiceLinker/linkers@2022-11-
 
 // Thank you - https://www.chingono.com/blog/2022/09/28/integrate-container-apps-api-management-bicep/
 @description('Provision the Container App as a Backend resource in APIM')
-resource containerAppBackendResource 'Microsoft.ApiManagement/service/backends@2022-09-01-preview' = {
+resource containerAppBackendResource 'Microsoft.ApiManagement/service/backends@2023-03-01-preview' = if (addToAPIM) {
   name: 'ContainerApp_${containerApp.name}'
   parent: apim
   properties: {
@@ -494,7 +498,7 @@ resource containerAppBackendResource 'Microsoft.ApiManagement/service/backends@2
 }
 
 @description('Provision the Container App as an API in APIM')
-resource containerAppApiResource 'Microsoft.ApiManagement/service/apis@2022-09-01-preview' = {
+resource containerAppApiResource 'Microsoft.ApiManagement/service/apis@2023-03-01-preview' = if (addToAPIM) {
   parent: apim
   name: containerApp.name
   properties: {
@@ -512,7 +516,7 @@ resource containerAppApiResource 'Microsoft.ApiManagement/service/apis@2022-09-0
 }
 
 @description('Update the Container App API in APIM to use the Container App Backend resource')
-resource setApiPolicyToUseBackend 'Microsoft.ApiManagement/service/apis/policies@2022-09-01-preview' = {
+resource setApiPolicyToUseBackend 'Microsoft.ApiManagement/service/apis/policies@2023-03-01-preview' = if (addToAPIM) {
   name: 'policy'
   parent: containerAppApiResource
   properties: {

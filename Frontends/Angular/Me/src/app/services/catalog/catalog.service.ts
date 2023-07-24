@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ConfigurationService } from '../configuration/configuration.service';
 import { DataService } from '../data/data.service';
-import { Observable, tap } from 'rxjs';
+import { Observable, switchMap, tap } from 'rxjs';
 import { ICatalog } from 'src/app/models/catalog/catalog.model';
 import { ICatalogBrand } from 'src/app/models/catalog/catalog-brand.model';
 import { ICatalogType } from 'src/app/models/catalog/catalog-type.model';
@@ -20,11 +20,17 @@ export class CatalogService {
     private _configurationService: ConfigurationService,
     private _dataService: DataService,
   ) {
-    this._configurationService.settingsLoaded$.subscribe(x => {
+    if (_configurationService.isReady) {
       this.catalogUrl = this._configurationService.serverSettings.purchaseUrl + '/c/api/v1/catalog/items';
       this.brandUrl = this._configurationService.serverSettings.purchaseUrl + '/c/api/v1/catalog/catalogbrands';
       this.typesUrl = this._configurationService.serverSettings.purchaseUrl + '/c/api/v1/catalog/catalogtypes';
-    });
+    } else {
+      this._configurationService.settingsLoaded$.subscribe(x => {
+        this.catalogUrl = this._configurationService.serverSettings.purchaseUrl + '/c/api/v1/catalog/items';
+        this.brandUrl = this._configurationService.serverSettings.purchaseUrl + '/c/api/v1/catalog/catalogbrands';
+        this.typesUrl = this._configurationService.serverSettings.purchaseUrl + '/c/api/v1/catalog/catalogtypes';
+      });
+    }
   }
 
 
@@ -46,7 +52,7 @@ export class CatalogService {
       }));
   }
 
-  
+
   getBrands(): Observable<ICatalogBrand[]> {
     return this._dataService.get<ICatalogBrand[]>(this.brandUrl)
       .pipe(tap((response: ICatalogBrand[]) => {

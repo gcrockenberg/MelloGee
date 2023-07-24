@@ -7,6 +7,8 @@ EXPOSE 443
 ENV Kestrel__Endpoints__HTTP__Url=http://+:80
 ENV Kestrel__Endpoints__GRPC__Url=http://+:81
 ENV Kestrel__Endpoints__GRPC__Protocols=Http2
+ENV ConnectionStrings__Redis=me-cart-data
+ENV ConnectionStrings__EventBus=me-rabbitmq
 
 FROM mcr.microsoft.com/dotnet/sdk:8.0.100-preview.6 AS build
 WORKDIR /src
@@ -33,6 +35,7 @@ FROM build AS publish
 
 FROM base AS final
 RUN apt-get update && apt-get install -y curl
+RUN apt-get install redis-tools -y
 WORKDIR /app
 COPY --from=publish /app .
 ENTRYPOINT ["dotnet", "Cart.API.dll"]

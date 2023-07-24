@@ -28,12 +28,14 @@
         <div (click)="setShowMobileMenu()"
             class="lg:hidden flex flex-row items-center gap-2 ml-8 cursor-pointer relative">
             <p class="text-white text-sm">Browse</p>
-            <ng-icon class="text-white transition {{ showMobileMenu() ? 'rotate-180' : 'rotate-0' }}" name="bootstrapChevronDown" />
+            <ng-icon class="text-white transition {{ showMobileMenu() ? 'rotate-180' : 'rotate-0' }}"
+                name="bootstrapChevronDown" />
             <app-mobile-menu [visible]="showMobileMenu()" />
         </div>
         <!--End Mobile-->
 
         <div class="flex flex-row ml-auto gap-7 items-center">
+            <app-cart-status />
             <div class="text-gray-200 hover:text-gray-300 cursor-pointer transition">
                 <ng-icon class="text-white transition" name="bootstrapSearch" />
             </div>
@@ -44,7 +46,8 @@
                 <div class="w-6 h-6 lg:w-10 lg:h-10 rounded-md overflow-hidden">
                     <img src="/assets/images/default-blue.png" alt="Profile">
                 </div>
-                <ng-icon class="text-white transition {{ showAccountMenu() ? 'rotate-180' : 'rotate-0' }}" name="bootstrapChevronDown" />
+                <ng-icon class="text-white transition {{ showAccountMenu() ? 'rotate-180' : 'rotate-0' }}"
+                    name="bootstrapChevronDown" />
                 <app-account-menu [visible]="showAccountMenu()" />
             </div>
         </div>

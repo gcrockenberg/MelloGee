@@ -17,38 +17,39 @@ export class ConfigurationService {
   isReady: boolean = false;
 
   constructor(private _http: HttpClient, private _storageService: StorageService) {
-    this.load();
+    this._load();
   }
 
-  load() {
+  private _load() {
     const baseURI = document.baseURI.endsWith('/') ? document.baseURI : `${document.baseURI}/`;
     let url = `${baseURI}config.me.json`;
 
-    return this._http.get(url)
+    return this._http.get<IConfiguration>(url)
       .subscribe({
-        next: (response) => {
-          this.serverSettings = response as IConfiguration;
+        next: (response: IConfiguration) => {
+          this.serverSettings = response;
           this._storageService.store(Constants.IDENTITY_URL, this.serverSettings.identityUrl);
           this._storageService.store(Constants.PURCHASE_URL, this.serverSettings.purchaseUrl);
           this._storageService.store(Constants.SIGNAL_R_HUB_URL, this.serverSettings.signalrHubUrl);
           this._storageService.store(Constants.ACTIVATE_CAMPAIGN_DETAIL_FUNCTION, this.serverSettings.activateCampaignDetailFunction);
 
-          this.isReady = true;
           this._settingsLoadedSource.next(response);
+          this.isReady = true;
         },
         error: (error) => {
-          this.handleError('load');
+          this._handleError('load');
         }
       });
   }
 
+  
   /**
    * Returns a function that handles Http operation failures.
    * This error handler lets the app continue to run as if no error occurred.
    *
    * @param operation - name of the operation that failed
    */
-  private handleError<T>(operation = 'operation') {
+  private _handleError<T>(operation = 'operation') {
     return (error: HttpErrorResponse): Observable<T> => {
       // TODO: send the error to remote logging infrastructure
       console.error(error);  // log to console instead

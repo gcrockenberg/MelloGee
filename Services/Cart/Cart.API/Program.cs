@@ -1,4 +1,4 @@
-using Me.Services.Cart;
+// CORs is enforced by Gateway
 
 var builder = WebApplication.CreateBuilder(args);
 

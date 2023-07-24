@@ -32,23 +32,45 @@ param githubOrganizationOrUsername string
 @description('The Container App microservices')
 var microservices = [
   {
+    addToAPIM: false
+    apiPath: ''
+    connectKeyVault: false
+    containerAppName: '${solutionName}-cart-data'
+    dockerImageName: '${dockerHubUsername}/cart-data:latest'
+    minScale: 1
+    targetPort: 6379
+    transport: 'tcp'
+  }
+  {
+    addToAPIM: false
+    apiPath: ''
+    connectKeyVault: false
+    containerAppName: '${solutionName}-rabbitmq'
+    dockerImageName: '${dockerHubUsername}/rabbitmq:latest'
+    minScale: 1
+    targetPort: 5672
+    transport: 'tcp'
+  }
+  {
+    addToAPIM: true
     apiPath: 'c'
     connectKeyVault: false
     containerAppName: '${solutionName}-catalog-api'
     dockerImageName: '${dockerHubUsername}/catalog-api:latest'
+    minScale: 0
+    targetPort: 80
+    transport: 'http'
   }
-  // {
-  //   apiPath: 'cof'
-  //   connectKeyVault: false
-  //   containerAppName: '${solutionName}-coffee-api'
-  //   dockerImageName: '${dockerHubUsername}/coffeeapi:latest'
-  // }
-  // {
-  //   apiPath: 'cat'
-  //   connectKeyVault: true
-  //   containerAppName: '${solutionName}-catalogapi'
-  //   dockerImageName: '${dockerHubUsername}/catalogapi:latest'
-  // }
+  {
+    addToAPIM: true
+    apiPath: 'b'
+    connectKeyVault: false
+    containerAppName: '${solutionName}-cart-api'
+    dockerImageName: '${dockerHubUsername}/cart-api:latest'
+    minScale: 0
+    targetPort: 80
+    transport: 'http'
+  }
 ]
 
 resource workspaceForManagedEnvionment 'Microsoft.OperationalInsights/workspaces@2022-10-01' = {
@@ -118,6 +140,7 @@ module keyVaultForSolution 'modules/keyVault.bicep' = {
 module containerAppModule 'modules/containerApps.bicep' = [for (microservice, index) in microservices: {
   name: 'containerApp-${index}'
   params: {
+    addToAPIM: microservice.addToAPIM
     //apimIpAddress: apiManagementGateway.outputs.ipAddress
     apimName: apiManagementGateway.outputs.name
     //apimName: 'me-dev'
@@ -128,6 +151,9 @@ module containerAppModule 'modules/containerApps.bicep' = [for (microservice, in
     dockerHubPasswordOrToken: dockerHubPasswordOrToken
     dockerHubUsername: dockerHubUsername
     dockerImageName: microservice.dockerImageName
+    minScale: microservice.minScale
+    targetPort: microservice.targetPort
+    transport: microservice.transport
     keyVaultId: keyVaultForSolution.outputs.id
     keyVaultName: keyVaultForSolution.outputs.name
     location: location

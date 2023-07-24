@@ -1,8 +1,9 @@
 import { Component, HostListener, OnDestroy, OnInit, WritableSignal, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { NavbarItemComponent } from "../navbar-item/navbar-item.component";
+import { CartStatusComponent } from '../cart-status/cart-status/cart-status.component';
+import { NavbarItemComponent } from '../navbar-item/navbar-item.component';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
-import { bootstrapBell, bootstrapChevronDown, bootstrapSearch } from "@ng-icons/bootstrap-icons"
+import { bootstrapBell, bootstrapCart3, bootstrapChevronDown, bootstrapSearch } from '@ng-icons/bootstrap-icons';
 import { MobileMenuComponent } from "../mobile-menu/mobile-menu.component";
 import { AccountMenuComponent } from "../account-menu/account-menu.component";
 
@@ -13,8 +14,9 @@ const TOP_OFFSET: number = 66;
     standalone: true,
     templateUrl: './navbar.component.html',
     styleUrls: ['./navbar.component.scss'],
-    providers: [provideIcons({ bootstrapBell, bootstrapChevronDown, bootstrapSearch })],
+    providers: [provideIcons({ bootstrapBell, bootstrapCart3, bootstrapChevronDown, bootstrapSearch })],
     imports: [
+        CartStatusComponent,
         CommonModule,
         NavbarItemComponent,
         NgIconComponent,

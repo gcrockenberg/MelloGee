@@ -2,13 +2,11 @@ version: '3.4'
 
 services:
 
-  cartdata:
+  me-cart-data:
     ports:
       - "6379:6379"
-    volumes:
-      - me-cartdata:/data
 
-  rabbitmq:
+  me-rabbitmq:
     ports:
       - "15672:15672"
       - "5672:5672"
@@ -37,7 +35,7 @@ services:
     #   - 8082:80
     #   - 8083:443
 
-  catalog-api:
+  me-catalog-api:
   # Override environment defined in Dockerfile
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
@@ -60,15 +58,13 @@ services:
       - "5101:80"
       - "9101:81"
 
-  cart-api:
+  me-cart-api:
   # Override environment defined in Dockerfile
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
 #      - Kestrel__Endpoints__HTTP__Url=http://+:80
 #      - Kestrel__Endpoints__GRPC__Url=http://+:81
 #      - Kestrel__Endpoints__GRPC__Protocols=Http2
-      - ConnectionStrings__Redis=cartdata
-      - ConnectionStrings__EventBus=rabbitmq
 #      - Identity__Url=http://identity-api
 #      - Identity__ExternalUrl=http://${ESHOP_EXTERNAL_DNS_NAME_OR_IP}:5105
 #      - EventBus__UserName=${ME_SERVICE_BUS_USERNAME}
@@ -80,7 +76,3 @@ services:
     ports:
       - "5103:80"
       - "9103:81"
-
-volumes:
-  me-cartdata:
-    external: false

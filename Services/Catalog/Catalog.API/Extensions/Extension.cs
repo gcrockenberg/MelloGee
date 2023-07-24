@@ -39,7 +39,7 @@ public static class Extensions
 
         services.AddDbContext<CatalogContext>(options =>
         {
-            if (Boolean.Parse(configuration["InMemoryDatabase"] ?? "false"))
+            if (Boolean.Parse(configuration["InMemoryDatabase"] ?? "true"))
             {
                 options.UseInMemoryDatabase("InMem");
             }

@@ -31,6 +31,7 @@ export class AuthService {
     this.tryLoadUser();
   }
 
+
   login(email: string, password: string) {
     return this.http.post('https://api.developbetterapps.com/auth', {
       email,
@@ -53,6 +54,7 @@ export class AuthService {
     );
   }
 
+
   register(email: string, password: string) {
     return this.http.post('https://api.developbetterapps.com/users', {
       email,
@@ -65,11 +67,13 @@ export class AuthService {
       );
   }
 
+
   signOut() {
     localStorage.removeItem(USER_STORAGE_KEY);
     this._user.next(null);
   }
 
+  
   /**
    * Try to load user token from storage
    */

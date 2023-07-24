@@ -1,16 +1,16 @@
 import { Injectable, inject } from '@angular/core';
 import { DataService } from '../data/data.service';
 import { ICart } from 'src/app/models/cart/cart.model';
-import { SecurityService } from '../security/security.service';
 import { ConfigurationService } from '../configuration/configuration.service';
-import { Observable, firstValueFrom, tap } from 'rxjs';
-import { environment } from 'src/environments/environment';
-import { MsalService } from '@azure/msal-angular';
+import { Observable, Subject, tap } from 'rxjs';
 import { ICatalogItem } from 'src/app/models/catalog/catalog-item.model';
 import { Guid } from 'src/guid';
 import { ICartItem } from 'src/app/models/cart/cart-item.model';
 import { CookieService } from 'ngx-cookie-service';
 
+/**
+ * Cart API is bound by SessionId
+ */
 @Injectable({
   providedIn: 'root'
 })
@@ -23,17 +23,21 @@ export class CartService {
     items: []
   };
 
+  // Observable fired when item is added or removed from cart
+  private _cartUpdateSource = new Subject<ICart>();
+  cartUpdate$ = this._cartUpdateSource.asObservable();
 
+  
   constructor(
     private _dataService: DataService,
-    private _securityService: SecurityService,
-    private _configurationService: ConfigurationService,
-    private _msalInstance: MsalService
+    private _configurationService: ConfigurationService
   ) {
     // Init:
     //    if (this._securityService.IsAuthorized) {
     //      if (this._securityService.UserData) {
     //        this.cart.buyerId = this._securityService.UserData.localAccountId;
+    // Switched to SessionId for Cart 
+    // TODO: Review cookie policy. Defaults to Lax. Should it be Strict?
     if (!this._cookieService.check('SessionId')) {
       this._cookieService.set(
         'SessionId',
@@ -42,19 +46,16 @@ export class CartService {
       );
     }
 
-    // By default, SessionID values are stored a cookie.
-    // Use that to manage Cart
-    // For login demo, use UserData.sub at the time of puchase
     if (this._configurationService.isReady) {
       this._cartUrl = this._configurationService.serverSettings.purchaseUrl + '/b/api/v1/cart/';
       this._purchaseUrl = this._configurationService.serverSettings.purchaseUrl + '/b/api/v1/cart/';
-      // this._loadData();
+      this.getCart().subscribe();
     }
     else {
       this._configurationService.settingsLoaded$.subscribe(x => {
         this._cartUrl = this._configurationService.serverSettings.purchaseUrl + '/b/api/v1/cart/';
         this._purchaseUrl = this._configurationService.serverSettings.purchaseUrl + '/b/api/v1/cart/';
-        // this._loadData();
+        this.getCart().subscribe();
       });
       //        }
       //      }
@@ -66,7 +67,7 @@ export class CartService {
   }
 
 
-  addItemToCart(item: ICatalogItem): Observable<boolean> {
+  addItemToCart(item: ICatalogItem): Observable<ICart> {
     let newCartItem: ICartItem = {
       pictureUrl: item.pictureUri,
       productId: item.id,
@@ -91,31 +92,29 @@ export class CartService {
   getCart(): Observable<ICart> {
     let url: string = this._cartUrl + this._cookieService.get('SessionId');
 
-    return this._dataService.get(url)
+    return this._dataService.get<ICart>(url)
       .pipe<ICart>(
-        tap((response: any) => {
-          if (response.status === 204) {
-            return null;
-          }
+        tap((response: ICart) => {
+          // if (response.status === 204) {
+          //   return null;
+          // }
+          
+          this._cartUpdateSource.next(response); 
 
           return response;
         }));
   }
 
 
-  // private _loadData() {
-  //   this.getCart().subscribe(cart => {
-  //     if (cart != null)
-  //       this.cart.items = cart.items;
-  //   });
-  // }
-
-
-  private _setCart(): Observable<boolean> {
+  private _setCart(): Observable<ICart> {
     this.cart.buyerId = this._cookieService.get('SessionId');
 
-    return this._dataService.post(this._cartUrl, this.cart).
-      pipe<boolean>(tap((response: any) => true));
+    return this._dataService.post<ICart>(this._cartUrl, this.cart).
+      pipe<ICart>(
+        tap((response: ICart) => {
+          this._cartUpdateSource.next(response);          
+        })
+      );
   }
 
 }

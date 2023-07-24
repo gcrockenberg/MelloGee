@@ -29,7 +29,6 @@ export class DataService {
     return this._http.post<Type>(url, data, options)
       .pipe(
         tap((response: Type) => {
-          console.log('Post response: ', response)
           return response;
         }),
         catchError(this._handleError)
@@ -46,7 +45,6 @@ export class DataService {
     let options = {};
     this._setHeaders(options);
 
-    console.log(`DataService getting ${url}`);
     return this._http.get<Type>(url, options)
       .pipe(
         // retry(3), // retry a failed request up to 3 times
@@ -58,7 +56,7 @@ export class DataService {
   }
 
 
-  post(url: string, data: any, params?: any): Observable<Response> {
+  post<Type>(url: string, data: any, params?: any): Observable<Type> {
     let options = { };
     this._setHeaders(options);
 
@@ -86,7 +84,6 @@ export class DataService {
 
 
   private async _setHeaders(options: any, needId?: boolean) {
-    console.log(`IsAuthenticated: ${this._securityService.IsAuthorized}`)
   //  options["withCredentials"] = true;
   //   // if (needId && this.securityService) {
   //   //   options["headers"] = new HttpHeaders()

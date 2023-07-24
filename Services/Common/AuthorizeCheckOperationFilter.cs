@@ -21,8 +21,6 @@ internal class AuthorizeCheckOperationFilter : IOperationFilter
 
     public void Apply(OpenApiOperation operation, OperationFilterContext context)
     {
-        _logger.LogInformation("--> Apply()");
-
         // Check for authorize attribute
         var hasAuthorize = false;
 
@@ -34,7 +32,6 @@ internal class AuthorizeCheckOperationFilter : IOperationFilter
 
         if (!hasAuthorize) return;
 
-        _logger.LogInformation("--> Apply() , Authorization check required");
         operation.Responses.TryAdd("401", new OpenApiResponse { Description = "Unauthorized" });
         operation.Responses.TryAdd("403", new OpenApiResponse { Description = "Forbidden" });
 

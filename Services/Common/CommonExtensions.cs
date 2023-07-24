@@ -135,14 +135,13 @@ public static class CommonExtensions
             var pathBase = configuration["PATH_BASE"];
             var authSection = openApiSection.GetSection("Auth");
             var endpointSection = openApiSection.GetRequiredSection("Endpoint");
-
             var swaggerUrl = endpointSection["Url"] ?? $"{(!string.IsNullOrEmpty(pathBase) ? pathBase : string.Empty)}/swagger/v1/swagger.json";
 
             setup.SwaggerEndpoint(swaggerUrl, endpointSection.GetRequiredValue("Name"));
 
             if (authSection.Exists())
             {
-                setup.OAuthClientId(authSection.GetRequiredValue("ClientId"));
+                setup.OAuthClientId(authSection.GetRequiredValue("ClientId"));                
                 setup.OAuthAppName(authSection.GetRequiredValue("AppName"));
             }
         });
@@ -161,19 +160,15 @@ public static class CommonExtensions
         var sp = services.BuildServiceProvider();
         var logger = sp.GetRequiredService<ILogger<OpenApiInfo>>();
 
-        logger.LogInformation("--> AddDefaultOpenApi()");
-
         if (!openApi.Exists())
         {
             return services;
         }
 
-        logger.LogInformation("--> OpenApi section defined in AppSettings/Config");
         services.AddEndpointsApiExplorer();
 
         return services.AddSwaggerGen(options =>
         {
-            logger.LogInformation("--> services.AddSwaggerGen()");
             /// {
             ///   "OpenApi": {
             ///     "Document": {
@@ -228,7 +223,6 @@ public static class CommonExtensions
             //     }
             // });
 
-            // logger.LogInformation("--> options.OperationFilter<AuthorizeCheckOperationFilter>()");
             // options.OperationFilter<AuthorizeCheckOperationFilter>();
         });
     }
@@ -272,6 +266,13 @@ public static class CommonExtensions
         // By default, the claims mapping will map claim names in the old format to accommodate older SAML applications.
         // For instance, 'http://schemas.microsoft.com/ws/2008/06/identity/claims/role' instead of 'roles' claim.
         // This flag ensures that the ClaimsIdentity claims collection will be built from the claims in the token
+
+        var azureAdB2C = configuration.GetSection("AzureAdB2C");
+        if (!azureAdB2C.Exists())
+        {
+            return services;
+        }
+
         JwtSecurityTokenHandler.DefaultMapInboundClaims = false;
 
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
