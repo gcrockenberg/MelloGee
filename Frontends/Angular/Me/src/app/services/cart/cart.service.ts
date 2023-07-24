@@ -85,7 +85,7 @@ export class CartService {
       this.cart.items.push(newCartItem);
     }
 
-    return this._setCart();
+    return this.setCart(this.cart);
   }
 
 
@@ -106,10 +106,10 @@ export class CartService {
   }
 
 
-  private _setCart(): Observable<ICart> {
-    this.cart.buyerId = this._cookieService.get('SessionId');
+  setCart(cart: ICart): Observable<ICart> {
+    cart.buyerId = this._cookieService.get('SessionId');
 
-    return this._dataService.post<ICart>(this._cartUrl, this.cart).
+    return this._dataService.post<ICart>(this._cartUrl, cart).
       pipe<ICart>(
         tap((response: ICart) => {
           this.cart = response;
