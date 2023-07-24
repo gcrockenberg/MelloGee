@@ -175,6 +175,7 @@ module staticWebAppModule 'modules/staticWebApp.bicep' = {
   name: 'staticWebAppTemplate'
   params: {
     solutionName: solutionName
+    apimName: apiManagementGateway.outputs.name
   }
 }
 
