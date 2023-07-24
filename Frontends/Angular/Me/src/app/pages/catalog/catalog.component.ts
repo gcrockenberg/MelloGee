@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, WritableSignal, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CatalogService } from 'src/app/services/catalog/catalog.service';
 import { ConfigurationService } from 'src/app/services/configuration/configuration.service';
@@ -21,27 +21,20 @@ import { CatalogItemModalComponent } from "../../components/catalog-item-modal/c
     imports: [CommonModule, PagerComponent, CatalogItemsComponent, CatalogItemModalComponent]
 })
 export class CatalogComponent implements OnInit {
-  authenticated: boolean = false;
   errorReceived: boolean = false;
-  catalog: ICatalog = {
+  catalog: WritableSignal<ICatalog> = signal({
     count: 0,
     data: [],
     pageIndex: 0,
     pageSize: 0
-  };
+  });
   paginationInfo!: IPager;
-  brands!: ICatalogBrand[];
-  types!: ICatalogType[];
+  brands: ICatalogBrand[] = [];
+  types: ICatalogType[] = [];
   brandSelected!: number | null;
   typeSelected!: number | null;
 
-  constructor(
-    private _catalogService: CatalogService,
-    private _configurationService: ConfigurationService,
-    private _securityService: SecurityService
-  ) {
-    this.authenticated = _securityService.IsAuthorized;
-  }
+  constructor(private _catalogService: CatalogService) { }
 
   
   ngOnInit(): void {
@@ -88,7 +81,7 @@ export class CatalogComponent implements OnInit {
     this._catalogService.getCatalog(pageIndex, pageSize, brand, type)
       .pipe(catchError((err) => this._handleError(err)))
       .subscribe(catalog => {
-        this.catalog = catalog;
+        this.catalog.set(catalog);
         this.paginationInfo = {
           actualPage: catalog.pageIndex,
           itemsPage: catalog.pageSize,
@@ -117,7 +110,6 @@ export class CatalogComponent implements OnInit {
 
 
   onPageChanged(value: any) {
-    console.log('catalog pager event fired' + value);
     //    event.preventDefault();
     this.paginationInfo.actualPage = value;
     this.getCatalog(this.paginationInfo.itemsPage, value);

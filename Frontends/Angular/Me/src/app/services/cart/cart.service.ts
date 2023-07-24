@@ -49,13 +49,13 @@ export class CartService {
     if (this._configurationService.isReady) {
       this._cartUrl = this._configurationService.serverSettings.purchaseUrl + '/b/api/v1/cart/';
       this._purchaseUrl = this._configurationService.serverSettings.purchaseUrl + '/b/api/v1/cart/';
-      this.getCart().subscribe();
+      this._getCart().subscribe();
     }
     else {
       this._configurationService.settingsLoaded$.subscribe(x => {
         this._cartUrl = this._configurationService.serverSettings.purchaseUrl + '/b/api/v1/cart/';
         this._purchaseUrl = this._configurationService.serverSettings.purchaseUrl + '/b/api/v1/cart/';
-        this.getCart().subscribe();
+        this._getCart().subscribe();
       });
       //        }
       //      }
@@ -89,7 +89,7 @@ export class CartService {
   }
 
 
-  getCart(): Observable<ICart> {
+  private _getCart(): Observable<ICart> {
     let url: string = this._cartUrl + this._cookieService.get('SessionId');
 
     return this._dataService.get<ICart>(url)
@@ -97,9 +97,9 @@ export class CartService {
         tap((response: ICart) => {
           // if (response.status === 204) {
           //   return null;
-          // }
-          
-          this._cartUpdateSource.next(response); 
+          // }          
+          this.cart = response;
+          this._cartUpdateSource.next(this.cart); 
 
           return response;
         }));
@@ -112,7 +112,8 @@ export class CartService {
     return this._dataService.post<ICart>(this._cartUrl, this.cart).
       pipe<ICart>(
         tap((response: ICart) => {
-          this._cartUpdateSource.next(response);          
+          this.cart = response;
+          this._cartUpdateSource.next(this.cart);
         })
       );
   }
