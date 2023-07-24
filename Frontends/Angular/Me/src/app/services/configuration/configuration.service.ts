@@ -32,9 +32,9 @@ export class ConfigurationService {
           this._storageService.store(Constants.PURCHASE_URL, this.serverSettings.purchaseUrl);
           this._storageService.store(Constants.SIGNAL_R_HUB_URL, this.serverSettings.signalrHubUrl);
           this._storageService.store(Constants.ACTIVATE_CAMPAIGN_DETAIL_FUNCTION, this.serverSettings.activateCampaignDetailFunction);
-
-          this._settingsLoadedSource.next(response);
+          
           this.isReady = true;
+          this._settingsLoadedSource.next(response);
         },
         error: (error) => {
           this._handleError('load');
