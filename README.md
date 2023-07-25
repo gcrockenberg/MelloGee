@@ -19,7 +19,7 @@ A personal project that I started May 2023 to demonstrate backend and frontend a
 - For global scaling the solution can be configured as a geode or stamped pattern
 
 ### Currently working on 
-- [Angular UI and API](https://green-wave-08182290f.3.azurestaticapps.net)
+- [Cart -> checkout](https://green-wave-08182290f.3.azurestaticapps.net)
 
 ## Steps for using Me
 
