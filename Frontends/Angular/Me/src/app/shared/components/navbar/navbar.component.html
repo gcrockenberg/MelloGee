@@ -1,4 +1,4 @@
-<nav class="w-full fixed z-40">
+<nav class="w-full fixed z-40 pt-2">
     <div class="
         px-4
         md:px-16
@@ -9,7 +9,7 @@
         transition
         duration-500        
         {{ showBackground() ? 'bg-zinc-900 bg-opacity-90' : '' }}">
-        <a href="/">
+        <a href="/" class="absolute mt-2 md:mt-8">
             <img class="object-cover w-16 h-16 md:w-24 md:h-24 rounded-full border-2 border-zinc-800"
                 src="assets/images/GerardAvatarPray.png" alt="avatar">
         </a>
@@ -17,7 +17,7 @@
         <div class="
             flex-row
             ml-8
-            md:ml-12
+            md:ml-32
             duration-500
             gap-6
             hidden
@@ -30,7 +30,7 @@
         <!-- Mobile -->
         <!-- hidden (aka display: none) will override flex display when activated -->
         <div (click)="setShowMobileMenu()"
-            class="md:hidden flex flex-row items-center gap-2 ml-4 cursor-pointer relative">
+            class="md:hidden flex flex-row items-center gap-2 ml-20 cursor-pointer relative">
             <p class="text-white text-sm">Browse</p>
             <ng-icon class="text-white transition {{ showMobileMenu() ? 'rotate-180' : 'rotate-0' }}"
                 name="bootstrapChevronDown" />
@@ -46,7 +46,11 @@
             <div class="text-gray-200 hover:text-gray-300 cursor-pointer transition">
                 <ng-icon class="text-white transition" name="bootstrapBell" />
             </div>
-            <div (click)="setShowAccountMenu()" class="flex flex-row items-center gap-2 cursor-pointer relative">
+            <button *ngIf="!isAuthorized()" (click)="login()" type="submit"
+                class="bg-red-600 py-2 px-4 text-white rounded-md w-full hover:bg-red-700 transition">
+                Login
+            </button>
+            <div *ngIf="isAuthorized()" (click)="setShowAccountMenu()" class="flex flex-row items-center gap-2 cursor-pointer relative">
                 <div class="w-6 h-6 lg:w-10 lg:h-10 rounded-md overflow-hidden">
                     <img src="/assets/images/default-blue.png" alt="Profile">
                 </div>

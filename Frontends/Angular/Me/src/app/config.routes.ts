@@ -9,6 +9,7 @@ import { CatalogComponent } from './pages/catalog/catalog.component';
 import { ProfileComponent } from './pages/profile/profile.component';
 import { NotFoundComponent } from './pages/not-found/not-found/not-found.component';
 import { CartComponent } from './pages/cart/cart/cart.component';
+import { CheckoutComponent } from './pages/cart/checkout/checkout.component';
 
 export const routes: Routes = [
     {
@@ -22,6 +23,13 @@ export const routes: Routes = [
     {
         path: 'cart',
         component: CartComponent
+    },
+    {
+        path: 'checkout',
+        component: CheckoutComponent,
+        canActivate: [
+            MsalGuard
+        ]
     },
     {
         path: '3D',

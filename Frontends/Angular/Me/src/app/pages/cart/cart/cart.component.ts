@@ -2,14 +2,14 @@ import { Component, computed, WritableSignal, signal, Signal, OnDestroy } from '
 import { CommonModule, NgFor } from '@angular/common';
 import { CartService } from 'src/app/services/cart/cart.service';
 import { ICart } from 'src/app/models/cart/cart.model';
-import { ConfigurationService } from 'src/app/services/configuration/configuration.service';
 import { Subject, Subscription } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
+import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 
 @Component({
   selector: 'app-cart',
   standalone: true,
-  imports: [CommonModule, NgFor],
+  imports: [CommonModule, NgFor, RouterLink, RouterLinkActive],
   templateUrl: './cart.component.html',
   styleUrls: ['./cart.component.scss']
 })
@@ -36,7 +36,13 @@ export class CartComponent implements OnDestroy {
   readonly totalPrice: Signal<number> = computed(() => this.subTotal() + this.tax() + this.shipping);
 
 
-  constructor(private _cartService: CartService, private _configurationService: ConfigurationService) {
+  constructor(
+    private _cartService: CartService,
+    private _router: Router) {
+    this.cart.set(_cartService.cart);
+
+    this._checkRedirect();
+
     this.cart.set(_cartService.cart);
 
     this._subscriptions.push(
@@ -63,6 +69,20 @@ export class CartComponent implements OnDestroy {
     if (newQuantity) {
       this.cart.mutate(c => c.items[i].quantity = newQuantity);
       this._updateCartSubject.next(this.cart());
+    }
+  }
+
+
+  removeItem(i: number) {
+    this.cart.mutate(c => c.items.splice(i, 1));
+    this._updateCartSubject.next(this.cart());
+    this._checkRedirect();
+  }
+
+
+  private _checkRedirect() {
+    if (1 > this._cartService.cart.items.length) {
+      this. _router.navigate(['/catalog']);
     }
   }
 
