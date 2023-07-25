@@ -1,4 +1,4 @@
-<div (click)="modalService.open('catalog-items-modal', item)" class="group bg-zinc-900 col-span relative h-[12vw]">
+<div class="group flex bg-zinc-900 col-span relative">
     <img [src]="item.pictureUri" alt="{{item.name}} image" class="
     cursor-pointer
     object-cover
@@ -10,7 +10,6 @@
     sm:group-hover:opacity-0
     delay-200
     w-full
-    h-[12vw]
     ">
     <div class="
         opacity-0
@@ -28,15 +27,16 @@
         group-hover:-translate-y-[6vw]
         group-hover:transalte-x-[2vw]
         group-hover:opacity-100">
-        <img [src]="item.pictureUri" alt="{{item.name}} image" class="
-            cursor-pointer
-            object-cover
-            transition
-            duration
-            shadow-xl
-            rounded-t-md
-            w-full
-            h-[12vw]">
+        <img [src]="item.pictureUri" alt="{{item.name}} image" (click)="modalService.open('catalog-items-modal', item)"
+            class="
+                cursor-pointer
+                object-cover
+                transition
+                duration
+                shadow-xl
+                rounded-t-md
+                w-full
+                h-[12vw]">
         <div class="
             z-10
             bg-zinc-800
@@ -50,9 +50,7 @@
 
             <div class="flex flex-row items-center gap-3">
                 <div>
-                    <button 
-                    (click)="addToCart(item)"
-                    class="
+                    <button (click)="addToCart(item)" class="
                     bg-white
                     text-white
                     bg-opacity-30
@@ -76,13 +74,15 @@
 
                     <div class="flex flex-row mt-4 gap-2 items-center">
                         <!-- https://en.wikipedia.org/wiki/ISO_4217 -->
-                        <p class="text-white text-[10px] lg:text-sm">{{item.price | currency:'CAD':'symbol-narrow':'1.2-2'}}</p>
+                        <p class="text-white text-[10px] lg:text-sm">{{item.price |
+                            currency:'CAD':'symbol-narrow':'1.2-2'}}</p>
                     </div>
                     <div class="flex flex-row mt-4 gap-2 items-center">
                         <p class="text-white text-[10px] lg:text-sm">{{item.name}}</p>
                     </div>
                     <div class="flex flex-row mt-4 gap-2 items-center">
-                        <p class="text-white text-[10px] lg:text-sm">Description: {{item.description ?? 'undefined'}}</p>
+                        <p class="text-white text-[10px] lg:text-sm">Description: {{item.description ?? 'undefined'}}
+                        </p>
                     </div>
                     <div class="flex flex-row mt-4 gap-2 items-center">
                         <p class="text-white text-[10px] lg:text-sm">Type: {{item.catalogType.type}}</p>

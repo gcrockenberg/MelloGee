@@ -26,4 +26,5 @@ export class CatalogItemCardComponent {
   addToCart(item: ICatalogItem) {
     this._cartService.addItemToCart(item).subscribe();
   }
+  
 }
