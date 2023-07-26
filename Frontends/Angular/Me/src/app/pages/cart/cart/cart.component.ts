@@ -39,7 +39,6 @@ export class CartComponent implements OnDestroy {
   constructor(
     private _cartService: CartService,
     private _router: Router) {
-    this.cart.set(_cartService.cart);
 
     this._checkRedirect();
 

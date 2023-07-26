@@ -1,1 +1,87 @@
-<p>checkout works!</p>
+<!-- Fixed right summary -->
+<div class="fixed right-0 top-0 mt-28 pt-5">
+    <div class="flex flex-col lg:px-8 md:px-7 px-4 w-full sm:w-96 invisible lg:visible">
+        <p class="lg:text-4xl text-3xl font-black leading-9 text-gray-800 dark:text-white">Summary</p>
+        <div>
+            <div class="flex items-center justify-between pt-16">
+                <p class="text-base leading-none text-gray-800 dark:text-white">Subtotal</p>
+                <p class="text-base leading-none text-gray-800 dark:text-white">{{ subTotal() |
+                    currency:'CAD':'symbol-narrow':'1.2-2' }}</p>
+            </div>
+            <div class="flex items-center justify-between pt-5">
+                <p class="text-base leading-none text-gray-800 dark:text-white">Tax</p>
+                <p class="text-base leading-none text-gray-800 dark:text-white">{{ tax() |
+                    currency:'CAD':'symbol-narrow':'1.2-2'}}</p>
+            </div>
+            <div class="flex items-center justify-between pt-5">
+                <p class="text-base leading-none text-gray-800 dark:text-white">Shipping</p>
+                <p class="text-base leading-none text-gray-800 dark:text-white">{{ shipping |
+                    currency:'CAD':'symbol-narrow':'1.2-2' }}</p>
+            </div>
+        </div>
+        <div>
+            <div class="flex items-center pb-6 justify-between lg:pt-5 pt-20">
+                <p class="text-2xl leading-normal text-gray-800 dark:text-white">Total</p>
+                <p class="text-2xl font-bold leading-normal text-right text-gray-800 dark:text-white">{{ totalPrice() |
+                    currency:'CAD':'symbol-narrow':'1.2-2'}}</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Centered space for the remainder of elements -->
+<div class="flex flex-col bg-black lg:pr-96 min-h-screen">
+    <!-- Login form container with width defined by screen breakpoint -->
+    <!---------- DO I NEED TO ADD "self-centered" below with "justify-center" above? --------------------------------------------------------->
+    <div class="bg-black bg-opacity-70 px-16 mt-20 md:mt-28 rounded-md w-full">
+        <!-- Title -->
+        <h2 class="text-white text-4xl mb-8 font-semibold">
+            Checkout
+        </h2>
+        <form (ngSubmit)="submitForm()" [formGroup]="form">
+            <!-- Inputs in column layout -->
+            <div class="flex flex-col gap-4">
+                <app-input formControlName="street" required label="Address" id="street" />
+                <app-input formControlName="city" required label="City" id="city" />
+                <app-input formControlName="state" required label="State" id="state" />
+            </div>
+            <button type="submit"
+                class="bg-red-600 py-3 text-white rounded-md w-full mt-10 hover:bg-red-700 transition">
+                Place order
+            </button>
+        </form>
+    </div>
+
+    <!-- Bottom Summary for small screen -->
+    <div class="lg:hidden w-96 mx-auto">
+        <div class="flex flex-col lg:px-8 md:px-7 px-4 w-96 sm:w-96 py-5">
+            <p class="lg:text-4xl text-3xl font-black leading-9 text-gray-800 dark:text-white">Summary</p>
+            <div>
+                <div class="flex items-center justify-between pt-16">
+                    <p class="text-base leading-none text-gray-800 dark:text-white">Subtotal</p>
+                    <p class="text-base leading-none text-gray-800 dark:text-white">{{ subTotal() |
+                        currency:'CAD':'symbol-narrow':'1.2-2' }}</p>
+                </div>
+                <div class="flex items-center justify-between pt-5">
+                    <p class="text-base leading-none text-gray-800 dark:text-white">Tax</p>
+                    <p class="text-base leading-none text-gray-800 dark:text-white">{{ tax() |
+                        currency:'CAD':'symbol-narrow':'1.2-2'}}</p>
+                </div>
+                <div class="flex items-center justify-between pt-5">
+                    <p class="text-base leading-none text-gray-800 dark:text-white">Shipping</p>
+                    <p class="text-base leading-none text-gray-800 dark:text-white">{{ shipping |
+                        currency:'CAD':'symbol-narrow':'1.2-2' }}</p>
+                </div>
+            </div>
+            <div>
+                <div class="flex items-center pb-6 justify-between lg:pt-5 pt-20">
+                    <p class="text-2xl leading-normal text-gray-800 dark:text-white">Total</p>
+                    <p class="text-2xl font-bold leading-normal text-right text-gray-800 dark:text-white">{{
+                        totalPrice() |
+                        currency:'CAD':'symbol-narrow':'1.2-2'}}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
