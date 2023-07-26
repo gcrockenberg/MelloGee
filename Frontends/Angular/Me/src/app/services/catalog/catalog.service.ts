@@ -21,10 +21,12 @@ export class CatalogService {
     private _dataService: DataService,
   ) {
     if (_configurationService.isReady) {
+      console.log('--> Configuration Service is ready!');
       this.catalogUrl = this._configurationService.serverSettings.purchaseUrl + '/c/api/v1/catalog/items';
       this.brandUrl = this._configurationService.serverSettings.purchaseUrl + '/c/api/v1/catalog/catalogbrands';
       this.typesUrl = this._configurationService.serverSettings.purchaseUrl + '/c/api/v1/catalog/catalogtypes';
     } else {
+      console.log('--> Subscribed to ConfigurationService is ready!');
       this._configurationService.settingsLoaded$.subscribe(x => {
         this.catalogUrl = this._configurationService.serverSettings.purchaseUrl + '/c/api/v1/catalog/items';
         this.brandUrl = this._configurationService.serverSettings.purchaseUrl + '/c/api/v1/catalog/catalogbrands';
@@ -35,6 +37,11 @@ export class CatalogService {
 
 
   getCatalog(pageIndex: number, pageSize: number, brand?: number, type?: number): Observable<ICatalog> {
+    if (!this._configurationService.isReady) {
+      return this._configurationService.settingsLoaded$
+        .pipe(switchMap(x => this.getCatalog(pageIndex, pageSize, brand, type)))
+    }
+
     let url = this.catalogUrl;
 
     if (type) {
@@ -54,6 +61,11 @@ export class CatalogService {
 
 
   getBrands(): Observable<ICatalogBrand[]> {
+    if (!this._configurationService.isReady) {
+      return this._configurationService.settingsLoaded$
+        .pipe(switchMap(x => this.getBrands()))
+    }
+
     return this._dataService.get<ICatalogBrand[]>(this.brandUrl)
       .pipe(tap((response: ICatalogBrand[]) => {
         return response;
@@ -62,6 +74,11 @@ export class CatalogService {
 
 
   getTypes(): Observable<ICatalogType[]> {
+    if (!this._configurationService.isReady) {
+      return this._configurationService.settingsLoaded$
+        .pipe(switchMap(x => this.getTypes()))
+    }
+
     return this._dataService.get<ICatalogType[]>(this.typesUrl)
       .pipe(tap((response: ICatalogType[]) => {
         return response;

@@ -78,7 +78,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
 
   setIsLogin() {
-    this.isLogin = this._securityService.IsAuthorized;
+    this.isLogin = this._securityService.isAuthorized;
   }
 
 

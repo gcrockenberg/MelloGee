@@ -93,7 +93,7 @@ export class NavbarComponent implements OnDestroy, OnInit {
 
 
     setIsAuthorized() {
-        this.isAuthorized.set(this._securityService.IsAuthorized);
+        this.isAuthorized.set(this._securityService.isAuthorized);
     }
 
 

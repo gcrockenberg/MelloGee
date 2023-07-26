@@ -4,13 +4,13 @@ import { IEnvironment, AuthRequestType } from "./interfaces/IEnvironment";
 export const environment: IEnvironment = {
   production: false,
   apiConfigs: [
-    // {
-    // uri: 'http://localhost/b/api/v1/cart*',
-    // scopes: [
-    //   'https://meauth.onmicrosoft.com/cart/cart.read',
-    //   'https://meauth.onmicrosoft.com/cart/cart.write'
-    //   ]
-    // }
+    {
+    uri: 'http://localhost/b/api/v1/cart/checkout*',
+    scopes: [
+      'https://meauth.onmicrosoft.com/cart/cart.read',
+      'https://meauth.onmicrosoft.com/cart/cart.write'
+      ]
+    }
   ],
   b2cPolicies: {
     names: {

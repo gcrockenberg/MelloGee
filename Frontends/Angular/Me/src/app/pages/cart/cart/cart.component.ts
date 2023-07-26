@@ -18,7 +18,7 @@ export class CartComponent implements OnDestroy {
   private _updateCartSubject: Subject<ICart> = new Subject<ICart>();
 
   readonly cart: WritableSignal<ICart> = signal({
-    buyerId: '',
+    sessionId: '',
     items: []
   });
 
@@ -48,7 +48,6 @@ export class CartComponent implements OnDestroy {
     this._subscriptions.push(
       this._cartService.cartUpdate$
         .subscribe((cart) => {
-          console.log('--> Received updated cart from CartService')
           this.cart.set(cart);
         })
     );
@@ -57,7 +56,6 @@ export class CartComponent implements OnDestroy {
       this._updateCartSubject.asObservable()
         .pipe(debounceTime(1000))
         .subscribe((cart: ICart) => {
-          console.log('--> Updating CartService');
           this._cartService.setCart(this.cart()).subscribe();
         })
     );

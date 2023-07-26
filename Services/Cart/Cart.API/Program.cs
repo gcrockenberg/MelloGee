@@ -22,6 +22,7 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
+
 app.UseServiceDefaults();     // Extension
 
 if (app.Environment.IsDevelopment())

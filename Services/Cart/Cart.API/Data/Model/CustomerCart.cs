@@ -2,16 +2,15 @@ namespace Me.Services.Cart.API.Model;
 
 public class CustomerCart
 {
-    public string BuyerId { get; set; } = string.Empty;
-
+    public string SessionId { get; set; } = string.Empty;
     public List<CartItem> Items { get; set; } = new();
 
 
     public CustomerCart() { }
 
 
-    public CustomerCart(string customerId)
+    public CustomerCart(string sessionId)
     {
-        BuyerId = customerId;
+        SessionId = sessionId;
     }
 }

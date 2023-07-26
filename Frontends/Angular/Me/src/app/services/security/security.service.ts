@@ -15,6 +15,9 @@ import {
   RedirectRequest,
   SsoSilentRequest
 } from '@azure/msal-browser';
+import { ClaimFields, UserData } from 'src/app/models/security/user-data.model';
+
+
 
 
 /**
@@ -27,8 +30,9 @@ export class SecurityService {
   private readonly _destroying$ = new Subject<void>();
   private _destroyRef = inject(DestroyRef);
 
-  public IsAuthorized: boolean = false;
-  public UserData?: AccountInfo;
+  public isAuthorized: boolean = false;
+  public accountData?: AccountInfo;
+  public userData: UserData = new UserData();
 
   constructor(
     private _msalInstance: MsalService,
@@ -229,11 +233,24 @@ export class SecurityService {
 
   private _setIsAuthorized() {
     let accountInfo: AccountInfo[] = this._msalInstance.instance.getAllAccounts();
-    this.IsAuthorized = accountInfo.length > 0;
+    this.isAuthorized = accountInfo.length > 0;
 
     // see https://github.com/AzureAD/microsoft-authentication-library-for-js/blob/dev/lib/msal-common/docs/Accounts.md
-    if (this.IsAuthorized) {
-      this.UserData = accountInfo[0];
+    if (this.isAuthorized) {
+      this.accountData = accountInfo[0];
+      if (this.accountData.idTokenClaims) {
+        //console.log(this.AccountData.idTokenClaims);
+        this.userData.UserName = this.accountData.idTokenClaims[ClaimFields.USER_NAME] as string;
+        this.userData.givenName = this.accountData.idTokenClaims[ClaimFields.GIVEN_NAME] as string;
+        this.userData.surName = this.accountData.idTokenClaims[ClaimFields.SUR_NAME] as string;
+        this.userData.streetAddress = this.accountData.idTokenClaims[ClaimFields.STREET_ADDRESS] as string;
+        this.userData.city = this.accountData.idTokenClaims[ClaimFields.CITY] as string;
+        this.userData.state = this.accountData.idTokenClaims[ClaimFields.STATE] as string;
+        this.userData.postalCode = this.accountData.idTokenClaims[ClaimFields.POSTAL_CODE] as string;
+        this.userData.country = this.accountData.idTokenClaims[ClaimFields.COUNTRY] as string;
+        this.userData.Emails = this.accountData.idTokenClaims[ClaimFields.EMAILS] as string[];
+      }
+      //console.log(this.UserData);
       // console.log(`homeAccountId: ${accountInfo[0].homeAccountId}`);
       // console.log(`environment: ${accountInfo[0].environment}`);
       // console.log(`tenantId: ${accountInfo[0].tenantId}`);
@@ -246,12 +263,13 @@ export class SecurityService {
     }
   }
 
+
 /**
- * Rely on MsalInterceptor to automatically acquires tokens for outgoing requests 
- * that use the Angular http client to known protected resources.
+ * Rely on MsalInterceptor to automatically acquire and attach tokens for outgoing requests 
+ * that use the Angular http client to defined protected resources.
  * 
  */
-  // async getToken(): Promise<string> {
+  // async getAccessToken(): Promise<string> {
   //   const REQUEST = { scopes: ["https://meauth.onmicrosoft.com/cart/cart.read"] };
   //   const authenticationResult: AuthenticationResult = await firstValueFrom(
   //     this._msalInstance.acquireTokenSilent(REQUEST)

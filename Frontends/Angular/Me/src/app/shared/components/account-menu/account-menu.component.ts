@@ -76,7 +76,7 @@ export class AccountMenuComponent implements OnDestroy, OnInit {
 
 
   setIsLogin() {
-      this.isLogin = this._securityService.IsAuthorized;
+      this.isLogin = this._securityService.isAuthorized;
   }
 
 

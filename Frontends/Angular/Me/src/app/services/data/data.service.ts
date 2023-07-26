@@ -22,28 +22,9 @@ export class DataService {
   ) { }
 
 
-  private doPost<Type>(url: string, data: any, needId: boolean, params?: any): Observable<Type> {
-    let options = {};
-    this._setHeaders(options, needId);
-
-    return this._http.post<Type>(url, data, options)
-      .pipe(
-        tap((response: Type) => {
-          return response;
-        }),
-        catchError(this._handleError)
-      );
-  }
-
-
   get<Type>(url: string, params?: any): Observable<Type> {
-    if (this._securityService.isSecurePath(url) && !this._securityService.IsAuthorized) {
-      console.log('--> Msal fails to invoke interactive login when calling secure API unauthenticated');
-      return of();
-    }      
-
     let options = {};
-    this._setHeaders(options);
+    this._setHeaders(options, url);
 
     return this._http.get<Type>(url, options)
       .pipe(
@@ -56,11 +37,24 @@ export class DataService {
   }
 
 
+  /**
+   * Auth headers are automatically applied by Msal libraries based upon Environment.apiConfigs
+   * @param url 
+   * @param data 
+   * @param params 
+   * @returns 
+   */
   post<Type>(url: string, data: any, params?: any): Observable<Type> {
-    let options = { };
-    this._setHeaders(options);
+    let options = {};
+    this._setHeaders(options, url);
 
-    return this.doPost(url, data, false, params);
+    return this._http.post<Type>(url, data, options)
+      .pipe(
+        tap((response: Type) => {
+          return response;
+        }),
+        catchError(this._handleError)
+      );
   }
 
 
@@ -83,22 +77,11 @@ export class DataService {
   }
 
 
-  private async _setHeaders(options: any, needId?: boolean) {
-  //  options["withCredentials"] = true;
-  //   // if (needId && this.securityService) {
-  //   //   options["headers"] = new HttpHeaders()
-  //   //     .append('authorization', 'Bearer ' + this.securityService.GetToken())
-  //   //     .append('x-requestid', Guid.newGuid());
-  //   // }
-  //   // else 
-
-  //  = true and when I made the request I set withCredentials: true
-  //   if (this._securityService.IsAuthorized) {
-  //   options["headers"] = new HttpHeaders()
-  //     .append('withCredentials', 'true');
-  //       .append('authorization', 'Bearer ' + await this._securityService.getToken())
-  //       .append('x-requestid', Guid.newGuid());
-  //   }
+  private async _setHeaders(options: any, url?: string) {
+    if (url && this._securityService.isSecurePath(url)) {
+      options["headers"] = new HttpHeaders()
+        .append('x-requestid', Guid.newGuid());
+    }
   }
 
 

@@ -1,7 +1,8 @@
+using System.Text.Json.Serialization;
+
 namespace Me.Services.Cart.API.Controllers;
 
 [Route("api/v1/[controller]")]
-//[Authorize]
 [ApiController]
 public class CartController : ControllerBase
 {
@@ -31,7 +32,7 @@ public class CartController : ControllerBase
         var cart = await _repository.GetCartAsync(compositeId);
         if (null != cart)
         {
-            cart.BuyerId = sessionId;
+            cart.SessionId = sessionId;
         }
 
         return Ok(cart ?? new CustomerCart(sessionId));
@@ -43,41 +44,48 @@ public class CartController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<CustomerCart>> UpdateCartAsync([FromBody] CustomerCart cart)
     {
-        string originalBuyerId = cart.BuyerId;
+        string originalBuyerId = cart.SessionId;
 
-        cart.BuyerId = originalBuyerId + Request.HttpContext.Connection.RemoteIpAddress;
+        cart.SessionId = originalBuyerId + Request.HttpContext.Connection.RemoteIpAddress;
 
-        if (null == cart || string.IsNullOrEmpty(cart.BuyerId))
+        if (null == cart || string.IsNullOrEmpty(cart.SessionId))
         {
             return BadRequest();
         }
 
         cart = await _repository.UpdateCartAsync(cart);
-        cart.BuyerId = originalBuyerId;
+        cart.SessionId = originalBuyerId;
 
         return Ok(cart);
     }
 
 
+    [Authorize]
+    [RequiredScope ("cart.write")]
     [Route("checkout")]
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status202Accepted)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult> CheckoutAsync([FromBody] CartCheckout cartCheckout, [FromHeader(Name = "x-requestid")] string requestId)
-    {
+    {        
         var userId = _identityService.GetUserIdentity();
 
         cartCheckout.RequestId = (Guid.TryParse(requestId, out Guid guid) && guid != Guid.Empty) ?
             guid : cartCheckout.RequestId;
 
-        var cart = await _repository.GetCartAsync(userId);
+        if (string.IsNullOrWhiteSpace(cartCheckout.CartSessionId))
+        {
+            return BadRequest();
+        }
 
+        string compositeId = cartCheckout.CartSessionId + Request.HttpContext.Connection.RemoteIpAddress;
+        var cart = await _repository.GetCartAsync(compositeId);
         if (cart == null)
         {
             return BadRequest();
         }
 
-        var userName = User.FindFirst(x => x.Type == ClaimTypes.Name)!.Value;
+        var userName = User.FindFirst(x => x.Type == "name")!.Value;
 
         var eventMessage = new UserCheckoutAcceptedIntegrationEvent(userId, userName, cartCheckout.City, cartCheckout.Street,
             cartCheckout.State, cartCheckout.Country, cartCheckout.ZipCode, cartCheckout.CardNumber, cartCheckout.CardHolderName,

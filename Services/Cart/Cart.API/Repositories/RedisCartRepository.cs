@@ -42,14 +42,14 @@ public class RedisCartRepository : ICartRepository
 
     public async Task<CustomerCart> UpdateCartAsync(CustomerCart cart)
     {
-        var created = await _database.StringSetAsync(cart.BuyerId, JsonSerializer.Serialize(cart, JsonDefaults.CaseInsensitiveOptions));
+        var created = await _database.StringSetAsync(cart.SessionId, JsonSerializer.Serialize(cart, JsonDefaults.CaseInsensitiveOptions));
 
         if (!created)
         {
             return null;
         }
 
-        return await GetCartAsync(cart.BuyerId);
+        return await GetCartAsync(cart.SessionId);
     }
 
 

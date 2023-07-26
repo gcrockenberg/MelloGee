@@ -2,11 +2,13 @@ import { Injectable, inject } from '@angular/core';
 import { DataService } from '../data/data.service';
 import { ICart } from 'src/app/models/cart/cart.model';
 import { ConfigurationService } from '../configuration/configuration.service';
-import { Observable, Subject, tap } from 'rxjs';
+import { Observable, Subject, switchMap, tap } from 'rxjs';
 import { ICatalogItem } from 'src/app/models/catalog/catalog-item.model';
 import { Guid } from 'src/guid';
 import { ICartItem } from 'src/app/models/cart/cart-item.model';
 import { CookieService } from 'ngx-cookie-service';
+import { IOrder } from 'src/app/models/order/order.model';
+import { ICartCheckout } from 'src/app/models/cart/cart-checkout.model';
 
 /**
  * Cart API is bound by SessionId
@@ -19,7 +21,7 @@ export class CartService {
   private _purchaseUrl: string = '';
   private _cookieService = inject(CookieService);
   cart: ICart = {
-    buyerId: '',
+    sessionId: '',
     items: []
   };
 
@@ -27,16 +29,11 @@ export class CartService {
   private _cartUpdateSource = new Subject<ICart>();
   cartUpdate$ = this._cartUpdateSource.asObservable();
 
-  
+
   constructor(
     private _dataService: DataService,
     private _configurationService: ConfigurationService
   ) {
-    // Init:
-    //    if (this._securityService.IsAuthorized) {
-    //      if (this._securityService.UserData) {
-    //        this.cart.buyerId = this._securityService.UserData.localAccountId;
-    // Switched to SessionId for Cart 
     // TODO: Review cookie policy. Defaults to Lax. Should it be Strict?
     if (!this._cookieService.check('SessionId')) {
       this._cookieService.set(
@@ -57,8 +54,6 @@ export class CartService {
         this._purchaseUrl = this._configurationService.serverSettings.purchaseUrl + '/b/api/v1/cart/';
         this._getCart().subscribe();
       });
-      //        }
-      //      }
     }
 
     // this.cartWrapperService.orderCreated$.subscribe(x => {
@@ -89,7 +84,48 @@ export class CartService {
   }
 
 
+  createCartCheckoutFromOrder(order: IOrder): ICartCheckout {
+    let cartCheckout = <ICartCheckout>{};
+
+    cartCheckout.cartsessionid = order.cartSessionId
+    cartCheckout.street = order.street
+    cartCheckout.city = order.city;
+    cartCheckout.country = order.country;
+    cartCheckout.state = order.state;
+    cartCheckout.zipcode = order.zipcode;
+    cartCheckout.cardexpiration = order.cardexpiration;
+    cartCheckout.cardnumber = order.cardnumber;
+    cartCheckout.cardsecuritynumber = order.cardsecuritynumber;
+    cartCheckout.cardtypeid = order.cardtypeid;
+    cartCheckout.cardholdername = order.cardholdername;
+
+    return cartCheckout;
+  }
+
+
+  setCartCheckout(cartCheckout: ICartCheckout): Observable<boolean> {
+    if (!this._configurationService.isReady) {
+      return this._configurationService.settingsLoaded$
+        .pipe(switchMap(x => this.setCartCheckout(cartCheckout)))
+    }
+
+    let url: string = this._cartUrl + 'checkout';
+
+    return this._dataService.post(url, cartCheckout)
+      .pipe<boolean>(
+        tap((response: any) => {
+          //this.basketWrapperService.orderCreated();
+          return true;
+        }));
+  }
+
+
   private _getCart(): Observable<ICart> {
+    if (!this._configurationService.isReady) {
+      return this._configurationService.settingsLoaded$
+        .pipe(switchMap(x => this._getCart()))
+    }
+
     let url: string = this._cartUrl + this._cookieService.get('SessionId');
 
     return this._dataService.get<ICart>(url)
@@ -99,7 +135,8 @@ export class CartService {
           //   return null;
           // }          
           this.cart = response;
-          this._cartUpdateSource.next(this.cart); 
+          console.log(response);
+          this._cartUpdateSource.next(this.cart);
 
           return response;
         }));
@@ -107,7 +144,12 @@ export class CartService {
 
 
   setCart(cart: ICart): Observable<ICart> {
-    cart.buyerId = this._cookieService.get('SessionId');
+    if (!this._configurationService.isReady) {
+      return this._configurationService.settingsLoaded$
+        .pipe(switchMap(x => this.setCart(cart)))
+    }
+
+    cart.sessionId = this._cookieService.get('SessionId');
 
     return this._dataService.post<ICart>(this._cartUrl, cart).
       pipe<ICart>(

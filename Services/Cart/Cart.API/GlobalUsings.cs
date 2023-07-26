@@ -14,5 +14,7 @@ global using Me.Services.EventBus.Events;
 //global using Grpc.Core;
 //global using GrpcCart;
 global using Microsoft.AspNetCore.Authorization;
+global using Microsoft.AspNetCore.Http;
 global using Microsoft.AspNetCore.Mvc;
+global using Microsoft.Identity.Web.Resource;
 global using StackExchange.Redis;
