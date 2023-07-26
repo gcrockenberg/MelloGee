@@ -7,7 +7,10 @@ A personal project that I started May 2023 to demonstrate backend and frontend a
 - [Azure API Management](https://azure.microsoft.com/en-us/products/api-management/)
 - Docker Container Registry
 - GitHub Actions CI/CD
-- [AAD B2C](https://learn.microsoft.com/en-us/azure/active-directory-b2c/) - Customer identity access management (CIAM). This infrastructure is not part of automated provisioning. It requires manual provision and config.
+- [AAD B2C](https://learn.microsoft.com/en-us/azure/active-directory-b2c/) - Customer identity access management (CIAM). This infrastructure is not yet part of automated provisioning. It requires manual provision and config. (claims, apis, scopes)
+- In-mem SQL for demo purposes
+- RabbitMQ Event Bus
+- Redis caching
 - Angular SPA with Tailwind CSS
 
 ![Me architecture](Images/Me%20Architecture.png)
@@ -79,12 +82,13 @@ az deployment group create --template-file bicep/main.bicep
 - Navigate to your static web app.
 
 **That's it so far**
-: Container Apps Environment is external. Container Apps restrict access via IP only granting access to APIM. The containers have curl installed for quick API checks but you can toggle Ingress to allow public access. The APIs "talk" to each other and to Azure Key Vault. APIM connects to the Container Apps as Backend Services.
+: Container Apps Environment is external. Container Apps ingress is limited to APIM and internal container services. The containers have curl installed for quick API checks but you can change ingress to allow public access. EventBus and GRPC enable inter-service communication. APIM connects to the Container Apps as Backend Services. APIM implements CORS.
 
 ### TO DO
-- Implement semantic-release versioning for modules, update CDN cache strategy which is currently turned off for dev
+- Implement semantic-release versioning for modules
 - Better micro-services, front-ends, Event Bus, aggregation, and SignalR
 - Script initial Docker image build and push
+- Script AAD-B2C environment provisioning
 
 [^1]: The Azure Container Apps Managed Environment creates an additional Resource Group for Kubernetes that it controls
 
