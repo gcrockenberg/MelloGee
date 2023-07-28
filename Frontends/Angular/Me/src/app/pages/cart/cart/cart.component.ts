@@ -15,7 +15,6 @@ import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 })
 export class CartComponent implements OnDestroy {
   private _subscriptions: Subscription[] = [];
-  private _updateCartSubject: Subject<ICart> = new Subject<ICart>();
 
   readonly cart: WritableSignal<ICart> = signal({
     sessionId: '',
@@ -40,10 +39,9 @@ export class CartComponent implements OnDestroy {
     private _cartService: CartService,
     private _router: Router) {
 
-    this._checkRedirect();
-
     this.cart.set(_cartService.cart);
 
+    // Handle Cart being updated elsewhere
     this._subscriptions.push(
       this._cartService.cartUpdate$
         .subscribe((cart) => {
@@ -51,36 +49,27 @@ export class CartComponent implements OnDestroy {
         })
     );
 
-    this._subscriptions.push(
-      this._updateCartSubject.asObservable()
-        .pipe(debounceTime(1000))
-        .subscribe((cart: ICart) => {
-          this._cartService.setCart(this.cart()).subscribe();
-        })
-    );
+    // Throttle updates that this component makes to the Cart
+    // this._subscriptions.push(
+    //   this._updateCartSubject.asObservable()
+    //     .pipe(debounceTime(1000))
+    //     .subscribe((cart: ICart) => {
+    //       this._cartService._setCart(this.cart()).subscribe();
+    //     })
+    // );
   }
 
 
-  changeQuantity(e: any, i: number) {
-    let newQuantity = e.target.value;
+  changeQuantity(event: any, itemIndex: number) {
+    let newQuantity = event.target.value;
     if (newQuantity) {
-      this.cart.mutate(c => c.items[i].quantity = newQuantity);
-      this._updateCartSubject.next(this.cart());
+      this._cartService.changeQuantity(itemIndex, newQuantity);
     }
   }
 
 
-  removeItem(i: number) {
-    this.cart.mutate(c => c.items.splice(i, 1));
-    this._updateCartSubject.next(this.cart());
-    this._checkRedirect();
-  }
-
-
-  private _checkRedirect() {
-    if (1 > this._cartService.cart.items.length) {
-      this. _router.navigate(['/catalog']);
-    }
+  removeItem(itemIndex: number) {
+    this._cartService.removeItem(itemIndex);
   }
 
 
@@ -91,7 +80,6 @@ export class CartComponent implements OnDestroy {
 
 
   ngOnDestroy(): void {
-    // prevent memory leak when component destroyed
     this._subscriptions.forEach(s => s.unsubscribe());
   }
 

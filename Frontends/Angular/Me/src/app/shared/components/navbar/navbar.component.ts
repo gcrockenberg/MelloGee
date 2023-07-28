@@ -40,8 +40,8 @@ export class NavbarComponent implements OnDestroy, OnInit {
     constructor(
         private _securityService: SecurityService,
         //private cd: ChangeDetectorRef,  // To manually control change detection
-        private authService: MsalService,
-        private msalBroadcastService: MsalBroadcastService,
+        private _authService: MsalService,
+        private _msalBroadcastService: MsalBroadcastService,
     ) { }
 
 
@@ -53,20 +53,20 @@ export class NavbarComponent implements OnDestroy, OnInit {
          * You can subscribe to MSAL events as shown below. For more info,
          * visit: https://github.com/AzureAD/microsoft-authentication-library-for-js/blob/dev/lib/msal-angular/docs/v2-docs/events.md
          */
-        this.msalBroadcastService.msalSubject$
+        this._msalBroadcastService.msalSubject$
             .pipe(
                 filter((msg: EventMessage) => msg.eventType === EventType.ACCOUNT_ADDED || msg.eventType === EventType.ACCOUNT_REMOVED),
                 takeUntil(this._destroying$)
             )
             .subscribe((result: EventMessage) => {
-                if (this.authService.instance.getAllAccounts().length === 0) {
+                if (this._authService.instance.getAllAccounts().length === 0) {
                     window.location.pathname = "/";
                 } else {
                     this.setIsAuthorized();
                 }
             });
 
-        this.msalBroadcastService.inProgress$
+        this._msalBroadcastService.inProgress$
             .pipe(
                 filter((status: InteractionStatus) => status === InteractionStatus.None),
                 takeUntil(this._destroying$)

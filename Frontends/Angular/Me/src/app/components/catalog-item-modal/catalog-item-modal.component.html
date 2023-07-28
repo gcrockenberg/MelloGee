@@ -1,90 +1,33 @@
 <div *ngIf="isOpen()" (click)="modalService.close()" class="
-    z-50 
+    z-10 
     transition 
     duration-300 
     bg-black 
     bg-opacity-80 
-    flex 
-    justify-center 
-    items-center 
     overflow-x-hidden 
     overflow-y-auto 
     fixed
-    inset-0"> 
-    <div (click)="$event.stopPropagation()" class="
-        relative 
-        w-full
-        mx-auto 
-        max-w-3xl 
-        rounded-md 
-        overflow-hidden">
-        
-        <div class="
-            scale-100
-            transform 
-            duration-300 
-            relative 
-            flex-auto 
-            bg-zinc-900 
-            drop-shadow-md">
-
-            <div class="relative h-96">
-                <img *ngIf="null != item" [src]="item.pictureUri" alt="{{item.name}} image" class="
-                    w-full 
-                    brightness-[60%] 
-                    object-cover 
-                    h-full">
-                <div (click)="modalService.close()" class="
-                    cursor-pointer 
-                    absolute 
-                    top-3 
-                    right-3 
-                    h-10 
-                    w-10 
-                    rounded-full 
-                    bg-black 
-                    bg-opacity-70 
-                    flex 
-                    items-center 
-                    justify-center">
-                    <ng-icon class="text-white h-20 w-20" name="bootstrapXLg" />
+    inset-0">
+    <section *ngIf="!itemLoaded()" class="h-screen flex justify-center items-center text-white">
+        Loading...
+    </section>
+    <section class="pt-32 pb-12 lg:py-32 h-screen flex items-center bg-white mx-4 lg:mx-12 mt-20 md:mt-28 rounded-3xl">
+        <div class="container mx-auto">
+            <div class="flex flex-col lg:flex-row items-center">
+                <div class="flex flex-1 justify-center items-center mb-8 lg:mb-0">
+                    <img [src]="item().pictureUri" alt="" class="max-w-[200px] lg:max-w-sm">
                 </div>
-                <div class="absolute bottom-[10%] left-10">
-                    <p class="
-                        text-white
-                        text-3xl
-                        md:text-4xl
-                        h-full
-                        lg:text-5xl
-                        font-bold
-                        mb-80">
-                        {{item.name}}
-                    </p>
-                    <div class="flex flex-row gap-4 items-center">
-                        <app-button-add-to-cart [itemId]="item.id" />
+                <div class="flex-1 text-center lg:text-left">
+                    <h1 class="text-[26px] font-medium mb-2 max-w-[450px] mx-auto lg:mx-0">
+                        {{ item().name }}
+                    </h1>
+                    <div class="text-xl text-red-500 font-medium mb-6">
+                        $ {{ item().price | number: '1.2-2'  }}
                     </div>
+                    <p class="mb-8">{{ item().description }}</p>
+                    <button (click)="$event.stopPropagation(); addToCart()" class="bg-black py-4 px-8 text-white">Add to cart</button>
                 </div>
             </div>
-
-            <div class="px-12 py-8">
-                <p class="text-green-400 font-semibold text-lg">
-                    New
-                </p>
-                <p class="text-white text-lg">
-                    {{item.price | currency:'CAD':'symbol-narrow':'1.2-2'}}
-                </p>
-                <p class="text-white text-lg">
-                    {{item.description ?? 'description'}}
-                </p>
-                <p class="text-white text-lg">
-                    {{item.catalogType.type}}
-                </p>
-                <p class="text-white text-lg">
-                    {{item.catalogBrand.brand}}
-                </p>
-            </div>
-
         </div>
-
-    </div>
+    </section>
 </div>

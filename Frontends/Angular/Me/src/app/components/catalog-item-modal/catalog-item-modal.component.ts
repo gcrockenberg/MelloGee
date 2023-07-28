@@ -1,11 +1,15 @@
-import { Component, Input, OnDestroy, OnInit, WritableSignal, signal } from '@angular/core';
-import { CommonModule, NgIf } from '@angular/common';
+import { Component, OnDestroy, OnInit, WritableSignal, signal } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { bootstrapBagPlus, bootstrapXLg } from "@ng-icons/bootstrap-icons"
 import { ButtonAddToCartComponent } from "../button-add-to-cart/button-add-to-cart.component";
 import { ModalService } from 'src/app/services/modal/modal.service';
 import { IModal } from 'src/app/models/modal/modal.model';
 import { ICatalogItem } from 'src/app/models/catalog/catalog-item.model';
+import { CatalogService } from 'src/app/services/catalog/catalog.service';
+import { CartService } from 'src/app/services/cart/cart.service';
+
+export const CATALOG_ITEM_MODAL: string = 'CATALOG_ITEM_MODAL';
 
 @Component({
   selector: 'app-catalog-item-modal',
@@ -13,16 +17,23 @@ import { ICatalogItem } from 'src/app/models/catalog/catalog-item.model';
   providers: [provideIcons({ bootstrapBagPlus, bootstrapXLg })],
   templateUrl: './catalog-item-modal.component.html',
   styleUrls: ['./catalog-item-modal.component.scss'],
-  imports: [CommonModule, NgIconComponent, NgIf, ButtonAddToCartComponent]
+  imports: [CommonModule, NgIconComponent, ButtonAddToCartComponent]
 })
 export class CatalogItemModalComponent implements IModal, OnInit, OnDestroy {
-  @Input() id!: string;
+  readonly id: string = CATALOG_ITEM_MODAL;
   isOpen: WritableSignal<boolean> = signal(false);
+  itemLoaded: WritableSignal<boolean> = signal(false);
+  item: WritableSignal<ICatalogItem> = signal(<ICatalogItem>{});
 
-  item!: ICatalogItem;
-  private _element: any;
+  constructor(
+    private _catalogService: CatalogService,
+    public modalService: ModalService,
+    private _cartService: CartService) { }
 
-  constructor(public modalService: ModalService) { }
+
+  addToCart() {
+    this._cartService.addCatalogItemToCart(this.item());
+  }
 
 
   ngOnInit() {
@@ -41,8 +52,14 @@ export class CatalogItemModalComponent implements IModal, OnInit, OnDestroy {
   }
 
 
+  // TODO: Handle not found
   setTarget<T>(target: T) {
-    this.item = target as ICatalogItem;
+    this.itemLoaded.set(false);
+    this._catalogService.getCatalogItem(target as number)
+      .subscribe((catalogItem) => {
+        this.item.set(catalogItem);
+        this.itemLoaded.set(true);
+      })
   }
 
 

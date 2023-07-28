@@ -5,6 +5,7 @@ import { Observable, switchMap, tap } from 'rxjs';
 import { ICatalog } from 'src/app/models/catalog/catalog.model';
 import { ICatalogBrand } from 'src/app/models/catalog/catalog-brand.model';
 import { ICatalogType } from 'src/app/models/catalog/catalog-type.model';
+import { ICatalogItem } from 'src/app/models/catalog/catalog-item.model';
 
 const baseUrl = '';
 
@@ -21,12 +22,10 @@ export class CatalogService {
     private _dataService: DataService,
   ) {
     if (_configurationService.isReady) {
-      console.log('--> Configuration Service is ready!');
       this.catalogUrl = this._configurationService.serverSettings.purchaseUrl + '/c/api/v1/catalog/items';
       this.brandUrl = this._configurationService.serverSettings.purchaseUrl + '/c/api/v1/catalog/catalogbrands';
       this.typesUrl = this._configurationService.serverSettings.purchaseUrl + '/c/api/v1/catalog/catalogtypes';
     } else {
-      console.log('--> Subscribed to ConfigurationService is ready!');
       this._configurationService.settingsLoaded$.subscribe(x => {
         this.catalogUrl = this._configurationService.serverSettings.purchaseUrl + '/c/api/v1/catalog/items';
         this.brandUrl = this._configurationService.serverSettings.purchaseUrl + '/c/api/v1/catalog/catalogbrands';
@@ -55,6 +54,21 @@ export class CatalogService {
 
     return this._dataService.get<ICatalog>(url)
       .pipe(tap((response: ICatalog) => {
+        return response;
+      }));
+  }
+
+
+  getCatalogItem(itemId: number): Observable<ICatalogItem> {
+    if (!this._configurationService.isReady) {
+      return this._configurationService.settingsLoaded$
+        .pipe(switchMap(x => this.getCatalogItem(itemId)))
+    }
+
+    let url = this.catalogUrl + `/${itemId}`;
+
+    return this._dataService.get<ICatalogItem>(url)
+      .pipe(tap((response: ICatalogItem) => {
         return response;
       }));
   }

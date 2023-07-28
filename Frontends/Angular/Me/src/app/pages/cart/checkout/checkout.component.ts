@@ -1,10 +1,10 @@
-import { Component, Signal, computed } from '@angular/core';
+import { Component, OnDestroy, Signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { OrderService } from 'src/app/services/cart/order.service';
 import { IOrder } from 'src/app/models/order/order.model';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CartService } from 'src/app/services/cart/cart.service';
-import { catchError, throwError } from 'rxjs';
+import { Subscription, catchError, throwError } from 'rxjs';
 import { Router } from '@angular/router';
 import { ICartCheckout } from 'src/app/models/cart/cart-checkout.model';
 import { InputComponent } from "../../../shared/components/input/input.component";
@@ -17,13 +17,15 @@ import { ICart } from 'src/app/models/cart/cart.model';
   templateUrl: './checkout.component.html',
   styleUrls: ['./checkout.component.scss']
 })
-export class CheckoutComponent {
+export class CheckoutComponent implements OnDestroy {
+  private _subscriptions: Subscription[] = [];
+
   order: IOrder = <IOrder>{};
   form!: FormGroup;
-  cart: ICart;
+
   private readonly _subTotal: Signal<number> = computed(() => {
     let totalPrice = 0;
-    this.cart.items.forEach(item => {
+    this._cartService.cart.items.forEach(item => {
       totalPrice += (item.unitPrice * item.quantity);
     });
 
@@ -48,7 +50,13 @@ export class CheckoutComponent {
     private _router: Router) {
 
     this._checkRedirect();
-    this.cart = _cartService.cart;
+
+    this._subscriptions.push(
+      this._cartService.cartUpdate$
+        .subscribe((cart) => {
+          this._checkRedirect();
+        })
+    );
 
     this.order = _orderService.createOrderFromCartAndIdentity();
     this.form = this._fb.nonNullable.group({
@@ -56,6 +64,7 @@ export class CheckoutComponent {
       city: [this.order.city, [Validators.required]],
       state: [this.order.state, [Validators.required]],
       country: [this.order.country, [Validators.required]],
+      postalCode: [this.order.zipcode, [Validators.required]],
       cardnumber: [this.order.cardnumber, [Validators.required]],
       cardholdername: [this.order.cardholdername, [Validators.required]],
       expirationdate: [this.order.expiration, [Validators.required]],
@@ -90,6 +99,11 @@ export class CheckoutComponent {
       });
     this.errorReceived = false;
     this.isOrderProcessing = true;
+  }
+
+
+  ngOnDestroy(): void {
+    this._subscriptions.forEach(s => s.unsubscribe());
   }
 
 

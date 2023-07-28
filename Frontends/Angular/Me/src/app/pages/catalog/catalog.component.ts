@@ -12,13 +12,14 @@ import { PagerComponent } from "../../shared/components/pager/pager.component";
 import { ICatalogItem } from 'src/app/models/catalog/catalog-item.model';
 import { CatalogItemsComponent } from "../../components/catalog-items/catalog-items.component";
 import { CatalogItemModalComponent } from "../../components/catalog-item-modal/catalog-item-modal.component";
+import { CartSidebarComponent } from "../../components/cart-sidebar/cart-sidebar.component";
 
 @Component({
     selector: 'app-catalog',
     standalone: true,
     templateUrl: './catalog.component.html',
     styleUrls: ['./catalog.component.scss'],
-    imports: [CommonModule, PagerComponent, CatalogItemsComponent, CatalogItemModalComponent]
+    imports: [CommonModule, PagerComponent, CatalogItemsComponent, CatalogItemModalComponent, CartSidebarComponent]
 })
 export class CatalogComponent implements OnInit {
   errorReceived: boolean = false;
@@ -50,8 +51,8 @@ export class CatalogComponent implements OnInit {
 
   loadData() {
     this.getBrands();
-    this.getCatalog(12, 0);
     this.getTypes();
+    this.getCatalog(12, 0);
   }
 
 
@@ -70,10 +71,11 @@ export class CatalogComponent implements OnInit {
   getTypes() {
     this._catalogService.getTypes().subscribe(types => {
       this.types = types;
-      let alltypes: ICatalogType = { id: null, type: 'All' };
+      let alltypes: ICatalogType = { id: -1, type: 'All' };
       this.types.unshift(alltypes);
     });
   }
+
 
 
   getCatalog(pageSize: number, pageIndex: number, brand?: number, type?: number) {
@@ -91,7 +93,6 @@ export class CatalogComponent implements OnInit {
         };
       });
   }
-
 
   onBrandFilterChanged(event: any) {
     event.preventDefault();

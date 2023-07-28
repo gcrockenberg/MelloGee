@@ -54,26 +54,34 @@ export class SecurityService {
 
 
   login(userFlowRequest?: RedirectRequest | PopupRequest) {
-    if (environment.msalGuardConfig.interactionType === InteractionType.Popup) {
-      if (environment.msalGuardConfig.authRequest) {
-        this._msalInstance.loginPopup({ ...environment.msalGuardConfig.authRequest, ...userFlowRequest } as PopupRequest)
-          .subscribe((response: AuthenticationResult) => {
-            this._msalInstance.instance.setActiveAccount(response.account);
-          });
-      } else {
-        this._msalInstance.loginPopup(userFlowRequest)
-          .subscribe((response: AuthenticationResult) => {
-            this._msalInstance.instance.setActiveAccount(response.account);
-          });
-      }
-    } else {
-      if (environment.msalGuardConfig.authRequest) {
-        console.log('authService.loginRedirect() params: ', { ...environment.msalGuardConfig.authRequest, ...userFlowRequest });
-        this._msalInstance.instance.loginRedirect({ ...environment.msalGuardConfig.authRequest, ...userFlowRequest } as RedirectRequest);
-      } else {
-        this._msalInstance.instance.loginRedirect(userFlowRequest);
-      }
-    }
+    // https://github.com/AzureAD/microsoft-authentication-library-for-js/blob/dev/lib/msal-browser/docs/errors.md#interaction_in_progress
+    this._msalInstance.handleRedirectObservable().subscribe({
+      next: (tokenPromise) => {
+        if (!tokenPromise) {
+          if (environment.msalGuardConfig.interactionType === InteractionType.Popup) {
+            if (environment.msalGuardConfig.authRequest) {
+              this._msalInstance.loginPopup({ ...environment.msalGuardConfig.authRequest, ...userFlowRequest } as PopupRequest)
+                .subscribe((response: AuthenticationResult) => {
+                  this._msalInstance.instance.setActiveAccount(response.account);
+                });
+            } else {
+              this._msalInstance.loginPopup(userFlowRequest)
+                .subscribe((response: AuthenticationResult) => {
+                  this._msalInstance.instance.setActiveAccount(response.account);
+                });
+            }
+          } else {
+            if (environment.msalGuardConfig.authRequest) {
+              console.log('authService.loginRedirect() params: ', { ...environment.msalGuardConfig.authRequest, ...userFlowRequest });
+              this._msalInstance.instance.loginRedirect({ ...environment.msalGuardConfig.authRequest, ...userFlowRequest } as RedirectRequest);
+            } else {
+              this._msalInstance.instance.loginRedirect(userFlowRequest);
+            }
+          }
+        }
+      },
+      error: (error) => { console.error(error) }
+    })
   }
 
 
@@ -216,8 +224,7 @@ export class SecurityService {
   }
 
 
-  isSecurePath (url: string): boolean
-  {
+  isSecurePath(url: string): boolean {
     let matchingSecurePath = environment.apiConfigs.find((config) => {
       let configUri = config.uri.replace('*', '');
       return url.startsWith(configUri);
@@ -226,7 +233,7 @@ export class SecurityService {
     if (!matchingSecurePath) {
       return false;
     }
-  
+
     return true;
   }
 
@@ -264,11 +271,11 @@ export class SecurityService {
   }
 
 
-/**
- * Rely on MsalInterceptor to automatically acquire and attach tokens for outgoing requests 
- * that use the Angular http client to defined protected resources.
- * 
- */
+  /**
+   * Rely on MsalInterceptor to automatically acquire and attach tokens for outgoing requests 
+   * that use the Angular http client to defined protected resources.
+   * 
+   */
   // async getAccessToken(): Promise<string> {
   //   const REQUEST = { scopes: ["https://meauth.onmicrosoft.com/cart/cart.read"] };
   //   const authenticationResult: AuthenticationResult = await firstValueFrom(
@@ -280,7 +287,7 @@ export class SecurityService {
   //         })
   //       )
   //   );
-    
+
   //   return authenticationResult.accessToken;
   // }
 

@@ -1,5 +1,5 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { CommonModule, NgIf } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { Subject, filter, takeUntil } from 'rxjs';
 import { SecurityService } from 'src/app/services/security/security.service';
 import { MsalBroadcastService, MsalService } from '@azure/msal-angular';
@@ -8,7 +8,7 @@ import { EventMessage, EventType, InteractionStatus, PopupRequest, RedirectReque
 @Component({
   selector: 'app-account-menu',
   standalone: true,
-  imports: [CommonModule, NgIf],
+  imports: [CommonModule],
   templateUrl: './account-menu.component.html',
   styleUrls: ['./account-menu.component.scss']
 })

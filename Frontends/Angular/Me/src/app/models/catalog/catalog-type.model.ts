@@ -1,4 +1,4 @@
 export interface ICatalogType {
-    id: number | null;
+    id: number;
     type: string;
 }

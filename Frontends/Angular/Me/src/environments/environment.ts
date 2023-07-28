@@ -37,7 +37,7 @@ export const environment: IEnvironment = {
    */
   msalGuardConfig: {
     // Popup detects when user cancels the flow, Redirect does not which leaves inconsistent state.
-    interactionType: InteractionType.Popup,
+    interactionType: InteractionType.Redirect,
     authRequest: AuthRequestType.LoginRequest    // Scopes
   }
 };

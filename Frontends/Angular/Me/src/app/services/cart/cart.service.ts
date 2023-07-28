@@ -18,14 +18,13 @@ import { ICartCheckout } from 'src/app/models/cart/cart-checkout.model';
 })
 export class CartService {
   private _cartUrl: string = '';
-  private _purchaseUrl: string = '';
   private _cookieService = inject(CookieService);
   cart: ICart = {
     sessionId: '',
     items: []
   };
 
-  // Observable fired when item is added or removed from cart
+  // Observable fired when Cart mutates
   private _cartUpdateSource = new Subject<ICart>();
   cartUpdate$ = this._cartUpdateSource.asObservable();
 
@@ -45,14 +44,12 @@ export class CartService {
 
     if (this._configurationService.isReady) {
       this._cartUrl = this._configurationService.serverSettings.purchaseUrl + '/b/api/v1/cart/';
-      this._purchaseUrl = this._configurationService.serverSettings.purchaseUrl + '/b/api/v1/cart/';
-      this._getCart().subscribe();
+      this._getCart();
     }
     else {
       this._configurationService.settingsLoaded$.subscribe(x => {
         this._cartUrl = this._configurationService.serverSettings.purchaseUrl + '/b/api/v1/cart/';
-        this._purchaseUrl = this._configurationService.serverSettings.purchaseUrl + '/b/api/v1/cart/';
-        this._getCart().subscribe();
+        this._getCart();
       });
     }
 
@@ -62,25 +59,51 @@ export class CartService {
   }
 
 
-  addItemToCart(item: ICatalogItem): Observable<ICart> {
-    let newCartItem: ICartItem = {
-      pictureUrl: item.pictureUri,
-      productId: item.id,
-      productName: item.name,
-      quantity: 1,
-      unitPrice: item.price,
-      id: Guid.newGuid(),
-      oldUnitPrice: 0
-    };
-    let cartItem = this.cart.items.find(value => value.productId == newCartItem.productId);
-
+  addCatalogItemToCart(item: ICatalogItem) {
+    let cartItem = this.cart.items.find(value => value.productId == item.id);
     if (cartItem) {
       cartItem.quantity++;
     } else {
+      let newCartItem: ICartItem = {
+        pictureUrl: item.pictureUri,
+        productId: item.id,
+        productName: item.name,
+        quantity: 1,
+        unitPrice: item.price,
+        id: Guid.newGuid(),
+        oldUnitPrice: 0
+      };
+
       this.cart.items.push(newCartItem);
     }
 
-    return this.setCart(this.cart);
+    this._postCartAndBroadcast();
+  }
+
+
+  changeQuantity(cartItemIndex: number, newQuantity: number) {
+    if (1 > newQuantity) {
+      throw new Error(`Invalid cart item quantity: ${newQuantity}`);
+    }
+    if (this.cart.items.length <= cartItemIndex || 0 > cartItemIndex) {
+      throw new Error(`Invalid cart item index: ${cartItemIndex}`);
+    }
+    if (this.cart.items[cartItemIndex].quantity == newQuantity) {
+      return;
+    }
+
+    this.cart.items[cartItemIndex].quantity = newQuantity
+    this._postCartAndBroadcast();
+  }
+
+
+  clearCart() {
+    if (1 > this.cart.items.length) {
+      return;
+    }
+
+    this.cart.items = [];
+    this._postCartAndBroadcast();
   }
 
 
@@ -103,6 +126,39 @@ export class CartService {
   }
 
 
+  decreaseQuantity(cartItemIndex: number) {
+    if (this.cart.items.length <= cartItemIndex || 0 > cartItemIndex) {
+      throw new Error(`Invalid cart item index: ${cartItemIndex}`);
+    }
+    if (2 > this.cart.items[cartItemIndex].quantity) {
+      return;
+    }
+
+    this.cart.items[cartItemIndex].quantity--;
+    this._postCartAndBroadcast();
+  }
+
+
+  increaseQuantity(cartItemIndex: number) {
+    if (this.cart.items.length <= cartItemIndex || 0 > cartItemIndex) {
+      throw new Error(`Invalid cart item index: ${cartItemIndex}`);
+    }
+
+    this.cart.items[cartItemIndex].quantity++;
+    this._postCartAndBroadcast();
+  }
+
+
+  removeItem(cartItemIndex: number) {
+    if (this.cart.items.length <= cartItemIndex || 0 > cartItemIndex) {
+      throw new Error(`Invalid cart item index: ${cartItemIndex}`);
+    }
+
+    this.cart.items.splice(cartItemIndex, 1);
+    this._postCartAndBroadcast;
+  }
+
+
   setCartCheckout(cartCheckout: ICartCheckout): Observable<boolean> {
     if (!this._configurationService.isReady) {
       return this._configurationService.settingsLoaded$
@@ -120,44 +176,42 @@ export class CartService {
   }
 
 
-  private _getCart(): Observable<ICart> {
+  private _getCart() {
     if (!this._configurationService.isReady) {
-      return this._configurationService.settingsLoaded$
-        .pipe(switchMap(x => this._getCart()))
-    }
+      this._configurationService.settingsLoaded$
+        .subscribe(() => this._getCart())
+    } else {
+      let url: string = this._cartUrl + this._cookieService.get('SessionId');
 
-    let url: string = this._cartUrl + this._cookieService.get('SessionId');
-
-    return this._dataService.get<ICart>(url)
-      .pipe<ICart>(
-        tap((response: ICart) => {
+      this._dataService.get<ICart>(url)
+        .subscribe((response: ICart) => {
           // if (response.status === 204) {
           //   return null;
           // }          
           this.cart = response;
-          console.log(response);
           this._cartUpdateSource.next(this.cart);
-
-          return response;
-        }));
+        });
+    }
   }
 
 
-  setCart(cart: ICart): Observable<ICart> {
+  private _postCartAndBroadcast() {
     if (!this._configurationService.isReady) {
-      return this._configurationService.settingsLoaded$
-        .pipe(switchMap(x => this.setCart(cart)))
-    }
+      this._configurationService.settingsLoaded$
+        .subscribe(() => this._postCartAndBroadcast())
+    } else {
+      this.cart.sessionId = this._cookieService.get('SessionId');
 
-    cart.sessionId = this._cookieService.get('SessionId');
-
-    return this._dataService.post<ICart>(this._cartUrl, cart).
-      pipe<ICart>(
-        tap((response: ICart) => {
+      // Sever update no await
+      // TODO: Should I debounce?
+      this._dataService.post<ICart>(this._cartUrl, this.cart)
+        .subscribe((response: ICart) => {
           this.cart = response;
-          this._cartUpdateSource.next(this.cart);
-        })
-      );
+        });
+
+      // Notify listeners
+      this._cartUpdateSource.next(this.cart);
+    }
   }
 
 }
