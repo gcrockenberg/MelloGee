@@ -9,7 +9,7 @@ param addToAPIM bool
 param apimName string
 //param apimIpAddress string =''
 param apiPath string
-param connectKeyVault bool
+//param connectKeyVault bool
 param containerAppName string
 param containerAppManagedEnvironmentName string
 param dockerImageName string
@@ -20,20 +20,12 @@ param transport string
 @description('The location into which your Azure resources should be deployed.')
 param location string = resourceGroup().location
 
-@description('Container app secrets are common. Just connecting with Docker.')
-@secure()
-param containerSecrets object = {
-  arrayValue: [
-    {
-      name: 'container-registry-password'
-      value: dockerHubPasswordOrToken
-    }
-  ]
-}
+@description('Container App secrets')
+param containerSecrets array
 
-@description('Required to integrate with Docker as container registry')
-@secure()
-param dockerHubPasswordOrToken string
+@description('Container environment variables.')
+param environmentVariables array
+
 @description('Required to integrate with Docker as container registry')
 @secure()
 param dockerHubUsername string
@@ -50,8 +42,8 @@ var containerScale = {
   maxReplicas: 1
 }
 
-param keyVaultName string
-param keyVaultId string
+//param keyVaultName string
+//param keyVaultId string
 
 @description('Docker registry for container app')
 param containerRegistries array = [
@@ -66,11 +58,11 @@ resource containerAppManagedEnvironment 'Microsoft.App/managedEnvironments@2023-
   name: containerAppManagedEnvironmentName
 }
 
-@description('This is the built-in Key Vault Secrets User role. See https://docs.microsoft.com/azure/role-based-access-control/built-in-roles#key-vault-secrets-user')
-resource keyVaultReaderRoleDefinition 'Microsoft.Authorization/roleDefinitions@2022-05-01-preview' existing = if (connectKeyVault) {
-  scope: subscription()
-  name: '4633458b-17de-408a-b874-0445c86b69e6'
-}
+// @description('This is the built-in Key Vault Secrets User role. See https://docs.microsoft.com/azure/role-based-access-control/built-in-roles#key-vault-secrets-user')
+// resource keyVaultReaderRoleDefinition 'Microsoft.Authorization/roleDefinitions@2022-05-01-preview' existing = if (connectKeyVault) {
+//   scope: subscription()
+//   name: '4633458b-17de-408a-b874-0445c86b69e6'
+// }
 
 resource apim 'Microsoft.ApiManagement/service@2023-03-01-preview' existing = {
   name: apimName
@@ -412,7 +404,7 @@ resource containerApp 'Microsoft.App/containerApps@2023-04-01-preview' = {
   properties: {
     environmentId: containerAppManagedEnvironment.id
     configuration: {
-      secrets: containerSecrets.arrayValue
+      secrets: containerSecrets
       registries: containerRegistries
       activeRevisionsMode: 'Single'
       ingress: {
@@ -438,12 +430,13 @@ resource containerApp 'Microsoft.App/containerApps@2023-04-01-preview' = {
           name: 'container-main'
           image: dockerImageName
           resources: containerResources
-          env: connectKeyVault ? [
-            {
-              name: 'VAULT_NAME'
-              value: keyVaultName
-            }
-          ] : []
+          env: environmentVariables
+          // connectKeyVault ? [
+          //   {
+          //     name: 'VAULT_NAME'
+          //     value: 'No key vault' //keyVaultName
+          //   }
+          // ] : []
         }
       ]
       scale: containerScale
@@ -451,38 +444,39 @@ resource containerApp 'Microsoft.App/containerApps@2023-04-01-preview' = {
   }
 }
 
-@description('Connect Container App to the Key Vault using System Assigned Id and RBAC')
-resource connectContainerAppToKeyVault 'Microsoft.ServiceLinker/linkers@2022-11-01-preview' = if (connectKeyVault) {
-  scope: containerApp
-  name: 'connect_container_app_to_keyvault'
-  properties: {
-    clientType: 'dotnet'
-    targetService: {
-      type: 'AzureResource'
-      id: keyVaultId
-      resourceProperties: {
-        type: 'KeyVault'
-        connectAsKubernetesCsiDriver: false
-      }
-    }
-    authInfo: {
-      authType: 'systemAssignedIdentity'
-      roles: [
-        keyVaultReaderRoleDefinition.name
-      ]
-    }
-    scope: containerApp.properties.template.containers[0].name
-    configurationInfo: {
-      customizedKeys: {}
-      daprProperties: {
-        version: ''
-        componentType: ''
-        metadata: []
-        scopes: []
-      }
-    }
-  }
-}
+// Using Container App secrets instead
+// @description('Connect Container App to the Key Vault using System Assigned Id and RBAC')
+// resource connectContainerAppToKeyVault 'Microsoft.ServiceLinker/linkers@2022-11-01-preview' = if (connectKeyVault) {
+//   scope: containerApp
+//   name: 'connect_container_app_to_keyvault'
+//   properties: {
+//     clientType: 'dotnet'
+//     targetService: {
+//       type: 'AzureResource'
+//       id: keyVaultId
+//       resourceProperties: {
+//         type: 'KeyVault'
+//         connectAsKubernetesCsiDriver: false
+//       }
+//     }
+//     authInfo: {
+//       authType: 'systemAssignedIdentity'
+//       roles: [
+//         keyVaultReaderRoleDefinition.name
+//       ]
+//     }
+//     scope: containerApp.properties.template.containers[0].name
+//     configurationInfo: {
+//       customizedKeys: {}
+//       daprProperties: {
+//         version: ''
+//         componentType: ''
+//         metadata: []
+//         scopes: []
+//       }
+//     }
+//   }
+// }
 
 // Thank you - https://www.chingono.com/blog/2022/09/28/integrate-container-apps-api-management-bicep/
 @description('Provision the Container App as a Backend resource in APIM')

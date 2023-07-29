@@ -1,5 +1,4 @@
 {
-  "identityUrl": "https://me-dev.azure-api.net",
   "purchaseUrl": "https://me-dev.azure-api.net",
   "signalrHubUrl": "https://me-dev.azure-api.net",
   "activateCampaignDetailFunction": false

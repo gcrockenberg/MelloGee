@@ -1,0 +1,96 @@
+name: me-order-api - Build and deploy .NET API to container app
+on:
+  push:
+    branches:
+    - main
+    paths:
+    - Services/Order/Order.API**
+# Permission to support Azure login using OIDC
+permissions:
+  id-token: write
+env:
+  CONTAINER_APP_RESOURCE_GROUP_NAME: MelloGee
+  CONTAINER_APPS_ENVIRONMENT: env-me-dev-eastus
+  CONTAINER_APP_CONTAINER_NAME: container-main
+  CONTAINER_APP_NAME: me-order-api
+  CONTAINER_REGISTRY_LOGIN_SERVER: registry.hub.docker.com
+  DOCKER_FILE_PATH: Services/Order/Order.API/Dockerfile
+  PROJECT_NAME_FOR_DOCKER: order-api
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - 
+      name: Checkout to the branch
+      uses: actions/checkout@v3
+    - 
+      name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v1
+#    - 
+#      name: Login to Azure container registry
+#      uses: docker/login-action@v1
+#      with:
+#        registry: ${{ env.CONTAINER_REGISTRY_LOGIN_SERVER }}
+#        username: ${{ secrets.mellogeeacr_USERNAME_9A5D }}
+#        password: ${{ secrets.mellogeeacr_PASSWORD_9A5D }}
+    - # Switched to using Docker Hub container registry
+      name: Setup Docker Buildx
+      uses: docker/setup-buildx-action@v1
+    - 
+      name: Login to Docker Hub container registry
+      uses: docker/login-action@v1
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+#    - 
+#      name: Build and push image to Azure registry
+#      uses: docker/build-push-action@v2
+#      with:
+#        push: true
+#        tags: ${{ env.CONTAINER_REGISTRY_LOGIN_SERVER }}/${{ env.PROJECT_NAME_FOR_DOCKER }}:${{ github.sha }}
+#        file: ${{ env.DOCKER_FILE_PATH }}
+    - 
+      name: Build and push image to Docker Hub registry
+      uses: docker/build-push-action@v2
+      with:
+        push: true 
+        tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.PROJECT_NAME_FOR_DOCKER }}
+        file: ${{ env.DOCKER_FILE_PATH }}
+  deploy:
+    runs-on: ubuntu-latest
+    # Set Git Environment - Used in "Subject Identifier" for Federated Credentials
+    # https://learn.microsoft.com/en-us/azure/developer/github/connect-from-azure?tabs=azure-cli%2Clinux
+    environment: dev
+    needs: build
+    steps:
+    - uses: actions/checkout@v3
+    - name: Azure Login using OIDC
+      uses: ./.github/workflows/composite/azure-oidc-login
+      with:
+        tenant_id: ${{ secrets.AZURE_TENANT_ID }}
+        subscription_id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+        client_id: ${{ secrets.AZURE_CLIENT_ID }} # See Readme for the correct Client Id to reference
+# Login to Azure using App Registration and ClientSecret
+#    - name: Azure Login
+#      uses: azure/login@v1
+#      with:
+#        creds: ${{ secrets.mg_catalogservice_api_SPN }}
+    - name: Deploy to containerapp
+      uses: azure/CLI@v1
+      with:
+        # Depoy from Docker Hub Container Registry
+        inlineScript: >
+          echo "Install az extensions on the fly, as needed"
+
+          az config set extension.use_dynamic_install=yes_without_prompt
+
+          echo "Configure the Docker registry"
+
+          az containerapp registry set --name ${{ env.CONTAINER_APP_NAME }} --resource-group ${{ env.CONTAINER_APP_RESOURCE_GROUP_NAME }} --username ${{ secrets.DOCKERHUB_USERNAME }} --password ${{ secrets.DOCKERHUB_TOKEN }} --server ${{ env.CONTAINER_REGISTRY_LOGIN_SERVER }} 
+
+          echo "Update Container App image - force revision"
+          
+          az containerapp update --name ${{ env.CONTAINER_APP_NAME }} --resource-group ${{ env.CONTAINER_APP_RESOURCE_GROUP_NAME }} --image ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.PROJECT_NAME_FOR_DOCKER }}
+    - name: Logout
+      run: >
+        az logout

@@ -5,16 +5,49 @@ import { CartService } from './cart.service';
 import { SecurityService } from '../security/security.service';
 import { UserData } from 'src/app/models/security/user-data.model';
 import { ICart } from 'src/app/models/cart/cart.model';
+import { ConfigurationService } from '../configuration/configuration.service';
+import { Observable, map, switchMap, tap } from 'rxjs';
+import { DataService } from '../data/data.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class OrderService {
+  private _orderUrl: string = '';
 
   constructor(
     private _cartService: CartService,
-    private _securityService: SecurityService) { }
-  
+    private _securityService: SecurityService,
+    private _configurationService: ConfigurationService,
+    private _dataService: DataService) {
+
+    if (this._configurationService.isReady) {
+      this._orderUrl = this._configurationService.serverSettings.purchaseUrl + '/o/api/v1/order/';
+    }
+    else {
+      this._configurationService.settingsLoaded$.subscribe(x => {
+        this._orderUrl = this._configurationService.serverSettings.purchaseUrl + '/o/api/v1/order/';
+      });
+    }
+  }
+
+
+  createLinkToCheckout(): Observable<string> {
+    if (!this._configurationService.isReady) {
+      return this._configurationService.settingsLoaded$
+        .pipe(switchMap(x => this.createLinkToCheckout()))
+    }
+
+    let url: string = this._orderUrl + 'create-checkout-session';
+
+    return this._dataService.post(url, {})
+      .pipe<string>(
+        map((response: any) => {
+          //this.basketWrapperService.orderCreated();
+          return response.value as string;
+        }));
+  }
+
 
   createOrderFromCartAndIdentity(): IOrder {
     let order: IOrder = <IOrder>{};

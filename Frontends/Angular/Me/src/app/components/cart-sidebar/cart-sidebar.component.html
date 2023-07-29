@@ -40,9 +40,13 @@
            class="bg-gray-200 flex p-4 justify-center items-center text-primary w-full font-medium">
             View cart
         </a>
-        <a routerLink="/checkout" routerLinkActive="underline" ariaCurrentWhenActive="page" [routerLinkActiveOptions]="{exact: true}"
+        <a (click)="handlePayment()"
            class="bg-black flex p-4 justify-center items-center text-white w-full font-medium">
             Checkout
         </a>
+        <!-- <a routerLink="/checkout" routerLinkActive="underline" ariaCurrentWhenActive="page" [routerLinkActiveOptions]="{exact: true}"
+           class="bg-black flex p-4 justify-center items-center text-white w-full font-medium">
+            Checkout
+        </a> -->
     </div>
 </div>

@@ -34,6 +34,10 @@ services:
         reservations:
           memory: 64MB
     memswap_limit: 128MB
+    depends_on:
+      - me-catalog-api
+      - me-cart-api
+      - me-order-api
 
   me-catalog-api:
     image: catalog-api
@@ -47,6 +51,8 @@ services:
         reservations:
           memory: 64MB
     memswap_limit: 128MB
+    depends_on:
+      - me-rabbitmq
 
   me-cart-api:
     image: cart-api
@@ -60,7 +66,22 @@ services:
         reservations:
           memory: 64MB
     memswap_limit: 128MB
+    depends_on:
+      - me-cart-data
+      - me-rabbitmq
 
+  me-order-api:
+    image: order-api
+    build:
+      context: .
+      dockerfile: Services/Order/Order.API/Dockerfile
+    deploy:
+      resources:
+        limits:
+          memory: 128MB
+        reservations:
+          memory: 64MB
+    memswap_limit: 128MB
 
   # catalogapi:
   #   image: catalogapi

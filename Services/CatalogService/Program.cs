@@ -24,17 +24,6 @@ try
     }
     else
     {
-        // using AzureEventSourceListener listener = AzureEventSourceListener.CreateConsoleLogger();
-        // DefaultAzureCredentialOptions options = new DefaultAzureCredentialOptions()
-        // {
-        //     Diagnostics =
-        //     {
-        //         LoggedHeaderNames = { "x-ms-request-id" },
-        //         LoggedQueryParameters = { "api-version" },
-        //         IsLoggingContentEnabled = true
-        //     }
-        // };
-        //
         // The following connects to Key Vault fine running locally on Windows in VS Code or Visual Studio
         // Not in Docker container
         //

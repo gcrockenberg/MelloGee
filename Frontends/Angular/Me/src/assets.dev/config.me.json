@@ -1,5 +1,4 @@
 {
-  "identityUrl": "http://localhost:5223",
   "purchaseUrl": "http://localhost",
   "signalrHubUrl": "http://localhost:5229",
   "activateCampaignDetailFunction": false

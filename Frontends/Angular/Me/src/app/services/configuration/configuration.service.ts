@@ -28,7 +28,6 @@ export class ConfigurationService {
       .subscribe({
         next: (response: IConfiguration) => {
           this.serverSettings = response;
-          this._storageService.store(Constants.IDENTITY_URL, this.serverSettings.identityUrl);
           this._storageService.store(Constants.PURCHASE_URL, this.serverSettings.purchaseUrl);
           this._storageService.store(Constants.SIGNAL_R_HUB_URL, this.serverSettings.signalrHubUrl);
           this._storageService.store(Constants.ACTIVATE_CAMPAIGN_DETAIL_FUNCTION, this.serverSettings.activateCampaignDetailFunction);

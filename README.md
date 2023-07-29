@@ -1,17 +1,18 @@
 # 'Me', a technology demonstration
 
-A personal project that I recently started to demonstrate backend and frontend aspects of a microservice based solution hosted in Azure.
+A personal project that I recently started to demonstrate full-stack aspects of a microservice based solution hosted in Azure.
 
 ## Environment
 - [Azure Container Apps](https://learn.microsoft.com/en-us/azure/container-apps/) - IaaS, easy orchestration, scalable, pay-as-you-go
 - [Azure API Management](https://azure.microsoft.com/en-us/products/api-management/)
 - Docker Container Registry
 - GitHub Actions CI/CD
-- [AAD B2C](https://learn.microsoft.com/en-us/azure/active-directory-b2c/) - Customer identity access management (CIAM). This infrastructure is not yet part of automated provisioning. It requires manual provision and config. (claims, apis, scopes)
+- [AAD B2C](https://learn.microsoft.com/en-us/azure/active-directory-b2c/) - Customer identity access management (CIAM). 
 - In-mem SQL for demo purposes
 - RabbitMQ Event Bus
 - Redis caching
 - Angular SPA with Tailwind CSS
+- Stripe for order checkout
 
 ![Me architecture](Images/Me%20Architecture.png)
 
@@ -62,6 +63,7 @@ docker push *your-docker-login*/cart-api
 az configure --defaults group=*my-resource-group*
 az deployment group create --template-file bicep/main.bicep
 ```
+Note: AAD B2C infrastructure is not yet part of automated provisioning. It requires manual provision and config. (claims, apis, scopes)
 **GitHub Actions CI/CD Repository Secrets**
 : The following Repository Secrets support CI/CD deployments
 - [DOCKERHUB_TOKEN](https://docs.docker.com/docker-hub/access-tokens/) - Container images will be pushed to Docker
@@ -72,17 +74,17 @@ az deployment group create --template-file bicep/main.bicep
 
 **GitHub Actions CI/CD Environment Secrets (dev)**
 : The following Environment Secrets support the beginning of CI/CD dev/prod isolation
-- AZURE_CLIENT_ID - User Assigned Identity "uai-GitHubOIDC" provisioned above -> Settings -> Properties. I have seen the Client Id under "Overview" not match.
+- AZURE_CLIENT_ID - User Assigned Identity "uai-GitHubOIDC" provisioned above -> Settings -> Properties. 
 
 **Testing**
 - Verify the .github/*.yml env variables match your configuration
 - You might want to comment out "on: push: paths:" from GitHub yml files to force CI/CD to run
 - Test APIs that were imported into APIM
-- Open Container App console in Azure portal and curl the APIs, view the logs. They are configured to scale to 0. You can make an APIM call to wake them.
+- Open Container App console in Azure portal and curl the APIs, view the logs. The Container Apps are configured to scale to 0. An APIM call will wake them.
 - Navigate to your static web app.
 
 **That's it so far**
-: Container Apps Environment is external. Container Apps ingress is limited to APIM and internal container services. The containers have curl installed for quick API checks but you can change ingress to allow public access. EventBus and GRPC enable inter-service communication. APIM connects to the Container Apps as Backend Services. APIM implements CORS.
+: Container Apps Environment is external. Container Apps ingress is limited to APIM and internal container services. The containers have curl installed for quick API checks but you can change ingress to allow public access. EventBus and GRPC enable inter-service communication. APIM connects to the Container Apps as Backend Services. CORS is handled in APIM.
 
 ### TO DO
 - Implement semantic-release versioning for modules

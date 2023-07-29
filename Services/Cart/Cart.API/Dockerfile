@@ -23,6 +23,7 @@ COPY "Services/EventBus/EventBusServiceBus/EventBusServiceBus.csproj" "Services/
 COPY "Services/EventBus/EventBusRabbitMQ/EventBusRabbitMQ.csproj" "Services/EventBus/EventBusRabbitMQ/EventBusRabbitMQ.csproj"
 COPY "Services/Catalog/Catalog.API/Catalog.API.csproj" "Services/Catalog/Catalog.API/Catalog.API.csproj"
 COPY "Services/Cart/Cart.API/Cart.API.csproj" "Services/Cart/Cart.API/Cart.API.csproj"
+COPY "Services/Order/Order.API/Order.API.csproj" "Services/Order/Order.API/Order.API.csproj"
 COPY "Directory.Packages.props" "Directory.Packages.props"
 COPY "NuGet.config" "NuGet.config"
 

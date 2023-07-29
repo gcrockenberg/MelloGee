@@ -29,47 +29,125 @@ param dockerHubUsername string
 @secure()
 param githubOrganizationOrUsername string
 
+@description('Required to provision Federated Id Credentials for Github Open Id Connect login.')
+@secure()
+param stripeApiKey string
+
 @description('The Container App microservices')
 var microservices = [
   {
     addToAPIM: false
     apiPath: ''
-    connectKeyVault: false
+    //connectKeyVault: false
     containerAppName: '${solutionName}-cart-data'
     dockerImageName: '${dockerHubUsername}/cart-data:latest'
     minScale: 1
     targetPort: 6379
     transport: 'tcp'
+    secrets: [
+        {
+          name: 'container-registry-password'
+          value: dockerHubPasswordOrToken
+        }
+      ] 
+    environment: [
+      {
+        name: 'test-environment-variable'
+        value: 'Foo'
+      }
+    ]
   }
   {
     addToAPIM: false
     apiPath: ''
-    connectKeyVault: false
+    //connectKeyVault: false
     containerAppName: '${solutionName}-rabbitmq'
     dockerImageName: '${dockerHubUsername}/rabbitmq:latest'
     minScale: 1
     targetPort: 5672
     transport: 'tcp'
+    secrets: [
+        {
+          name: 'container-registry-password'
+          value: dockerHubPasswordOrToken
+        }
+      ]
+    environment: [
+      {
+        name: 'test-environment-variable'
+        value: 'Foo'
+      }
+    ]
   }
   {
     addToAPIM: true
     apiPath: 'c'
-    connectKeyVault: false
+    //connectKeyVault: false
     containerAppName: '${solutionName}-catalog-api'
     dockerImageName: '${dockerHubUsername}/catalog-api:latest'
     minScale: 0
     targetPort: 80
     transport: 'http'
+    secrets: [
+        {
+          name: 'container-registry-password'
+          value: dockerHubPasswordOrToken
+        }
+      ]
+    environment: [
+      {
+        name: 'test-environment-variable'
+        value: 'Foo'
+      }
+    ]
   }
   {
     addToAPIM: true
     apiPath: 'b'
-    connectKeyVault: false
+    //connectKeyVault: false
     containerAppName: '${solutionName}-cart-api'
     dockerImageName: '${dockerHubUsername}/cart-api:latest'
     minScale: 0
     targetPort: 80
     transport: 'http'
+    secrets: [
+        {
+          name: 'container-registry-password'
+          value: dockerHubPasswordOrToken
+        }
+      ] 
+    environment: [
+      {
+        name: 'test-environment-variable'
+        value: 'Foo'
+      }
+    ]
+  }
+  {
+    addToAPIM: true
+    apiPath: 'o'
+    //connectKeyVault: false
+    containerAppName: '${solutionName}-order-api'
+    dockerImageName: '${dockerHubUsername}/order-api:latest'
+    minScale: 0
+    targetPort: 80
+    transport: 'http'
+    secrets: [
+        {
+          name: 'container-registry-password'
+          value: dockerHubPasswordOrToken
+        }
+        {
+          name: 'stripe-configuration-apikey'
+          value: stripeApiKey
+        }
+      ] 
+    environment: [
+      {
+        name: 'stripe-configuration-apikey'
+        secretRef: 'stripe-configuration-apikey'
+      }
+    ]
   }
 ]
 
@@ -94,7 +172,6 @@ module subnetForManagedEnvironment 'modules/newInfrastructureSubnetTemplate.bice
   }
 }
 
-
 resource containerAppsManagedEnvironment 'Microsoft.App/managedEnvironments@2022-11-01-preview' = {
   name: 'env-${solutionName}-${environmentType}-${location}'
   location: location
@@ -115,7 +192,6 @@ resource containerAppsManagedEnvironment 'Microsoft.App/managedEnvironments@2022
   }
 }
 
-
 module apiManagementGateway 'modules/apiManagementGateway.bicep' = {
   name: 'apiManagementTemplate'
   params: {
@@ -125,37 +201,36 @@ module apiManagementGateway 'modules/apiManagementGateway.bicep' = {
   }
 }
 
-
-@description('Key Vault to demo connectivity from Container App')
-module keyVaultForSolution 'modules/keyVault.bicep' = {
-  name: 'keyVaultTemplate'
-  params: {
-    keyVaultName: 'kv-${solutionName}-${environmentType}-${location}'
-    location: location
-  }
-}
-
+// Using container secrets instead of Key Vault
+// @description('Key Vault to demo connectivity from Container App')
+// module keyVaultForSolution 'modules/keyVault.bicep' = {
+//   name: 'keyVaultTemplate'
+//   params: {
+//     keyVaultName: 'kv-${solutionName}-${environmentType}-${location}'
+//     location: location
+//   }
+// }
 
 @description('Iterate and provision each containerized microservice')
 module containerAppModule 'modules/containerApps.bicep' = [for (microservice, index) in microservices: {
   name: 'containerApp-${index}'
   params: {
+    containerSecrets: microservice.secrets
+    environmentVariables: microservice.environment
     addToAPIM: microservice.addToAPIM
     //apimIpAddress: apiManagementGateway.outputs.ipAddress
     apimName: apiManagementGateway.outputs.name
-    //apimName: 'me-dev'
     apiPath: microservice.apiPath
-    connectKeyVault: microservice.connectKeyVault
+    //    connectKeyVault: microservice.connectKeyVault
     containerAppName: microservice.containerAppName
     containerAppManagedEnvironmentName: containerAppsManagedEnvironment.name
-    dockerHubPasswordOrToken: dockerHubPasswordOrToken
     dockerHubUsername: dockerHubUsername
     dockerImageName: microservice.dockerImageName
     minScale: microservice.minScale
     targetPort: microservice.targetPort
     transport: microservice.transport
-    keyVaultId: keyVaultForSolution.outputs.id
-    keyVaultName: keyVaultForSolution.outputs.name
+    //    keyVaultId: keyVaultForSolution.outputs.id
+    //    keyVaultName: keyVaultForSolution.outputs.name
     location: location
   }
 }]
@@ -170,7 +245,6 @@ module githubActionsModule 'modules/githubActions.bicep' = {
   }
 }
 
-
 module staticWebAppModule 'modules/staticWebApp.bicep' = {
   name: 'staticWebAppTemplate'
   params: {
@@ -178,7 +252,6 @@ module staticWebAppModule 'modules/staticWebApp.bicep' = {
     apimName: apiManagementGateway.outputs.name
   }
 }
-
 
 // Angular SPA routing requires more from server than pure static hosting
 // Switched to static web app
@@ -191,7 +264,6 @@ module staticWebAppModule 'modules/staticWebApp.bicep' = {
 //     solutionName: solutionName
 //   }
 // }
-
 
 // Putting micro-frontend on hold to focus on a pure, full-bleed Angular solution
 // @description('Single-spa micro-frontend solution')

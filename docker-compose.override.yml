@@ -36,14 +36,10 @@ services:
     #   - 8083:443
 
   me-catalog-api:
-  # Override environment defined in Dockerfile
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-#      - Kestrel__Endpoints__HTTP__Url=http://+:80
-#      - Kestrel__Endpoints__GRPC__Url=http://+:81
-#      - Kestrel__Endpoints__GRPC__Protocols=Http2
 #      - ConnectionStrings__CatalogDb=${ME_AZURE_CATALOG_DB:-Server=sqldata;Database=Me.Services.CatalogDb;User Id=sa;Password=Pass@word;Encrypt=False;TrustServerCertificate=true}
-#      - ConnectionStrings__EventBus=${ME_AZURE_SERVICE_BUS:-rabbitmq}
+      - ConnectionStrings__EventBus=me-rabbitmq
       - PicBaseUrl=${ME_STORAGE_CATALOG_URL}
 #      - EventBus__UserName=${ME_SERVICE_BUS_USERNAME}
 #      - EventBus__Password=${ME_SERVICE_BUS_PASSWORD}
@@ -59,14 +55,8 @@ services:
       - "9101:81"
 
   me-cart-api:
-  # Override environment defined in Dockerfile
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-#      - Kestrel__Endpoints__HTTP__Url=http://+:80
-#      - Kestrel__Endpoints__GRPC__Url=http://+:81
-#      - Kestrel__Endpoints__GRPC__Protocols=Http2
-#      - Identity__Url=http://identity-api
-#      - Identity__ExternalUrl=http://${ESHOP_EXTERNAL_DNS_NAME_OR_IP}:5105
 #      - EventBus__UserName=${ME_SERVICE_BUS_USERNAME}
 #      - EventBus__Password=${ME_SERVICE_BUS_PASSWORD}
 #      - ApplicationInsights__InstrumentationKey=${INSTRUMENTATION_KEY}
@@ -76,3 +66,27 @@ services:
     ports:
       - "5103:80"
       - "9103:81"
+
+  me-order-api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__OrderingDb=${ME_AZURE_ORDERING_DB:-Server=sqldata;Database=Me.Services.OrderingDb;User Id=sa;Password=Pass@word;Encrypt=False;TrustServerCertificate=true}
+      - ConnectionStrings__EventBus=me-rabbitmq
+      - EventBus__UserName=${ME_SERVICE_BUS_USERNAME}
+      - EventBus__Password=${ME_SERVICE_BUS_PASSWORD}
+      - UseCustomizationData=True
+      - AzureServiceBusEnabled=False
+      - CheckUpdateTime=30000
+      - ApplicationInsights__InstrumentationKey=${INSTRUMENTATION_KEY}
+      - OrchestratorType=${ORCHESTRATOR_TYPE}
+      - UseLoadTest=${USE_LOADTEST:-False}
+      - GRPC_PORT=81
+      - PORT=80
+      - PATH_BASE=/order-api
+    ports:
+      - "5102:80"
+      - "9102:81"
+    volumes:  # https://endjin.com/blog/2022/09/using-azcli-authentication-within-local-containers
+      - ${USERPROFILE}/.azure-for-docker:/root/.azure
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+    

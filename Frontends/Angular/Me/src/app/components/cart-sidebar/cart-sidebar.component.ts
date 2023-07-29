@@ -9,6 +9,7 @@ import { Subscription } from 'rxjs';
 import { ICart } from 'src/app/models/cart/cart.model';
 import { CartItemComponent } from "../cart-item/cart-item.component";
 import { RouterLink, RouterLinkActive } from '@angular/router';
+import { OrderService } from 'src/app/services/cart/order.service';
 
 export const CART_SIDEBAR_ID: string = 'CART_SIDEBAR_ID';
 
@@ -52,7 +53,9 @@ export class CartSidebarComponent implements ISidebar, OnDestroy {
 
   constructor(
     private _sidebarService: SidebarService,
-    private _cartService: CartService) {
+    private _cartService: CartService,
+    private _orderService: OrderService) {
+
     _sidebarService.add(this);
     this.cart.set(_cartService.cart);
 
@@ -87,6 +90,14 @@ export class CartSidebarComponent implements ISidebar, OnDestroy {
 
   handleClose() {
     this.isOpen.set(false);
+  }
+
+
+  handlePayment() {
+    this._orderService.createLinkToCheckout()
+      .subscribe((url: string) => {
+        window.location.href = url;
+      });
   }
 
 
