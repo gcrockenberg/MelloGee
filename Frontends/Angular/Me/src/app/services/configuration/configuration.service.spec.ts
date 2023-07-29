@@ -34,7 +34,7 @@ describe('ConfigurationService', () => {
           .withContext('expected configuration service is ready')
           .toEqual(true);
 
-        expect(configurationService.serverSettings.identityUrl)
+        expect(configurationService.serverSettings.purchaseUrl)
           .withContext('expected configuration value')
           .toBeDefined()
 
