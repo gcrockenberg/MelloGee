@@ -1,4 +1,6 @@
 export interface ICartCheckout {
+    successRoute: string;   // Stripe callback (e.g. "/orders")
+    cancelRoute: string;    // Stripe callback (e.g. "/cart")
     city: string;
     street: string;
     state: string;

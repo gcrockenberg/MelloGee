@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { IOrderItem } from 'src/app/models/cart/order-item.model';
+import { IOrderItem } from 'src/app/models/order/order-item.model';
 import { IOrder } from 'src/app/models/order/order.model';
 import { CartService } from './cart.service';
 import { SecurityService } from '../security/security.service';
@@ -49,7 +49,13 @@ export class OrderService {
   }
 
 
+  /**
+   * Creates an Order from all items in the Cart
+   * TODO: Switch to accept ICart parameter to control which CartItems to process
+   * @returns The Order object
+   */
   createOrderFromCartAndIdentity(): IOrder {
+
     let order: IOrder = <IOrder>{};
     let cart: ICart = this._cartService.cart;
     let identityInfo: UserData = this._securityService.userData;

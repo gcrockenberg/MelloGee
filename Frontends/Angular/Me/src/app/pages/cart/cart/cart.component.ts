@@ -2,9 +2,9 @@ import { Component, computed, WritableSignal, signal, Signal, OnDestroy } from '
 import { CommonModule, NgFor } from '@angular/common';
 import { CartService } from 'src/app/services/cart/cart.service';
 import { ICart } from 'src/app/models/cart/cart.model';
-import { Subject, Subscription } from 'rxjs';
-import { debounceTime } from 'rxjs/operators';
-import { Router, RouterLink, RouterLinkActive } from '@angular/router';
+import { Subscription } from 'rxjs';
+import { RouterLink, RouterLinkActive } from '@angular/router';
+import { IStripeCancelComponent } from 'src/app/models/order/stripe-cancel-route.model';
 
 @Component({
   selector: 'app-cart',
@@ -13,7 +13,7 @@ import { Router, RouterLink, RouterLinkActive } from '@angular/router';
   templateUrl: './cart.component.html',
   styleUrls: ['./cart.component.scss']
 })
-export class CartComponent implements OnDestroy {
+export class CartComponent implements OnDestroy, IStripeCancelComponent {
   private _subscriptions: Subscription[] = [];
 
   readonly cart: WritableSignal<ICart> = signal({
@@ -36,8 +36,7 @@ export class CartComponent implements OnDestroy {
 
 
   constructor(
-    private _cartService: CartService,
-    private _router: Router) {
+    private _cartService: CartService) {
 
     this.cart.set(_cartService.cart);
 
@@ -65,6 +64,11 @@ export class CartComponent implements OnDestroy {
     if (newQuantity) {
       this._cartService.changeQuantity(itemIndex, newQuantity);
     }
+  }
+
+
+  isStripeCancelComponent(): this is IStripeCancelComponent {
+    throw new Error('Method not implemented.');
   }
 
 

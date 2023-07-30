@@ -50,12 +50,19 @@ After provisioning the Me infrastructure (below) we'll configure the GitHub envi
 : So you can run the scripts
 
 **Push initial images to Docker**
-: So that Docker has a latest version of the initial API. The provisioning that follows will pull them and import the APIs into APIM.
+: Upload to Docker a "latest" version of the initial images. The provisioning that follows will pull them and import the APIs into APIM.
 ```
+docker build -t *your-docker-login*/cart-data . -f Services\Redis\Dockerfile
+docker push *your-docker-login*/cart-data
+docker build -t *your-docker-login*/rabbitmq . -f Services\RabbitMQ\Dockerfile
+docker push *your-docker-login*/rabbitmq
 docker build -t *your-docker-login*/catalog-api . -f Services\Catalog\Catalog.API\Dockerfile
 docker push *your-docker-login*/catalog-api
 docker build -t *your-docker-login*/cart-api . -f Services\Cart\Cart.API\Dockerfile
 docker push *your-docker-login*/cart-api
+docker build -t *your-docker-login*/order-api . -f Services\Order\Order.API\Dockerfile
+docker push *your-docker-login*/order-api
+
 ```
 **Provision Me**
 : Create the Azure infrastructure for Me in an Azure Resource Group of your choosing [^1]. Confirm the Azure resources are all available in the location you choose (I used eastus).

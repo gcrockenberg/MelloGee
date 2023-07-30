@@ -1,7 +1,8 @@
-import { IOrderItem } from '../cart/order-item.model';
+import { IOrderItem } from './order-item.model';
 
 /**
  * User must be logged in to create Order
+ * Orders are posted to Checkout process
  */
 export interface IOrder {
     cartSessionId: string;

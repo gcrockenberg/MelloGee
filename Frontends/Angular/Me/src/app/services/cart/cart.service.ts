@@ -2,13 +2,16 @@ import { Injectable, inject } from '@angular/core';
 import { DataService } from '../data/data.service';
 import { ICart } from 'src/app/models/cart/cart.model';
 import { ConfigurationService } from '../configuration/configuration.service';
-import { Observable, Subject, switchMap, tap } from 'rxjs';
+import { Observable, Subject, map, switchMap, tap } from 'rxjs';
 import { ICatalogItem } from 'src/app/models/catalog/catalog-item.model';
 import { Guid } from 'src/guid';
 import { ICartItem } from 'src/app/models/cart/cart-item.model';
 import { CookieService } from 'ngx-cookie-service';
 import { IOrder } from 'src/app/models/order/order.model';
 import { ICartCheckout } from 'src/app/models/cart/cart-checkout.model';
+import { IStripeSuccessComponent, isStripeSuccessComponent } from 'src/app/models/order/stripe-success-route.model';
+import { Router } from '@angular/router';
+import { IStripeCancelComponent, isStripeCancelComponent } from 'src/app/models/order/stripe-cancel-route.model';
 
 /**
  * Cart API is bound by SessionId
@@ -31,7 +34,8 @@ export class CartService {
 
   constructor(
     private _dataService: DataService,
-    private _configurationService: ConfigurationService
+    private _configurationService: ConfigurationService,
+    private _router: Router
   ) {
     // TODO: Review cookie policy. Defaults to Lax. Should it be Strict?
     if (!this._cookieService.check('SessionId')) {
@@ -108,8 +112,23 @@ export class CartService {
 
 
   createCartCheckoutFromOrder(order: IOrder): ICartCheckout {
+    let successRoute = this._router.config.find(
+      (route) => isStripeSuccessComponent(route.component as unknown as IStripeSuccessComponent)
+    );
+    if (undefined == successRoute) {
+      throw new Error("Stripe success route undefined.");
+    }
+    let cancelRoute = this._router.config.find(
+      (route) => isStripeCancelComponent(route.component as unknown as IStripeCancelComponent)
+    );
+    if (undefined == cancelRoute) {
+      throw new Error("Stripe cancel route undefined.");
+    }
+
     let cartCheckout = <ICartCheckout>{};
 
+    cartCheckout.cancelRoute = `/${cancelRoute.path}`;
+    cartCheckout.successRoute = `/${successRoute.path}`;
     cartCheckout.cartsessionid = order.cartSessionId
     cartCheckout.street = order.street
     cartCheckout.city = order.city;
@@ -159,7 +178,7 @@ export class CartService {
   }
 
 
-  setCartCheckout(cartCheckout: ICartCheckout): Observable<boolean> {
+  setCartCheckout(cartCheckout: ICartCheckout): Observable<string> {
     if (!this._configurationService.isReady) {
       return this._configurationService.settingsLoaded$
         .pipe(switchMap(x => this.setCartCheckout(cartCheckout)))
@@ -168,10 +187,10 @@ export class CartService {
     let url: string = this._cartUrl + 'checkout';
 
     return this._dataService.post(url, cartCheckout)
-      .pipe<boolean>(
-        tap((response: any) => {
+      .pipe<string>(
+        map((response: any) => {
           //this.basketWrapperService.orderCreated();
-          return true;
+          return response.value as string;
         }));
   }
 

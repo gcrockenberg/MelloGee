@@ -111,18 +111,22 @@ var microservices = [
     targetPort: 80
     transport: 'http'
     secrets: [
-        {
-          name: 'container-registry-password'
-          value: dockerHubPasswordOrToken
-        }
-      ] 
-    environment: [
       {
-        name: 'test-environment-variable'
-        value: 'Foo'
+        name: 'container-registry-password'
+        value: dockerHubPasswordOrToken
       }
-    ]
-  }
+      {
+        name: 'stripe-configuration-apikey'
+        value: stripeApiKey
+      }
+    ] 
+  environment: [
+    {
+      name: 'stripe-configuration-apikey'
+      secretRef: 'stripe-configuration-apikey'
+    }
+  ]
+}
   {
     addToAPIM: true
     apiPath: 'o'

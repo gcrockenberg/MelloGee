@@ -6,9 +6,12 @@ import { NavbarComponent } from "./shared/components/navbar/navbar.component";
 import { FooterComponent } from './shared/components/footer/footer.component';
 import { CartSidebarComponent } from "./components/cart-sidebar/cart-sidebar.component";
 import { AltFooterComponent } from "./shared/components/alt-footer/alt-footer.component";
+import { MsalRedirectComponent } from '@azure/msal-angular';
 
 /**
- * Root bootstrap component instead of module
+ * Root bootstrap component instead of module.
+ * Extends MsalRedirectComponent to support dual boot requirement for Msal libraries
+ * Without extending Redirect auth doesn't work, only Popup auth
  */
 @Component({
     selector: 'app-root',
@@ -25,19 +28,6 @@ import { AltFooterComponent } from "./shared/components/alt-footer/alt-footer.co
         AltFooterComponent
     ]
 })
-export class AppComponent implements OnInit { // OnDestroy {
+export class AppComponent extends MsalRedirectComponent implements OnInit { // OnDestroy {
   title: string = 'me';
-  isIframe: boolean = false;
-
-
-  constructor() { }
-
-
-  ngOnInit(): void {
-    // Angular Universal does not support browser global obects on the server
-    if (typeof window !== "undefined") {  // Safety check
-      this.isIframe = window !== window.parent && !window.opener;
-    }
-  }
-
 }

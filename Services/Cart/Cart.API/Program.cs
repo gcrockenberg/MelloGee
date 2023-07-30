@@ -20,8 +20,11 @@ builder.Services.AddTransient<IIdentityService, IdentityService>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-var app = builder.Build();
+// Using environment secrets
+Console.WriteLine($"--> Stripe config loaded: {string.IsNullOrWhiteSpace(StripeConfiguration.ApiKey)}");
+StripeConfiguration.ApiKey = builder.Configuration["stripe-configuration-apikey"];
 
+var app = builder.Build();
 
 app.UseServiceDefaults();     // Extension
 

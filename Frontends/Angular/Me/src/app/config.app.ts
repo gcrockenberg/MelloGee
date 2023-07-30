@@ -27,6 +27,11 @@ export const appConfig: ApplicationConfig = {
       MsalModule
     ),
     {
+      provide: HTTP_INTERCEPTORS, // Provides as HTTP Interceptor
+      useClass: MsalInterceptor,
+      multi: true
+    },
+    {
       provide: MSAL_INSTANCE,
       useFactory: MSALInstanceFactory
     },
@@ -37,11 +42,6 @@ export const appConfig: ApplicationConfig = {
     {
       provide: MSAL_INTERCEPTOR_CONFIG,
       useFactory: MSALInterceptorConfigFactory
-    },
-    {
-      provide: HTTP_INTERCEPTORS, // Provides as HTTP Interceptor
-      useClass: MsalInterceptor,
-      multi: true
     },
     MsalService,
     MsalGuard,

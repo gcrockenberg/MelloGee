@@ -61,22 +61,18 @@ public class CartController : ControllerBase
 
 
     [Authorize]
-    [RequiredScope ("cart.write")]
+    [RequiredScope("cart.write")]
     [Route("checkout")]
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status202Accepted)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult> CheckoutAsync([FromBody] CartCheckout cartCheckout, [FromHeader(Name = "x-requestid")] string requestId)
-    {        
+    public async Task<ActionResult<KeyValuePair<string, string>>> CheckoutAsync([FromBody] CartCheckout cartCheckout, [FromHeader(Name = "x-requestid")] string requestId)
+    {
+        this._logger.LogInformation("--> CartCheckout: {cartCheckout}", JsonSerializer.Serialize(cartCheckout));
         var userId = _identityService.GetUserIdentity();
 
         cartCheckout.RequestId = (Guid.TryParse(requestId, out Guid guid) && guid != Guid.Empty) ?
             guid : cartCheckout.RequestId;
-
-        if (string.IsNullOrWhiteSpace(cartCheckout.CartSessionId))
-        {
-            return BadRequest();
-        }
 
         string compositeId = cartCheckout.CartSessionId + Request.HttpContext.Connection.RemoteIpAddress;
         var cart = await _repository.GetCartAsync(compositeId);
@@ -84,6 +80,11 @@ public class CartController : ControllerBase
         {
             return BadRequest();
         }
+
+        var session = CreateStripeSession(cartCheckout, cart);
+        KeyValuePair<string, string> kvp = new("url", session.Url);
+        // TEPORARY FORCE ROUTE TO SUCCESS
+        //KeyValuePair<string, string> kvp = new("url", session.SuccessUrl);
 
         var userName = User.FindFirst(x => x.Type == "name")!.Value;
 
@@ -105,7 +106,45 @@ public class CartController : ControllerBase
             throw;
         }
 
-        return Accepted();
+        return Accepted(kvp);
+    }
+
+
+    private Session CreateStripeSession(CartCheckout cartCheckout, CustomerCart cart)
+    {
+        var domain = Request.Headers.Origin;    // e.g. http://localhost:4200
+        List<SessionLineItemOptions> lineItemOptions = new();
+
+        foreach (var item in cart.Items)
+        {
+            lineItemOptions.Add(new SessionLineItemOptions
+            {
+                PriceData = new SessionLineItemPriceDataOptions
+                {
+                    Currency = "usd",
+                    UnitAmount = (long)(item.UnitPrice * 100),
+                    ProductData = new SessionLineItemPriceDataProductDataOptions
+                    {
+                        Name = item.ProductName
+                    }
+                },
+                Quantity = item.Quantity
+            });
+        }
+
+        var options = new SessionCreateOptions
+        {
+            SuccessUrl = domain + cartCheckout.SuccessRoute,
+            CancelUrl = domain + cartCheckout.CancelRoute,
+            PaymentMethodTypes = new List<string> { "card" },
+            LineItems = lineItemOptions,
+            Mode = "payment",
+        };
+
+        var service = new SessionService();
+        Session session = service.Create(options);
+
+        return session;
     }
 
 

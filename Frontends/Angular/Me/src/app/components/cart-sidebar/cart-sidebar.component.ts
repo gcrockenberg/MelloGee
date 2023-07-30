@@ -2,7 +2,7 @@ import { Component, OnDestroy, Signal, WritableSignal, computed, signal } from '
 import { CommonModule } from '@angular/common';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { bootstrapChevronRight, bootstrapTrash3 } from "@ng-icons/bootstrap-icons";
-import { ISidebar } from 'src/app/models/sitebar/sidebar.model';
+import { ISidebar } from 'src/app/models/sidebar/sidebar.model';
 import { SidebarService } from 'src/app/services/sidebar/sidebar.service';
 import { CartService } from 'src/app/services/cart/cart.service';
 import { Subscription } from 'rxjs';
@@ -10,6 +10,9 @@ import { ICart } from 'src/app/models/cart/cart.model';
 import { CartItemComponent } from "../cart-item/cart-item.component";
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { OrderService } from 'src/app/services/cart/order.service';
+import { IOrder } from 'src/app/models/order/order.model';
+import { ICartCheckout } from 'src/app/models/cart/cart-checkout.model';
+import { SecurityService } from 'src/app/services/security/security.service';
 
 export const CART_SIDEBAR_ID: string = 'CART_SIDEBAR_ID';
 
@@ -54,7 +57,8 @@ export class CartSidebarComponent implements ISidebar, OnDestroy {
   constructor(
     private _sidebarService: SidebarService,
     private _cartService: CartService,
-    private _orderService: OrderService) {
+    private _orderService: OrderService,
+    private _securityService: SecurityService) {
 
     _sidebarService.add(this);
     this.cart.set(_cartService.cart);
@@ -94,7 +98,15 @@ export class CartSidebarComponent implements ISidebar, OnDestroy {
 
 
   handlePayment() {
-    this._orderService.createLinkToCheckout()
+    if (!this._securityService.isAuthorized) {
+      this._securityService.login();
+      return;
+    }
+
+    let order: IOrder = this._orderService.createOrderFromCartAndIdentity();
+    let cartCheckout: ICartCheckout = this._cartService.createCartCheckoutFromOrder(order);
+
+    this._cartService.setCartCheckout(cartCheckout)
       .subscribe((url: string) => {
         window.location.href = url;
       });

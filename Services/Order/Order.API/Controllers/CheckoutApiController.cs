@@ -20,27 +20,12 @@ public class OrderController : Controller
   [HttpPost]
   public ActionResult<KeyValuePair<string, string>> Create()
   {
-    // Header passing impacted by APIM
-    _logger.LogInformation("--> Headers: {headers}", JsonSerializer.Serialize(Request.Headers));
-    // Request.Headers["Referer"].ToString() -> http://localhost:4200/
-    // or the production web app url
-    var domain = Request.Headers.Referer;
-
-    if (string.IsNullOrWhiteSpace(domain))
-    {
-      // Request.Headers["Origin"].ToString() -> http://localhost:4200
-      domain = $"{Request.Headers.Origin}/";
-    }
-
+    var domain = Request.Headers.Origin;    // e.g. http://localhost:4200
     var options = new SessionCreateOptions
     {
-      // domain includes the trailing "/"
-      SuccessUrl = domain + "catalog",
-      CancelUrl = domain + "catalog",
-      PaymentMethodTypes = new List<string>
-            {
-              "card"
-            },
+      SuccessUrl = domain + "/catalog",
+      CancelUrl = domain + "/catalog",
+      PaymentMethodTypes = new List<string> { "card" },
       LineItems = new List<SessionLineItemOptions>
             {
               new SessionLineItemOptions
@@ -60,10 +45,14 @@ public class OrderController : Controller
       Mode = "payment",
     };
 
-    var service = new SessionService();
-    Session session = service.Create(options);
+    // TODO: Reinstate after Event Bus is up and running
+    // var service = new SessionService();
+    // Session session = service.Create(options);
+    // KeyValuePair<string, string> kvp = new KeyValuePair<string, string>("url", session.Url);
 
-    KeyValuePair<string, string> kvp = new KeyValuePair<string, string>("url", session.Url);
+    // TEPORARY FAKE
+    KeyValuePair<string, string> kvp = new KeyValuePair<string, string>("url", options.s);
+
     // Response.Headers.Add("Location", session.Url);
     // return new StatusCodeResult(303);
     return Ok(kvp);

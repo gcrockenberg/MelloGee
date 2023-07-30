@@ -18,3 +18,5 @@ global using Microsoft.AspNetCore.Http;
 global using Microsoft.AspNetCore.Mvc;
 global using Microsoft.Identity.Web.Resource;
 global using StackExchange.Redis;
+global using Stripe;
+global using Stripe.Checkout;

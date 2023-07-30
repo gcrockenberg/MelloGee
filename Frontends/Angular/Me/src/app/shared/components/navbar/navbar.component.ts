@@ -6,10 +6,8 @@ import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { bootstrapBell, bootstrapCart3, bootstrapChevronDown, bootstrapSearch } from '@ng-icons/bootstrap-icons';
 import { MobileMenuComponent } from "../mobile-menu/mobile-menu.component";
 import { AccountMenuComponent } from "../account-menu/account-menu.component";
-import { EventMessage, EventType, InteractionStatus, PopupRequest, RedirectRequest } from '@azure/msal-browser';
-import { Subject, filter, takeUntil } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 import { SecurityService } from 'src/app/services/security/security.service';
-import { MsalBroadcastService, MsalService } from '@azure/msal-angular';
 
 const TOP_OFFSET: number = 66;
 
@@ -28,11 +26,13 @@ const TOP_OFFSET: number = 66;
         AccountMenuComponent
     ]
 })
-export class NavbarComponent implements OnDestroy, OnInit {
+export class NavbarComponent implements OnDestroy {     //}, OnInit {
+    private _subscriptions: Subscription[] = [];
+
     private readonly _destroying$ = new Subject<void>();
     isIframe: boolean = false;
 
-    isAuthorized: WritableSignal<boolean> = signal(true);
+    isAuthorized: WritableSignal<boolean> = signal(false);
     showMobileMenu: WritableSignal<boolean> = signal(false);
     showAccountMenu: WritableSignal<boolean> = signal(false);
     showBackground: WritableSignal<boolean> = signal(false);
@@ -40,40 +40,15 @@ export class NavbarComponent implements OnDestroy, OnInit {
     constructor(
         private _securityService: SecurityService,
         //private cd: ChangeDetectorRef,  // To manually control change detection
-        private _authService: MsalService,
-        private _msalBroadcastService: MsalBroadcastService,
-    ) { }
-
-
-    ngOnInit(): void {
-        this.isIframe = window !== window.parent && !window.opener;
-        this.setIsAuthorized();
-
-        /**
-         * You can subscribe to MSAL events as shown below. For more info,
-         * visit: https://github.com/AzureAD/microsoft-authentication-library-for-js/blob/dev/lib/msal-angular/docs/v2-docs/events.md
-         */
-        this._msalBroadcastService.msalSubject$
-            .pipe(
-                filter((msg: EventMessage) => msg.eventType === EventType.ACCOUNT_ADDED || msg.eventType === EventType.ACCOUNT_REMOVED),
-                takeUntil(this._destroying$)
-            )
-            .subscribe((result: EventMessage) => {
-                if (this._authService.instance.getAllAccounts().length === 0) {
-                    window.location.pathname = "/";
-                } else {
-                    this.setIsAuthorized();
-                }
-            });
-
-        this._msalBroadcastService.inProgress$
-            .pipe(
-                filter((status: InteractionStatus) => status === InteractionStatus.None),
-                takeUntil(this._destroying$)
-            )
-            .subscribe(() => {
-                this.setIsAuthorized();
-            })
+    ) {
+        this.isAuthorized.set(_securityService.isAuthorized);
+        // Handle Cart being updated elsewhere
+        this._subscriptions.push(
+            this._securityService.isAutorizedUpdate$
+                .subscribe((newIsAuthorized: boolean) => {
+                    this.isAuthorized.set(newIsAuthorized);
+                })
+        );
     }
 
 
@@ -82,8 +57,8 @@ export class NavbarComponent implements OnDestroy, OnInit {
     }
 
 
-    login(userFlowRequest?: RedirectRequest | PopupRequest) {
-        this._securityService.login(userFlowRequest);
+    login() {
+        this._securityService.login();
     }
 
 
@@ -115,8 +90,7 @@ export class NavbarComponent implements OnDestroy, OnInit {
 
     // unsubscribe to events when component is destroyed
     ngOnDestroy(): void {
-        this._destroying$.next(undefined);
-        this._destroying$.complete();
+        this._subscriptions.forEach(s => s.unsubscribe());
     }
 
 
