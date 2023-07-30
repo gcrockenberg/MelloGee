@@ -1,6 +1,6 @@
 # 'Me', a technology demonstration
 
-A personal project that I recently started to demonstrate full-stack aspects of a microservice based solution hosted in Azure.
+A project to demonstrate full-stack aspects of a microservice based solution hosted in Azure.
 
 ## Environment
 - [Azure Container Apps](https://learn.microsoft.com/en-us/azure/container-apps/) - IaaS, easy orchestration, scalable, pay-as-you-go
