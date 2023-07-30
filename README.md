@@ -71,6 +71,7 @@ az configure --defaults group=*my-resource-group*
 az deployment group create --template-file bicep/main.bicep
 ```
 Note: AAD B2C infrastructure is not yet part of automated provisioning. It requires manual provision and config. (claims, apis, scopes)
+
 **GitHub Actions CI/CD Repository Secrets**
 : The following Repository Secrets support CI/CD deployments
 - [DOCKERHUB_TOKEN](https://docs.docker.com/docker-hub/access-tokens/) - Container images will be pushed to Docker
