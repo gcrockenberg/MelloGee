@@ -131,6 +131,7 @@ export class SecurityService {
      */
     this._msalBroadcastService.msalSubject$
       .pipe(
+        tap((msg: EventMessage) => console.log('--> msalSubject$ event: ', msg)),
         filter((msg: EventMessage) => msg.eventType === EventType.ACCOUNT_ADDED || msg.eventType === EventType.ACCOUNT_REMOVED),
       )
       .subscribe((result: EventMessage) => {
@@ -143,6 +144,7 @@ export class SecurityService {
 
     this._msalBroadcastService.inProgress$
       .pipe(
+        tap((status: InteractionStatus) => console.log('--> inProgress$ status: ', status)),
         filter((status: InteractionStatus) => status === InteractionStatus.None),
         takeUntil(this._destroying$)
       )
@@ -153,6 +155,7 @@ export class SecurityService {
 
     this._msalBroadcastService.msalSubject$
       .pipe(
+        tap((msg: EventMessage) => console.log('--> msalSubject$ event: ', msg)),
         filter((msg: EventMessage) => msg.eventType === EventType.LOGIN_SUCCESS
           || msg.eventType === EventType.ACQUIRE_TOKEN_SUCCESS
           || msg.eventType === EventType.SSO_SILENT_SUCCESS),
@@ -216,6 +219,7 @@ export class SecurityService {
 
     this._msalBroadcastService.msalSubject$
       .pipe(
+        tap((msg: EventMessage) => console.log('--> msalSubject$ event: ', msg)),
         filter((msg: EventMessage) => msg.eventType === EventType.LOGIN_FAILURE || msg.eventType === EventType.ACQUIRE_TOKEN_FAILURE),
         takeUntil(this._destroying$)
       )

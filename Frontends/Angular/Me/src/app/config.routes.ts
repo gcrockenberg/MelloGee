@@ -52,11 +52,11 @@ export const routes: Routes = [
         path: 'profile',
         component: ProfileComponent
     },
-    // {
-    //     // Needed for handling redirect after login
-    //     path: 'auth',
-    //     component: MsalRedirectComponent
-    // },
+    {
+        // Needed for handling redirect after login
+        path: 'auth',
+        component: MsalRedirectComponent
+    },
     {
         path: 'me',
         component: MainComponent
