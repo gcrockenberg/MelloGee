@@ -207,7 +207,8 @@ export class SecurityService {
             prompt: PromptValue.LOGIN, // force user to reauthenticate with their new password
           };
 
-          this.login(signUpSignInFlowRequest);
+          // TODO - Commented out troubleshooting loop when deployed
+          //this.login(signUpSignInFlowRequest);
         }
 
         return result;
@@ -227,7 +228,8 @@ export class SecurityService {
             scopes: [],
           };
 
-          this.login(resetPasswordFlowRequest);
+          // TODO - Commented out troubleshooting loop when deployed
+          //this.login(resetPasswordFlowRequest);
         };
       });
   }
