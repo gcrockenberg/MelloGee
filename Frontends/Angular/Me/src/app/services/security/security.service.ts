@@ -164,6 +164,7 @@ export class SecurityService {
 
         if (idtoken.acr === environment.b2cPolicies.names.signUpSignIn || idtoken.tfp === environment.b2cPolicies.names.signUpSignIn) {
           this._msalInstance.setActiveAccount(payload.account);
+          // TODO: Should I return here?
         }
 
         /**
@@ -188,7 +189,8 @@ export class SecurityService {
           };
 
           // silently login again with the signUpSignIn policy
-          this._msalService.ssoSilent(signUpSignInFlowRequest);
+          // TODO - Commented out troubleshooting loop when deployed
+          // this._msalService.ssoSilent(signUpSignInFlowRequest);
         }
 
         /**
