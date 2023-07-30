@@ -51,7 +51,7 @@ public class OrderController : Controller
     // KeyValuePair<string, string> kvp = new KeyValuePair<string, string>("url", session.Url);
 
     // TEPORARY FAKE
-    KeyValuePair<string, string> kvp = new KeyValuePair<string, string>("url", options.s);
+    KeyValuePair<string, string> kvp = new KeyValuePair<string, string>("url", options.SuccessUrl);
 
     // Response.Headers.Add("Location", session.Url);
     // return new StatusCodeResult(303);
