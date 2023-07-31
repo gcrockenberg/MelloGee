@@ -51,6 +51,11 @@
                   "glob": "**/*",
                   "input": "external",
                   "output": "/external"
+                },
+                {
+                  "glob": "**/*",
+                  "input": "templates",
+                  "output": "/templates"
                 }
               ],
               "budgets": [
@@ -87,6 +92,11 @@
                   "glob": "**/*",
                   "input": "external",
                   "output": "/external"
+                },
+                {
+                  "glob": "**/*",
+                  "input": "templates",
+                  "output": "/templates"
                 }
               ],
               "buildOptimizer": false,
@@ -150,6 +160,11 @@
                 "glob": "**/*",
                 "input": "external",
                 "output": "/external"
+              },
+              {
+                "glob": "**/*",
+                "input": "templates",
+                "output": "/templates"
               }
             ],
             "styles": [
