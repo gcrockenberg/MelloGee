@@ -10,6 +10,7 @@ import { ProfileComponent } from './pages/profile/profile.component';
 import { NotFoundComponent } from './pages/not-found/not-found/not-found.component';
 import { CartComponent } from './pages/cart/cart/cart.component';
 import { OrdersComponent } from './pages/order/orders/orders.component';
+import { LoginTemplateComponent } from './pages/login/login-template.component';
 
 export const routes: Routes = [
     {
@@ -47,6 +48,10 @@ export const routes: Routes = [
     {
         path: 'login',
         component: LoginComponent
+    },
+    {
+        path: 'loginTemplate',
+        component: LoginTemplateComponent
     },
     {
         path: 'profile',
