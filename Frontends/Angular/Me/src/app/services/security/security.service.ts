@@ -19,10 +19,9 @@ import {
 import { ClaimFields, UserData } from 'src/app/models/security/user-data.model';
 
 
-
-
 /**
- * TODO: Configure msalAuth to ALWAYS ask which account to use. Do not default to the currently logged in user.
+ * TODO: Figure out how to configure msalAuth to ALWAYS ask which account to use. 
+ * Do not default to the currently logged in user unless they ask to stay logged in.
  */
 @Injectable({
   providedIn: 'root'
@@ -63,9 +62,9 @@ export class SecurityService {
 
   login(userFlowRequest?: RedirectRequest | PopupRequest) {
     // https://github.com/AzureAD/microsoft-authentication-library-for-js/blob/dev/lib/msal-browser/docs/errors.md#interaction_in_progress
-    // this._msalService.handleRedirectObservable().subscribe({
-    //   next: (tokenPromise) => {
-    //     if (!tokenPromise) {
+    this._msalService.handleRedirectObservable().subscribe({
+      next: (tokenPromise) => {
+        if (!tokenPromise) {
 
 
           if (environment.msalGuardConfig.interactionType === InteractionType.Popup) {
@@ -87,12 +86,12 @@ export class SecurityService {
               this._msalInstance.loginRedirect(userFlowRequest);
             }
           }
-        
-        
-    //     }
-    //   },
-    //   error: (error) => { console.error(error) }
-    // })
+
+
+        }
+      },
+      error: (error) => { console.error(error) }
+    })
   }
 
 
@@ -153,6 +152,7 @@ export class SecurityService {
         takeUntil(this._destroying$)
       )
       .subscribe(() => {
+        // She the order of the next 2 statements be switched?
         this._checkAndSetActiveAccount();
         this._setIsAuthorized();
       })
@@ -171,7 +171,6 @@ export class SecurityService {
 
         if (idtoken.acr === environment.b2cPolicies.names.signUpSignIn || idtoken.tfp === environment.b2cPolicies.names.signUpSignIn) {
           this._msalInstance.setActiveAccount(payload.account);
-          // TODO: Should I return here?
         }
 
         /**
@@ -196,8 +195,7 @@ export class SecurityService {
           };
 
           // silently login again with the signUpSignIn policy
-          // TODO - Commented out troubleshooting loop when deployed
-          // this._msalService.ssoSilent(signUpSignInFlowRequest);
+          this._msalService.ssoSilent(signUpSignInFlowRequest);
         }
 
         /**
@@ -214,8 +212,7 @@ export class SecurityService {
             prompt: PromptValue.LOGIN, // force user to reauthenticate with their new password
           };
 
-          // TODO - Commented out troubleshooting loop when deployed
-          //this.login(signUpSignInFlowRequest);
+          this.login(signUpSignInFlowRequest);
         }
 
         return result;
@@ -236,8 +233,7 @@ export class SecurityService {
             scopes: [],
           };
 
-          // TODO - Commented out troubleshooting loop when deployed
-          //this.login(resetPasswordFlowRequest);
+          this.login(resetPasswordFlowRequest);
         };
       });
   }
@@ -257,12 +253,14 @@ export class SecurityService {
   }
 
 
-  private _setIsAuthorized() {
+  private async _setIsAuthorized() {
+    // see https://github.com/AzureAD/microsoft-authentication-library-for-js/blob/dev/lib/msal-common/docs/Accounts.md
+    await this._msalInstance.handleRedirectPromise();   // <-- Important
+
     let accountInfo: AccountInfo[] = this._msalInstance.getAllAccounts();
     let isAuthorized = accountInfo.length > 0;
 
-    // see https://github.com/AzureAD/microsoft-authentication-library-for-js/blob/dev/lib/msal-common/docs/Accounts.md
-    if (!isAuthorized) { 
+    if (!isAuthorized) {
       this.accountData = <AccountInfo>{};
     } else {
       this.accountData = accountInfo[0];
@@ -290,13 +288,13 @@ export class SecurityService {
       // console.log('idTokenClaims: ', accountInfo[0].idTokenClaims);
     }
 
-    if (this.isAuthorized != isAuthorized) { 
+    if (this.isAuthorized != isAuthorized) {
       this.isAuthorized = isAuthorized;
       this._isAuthorizedSource.next(this.isAuthorized);
     }
   }
 
-  
+
   private _OnDestroy(): void {
     this._destroying$.next(undefined);
     this._destroying$.complete();
