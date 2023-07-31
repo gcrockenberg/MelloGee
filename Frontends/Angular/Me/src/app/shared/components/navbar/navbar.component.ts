@@ -1,4 +1,4 @@
-import { Component, HostListener, OnDestroy, OnInit, WritableSignal, signal } from '@angular/core';
+import { Component, HostListener, OnDestroy, WritableSignal, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CartStatusComponent } from '../cart-status/cart-status/cart-status.component';
 import { NavbarItemComponent } from '../navbar-item/navbar-item.component';
@@ -26,7 +26,7 @@ const TOP_OFFSET: number = 66;
         AccountMenuComponent
     ]
 })
-export class NavbarComponent implements OnDestroy {     //}, OnInit {
+export class NavbarComponent implements OnDestroy {     
     private _subscriptions: Subscription[] = [];
 
     private readonly _destroying$ = new Subject<void>();
@@ -38,11 +38,10 @@ export class NavbarComponent implements OnDestroy {     //}, OnInit {
     showBackground: WritableSignal<boolean> = signal(false);
 
     constructor(
-        private _securityService: SecurityService,
-        //private cd: ChangeDetectorRef,  // To manually control change detection
+        private _securityService: SecurityService
     ) {
         this.isAuthorized.set(_securityService.isAuthorized);
-        // Handle Cart being updated elsewhere
+        // Handle authorization updates
         this._subscriptions.push(
             this._securityService.isAutorizedUpdate$
                 .subscribe((newIsAuthorized: boolean) => {

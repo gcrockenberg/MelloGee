@@ -1,11 +1,12 @@
 import { NgIf } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { HeaderComponent } from "./shared/components/header/header.component";
 import { NavbarComponent } from "./shared/components/navbar/navbar.component";
 import { FooterComponent } from './shared/components/footer/footer.component';
 import { CartSidebarComponent } from "./components/cart-sidebar/cart-sidebar.component";
 import { AltFooterComponent } from "./shared/components/alt-footer/alt-footer.component";
+import { MsalService } from '@azure/msal-angular';
 
 @Component({
     selector: 'app-root',
@@ -22,6 +23,13 @@ import { AltFooterComponent } from "./shared/components/alt-footer/alt-footer.co
         AltFooterComponent
     ]
 })
-export class AppComponent {
+export class AppComponent implements OnInit{
   title: string = 'me'; 
+
+  constructor(private _msalService: MsalService) { }
+
+  async ngOnInit(): Promise<void> {
+    await this._msalService.instance.handleRedirectPromise();
+  }
+
 }

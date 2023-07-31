@@ -60,43 +60,33 @@ export class SecurityService {
   }
 
 
-  login(userFlowRequest?: RedirectRequest | PopupRequest) {
+  async login(userFlowRequest?: RedirectRequest | PopupRequest) {
     // https://github.com/AzureAD/microsoft-authentication-library-for-js/blob/dev/lib/msal-browser/docs/errors.md#interaction_in_progress
-    this._msalService.handleRedirectObservable().subscribe({
-      next: (tokenPromise) => {
-        if (!tokenPromise) {
+    await this._msalInstance.handleRedirectPromise();
 
-
-          if (environment.msalGuardConfig.interactionType === InteractionType.Popup) {
-            if (environment.msalGuardConfig.authRequest) {
-              this._msalService.loginPopup({ ...environment.msalGuardConfig.authRequest, ...userFlowRequest } as PopupRequest)
-                .subscribe((response: AuthenticationResult) => {
-                  this._msalInstance.setActiveAccount(response.account);
-                });
-            } else {
-              this._msalService.loginPopup(userFlowRequest)
-                .subscribe((response: AuthenticationResult) => {
-                  this._msalInstance.setActiveAccount(response.account);
-                });
-            }
-          } else {
-            if (environment.msalGuardConfig.authRequest) {
-              this._msalInstance.loginRedirect({ ...environment.msalGuardConfig.authRequest, ...userFlowRequest } as RedirectRequest);
-            } else {
-              this._msalInstance.loginRedirect(userFlowRequest);
-            }
-          }
-
-
-        }
-      },
-      error: (error) => { console.error(error) }
-    })
+    if (environment.msalGuardConfig.interactionType === InteractionType.Popup) {
+      if (environment.msalGuardConfig.authRequest) {
+        this._msalService.loginPopup({ ...environment.msalGuardConfig.authRequest, ...userFlowRequest } as PopupRequest)
+          .subscribe((response: AuthenticationResult) => {
+            this._msalInstance.setActiveAccount(response.account);
+          });
+      } else {
+        this._msalService.loginPopup(userFlowRequest)
+          .subscribe((response: AuthenticationResult) => {
+            this._msalInstance.setActiveAccount(response.account);
+          });
+      }
+    } else {
+      if (environment.msalGuardConfig.authRequest) {
+        this._msalInstance.loginRedirect({ ...environment.msalGuardConfig.authRequest, ...userFlowRequest } as RedirectRequest);
+      } else {
+        this._msalInstance.loginRedirect(userFlowRequest);
+      }
+    }
   }
 
 
   logout() {
-    //this.authService.logout();
     if (environment.msalGuardConfig.interactionType === InteractionType.Popup) {
       this._msalService.logoutPopup({
         mainWindowRedirectUri: "/"
