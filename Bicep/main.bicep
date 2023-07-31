@@ -257,19 +257,18 @@ module staticWebAppModule 'modules/staticWebApp.bicep' = {
   }
 }
 
-// Angular SPA routing requires more from server than pure static hosting
-// Switched to static web app
-// @description('Static web site hosted from Blob storage')
-// module storageWebsiteHostingModule 'modules/storageWebsiteHosting.bicep' = {
-//   name: 'storageWebsiteHostingTemplate'
-//   params: {
-//     environmentType: environmentType
-//     location: location
-//     solutionName: solutionName
-//   }
-// }
+// For AAD B2C login templates
+@description('Static web site hosted from Blob storage')
+module storageWebsiteHostingModule 'modules/storageWebsiteHosting.bicep' = {
+  name: 'storageWebsiteHostingTemplate'
+  params: {
+    environmentType: environmentType
+    location: location
+    solutionName: solutionName
+  }
+}
 
-// Putting micro-frontend on hold to focus on a pure, full-bleed Angular solution
+// Putting micro-frontend on hold to focus on a pure, "full-bleed" Angular solution
 // @description('Single-spa micro-frontend solution')
 // module singleSpaStaticWebsiteModule 'modules/singleSpaStaticWeb.bicep' = {
 //   name: 'singleSpaStaticWebsiteTemplate'

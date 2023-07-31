@@ -1,6 +1,6 @@
 /*
   SYNOPSIS: Me
-  DESCRIPTION: Provision the Me single-spa static web into Azure Blob static web site hosting
+  DESCRIPTION: Provision Azure Blob static web site hosting for AAD B2C login customization
   VERSION: 1.0.0
   OWNER TEAM: Gerard C.
 */
@@ -73,174 +73,30 @@ resource blobService 'Microsoft.Storage/storageAccounts/blobServices@2022-09-01'
       enabled: false
     }
     cors: {
-      corsRules: []
+      corsRules: [
+        {
+          allowedOrigins: [
+            'https://meauth.b2clogin.com'
+          ]
+          allowedMethods: [
+            'GET'
+            'OPTIONS'
+          ]
+          maxAgeInSeconds: 200
+          exposedHeaders: [
+            '*'
+          ]
+          allowedHeaders: [
+            '*'
+          ]
+        }
+      ]
     }
     deleteRetentionPolicy: {
       allowPermanentDelete: false
       enabled: false
     }
     isVersioningEnabled: false
-  }
-}
-
-
-resource cdnProfile 'Microsoft.Cdn/profiles@2021-06-01' = {
-  name: 'cdn-${solutionName}-${environmentType}'
-  location: location
-  sku: {
-    name: 'Standard_Microsoft'
-  }
-}
-
-
-resource cdnEndpoint 'Microsoft.Cdn/profiles/endpoints@2022-11-01-preview' = {
-  parent: cdnProfile
-  name: '${solutionName}-cdn'
-  location: 'Global'
-  properties: {
-    originHostHeader: '${storageAccount.name}.blob.${environment().suffixes.storage}'
-    contentTypesToCompress: [
-      'application/eot'
-      'application/font'
-      'application/font-sfnt'
-      'application/javascript'
-      'application/json'
-      'application/opentype'
-      'application/otf'
-      'application/pkcs7-mime'
-      'application/truetype'
-      'application/ttf'
-      'application/vnd.ms-fontobject'
-      'application/xhtml+xml'
-      'application/xml'
-      'application/xml+rss'
-      'application/x-font-opentype'
-      'application/x-font-truetype'
-      'application/x-font-ttf'
-      'application/x-httpd-cgi'
-      'application/x-javascript'
-      'application/x-mpegurl'
-      'application/x-opentype'
-      'application/x-otf'
-      'application/x-perl'
-      'application/x-ttf'
-      'font/eot'
-      'font/ttf'
-      'font/otf'
-      'font/opentype'
-      'image/svg+xml'
-      'text/css'
-      'text/csv'
-      'text/html'
-      'text/javascript'
-      'text/js'
-      'text/plain'
-      'text/richtext'
-      'text/tab-separated-values'
-      'text/xml'
-      'text/x-script'
-      'text/x-component'
-      'text/x-java-source'
-    ]
-    isCompressionEnabled: true
-    isHttpAllowed: true
-    isHttpsAllowed: true
-    queryStringCachingBehavior: 'BypassCaching'
-    origins: [
-      {
-        name: '${storageAccount.name}-blob-core-windows-net'
-        properties: {
-          hostName: '${storageAccount.name}.blob.${environment().suffixes.storage}'
-          httpPort: 80
-          httpsPort: 443
-          originHostHeader: '${storageAccount.name}.blob.${environment().suffixes.storage}'
-          priority: 1
-          weight: 1000
-          enabled: true
-        }
-      }
-    ]
-    originGroups: []
-    geoFilters: []
-    deliveryPolicy: {
-      rules: [
-        {
-          name: 'CORS'
-          order: 1
-          conditions: [
-            {
-              name: 'RequestHeader'
-              parameters: {
-                typeName: 'DeliveryRuleRequestHeaderConditionParameters'
-                operator: 'Equal'
-                selector: 'Origin'
-                negateCondition: false
-                matchValues: [
-                  take(storageAccount.properties.primaryEndpoints.web, length(storageAccount.properties.primaryEndpoints.web) - 1)
-                ]
-                transforms: []
-              }
-            }
-          ]
-          actions: [
-            {
-              name: 'ModifyResponseHeader'
-              parameters: {
-                typeName: 'DeliveryRuleHeaderActionParameters'
-                headerAction: 'Overwrite'
-                headerName: 'Access-Control-Allow-Origin'
-                value: take(storageAccount.properties.primaryEndpoints.web, length(storageAccount.properties.primaryEndpoints.web) - 1)
-              }
-            }
-          ]
-        }
-        {
-          name: 'CORSLocal'
-          order: 2
-          conditions: [
-            {
-              name: 'RequestHeader'
-              parameters: {
-                typeName: 'DeliveryRuleRequestHeaderConditionParameters'
-                operator: 'Equal'
-                selector: 'Origin'
-                negateCondition: false
-                matchValues: [
-                  'http://localhost:9000'
-                ]
-                transforms: []
-              }
-            }
-          ]
-          actions: [
-            {
-              name: 'ModifyResponseHeader'
-              parameters: {
-                typeName: 'DeliveryRuleHeaderActionParameters'
-                headerAction: 'Overwrite'
-                headerName: 'Access-Control-Allow-Origin'
-                value: 'http://localhost:9000'
-              }
-            }
-          ]
-        }
-      ]
-    }
-  }
-}
-
-
-resource cdnEndpointOrigin 'Microsoft.Cdn/profiles/endpoints/origins@2022-11-01-preview' = {
-  parent: cdnEndpoint
-  name: '${storageAccount.name}-blob-core-windows-net'
-  properties: {
-    hostName: '${storageAccount.name}.blob.${environment().suffixes.storage}'
-    httpPort: 80
-    httpsPort: 443
-    originHostHeader: '${storageAccount.name}.blob.${environment().suffixes.storage}'
-    priority: 1
-    weight: 1000
-    enabled: true
   }
 }
 

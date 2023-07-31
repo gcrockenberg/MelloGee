@@ -1,0 +1,50 @@
+name: AADB2CTemplates - Deploy AAD B2C customization templates
+on:
+  push:
+    branches:
+    - main
+    paths:
+    - AADB2CTemplates**
+# Permission to support Azure login using OIDC
+permissions:
+  id-token: write
+env:  
+  STORAGE_ACCOUNT_NAME: stmedev
+  WORKING_DIRECTORY: AADB2CTemplates
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    # Set Git Environments
+    environment: dev
+    steps:
+    - 
+      name: Checkout OIDC script and working directory 
+      uses: actions/checkout@v3
+      with:
+        sparse-checkout: |
+          .github   
+          ${{ env.WORKING_DIRECTORY }}
+    # - 
+    #   name: Test 2
+    #   shell: bash
+    #   run: |
+    #     pwd
+    #     ls -al
+    - 
+      name: Azure Login using OIDC
+      uses: ./.github/workflows/composite/azure-oidc-login
+      with:
+        tenant_id: ${{ secrets.AZURE_TENANT_ID }}
+        subscription_id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+        client_id: ${{ secrets.AZURE_CLIENT_ID }} # See Readme for the correct Client Id to reference
+    - 
+      name: Deploy to Azure Storage static website
+      uses: azure/CLI@v1
+      with:
+        inlineScript: >
+          az storage blob upload-batch --overwrite true -d '$web' --account-name ${{ env.STORAGE_ACCOUNT_NAME }} --account-key ${{ secrets.STORAGE_ACCOUNT_KEY }} -s ${{ env.WORKING_DIRECTORY }}
+    - 
+      name: logout
+      run: >
+        az logout
