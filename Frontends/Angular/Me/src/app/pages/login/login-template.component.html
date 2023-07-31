@@ -1,19 +1,20 @@
-<section class="h-screen">
-    <video aria-hidden="true" class="h-[56.25.vw] w-full object-cover brightness-[60%]" autoplay muted
-        oncanplay="this.play()" onloadedmetadata="this.muted = true">
-        <source src="assets/videos/mushroom.mp4"> Your browser does not support the video tag.
-    </video>
-    <div class="h-full absolute top-[30%] md:top-[40%] right-0 bottom-0 left-0">
-        <!-- Left column container with background-->
-        <div class="g-6 flex h-full flex-wrap items-center justify-center lg:justify-between">
-            <div class="shrink-1 mb-12 grow-0 basis-auto md:mb-0 md:w-9/12 md:shrink-0 lg:w-6/12 xl:w-6/12 h-full">
-                <h1 class="text-white text-center text-xl">Who are you?</h1>
-            </div>
+<video aria-hidden="true" class="fixed z-0 top-0 left-0 min-h-max min-w-max brightness-[60%]" autoplay muted
+    oncanplay="this.play()" onloadedmetadata="this.muted = true">
+    <source src="assets/videos/mushroom.mp4"> Your browser does not support the video tag.
+</video>
+<section class="absolute w-full min-h-screen">
+    <div class="flex flex-col md:flex-row items-center md:justify-center  h-screen">
 
-            <!-- Right column container -->
-            <div class="mb-12 md:mb-0 md:w-8/12 lg:w-5/12 xl:w-5/12">
+        <div class="py-24">
+            <h1 class="text-white text-center text-xl md:mr-16">Who are you?</h1>
+        </div>
+
+        <!-- Right column container -->
+        <div class="md:w-8/12 text-white flex justify-center">
+            <div class="inline-block">
                 <div id="api"></div>
             </div>
         </div>
     </div>
+
 </section>
