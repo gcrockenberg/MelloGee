@@ -95,7 +95,7 @@ Note: AAD B2C infrastructure is not yet part of automated provisioning. It requi
 : Container Apps Environment is external. Container Apps ingress is limited to APIM and internal container services. The containers have curl installed for quick API checks but you can change ingress to allow public access. EventBus and GRPC enable inter-service communication. APIM connects to the Container Apps as Backend Services. CORS is handled in APIM.
 
 ### TO DO
-- Implement semantic-release versioning for modules
+- Implement semantic-release versioning 
 - Better micro-services, front-ends, Event Bus, aggregation, and SignalR
 - Script initial Docker image build and push
 - Script AAD-B2C environment provisioning

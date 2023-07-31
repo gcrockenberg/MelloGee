@@ -6,7 +6,7 @@ import { NavbarComponent } from "./shared/components/navbar/navbar.component";
 import { FooterComponent } from './shared/components/footer/footer.component';
 import { CartSidebarComponent } from "./components/cart-sidebar/cart-sidebar.component";
 import { AltFooterComponent } from "./shared/components/alt-footer/alt-footer.component";
-import { MsalRedirectComponent } from '@azure/msal-angular';
+import { MsalRedirectComponent, MsalService } from '@azure/msal-angular';
 
 /**
  * Root bootstrap component instead of module.
@@ -18,7 +18,7 @@ import { MsalRedirectComponent } from '@azure/msal-angular';
     standalone: true,
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.scss'],
-    imports: [
+  imports: [
         FooterComponent,
         NgIf,
         RouterOutlet,
@@ -28,6 +28,15 @@ import { MsalRedirectComponent } from '@azure/msal-angular';
         AltFooterComponent
     ]
 })
-export class AppComponent extends MsalRedirectComponent implements OnInit { // OnDestroy {
+export class AppComponent implements OnInit  { //} extends MsalRedirectComponent { // OnDestroy {
   title: string = 'me';
+
+  constructor(private _authService: MsalService) { }
+
+  ngOnInit(): void {
+    this._authService.getLogger().verbose('MsalRedirectComponent activated');
+    this._authService.handleRedirectObservable()
+      .subscribe((e: any) => console.log('--> handleRedirectObservable: ', e));
+  }     
+
 }

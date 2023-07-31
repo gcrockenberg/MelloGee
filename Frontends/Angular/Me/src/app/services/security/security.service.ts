@@ -63,9 +63,11 @@ export class SecurityService {
 
   login(userFlowRequest?: RedirectRequest | PopupRequest) {
     // https://github.com/AzureAD/microsoft-authentication-library-for-js/blob/dev/lib/msal-browser/docs/errors.md#interaction_in_progress
-    this._msalService.handleRedirectObservable().subscribe({
-      next: (tokenPromise) => {
-        if (!tokenPromise) {
+    // this._msalService.handleRedirectObservable().subscribe({
+    //   next: (tokenPromise) => {
+    //     if (!tokenPromise) {
+
+
           if (environment.msalGuardConfig.interactionType === InteractionType.Popup) {
             if (environment.msalGuardConfig.authRequest) {
               this._msalService.loginPopup({ ...environment.msalGuardConfig.authRequest, ...userFlowRequest } as PopupRequest)
@@ -85,10 +87,12 @@ export class SecurityService {
               this._msalInstance.loginRedirect(userFlowRequest);
             }
           }
-        }
-      },
-      error: (error) => { console.error(error) }
-    })
+        
+        
+    //     }
+    //   },
+    //   error: (error) => { console.error(error) }
+    // })
   }
 
 
