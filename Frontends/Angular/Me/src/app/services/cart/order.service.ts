@@ -93,10 +93,6 @@ export class OrderService {
       order.orderItems.push(item);
     });
 
-    // if (this._securityService.accountData) {
-    //   order.buyer = this._securityService.accountData.localAccountId;
-    // }
-
     return order;
   }
 

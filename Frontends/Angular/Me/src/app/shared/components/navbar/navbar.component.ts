@@ -6,7 +6,7 @@ import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { bootstrapBell, bootstrapCart3, bootstrapChevronDown, bootstrapSearch } from '@ng-icons/bootstrap-icons';
 import { MobileMenuComponent } from "../mobile-menu/mobile-menu.component";
 import { AccountMenuComponent } from "../account-menu/account-menu.component";
-import { Subject, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { SecurityService } from 'src/app/services/security/security.service';
 
 const TOP_OFFSET: number = 66;
@@ -28,9 +28,6 @@ const TOP_OFFSET: number = 66;
 })
 export class NavbarComponent implements OnDestroy {     
     private _subscriptions: Subscription[] = [];
-
-    private readonly _destroying$ = new Subject<void>();
-    isIframe: boolean = false;
 
     isAuthorized: WritableSignal<boolean> = signal(false);
     showMobileMenu: WritableSignal<boolean> = signal(false);
@@ -66,11 +63,6 @@ export class NavbarComponent implements OnDestroy {
     }
 
 
-    setIsAuthorized() {
-        this.isAuthorized.set(this._securityService.isAuthorized);
-    }
-
-
     @HostListener('window:scroll', [])
     handleScroll() {
         this.showBackground.set(window.scrollY > TOP_OFFSET);
@@ -87,7 +79,6 @@ export class NavbarComponent implements OnDestroy {
     }
 
 
-    // unsubscribe to events when component is destroyed
     ngOnDestroy(): void {
         this._subscriptions.forEach(s => s.unsubscribe());
     }

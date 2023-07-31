@@ -16,10 +16,7 @@ import { Guid } from 'src/guid';
 })
 export class DataService {
 
-  constructor(
-    private _http: HttpClient,
-    private _securityService: SecurityService
-  ) { }
+  constructor(private _http: HttpClient) { }
 
 
   get<Type>(url: string, params?: any): Observable<Type> {
@@ -77,10 +74,8 @@ export class DataService {
 
 
   private async _setHeaders(options: any, url?: string) {
-    if (url && this._securityService.isSecurePath(url)) {
       options["headers"] = new HttpHeaders()
         .append('x-requestid', Guid.newGuid());
-    }
   }
 
 
