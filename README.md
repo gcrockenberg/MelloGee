@@ -8,6 +8,7 @@ A project to demonstrate full-stack aspects of a microservice based solution hos
 - Docker Container Registry
 - GitHub Actions CI/CD
 - [AAD B2C](https://learn.microsoft.com/en-us/azure/active-directory-b2c/) - Customer identity access management (CIAM). 
+- Azure Blob Storage - login customization
 - In-mem SQL for demo purposes
 - RabbitMQ Event Bus
 - Redis caching
