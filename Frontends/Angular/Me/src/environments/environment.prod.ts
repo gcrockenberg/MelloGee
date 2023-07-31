@@ -6,7 +6,7 @@ export const environment: IEnvironment = {
   production: true,
   apiConfigs: [
     {
-      uri: 'https://me-dev.azure-api.net/b/api/v1/cart/*',
+      uri: 'https://me-dev.azure-api.net/b/api/v1/cart/checkout*',
       scopes: [
         'https://meauth.onmicrosoft.com/cart/cart.read',
         'https://meauth.onmicrosoft.com/cart/cart.write'
