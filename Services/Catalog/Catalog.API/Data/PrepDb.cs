@@ -1,5 +1,8 @@
 namespace Me.Services.Catalog.API.Data;
 
+/// <summary>
+/// For InMemoryDb
+/// </summary>
 public static class PrepDb
 {
     public static void PrepPopulation(IApplicationBuilder app, ILogger logger)

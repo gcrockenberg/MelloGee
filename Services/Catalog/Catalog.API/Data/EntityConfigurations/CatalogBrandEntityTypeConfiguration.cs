@@ -11,11 +11,11 @@ class CatalogBrandEntityTypeConfiguration
     {
         builder.ToTable("CatalogBrand");
 
-        builder.HasKey(ci => ci.Id);
+        builder.HasKey(ci => ci.Id);  // When using InMemoryDb
 
-        // builder.Property(ci => ci.Id)
-        //     .UseHiLo("catalog_brand_hilo")
-        //     .IsRequired();
+        builder.Property(ci => ci.Id)
+            .UseHiLo("CatalogBrandSequence")
+            .IsRequired();
 
         builder.Property(cb => cb.Brand)
             .IsRequired()

@@ -9,12 +9,36 @@ services:
     build:
       context: .
       dockerfile: Services/Redis/Dockerfile
+    deploy:
+      resources:
+        limits:
+          memory: 128MB
+        reservations:
+          memory: 64MB
+
+  me-sql-data:
+    image: sqlserver
+    build:
+      context: .
+      dockerfile: Services/SQLServer/Dockerfile
+    deploy:
+      resources:
+        limits:
+          memory: 2048MB
+        reservations:
+          memory: 1024MB
 
   me-rabbitmq:
     image: rabbitmq
     build:
       context: .
       dockerfile: Services/RabbitMQ/Dockerfile
+    deploy:
+      resources:
+        limits:
+          memory: 256MB
+        reservations:
+          memory: 128MB
 
 # Explore switching to self-hosted App Gateway for local dev
 # https://learn.microsoft.com/en-us/azure/api-management/self-hosted-gateway-overview

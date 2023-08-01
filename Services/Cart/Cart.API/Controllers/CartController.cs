@@ -1,5 +1,3 @@
-using System.Text.Json.Serialization;
-
 namespace Me.Services.Cart.API.Controllers;
 
 [Route("api/v1/[controller]")]
@@ -86,7 +84,7 @@ public class CartController : ControllerBase
         // TEPORARY FORCE ROUTE TO SUCCESS
         //KeyValuePair<string, string> kvp = new("url", session.SuccessUrl);
 
-        var userName = User.FindFirst(x => x.Type == "name")!.Value;
+        var userName = _identityService.GetUserName();
 
         var eventMessage = new UserCheckoutAcceptedIntegrationEvent(userId, userName, cartCheckout.City, cartCheckout.Street,
             cartCheckout.State, cartCheckout.Country, cartCheckout.ZipCode, cartCheckout.CardNumber, cartCheckout.CardHolderName,

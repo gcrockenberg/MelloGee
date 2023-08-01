@@ -141,7 +141,7 @@ public static class CommonExtensions
 
             if (authSection.Exists())
             {
-                setup.OAuthClientId(authSection.GetRequiredValue("ClientId"));                
+                setup.OAuthClientId(authSection.GetRequiredValue("ClientId"));
                 setup.OAuthAppName(authSection.GetRequiredValue("AppName"));
             }
         });
@@ -262,14 +262,18 @@ public static class CommonExtensions
         // Configure AAD B2C Authentication instead of custom Identity provider
         // Adds Microsoft Identity platform (Azure AD B2C) support to protect this Api
 
-        // This is required to be instantiated before the OpenIdConnectOptions starts getting configured.
+        // This configuration is required BEFORE OpenIdConnectOptions.
         // By default, the claims mapping will map claim names in the old format to accommodate older SAML applications.
         // For instance, 'http://schemas.microsoft.com/ws/2008/06/identity/claims/role' instead of 'roles' claim.
         // This flag ensures that the ClaimsIdentity claims collection will be built from the claims in the token
+        const string JWT_CONFIGURATION_SECTION_NAME = "AzureAdB2C";
+        var logger = services.BuildServiceProvider().GetRequiredService<ILogger<MicrosoftIdentityOptions>>();
 
-        var azureAdB2C = configuration.GetSection("AzureAdB2C");
+        // Using environment variables (e.g. AzureAdB2C__Instance) instead of appsettings.json.
+        var azureAdB2C = configuration.GetSection(JWT_CONFIGURATION_SECTION_NAME);
         if (!azureAdB2C.Exists())
         {
+            logger.LogError("--> Configuration section not found: {section}", JWT_CONFIGURATION_SECTION_NAME);
             return services;
         }
 
@@ -278,11 +282,14 @@ public static class CommonExtensions
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddMicrosoftIdentityWebApi(options =>
         {
-            configuration.Bind("AzureAdB2C", options);
+            logger.LogInformation("--> Binding configuration section: {section}", JWT_CONFIGURATION_SECTION_NAME);
+            configuration.Bind(JWT_CONFIGURATION_SECTION_NAME, options);
 
-            //options.TokenValidationParameters.NameClaimType = "name";
+            // Can map claim types here
+            options.TokenValidationParameters.NameClaimType = "name";
         },
-        options => { configuration.Bind("AzureAdB2C", options); });
+        options => { configuration.Bind(JWT_CONFIGURATION_SECTION_NAME, options); }
+        );
         // End of the Microsoft Identity platform block  
 
         return services;
@@ -402,12 +409,12 @@ public static class CommonExtensions
         // }
 
         var eventBusSection = configuration.GetSection("EventBus");
-
         if (!eventBusSection.Exists())
         {
             return services;
         }
 
+        // Check if we are configuring Azure Service Bus
         if (string.Equals(eventBusSection["ProviderName"], "ServiceBus", StringComparison.OrdinalIgnoreCase))
         {
             services.AddSingleton<IServiceBusPersisterConnection>(sp =>
@@ -428,7 +435,7 @@ public static class CommonExtensions
                     eventBusSubscriptionsManager, sp, subscriptionName);
             });
         }
-        else
+        else    // We are configuring RabbitMQ
         {
             services.AddSingleton<IRabbitMQPersistentConnection>(sp =>
             {

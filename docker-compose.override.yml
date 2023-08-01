@@ -6,49 +6,28 @@ services:
     ports:
       - "6379:6379"
 
+  # Default SQL Server port 1433
+  me-sql-data:
+    ports:
+      - "1433:1433"
+
   me-rabbitmq:
     ports:
       - "15672:15672"
       - "5672:5672"
 
-  # catalogapi:
-  #   environment:
-  #     - ASPNETCORE_ENVIRONMENT=Development
-  #     - ASPNETCORE_URLS=https://+:443;http://+:80
-  #   volumes:
-  #     - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
-  # Direct, external access to API within composed environment
-    # ports:
-    #   - 8080:80
-    #   - 8081:443
-
-  # coffeeapi:
-  #   environment:
-  #     ASPNETCORE_ENVIRONMENT: Development
-  #     ASPNETCORE_HTTPS_PORT: 8083
-  #     ASPNETCORE_URLS: "https://+:443;http://+:80"
-  #   volumes:
-  #     - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
-# Hide direct external access to the container
-# Gateway provides routed access within the composed environment
-    # ports:
-    #   - 8082:80
-    #   - 8083:443
-
   me-catalog-api:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-#      - ConnectionStrings__CatalogDb=${ME_AZURE_CATALOG_DB:-Server=sqldata;Database=Me.Services.CatalogDb;User Id=sa;Password=Pass@word;Encrypt=False;TrustServerCertificate=true}
-      - ConnectionStrings__EventBus=me-rabbitmq
+      - ConnectionStrings__CatalogDb=Server=me-sql-data;Database=Me.Services.CatalogDb;User Id=sa;Password=Pass@word;Encrypt=False;TrustServerCertificate=true
+      - ConnectionStrings__EventBus=${ME_ConnectionStrings_EventBus}
       - PicBaseUrl=${ME_STORAGE_CATALOG_URL}
-#      - EventBus__UserName=${ME_SERVICE_BUS_USERNAME}
-#      - EventBus__Password=${ME_SERVICE_BUS_PASSWORD}
-#      - AzureStorageAccountName=${ME_AZURE_STORAGE_CATALOG_NAME}
-#      - AzureStorageAccountKey=${ME_AZURE_STORAGE_CATALOG_KEY}
-      - UseCustomizationData=True
+      #      - AzureStorageAccountName=${ME_AZURE_STORAGE_CATALOG_NAME}
+      #      - AzureStorageAccountKey=${ME_AZURE_STORAGE_CATALOG_KEY}
+      - UseCustomizationData=False
       - AzureStorageEnabled=False
-#      - ApplicationInsights__InstrumentationKey=${INSTRUMENTATION_KEY}
-#      - OrchestratorType=${ORCHESTRATOR_TYPE}
+      #      - ApplicationInsights__InstrumentationKey=${INSTRUMENTATION_KEY}
+      #      - OrchestratorType=${ORCHESTRATOR_TYPE}
       - PATH_BASE=/catalog-api
     ports:
       - "5101:80"
@@ -57,30 +36,38 @@ services:
   me-cart-api:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-#      - EventBus__UserName=${ME_SERVICE_BUS_USERNAME}
-#      - EventBus__Password=${ME_SERVICE_BUS_PASSWORD}
-#      - ApplicationInsights__InstrumentationKey=${INSTRUMENTATION_KEY}
-#      - OrchestratorType=${ORCHESTRATOR_TYPE}
+      - AzureAdB2C__Instance=${ME_AzureAdB2C_Instance}
+      - AzureAdB2C__Domain=${ME_AzureAdB2C_Domain}
+      - AzureAdB2C__ClientId=${ME_AzureAdB2C_ClientId}
+      - AzureAdB2C__SignedOutCallbackPath=${ME_AzureAdB2C_SignedOutCallbackPath}
+      - AzureAdB2C__SignUpSignInPolicyId=${ME_AzureAdB2C_SignUpSignInPolicyId}
+      - ConnectionStrings__EventBus=${ME_ConnectionStrings_EventBus}
+      - ConnectionStrings__Redis=${ME_ConnectionStrings_Redis}
+      #      - ApplicationInsights__InstrumentationKey=${INSTRUMENTATION_KEY}
+      #      - OrchestratorType=${ORCHESTRATOR_TYPE}
       - UseLoadTest=${USE_LOADTEST:-False}
       - PATH_BASE=/cart-api
     ports:
       - "5103:80"
       - "9103:81"
-    volumes:  
-      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro      
+    volumes:
+      # Rquired secret: "stripe-configuration-apikey"
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
 
   me-order-api:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
+      - AzureAdB2C__Instance=${ME_AzureAdB2C_Instance}
+      - AzureAdB2C__Domain=${ME_AzureAdB2C_Domain}
+      - AzureAdB2C__ClientId=${ME_AzureAdB2C_ClientId}
+      - AzureAdB2C__SignedOutCallbackPath=${ME_AzureAdB2C_SignedOutCallbackPath}
+      - AzureAdB2C__SignUpSignInPolicyId=${ME_AzureAdB2C_SignUpSignInPolicyId}
       - ConnectionStrings__OrderingDb=${ME_AZURE_ORDERING_DB:-Server=sqldata;Database=Me.Services.OrderingDb;User Id=sa;Password=Pass@word;Encrypt=False;TrustServerCertificate=true}
-      - ConnectionStrings__EventBus=me-rabbitmq
-      - EventBus__UserName=${ME_SERVICE_BUS_USERNAME}
-      - EventBus__Password=${ME_SERVICE_BUS_PASSWORD}
+      - ConnectionStrings__EventBus=${ME_ConnectionStrings_EventBus}
       - UseCustomizationData=True
-      - AzureServiceBusEnabled=False
       - CheckUpdateTime=30000
-      - ApplicationInsights__InstrumentationKey=${INSTRUMENTATION_KEY}
-      - OrchestratorType=${ORCHESTRATOR_TYPE}
+      #      - ApplicationInsights__InstrumentationKey=${INSTRUMENTATION_KEY}
+      #      - OrchestratorType=${ORCHESTRATOR_TYPE}
       - UseLoadTest=${USE_LOADTEST:-False}
       - GRPC_PORT=81
       - PORT=80
@@ -88,6 +75,30 @@ services:
     ports:
       - "5102:80"
       - "9102:81"
-    volumes:  
+    volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
-    
+
+    # catalogapi:
+    #   environment:
+    #     - ASPNETCORE_ENVIRONMENT=Development
+    #     - ASPNETCORE_URLS=https://+:443;http://+:80
+    #   volumes:
+    #     - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+    # Direct, external access to API within composed environment
+    # ports:
+    #   - 8080:80
+    #   - 8081:443
+
+    # coffeeapi:
+    #   environment:
+    #     ASPNETCORE_ENVIRONMENT: Development
+    #     ASPNETCORE_HTTPS_PORT: 8083
+    #     ASPNETCORE_URLS: "https://+:443;http://+:80"
+    #   volumes:
+    #     - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+    # Hide direct external access to the container
+    # Gateway provides routed access within the composed environment
+    # ports:
+    #   - 8082:80
+    #   - 8083:443
+

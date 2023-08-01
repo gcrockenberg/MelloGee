@@ -11,7 +11,7 @@ builder.Services.AddHealthChecks(builder.Configuration);    // Extension
 builder.Services.AddRedis(builder.Configuration);           // Extension
 
 //builder.Services.AddTransient<ProductPriceChangedIntegrationEventHandler>();
-//builder.Services.AddTransient<OrderStartedIntegrationEventHandler>();
+//builder.Services.AddTransient<OrderStartedIntegrationEventHandler>();               <<<==== Start here with Event Bus
 
 builder.Services.AddTransient<ICartRepository, RedisCartRepository>();
 builder.Services.AddTransient<IIdentityService, IdentityService>();

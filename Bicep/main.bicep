@@ -33,6 +33,34 @@ param githubOrganizationOrUsername string
 @secure()
 param stripeApiKey string
 
+@description('Naming rules for CA env variables: allowed characters are a-z, A-Z, 0-9 and _')
+var microserviceCommonEnvironment = [
+  {
+    name: 'AzureAdB2C__Instance'
+    value: 'https://meauth.b2clogin.com'
+  }
+  {
+    name: 'AzureAdB2C__Domain'
+    value: 'meauth.onmicrosoft.com'
+  }
+  {
+    name: 'AzureAdB2C__ClientId'
+    value: '730a4c4b-7cbe-4aef-8677-01763fad779a'
+  }
+  {
+    name: 'AzureAdB2C__SignedOutCallbackPath'
+    value: '/signout/B2C_1_susi_v2'
+  }
+  {
+    name: 'AzureAdB2C__SignUpSignInPolicyId'
+    value: 'B2C_1_susi_v2'
+  }
+  {
+    name: 'ConnectionStrings__EventBus'
+    value: 'me-rabbitmq'
+  }
+]
+
 @description('The Container App microservices')
 var microservices = [
   {
@@ -45,11 +73,33 @@ var microservices = [
     targetPort: 6379
     transport: 'tcp'
     secrets: [
-        {
-          name: 'container-registry-password'
-          value: dockerHubPasswordOrToken
-        }
-      ] 
+      {
+        name: 'container-registry-password'
+        value: dockerHubPasswordOrToken
+      }
+    ]
+    environment: [
+      {
+        name: 'test-environment-variable'
+        value: 'Foo'
+      }
+    ]
+  }
+  {
+    addToAPIM: false
+    apiPath: ''
+    //connectKeyVault: false
+    containerAppName: '${solutionName}-sql-data'
+    dockerImageName: '${dockerHubUsername}/sqlserver:latest'
+    minScale: 1
+    targetPort: 1433
+    transport: 'tcp'
+    secrets: [
+      {
+        name: 'container-registry-password'
+        value: dockerHubPasswordOrToken
+      }
+    ]
     environment: [
       {
         name: 'test-environment-variable'
@@ -67,11 +117,11 @@ var microservices = [
     targetPort: 5672
     transport: 'tcp'
     secrets: [
-        {
-          name: 'container-registry-password'
-          value: dockerHubPasswordOrToken
-        }
-      ]
+      {
+        name: 'container-registry-password'
+        value: dockerHubPasswordOrToken
+      }
+    ]
     environment: [
       {
         name: 'test-environment-variable'
@@ -89,11 +139,11 @@ var microservices = [
     targetPort: 80
     transport: 'http'
     secrets: [
-        {
-          name: 'container-registry-password'
-          value: dockerHubPasswordOrToken
-        }
-      ]
+      {
+        name: 'container-registry-password'
+        value: dockerHubPasswordOrToken
+      }
+    ]
     environment: [
       {
         name: 'test-environment-variable'
@@ -119,14 +169,18 @@ var microservices = [
         name: 'stripe-configuration-apikey'
         value: stripeApiKey
       }
-    ] 
-  environment: [
-    {
-      name: 'stripe-configuration-apikey'
-      secretRef: 'stripe-configuration-apikey'
-    }
-  ]
-}
+    ]
+    environment: concat(microserviceCommonEnvironment, [
+        {
+          name: 'stripe-configuration-apikey'
+          secretRef: 'stripe-configuration-apikey'
+        }
+        {
+          name: 'ConnectionStrings__Redis'
+          value: 'me-cart-data'
+        }
+      ])
+  }
   {
     addToAPIM: true
     apiPath: 'o'
@@ -137,21 +191,16 @@ var microservices = [
     targetPort: 80
     transport: 'http'
     secrets: [
-        {
-          name: 'container-registry-password'
-          value: dockerHubPasswordOrToken
-        }
-        {
-          name: 'stripe-configuration-apikey'
-          value: stripeApiKey
-        }
-      ] 
-    environment: [
+      {
+        name: 'container-registry-password'
+        value: dockerHubPasswordOrToken
+      }
       {
         name: 'stripe-configuration-apikey'
-        secretRef: 'stripe-configuration-apikey'
+        value: stripeApiKey
       }
     ]
+    environment: microserviceCommonEnvironment
   }
 ]
 

@@ -18,6 +18,7 @@ public class CatalogContext : DbContext
         builder.ApplyConfiguration(new CatalogTypeEntityTypeConfiguration());
         builder.ApplyConfiguration(new CatalogItemEntityTypeConfiguration());
     }
+
 }
 
 
@@ -26,8 +27,7 @@ public class CatalogContextDesignFactory : IDesignTimeDbContextFactory<CatalogCo
     public CatalogContext CreateDbContext(string[] args)
     {
         var optionsBuilder = new DbContextOptionsBuilder<CatalogContext>()
-        .UseInMemoryDatabase("InMem");
-        //.UseSqlServer("Server=.;Initial Catalog=Microsoft.eShopOnContainers.Services.CatalogDb;Integrated Security=true");
+        .UseSqlServer("Server=.;Initial Catalog=Me.Services.CatalogDb;Integrated Security=true");
 
         return new CatalogContext(optionsBuilder.Options);
     }

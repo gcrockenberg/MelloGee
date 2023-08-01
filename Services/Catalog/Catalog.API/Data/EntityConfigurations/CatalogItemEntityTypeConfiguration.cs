@@ -8,14 +8,12 @@ class CatalogItemEntityTypeConfiguration
     : IEntityTypeConfiguration<CatalogItem>
 {
     public void Configure(EntityTypeBuilder<CatalogItem> builder)
-    {
+    {   
         builder.ToTable("Catalog");
 
-        builder.HasKey(ci => ci.Id);
-
-        // builder.Property(ci => ci.Id)
-        //     .UseHiLo("catalog_hilo")
-        //     .IsRequired();
+        builder.Property(ci => ci.Id)
+            .UseHiLo("CatalogSequence")
+            .IsRequired();
 
         builder.Property(ci => ci.Name)
             .IsRequired(true)

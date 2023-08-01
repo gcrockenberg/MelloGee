@@ -9,10 +9,6 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddMvc().AddNewtonsoftJson();
 
-// Using environment secrets
-Console.WriteLine($"--> Stripe config loaded: {string.IsNullOrWhiteSpace(StripeConfiguration.ApiKey)}");
-StripeConfiguration.ApiKey = builder.Configuration["stripe-configuration-apikey"];
-
 var app = builder.Build();
 
 app.UseRouting();
