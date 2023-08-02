@@ -46,8 +46,8 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<Context>(options =>
     options.UseInMemoryDatabase("InMem")
-//options.UseSqlServer(builder.Configuration.GetConnectionString("defaultConnection"))   // From appsettings.json
-//options.UseSqlServer(builder.Configuration["defaultConnection"])   // From Key Vault
+    //options.UseSqlServer(builder.Configuration.GetConnectionString("defaultConnection"))   // From appsettings.json
+    //options.UseSqlServer(builder.Configuration["defaultConnection"])   // From Key Vault
 );
 
 /// Call extension method to configure health check

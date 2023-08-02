@@ -27,28 +27,37 @@ public static class Extensions
     }
 
     public static IServiceCollection AddDbContexts(this IServiceCollection services, IConfiguration configuration)
-    {        
+    {
         static void ConfigureSqlOptions(SqlServerDbContextOptionsBuilder sqlOptions)
         {
             sqlOptions.MigrationsAssembly(typeof(Program).Assembly.FullName);
 
             // Configuring Connection Resiliency: https://docs.microsoft.com/en-us/ef/core/miscellaneous/connection-resiliency 
-
-            sqlOptions.EnableRetryOnFailure(maxRetryCount: 15, maxRetryDelay: TimeSpan.FromSeconds(30), errorNumbersToAdd: null);
+            sqlOptions.EnableRetryOnFailure(
+                maxRetryCount: 15, 
+                maxRetryDelay: TimeSpan.FromSeconds(30), 
+                errorNumbersToAdd: null);
         };
 
         services.AddDbContext<CatalogContext>(options =>
         {
-            if (Boolean.Parse(configuration["InMemoryDatabase"] ?? "true"))
-            {
-                options.UseInMemoryDatabase("InMem");
-            }
-            else
-            {   // SQL Server
-                var connectionString = configuration.GetRequiredConnectionString("CatalogDB");
+            // --------------------- MariaDb ----------------------------------------------
+            //var connectionString = builder.Configuration.GetConnectionString("CatalogDb");
+            // LTS version specified in Dockerfile
+            // https://hub.docker.com/_/mariadb/tags
+            //var serverVersion = new MariaDbServerVersion(new Version(11, 0, 2));
+            //builder.Services.AddDbContext<CatalogContext>(options =>
+            //            options.UseMySql(connectionString, serverVersion));
+            // The following three options help with debugging, but should
+            // be changed or removed for production.
+            // .LogTo(Console.WriteLine, LogLevel.Information)
+            // .EnableSensitiveDataLogging()
+            // .EnableDetailedErrors());
+            // --------------------- End MariaDb ------------------------------------------
 
-                options.UseSqlServer(connectionString, ConfigureSqlOptions);
-            }
+            var connectionString = configuration.GetRequiredConnectionString("CatalogDB");
+
+            options.UseSqlServer(connectionString, ConfigureSqlOptions);
         });
 
         // services.AddDbContext<IntegrationEventLogContext>(options =>

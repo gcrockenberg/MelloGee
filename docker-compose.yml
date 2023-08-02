@@ -16,6 +16,7 @@ services:
         reservations:
           memory: 64MB
 
+  # https://learn.microsoft.com/en-us/sql/linux/quickstart-install-connect-docker?view=sql-server-ver15&preserve-view=true&pivots=cs1-bash
   me-sql-data:
     image: sqlserver
     build:
@@ -27,6 +28,19 @@ services:
           memory: 2048MB
         reservations:
           memory: 1024MB
+
+  me-mariadb:
+    image: mariadb
+    build:
+      context: .
+      dockerfile: Services/MariaDb/Dockerfile
+    deploy:
+      resources:
+        limits:
+          memory: 2048MB
+        reservations:
+          memory: 1024MB
+
 
   me-rabbitmq:
     image: rabbitmq

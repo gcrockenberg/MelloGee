@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Catalog.API.Migrations
 {
     [DbContext(typeof(CatalogContext))]
-    [Migration("20230801174028_initialmigration")]
+    [Migration("20230802213308_initialmigration")]
     partial class initialmigration
     {
         /// <inheritdoc />
@@ -27,7 +27,7 @@ namespace Catalog.API.Migrations
             modelBuilder.HasSequence("CatalogBrandSequence")
                 .IncrementsBy(10);
 
-            modelBuilder.HasSequence("CatalogSequence")
+            modelBuilder.HasSequence("CatalogItemSequence")
                 .IncrementsBy(10);
 
             modelBuilder.HasSequence("CatalogTypeSequence")
@@ -57,7 +57,7 @@ namespace Catalog.API.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseHiLo(b.Property<int>("Id"), "CatalogSequence");
+                    SqlServerPropertyBuilderExtensions.UseHiLo(b.Property<int>("Id"), "CatalogItemSequence");
 
                     b.Property<int>("AvailableStock")
                         .HasColumnType("int");

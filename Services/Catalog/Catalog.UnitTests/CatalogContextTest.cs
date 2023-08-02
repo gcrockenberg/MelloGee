@@ -22,7 +22,7 @@ public class CatalogContextTest
     {
         this.output = output;
         _dbOptions = new DbContextOptionsBuilder<CatalogContext>()
-            .UseInMemoryDatabase(databaseName: "in-memory")
+            .UseInMemoryDatabase("InMemDb")
             .Options;
 
         using var catalogContext = new CatalogContext(_dbOptions);

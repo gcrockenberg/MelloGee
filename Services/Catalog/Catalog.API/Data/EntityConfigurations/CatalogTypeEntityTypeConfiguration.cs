@@ -13,6 +13,7 @@ class CatalogTypeEntityTypeConfiguration
 
         builder.HasKey(ci => ci.Id);
 
+        // For non-SQL Server databases, sequences must be created before UseHiLo
         builder.Property(ci => ci.Id)
             .UseHiLo("CatalogTypeSequence")
             .IsRequired();

@@ -8,11 +8,12 @@ class CatalogItemEntityTypeConfiguration
     : IEntityTypeConfiguration<CatalogItem>
 {
     public void Configure(EntityTypeBuilder<CatalogItem> builder)
-    {   
+    {
         builder.ToTable("Catalog");
 
+        // For non-SQL Server databases, sequences must be created before UseHiLo
         builder.Property(ci => ci.Id)
-            .UseHiLo("CatalogSequence")
+            .UseHiLo("CatalogItemSequence")
             .IsRequired();
 
         builder.Property(ci => ci.Name)

@@ -31,10 +31,7 @@ param environmentVariables array
 param dockerHubUsername string
 
 @description('The smallest for dev testing')
-var containerResources = {
-  cpu: '0.25'
-  memory: '0.5Gi'
-}
+param containerResources object
 
 @description('Allow scale to 0 for minimal cost during dev')
 var containerScale = {

@@ -9,8 +9,8 @@ A project to demonstrate full-stack aspects of a microservice based solution hos
 - GitHub Actions CI/CD
 - [AAD B2C](https://learn.microsoft.com/en-us/azure/active-directory-b2c/) - Customer identity access management (CIAM). 
 - Azure Blob Storage - login customization
-- SQL Server Express as a Container App service for demo purposes
-- RabbitMQ Event Bus as a Container App service for demo purposes
+- SQL Server Container App service for demo purposes
+- RabbitMQ Event Bus Container App service for demo purposes
 - Redis caching as a Container App service for demo purposes
 - Angular SPA with Tailwind CSS
 - Stripe for order checkout
@@ -65,7 +65,6 @@ docker build -t *your-docker-login*/cart-api . -f Services\Cart\Cart.API\Dockerf
 docker push *your-docker-login*/cart-api
 docker build -t *your-docker-login*/order-api . -f Services\Order\Order.API\Dockerfile
 docker push *your-docker-login*/order-api
-
 ```
 **Provision Me**
 : Create the Azure infrastructure for Me in an Azure Resource Group of your choosing [^1]. Confirm the Azure resources are all available in the location you choose (I used eastus).
@@ -85,7 +84,8 @@ Note: AAD B2C infrastructure is not yet part of automated provisioning. It requi
 
 **GitHub Actions CI/CD Environment Secrets (dev)**
 : The following Environment Secrets support the beginning of CI/CD dev/prod isolation
-- AZURE_CLIENT_ID - User Assigned Identity "uai-GitHubOIDC" provisioned above -> Settings -> Properties. 
+- AZURE_CLIENT_ID - User Assigned Identity "uai-GitHubOIDC" provisioned above -> Settings -> Properties
+- STORAGE_ACCOUNT_KEY - For login customization deployment
 
 **Testing**
 - Verify the .github/*.yml env variables match your configuration

@@ -15,7 +15,7 @@ namespace Catalog.API.Migrations
                 incrementBy: 10);
 
             migrationBuilder.CreateSequence(
-                name: "CatalogSequence",
+                name: "CatalogItemSequence",
                 incrementBy: 10);
 
             migrationBuilder.CreateSequence(
@@ -106,7 +106,7 @@ namespace Catalog.API.Migrations
                 name: "CatalogBrandSequence");
 
             migrationBuilder.DropSequence(
-                name: "CatalogSequence");
+                name: "CatalogItemSequence");
 
             migrationBuilder.DropSequence(
                 name: "CatalogTypeSequence");

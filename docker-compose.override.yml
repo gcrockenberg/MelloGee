@@ -8,8 +8,17 @@ services:
 
   # Default SQL Server port 1433
   me-sql-data:
+    environment:
+      MSSQL_SA_PASSWORD: ${ME_MSSQL_SA_PASSWORD}
     ports:
       - "1433:1433"
+ 
+  me-mariadb:
+    environment:
+      MARIADB_ALLOW_EMPTY_ROOT_PASSWORD: true
+    ports:
+      - "3306:3306"
+
 
   me-rabbitmq:
     ports:
@@ -18,35 +27,37 @@ services:
 
   me-catalog-api:
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ConnectionStrings__CatalogDb=Server=me-sql-data;Database=Me.Services.CatalogDb;User Id=sa;Password=Pass@word;Encrypt=False;TrustServerCertificate=true
-      - ConnectionStrings__EventBus=${ME_ConnectionStrings_EventBus}
-      - PicBaseUrl=${ME_STORAGE_CATALOG_URL}
+      ASPNETCORE_ENVIRONMENT: Development
+      ConnectionStrings__EventBus: ${ME_ConnectionStrings_EventBus}
+      ConnectionStrings__CatalogDb: Server=me-sql-data;Database=Me.Services.CatalogDb;User Id=sa;Password=${ME_MSSQL_SA_PASSWORD};Encrypt=False;TrustServerCertificate=true
+      # ConnectionStrings__CatalogDb: server=me-my-sql;port=3306;database=Me.Services.CatalogDb;uid=root;password=
+      # ConnectionStrings__CatalogDb: server=me-mariadb;port=3306;uid=root;password=;database=Me.Services.CatalogDb
+      PicBaseUrl: ${ME_STORAGE_CATALOG_URL}
       #      - AzureStorageAccountName=${ME_AZURE_STORAGE_CATALOG_NAME}
       #      - AzureStorageAccountKey=${ME_AZURE_STORAGE_CATALOG_KEY}
-      - UseCustomizationData=False
-      - AzureStorageEnabled=False
+      UseCustomizationData: False
+      AzureStorageEnabled: False
       #      - ApplicationInsights__InstrumentationKey=${INSTRUMENTATION_KEY}
       #      - OrchestratorType=${ORCHESTRATOR_TYPE}
-      - PATH_BASE=/catalog-api
+      PATH_BASE: /catalog-api
     ports:
       - "5101:80"
       - "9101:81"
 
   me-cart-api:
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - AzureAdB2C__Instance=${ME_AzureAdB2C_Instance}
-      - AzureAdB2C__Domain=${ME_AzureAdB2C_Domain}
-      - AzureAdB2C__ClientId=${ME_AzureAdB2C_ClientId}
-      - AzureAdB2C__SignedOutCallbackPath=${ME_AzureAdB2C_SignedOutCallbackPath}
-      - AzureAdB2C__SignUpSignInPolicyId=${ME_AzureAdB2C_SignUpSignInPolicyId}
-      - ConnectionStrings__EventBus=${ME_ConnectionStrings_EventBus}
-      - ConnectionStrings__Redis=${ME_ConnectionStrings_Redis}
+      ASPNETCORE_ENVIRONMENT: Development
+      AzureAdB2C__Instance: ${ME_AzureAdB2C_Instance}
+      AzureAdB2C__Domain: ${ME_AzureAdB2C_Domain}
+      AzureAdB2C__ClientId: ${ME_AzureAdB2C_ClientId}
+      AzureAdB2C__SignedOutCallbackPath: ${ME_AzureAdB2C_SignedOutCallbackPath}
+      AzureAdB2C__SignUpSignInPolicyId: ${ME_AzureAdB2C_SignUpSignInPolicyId}
+      ConnectionStrings__EventBus: ${ME_ConnectionStrings_EventBus}
+      ConnectionStrings__Redis: ${ME_ConnectionStrings_Redis}
       #      - ApplicationInsights__InstrumentationKey=${INSTRUMENTATION_KEY}
       #      - OrchestratorType=${ORCHESTRATOR_TYPE}
-      - UseLoadTest=${USE_LOADTEST:-False}
-      - PATH_BASE=/cart-api
+      UseLoadTest: ${USE_LOADTEST:-False}
+      PATH_BASE: /cart-api
     ports:
       - "5103:80"
       - "9103:81"
@@ -56,22 +67,22 @@ services:
 
   me-order-api:
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - AzureAdB2C__Instance=${ME_AzureAdB2C_Instance}
-      - AzureAdB2C__Domain=${ME_AzureAdB2C_Domain}
-      - AzureAdB2C__ClientId=${ME_AzureAdB2C_ClientId}
-      - AzureAdB2C__SignedOutCallbackPath=${ME_AzureAdB2C_SignedOutCallbackPath}
-      - AzureAdB2C__SignUpSignInPolicyId=${ME_AzureAdB2C_SignUpSignInPolicyId}
-      - ConnectionStrings__OrderingDb=${ME_AZURE_ORDERING_DB:-Server=sqldata;Database=Me.Services.OrderingDb;User Id=sa;Password=Pass@word;Encrypt=False;TrustServerCertificate=true}
-      - ConnectionStrings__EventBus=${ME_ConnectionStrings_EventBus}
-      - UseCustomizationData=True
-      - CheckUpdateTime=30000
+      ASPNETCORE_ENVIRONMENT: Development
+      AzureAdB2C__Instance: ${ME_AzureAdB2C_Instance}
+      AzureAdB2C__Domain: ${ME_AzureAdB2C_Domain}
+      AzureAdB2C__ClientId: ${ME_AzureAdB2C_ClientId}
+      AzureAdB2C__SignedOutCallbackPath: ${ME_AzureAdB2C_SignedOutCallbackPath}
+      AzureAdB2C__SignUpSignInPolicyId: ${ME_AzureAdB2C_SignUpSignInPolicyId}
+      ConnectionStrings__OrderingDb: ${ME_AZURE_ORDERING_DB:-Server=sqldata;Database=Me.Services.OrderingDb;User Id=sa;Password=Pass@word;Encrypt=False;TrustServerCertificate=true}
+      ConnectionStrings__EventBus: ${ME_ConnectionStrings_EventBus}
+      UseCustomizationData: True
+      CheckUpdateTime: 30000
       #      - ApplicationInsights__InstrumentationKey=${INSTRUMENTATION_KEY}
       #      - OrchestratorType=${ORCHESTRATOR_TYPE}
-      - UseLoadTest=${USE_LOADTEST:-False}
-      - GRPC_PORT=81
-      - PORT=80
-      - PATH_BASE=/order-api
+      UseLoadTest: ${USE_LOADTEST:-False}
+      GRPC_PORT: 81
+      PORT: 80
+      PATH_BASE: /order-api
     ports:
       - "5102:80"
       - "9102:81"
@@ -89,16 +100,16 @@ services:
     #   - 8080:80
     #   - 8081:443
 
-    # coffeeapi:
-    #   environment:
-    #     ASPNETCORE_ENVIRONMENT: Development
-    #     ASPNETCORE_HTTPS_PORT: 8083
-    #     ASPNETCORE_URLS: "https://+:443;http://+:80"
-    #   volumes:
-    #     - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
-    # Hide direct external access to the container
-    # Gateway provides routed access within the composed environment
-    # ports:
-    #   - 8082:80
-    #   - 8083:443
+  # coffeeapi:
+  #   environment:
+  #     ASPNETCORE_ENVIRONMENT: Development
+  #     ASPNETCORE_HTTPS_PORT: 8083
+  #     ASPNETCORE_URLS: "https://+:443;http://+:80"
+  #     # ConnectionStrings__CoffeeDb: server=me-my-sql;port=3306;database=coffeedb;uid=root;password=
+  #     ConnectionStrings__CoffeeDb: server=me-mariadb;port=3306;uid=root;password=;database=coffeedb
+  #   volumes:
+  #       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+  #   ports:
+  #     - 8082:80
+  #     - 8083:443
 
