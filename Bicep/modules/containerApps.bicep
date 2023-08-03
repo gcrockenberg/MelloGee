@@ -506,12 +506,13 @@ resource containerAppApiResource 'Microsoft.ApiManagement/service/apis@2023-03-0
   }
 }
 
+
 @description('Update the Container App API in APIM to use the Container App Backend resource')
 resource setApiPolicyToUseBackend 'Microsoft.ApiManagement/service/apis/policies@2023-03-01-preview' = if (addToAPIM) {
   name: 'policy'
   parent: containerAppApiResource
   properties: {
-    value: replace(loadTextContent('apimPolicies/api.xml'), '{backendName}', containerAppBackendResource.name)
+    value: replace(replace(replace(loadTextContent('apimPolicies/api.xml'), '{backendName}', containerAppBackendResource.name), '{apiPath}', apiPath), '{apimName}', apim.name)
     format: 'xml'
   }
 }

@@ -13,11 +13,11 @@ services:
     ports:
       - "1433:1433"
  
-  me-mariadb:
-    environment:
-      MARIADB_ALLOW_EMPTY_ROOT_PASSWORD: true
-    ports:
-      - "3306:3306"
+  # me-mariadb:
+  #   environment:
+  #     MARIADB_ALLOW_EMPTY_ROOT_PASSWORD: true
+  #   ports:
+  #     - "3306:3306"
 
 
   me-rabbitmq:
@@ -32,6 +32,7 @@ services:
       ConnectionStrings__CatalogDb: Server=me-sql-data;Database=Me.Services.CatalogDb;User Id=sa;Password=${ME_MSSQL_SA_PASSWORD};Encrypt=False;TrustServerCertificate=true
       # ConnectionStrings__CatalogDb: server=me-my-sql;port=3306;database=Me.Services.CatalogDb;uid=root;password=
       # ConnectionStrings__CatalogDb: server=me-mariadb;port=3306;uid=root;password=;database=Me.Services.CatalogDb
+      EventBus__RetryCount: 5
       PicBaseUrl: ${ME_STORAGE_CATALOG_URL}
       #      - AzureStorageAccountName=${ME_AZURE_STORAGE_CATALOG_NAME}
       #      - AzureStorageAccountKey=${ME_AZURE_STORAGE_CATALOG_KEY}
@@ -54,6 +55,7 @@ services:
       AzureAdB2C__SignUpSignInPolicyId: ${ME_AzureAdB2C_SignUpSignInPolicyId}
       ConnectionStrings__EventBus: ${ME_ConnectionStrings_EventBus}
       ConnectionStrings__Redis: ${ME_ConnectionStrings_Redis}
+      EventBus__RetryCount: 5
       #      - ApplicationInsights__InstrumentationKey=${INSTRUMENTATION_KEY}
       #      - OrchestratorType=${ORCHESTRATOR_TYPE}
       UseLoadTest: ${USE_LOADTEST:-False}
@@ -75,6 +77,7 @@ services:
       AzureAdB2C__SignUpSignInPolicyId: ${ME_AzureAdB2C_SignUpSignInPolicyId}
       ConnectionStrings__OrderingDb: ${ME_AZURE_ORDERING_DB:-Server=sqldata;Database=Me.Services.OrderingDb;User Id=sa;Password=Pass@word;Encrypt=False;TrustServerCertificate=true}
       ConnectionStrings__EventBus: ${ME_ConnectionStrings_EventBus}
+      EventBus__RetryCount: 5
       UseCustomizationData: True
       CheckUpdateTime: 30000
       #      - ApplicationInsights__InstrumentationKey=${INSTRUMENTATION_KEY}

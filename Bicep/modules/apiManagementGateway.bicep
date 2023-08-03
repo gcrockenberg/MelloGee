@@ -7,24 +7,14 @@
   OWNER TEAM: Gerard C.
 */
 
-@description('The name of the app or solution.')
-param solutionName string
-
-@description('The type of environment you want to provision. Allowed values are dev and prod.')
-@allowed([
-  'dev'
-  'prod'
-])
-param environmentType string = 'dev'
 param location string = 'eastus'
-
 param tier string = 'Consumption'  //'Developer'
 param capacity int = 0             // Consumption requires 0 otherwise 1 @ $.07/hour
 param adminEmail string = 'gcrockenberg@hotmail.com'
 param organizationName string = 'Myoptyx'
 param customProperties object = {}
 param tagsByResource object = {} 
-var apimName = environmentType == 'dev' ? '${solutionName}-dev' : solutionName
+param apimName string
 
 resource apim 'Microsoft.ApiManagement/service@2023-03-01-preview' = {
   name: apimName

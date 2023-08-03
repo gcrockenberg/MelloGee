@@ -63,6 +63,10 @@ var microserviceCommonEnvironment = [
     name: 'ConnectionStrings__EventBus'
     value: 'me-rabbitmq'
   }
+  {    
+    name: 'EventBus__RetryCount'
+    value: '5'
+  }
 ]
 
 @description('Naming rules for CA secrets: allowed characters are a-z and -')
@@ -72,6 +76,13 @@ var microserviceCommonSecrets = [
     value: dockerHubPasswordOrToken
   }
 ]
+
+
+@description('Microsoft should add this to thier standard environment suffixes list')
+var apiManagementSuffix = 'azure-api.net'
+
+var apimName = environmentType == 'dev' ? '${solutionName}-dev' : solutionName
+
 
 // Allowed CPU - Memory combinations: 
 // [cpu: 0.25, memory: 0.5Gi]; 
@@ -89,7 +100,7 @@ var defaultResources = {
 @description('The Container App microservices')
 var microservices = [
   {
-    skip: true
+    skip: false
     addToAPIM: false
     apiPath: ''
     //connectKeyVault: false
@@ -103,7 +114,7 @@ var microservices = [
     resources: defaultResources
   }
   {
-    skip: true
+    skip: false
     addToAPIM: false
     apiPath: ''
     //connectKeyVault: false
@@ -134,7 +145,7 @@ var microservices = [
     }
   }
   {
-    skip: true
+    skip: false
     addToAPIM: false
     apiPath: ''
     //connectKeyVault: false
@@ -153,7 +164,7 @@ var microservices = [
     resources: defaultResources   // Less demanding that SQL Server
   }
   {
-    skip: true
+    skip: false
     addToAPIM: false
     apiPath: ''
     //connectKeyVault: false
@@ -183,16 +194,20 @@ var microservices = [
           //value: 'server=${solutionName}-mariadb;port=3306;uid=root;password=;database=Me.Services.CatalogDb'
         }
       ])
-    environment: [
+    environment: concat(microserviceCommonEnvironment, [
       {
         name: 'ConnectionStrings__CatalogDb'
         secretRef: 'connectionstrings-catalogdb'
       }
-    ]
+      {
+        name: 'PicBaseUrl' 
+        value: 'https://${apimName}.${apiManagementSuffix}/c/api/v1/catalog/items/[0]/pic/'
+      }
+    ])
     resources: defaultResources
   }
   {
-    skip: true
+    skip: false
     addToAPIM: true
     apiPath: 'b'
     //connectKeyVault: false
@@ -220,7 +235,7 @@ var microservices = [
       resources: defaultResources
     }
   {
-    skip: true
+    skip: false
     addToAPIM: true
     apiPath: 'o'
     //connectKeyVault: false
@@ -316,9 +331,8 @@ resource containerAppsManagedEnvironment 'Microsoft.App/managedEnvironments@2022
 module apiManagementGateway 'modules/apiManagementGateway.bicep' = {
   name: 'apiManagementTemplate'
   params: {
-    environmentType: environmentType
+    apimName: apimName
     location: location
-    solutionName: solutionName
   }
 }
 

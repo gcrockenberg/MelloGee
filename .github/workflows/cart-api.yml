@@ -1,4 +1,4 @@
-name: me-cart-api - Build and deploy .NET API to container app
+name: me-cart-api - Build and deploy API image to container app (Image only)
 on:
   push:
     branches:

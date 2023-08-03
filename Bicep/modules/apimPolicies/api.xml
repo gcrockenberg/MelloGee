@@ -8,6 +8,9 @@
     </backend>
     <outbound>
         <base />
+        <set-header name="Location" exists-action="override">
+            <value>@(Regex.Replace(context.Response.Headers.GetValueOrDefault("Location",""), "^.*api", "https://{apimName}.azure-api.net/{apiPath}/api"))</value>
+        </set-header>
     </outbound>
     <on-error>
         <base />

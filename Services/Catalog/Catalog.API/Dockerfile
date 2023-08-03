@@ -17,19 +17,19 @@ COPY "MeServices.sln" "MeServices.sln"
 
 COPY "Services/Common/Common.csproj" "Services/Common/Common.csproj"
 COPY "Services/EventBus/EventBus/EventBus.csproj" "Services/EventBus/EventBus/EventBus.csproj"
-COPY "Services/EventBus/EventBusServiceBus/EventBusServiceBus.csproj" "Services/EventBus/EventBusServiceBus/EventBusServiceBus.csproj"
 COPY "Services/EventBus/EventBusRabbitMQ/EventBusRabbitMQ.csproj" "Services/EventBus/EventBusRabbitMQ/EventBusRabbitMQ.csproj"
+COPY "Services/EventBus/EventBusServiceBus/EventBusServiceBus.csproj" "Services/EventBus/EventBusServiceBus/EventBusServiceBus.csproj"
+COPY "Services/EventBus/EventBusServiceBus/EventBusServiceBus.csproj" "Services/EventBus/IntegrationEventLogEF/IntegrationEventLogEF.csproj"
 COPY "Services/Catalog/Catalog.API/Catalog.API.csproj" "Services/Catalog/Catalog.API/Catalog.API.csproj"
 COPY "Services/Cart/Cart.API/Cart.API.csproj" "Services/Cart/Cart.API/Cart.API.csproj"
 COPY "Services/Order/Order.API/Order.API.csproj" "Services/Order/Order.API/Order.API.csproj"
 COPY "Directory.Packages.props" "Directory.Packages.props"
-COPY "NuGet.config" "NuGet.config"
 
 RUN dotnet restore "MeServices.sln"
 
 COPY . .
 WORKDIR /src/Services/Catalog/Catalog.API
-RUN dotnet publish --no-restore -c Release -o /app
+RUN dotnet publish -c Release -o /app
 COPY "Services/Catalog/Catalog.API/Pics" "/app/Pics"
 FROM build AS publish
 

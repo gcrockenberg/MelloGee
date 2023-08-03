@@ -5,16 +5,22 @@ namespace Me.Services.Catalog.API.Controllers;
 public class CatalogController : ControllerBase
 {
     private readonly CatalogContext _catalogContext;
+    private readonly ICatalogIntegrationEventService _catalogIntegrationEventService;
     private readonly CatalogSettings _settings;
 
-    public CatalogController(CatalogContext context, IOptionsSnapshot<CatalogSettings> settings)
+    public CatalogController(
+        CatalogContext context, 
+        IOptionsSnapshot<CatalogSettings> settings, 
+        ICatalogIntegrationEventService catalogIntegrationEventService)
     {
         _catalogContext = context ?? throw new ArgumentNullException(nameof(context));
+        _catalogIntegrationEventService = catalogIntegrationEventService ?? throw new ArgumentNullException(nameof(catalogIntegrationEventService));
         _settings = settings.Value;
 
         // Configure read only to avoid change tracking overhead
         context.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
     }
+
 
     // GET api/v1/[controller]/items[?pageSize=3&pageIndex=10]
     [HttpGet]
@@ -53,10 +59,29 @@ public class CatalogController : ControllerBase
 
         return Ok(model);
     }
+    
+
+    private async Task<List<CatalogItem>> ItemsByIdsAsync(string ids)
+    {
+        var numIds = ids.Split(',').Select(id => (Ok: int.TryParse(id, out int x), Value: x));
+
+        if (!numIds.All(nid => nid.Ok))
+        {
+            return new List<CatalogItem>();
+        }
+
+        var idsToSelect = numIds
+            .Select(id => id.Value);
+
+        var items = await _catalogContext.CatalogItems.Where(ci => idsToSelect.Contains(ci.Id)).ToListAsync();
+
+        items = _ChangeUriPlaceholder(items);
+
+        return items;
+    }
 
 
-    [HttpGet]
-    [Route("items/{id:int}")]
+    [HttpGet("items/{id:int}", Name = "ItemByIdAsync")]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<CatalogItem>> ItemByIdAsync(int id)
@@ -201,20 +226,20 @@ public class CatalogController : ControllerBase
         if (raiseProductPriceChangedEvent) // Save product's data and publish integration event through the Event Bus if price has changed
         {
             //Create Integration Event to be published through the Event Bus
-            //GMC            var priceChangedEvent = new ProductPriceChangedIntegrationEvent(catalogItem.Id, productToUpdate.Price, oldPrice);
+            var priceChangedEvent = new ProductPriceChangedIntegrationEvent(catalogItem.Id, productToUpdate.Price, oldPrice);
 
             // Achieving atomicity between original Catalog database operation and the IntegrationEventLog thanks to a local transaction
-            //GMC            await _catalogIntegrationEventService.SaveEventAndCatalogContextChangesAsync(priceChangedEvent);
+            await _catalogIntegrationEventService.SaveEventAndCatalogContextChangesAsync(priceChangedEvent);
 
             // Publish through the Event Bus and mark the saved event as published
-            //GMC            await _catalogIntegrationEventService.PublishThroughEventBusAsync(priceChangedEvent);
+            await _catalogIntegrationEventService.PublishThroughEventBusAsync(priceChangedEvent);
         }
         else // Just save the updated product because the Product's Price hasn't changed.
         {
             await _catalogContext.SaveChangesAsync();
         }
 
-        return CreatedAtAction(nameof(ItemByIdAsync), new { id = productToUpdate.Id }, null);
+        return CreatedAtRoute(nameof(ItemByIdAsync), new { id = productToUpdate.Id }, null);
     }
 
 

@@ -1,6 +1,8 @@
 global using System.ComponentModel.DataAnnotations;
 global using System.Security.Claims;
 global using System.Text.Json;
+
+global using Me.Cart.API.IntegrationEvents.EventHandlers;
 global using Me.Cart.API.IntegrationEvents.Events;
 global using Me.Cart.API.Repositories;
 global using Me.Services.Cart.API.DTO;

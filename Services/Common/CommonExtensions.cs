@@ -51,6 +51,12 @@ public static class CommonExtensions
     }
 
 
+    /// <summary>
+    /// Resolve ExceptionHandling, Routing, Authorization, OpenApi and HealthChecks
+    /// </summary>
+    /// <param name="app"></param>
+    /// <returns>The app Microsoft.AspNetCore.Builder.ControllerActionEndpointConventionBuilder for
+    /// endpoints associated with controller actions.</returns>
     public static WebApplication UseServiceDefaults(this WebApplication app)
     {
         if (!app.Environment.IsDevelopment())
@@ -65,7 +71,7 @@ public static class CommonExtensions
             app.UsePathBase(pathBase);
             app.UseRouting();
 
-            var identitySection = app.Configuration.GetSection("Identity");
+            var identitySection = app.Configuration.GetSection("AzureAdB2C");
 
             if (identitySection.Exists())
             {
@@ -273,7 +279,7 @@ public static class CommonExtensions
         var azureAdB2C = configuration.GetSection(JWT_CONFIGURATION_SECTION_NAME);
         if (!azureAdB2C.Exists())
         {
-            logger.LogError("--> Configuration section not found: {section}", JWT_CONFIGURATION_SECTION_NAME);
+            logger.LogError("--> {section} not found. Skipping authorization initialization.", JWT_CONFIGURATION_SECTION_NAME);
             return services;
         }
 
@@ -282,7 +288,7 @@ public static class CommonExtensions
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddMicrosoftIdentityWebApi(options =>
         {
-            logger.LogInformation("--> Binding configuration section: {section}", JWT_CONFIGURATION_SECTION_NAME);
+            logger.LogInformation("--> Initializing authorization for: {section}", JWT_CONFIGURATION_SECTION_NAME);
             configuration.Bind(JWT_CONFIGURATION_SECTION_NAME, options);
 
             // Can map claim types here
@@ -377,6 +383,7 @@ public static class CommonExtensions
         //GMC        };
     }
 
+
     public static IServiceCollection AddEventBus(this IServiceCollection services, IConfiguration configuration)
     {
         //  {
@@ -408,18 +415,21 @@ public static class CommonExtensions
         //   }
         // }
 
-        var eventBusSection = configuration.GetSection("EventBus");
+        const string EVENT_BUS_CONFIGURATION_SECTION_NAME = "EventBus";
+        var logger = services.BuildServiceProvider().GetRequiredService<ILogger<EventBusServiceBusImpl>>();
+        var eventBusSection = configuration.GetSection(EVENT_BUS_CONFIGURATION_SECTION_NAME);
         if (!eventBusSection.Exists())
         {
+            logger.LogError("--> {section} not found. Skipping EventBus initialization.", EVENT_BUS_CONFIGURATION_SECTION_NAME);
             return services;
         }
 
-        // Check if we are configuring Azure Service Bus
-        if (string.Equals(eventBusSection["ProviderName"], "ServiceBus", StringComparison.OrdinalIgnoreCase))
+        // ProviderName means we are configuring Azure Service Bus
+        if (string.Equals(eventBusSection["ProviderName"], EVENT_BUS_CONFIGURATION_SECTION_NAME, StringComparison.OrdinalIgnoreCase))
         {
             services.AddSingleton<IServiceBusPersisterConnection>(sp =>
             {
-                var serviceBusConnectionString = configuration.GetRequiredConnectionString("EventBus");
+                var serviceBusConnectionString = configuration.GetRequiredConnectionString(EVENT_BUS_CONFIGURATION_SECTION_NAME);
 
                 return new DefaultServiceBusPersisterConnection(serviceBusConnectionString);
             });
@@ -437,13 +447,14 @@ public static class CommonExtensions
         }
         else    // We are configuring RabbitMQ
         {
+            logger.LogInformation("--> Initializing RabbitMQ for section: {section}", EVENT_BUS_CONFIGURATION_SECTION_NAME);
             services.AddSingleton<IRabbitMQPersistentConnection>(sp =>
             {
                 var logger = sp.GetRequiredService<ILogger<DefaultRabbitMQPersistentConnection>>();
 
                 var factory = new ConnectionFactory()
                 {
-                    HostName = configuration.GetRequiredConnectionString("EventBus"),
+                    HostName = configuration.GetRequiredConnectionString(EVENT_BUS_CONFIGURATION_SECTION_NAME),
                     DispatchConsumersAsync = true
                 };
 

@@ -7,11 +7,11 @@ builder.AddServiceDefaults();                               // Extension
 builder.Services.AddControllers();
 builder.Services.AddProblemDetails();
 
-builder.Services.AddHealthChecks(builder.Configuration);    // Extension
-builder.Services.AddRedis(builder.Configuration);           // Extension
+builder.Services.AddHealthChecks(builder.Configuration)    // Extension
+    .AddRedis(builder.Configuration);
 
-//builder.Services.AddTransient<ProductPriceChangedIntegrationEventHandler>();
-//builder.Services.AddTransient<OrderStartedIntegrationEventHandler>();               <<<==== Start here with Event Bus
+builder.Services.AddTransient<ProductPriceChangedIntegrationEventHandler>();
+//builder.Services.AddTransient<OrderStartedIntegrationEventHandler>();               
 
 builder.Services.AddTransient<ICartRepository, RedisCartRepository>();
 builder.Services.AddTransient<IIdentityService, IdentityService>();
@@ -48,9 +48,8 @@ app.UseAuthorization();
 // app.MapGrpcService<CartService>();
 app.MapControllers();
 
-// var eventBus = app.Services.GetRequiredService<IEventBus>();
-
-// eventBus.Subscribe<ProductPriceChangedIntegrationEvent, ProductPriceChangedIntegrationEventHandler>();
+var eventBus = app.Services.GetRequiredService<IEventBus>();
+eventBus.Subscribe<ProductPriceChangedIntegrationEvent, ProductPriceChangedIntegrationEventHandler>();
 // eventBus.Subscribe<OrderStartedIntegrationEvent, OrderStartedIntegrationEventHandler>();
 
 app.Run();

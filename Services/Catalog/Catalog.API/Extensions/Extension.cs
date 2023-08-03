@@ -26,6 +26,14 @@ public static class Extensions
         return services;
     }
 
+
+    /// <summary>
+    /// Catalog and IntegrationEventLog DbContexts in the CatalogDb database.
+    /// </summary>
+    /// <param name="services">AddDbContext target</param>
+    /// <param name="configuration">For DB connection strings</param>
+    /// <returns>The services Microsoft.Extensions.DependencyInjection.IMvcBuilder that can be used to further
+    /// configure the MVC services.</returns>
     public static IServiceCollection AddDbContexts(this IServiceCollection services, IConfiguration configuration)
     {
         static void ConfigureSqlOptions(SqlServerDbContextOptionsBuilder sqlOptions)
@@ -34,8 +42,8 @@ public static class Extensions
 
             // Configuring Connection Resiliency: https://docs.microsoft.com/en-us/ef/core/miscellaneous/connection-resiliency 
             sqlOptions.EnableRetryOnFailure(
-                maxRetryCount: 15, 
-                maxRetryDelay: TimeSpan.FromSeconds(30), 
+                maxRetryCount: 15,
+                maxRetryDelay: TimeSpan.FromSeconds(30),
                 errorNumbersToAdd: null);
         };
 
@@ -54,23 +62,29 @@ public static class Extensions
             // .EnableSensitiveDataLogging()
             // .EnableDetailedErrors());
             // --------------------- End MariaDb ------------------------------------------
-
-            var connectionString = configuration.GetRequiredConnectionString("CatalogDB");
+            var connectionString = configuration.GetRequiredConnectionString("CatalogDb");
 
             options.UseSqlServer(connectionString, ConfigureSqlOptions);
         });
 
-        // services.AddDbContext<IntegrationEventLogContext>(options =>
-        // {
-        //     var connectionString = configuration.GetRequiredConnectionString("CatalogDB");
+        services.AddDbContext<IntegrationEventLogContext>(options =>
+        {
+            var connectionString = configuration.GetRequiredConnectionString("CatalogDb");
 
-        //     options.UseSqlServer(connectionString, ConfigureSqlOptions);
-        // });
+            options.UseSqlServer(connectionString, ConfigureSqlOptions);
+        });
 
         return services;
     }
 
 
+    /// <summary>
+    /// Initialize CatalogSettings from configuration. Register problem detail responses.
+    /// </summary>
+    /// <param name="services"></param>
+    /// <param name="configuration"></param>
+    /// <returns>The services Microsoft.Extensions.DependencyInjection.IMvcBuilder that can be used to further
+    /// configure the MVC services.</returns>
     public static IServiceCollection AddApplicationOptions(this IServiceCollection services, IConfiguration configuration)
     {
         return services
@@ -96,12 +110,18 @@ public static class Extensions
     }
 
 
+    /// <summary>
+    /// Register transient IIntegrationEventLogService and ICatalogIntegrationEventService
+    /// </summary>
+    /// <param name="services"></param>
+    /// <returns>The services Microsoft.Extensions.DependencyInjection.IMvcBuilder that can be used to further
+    /// configure the MVC services.</returns>
     public static IServiceCollection AddIntegrationServices(this IServiceCollection services)
     {
-        // services.AddTransient<Func<DbConnection, IIntegrationEventLogService>>(
-        //     sp => (DbConnection c) => new IntegrationEventLogService(c));
+        services.AddTransient<Func<DbConnection, IIntegrationEventLogService>>(
+            sp => (DbConnection c) => new IntegrationEventLogService(c));
 
-        // services.AddTransient<ICatalogIntegrationEventService, CatalogIntegrationEventService>();
+        services.AddTransient<ICatalogIntegrationEventService, CatalogIntegrationEventService>();
 
         return services;
     }

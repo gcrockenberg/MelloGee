@@ -29,18 +29,17 @@ services:
         reservations:
           memory: 1024MB
 
-  me-mariadb:
-    image: mariadb
-    build:
-      context: .
-      dockerfile: Services/MariaDb/Dockerfile
-    deploy:
-      resources:
-        limits:
-          memory: 2048MB
-        reservations:
-          memory: 1024MB
-
+  # me-mariadb:
+  #   image: mariadb
+  #   build:
+  #     context: .
+  #     dockerfile: Services/MariaDb/Dockerfile
+  #   deploy:
+  #     resources:
+  #       limits:
+  #         memory: 2048MB
+  #       reservations:
+  #         memory: 1024MB
 
   me-rabbitmq:
     image: rabbitmq
@@ -91,6 +90,7 @@ services:
     memswap_limit: 128MB
     depends_on:
       - me-rabbitmq
+      - me-sql-data
 
   me-cart-api:
     image: cart-api

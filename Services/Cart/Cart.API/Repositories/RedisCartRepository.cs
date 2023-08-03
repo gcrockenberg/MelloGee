@@ -18,7 +18,7 @@ public class RedisCartRepository : ICartRepository
         return await _database.KeyDeleteAsync(id);
     }
 
-    public IEnumerable<string> GetUsers()
+    public IEnumerable<string> GetCartIds()
     {
         var server = GetServer();
         var data = server.Keys();
