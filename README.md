@@ -52,20 +52,9 @@ After provisioning the Me infrastructure (below) we'll configure the GitHub envi
 
 **Push initial images to Docker**
 : Upload to Docker a "latest" version of the initial images. The provisioning that follows will pull them and import the APIs into APIM.
-```
-docker build -t *your-docker-login*/cart-data . -f Services\Redis\Dockerfile
-docker push *your-docker-login*/cart-data
-docker build -t *your-docker-login*/rabbitmq . -f Services\RabbitMQ\Dockerfile
-docker push *your-docker-login*/rabbitmq
-docker build -t *your-docker-login*/sqlserver . -f Services\SQLServer\Dockerfile
-docker push *your-docker-login*/sqlserver
-docker build -t *your-docker-login*/catalog-api . -f Services\Catalog\Catalog.API\Dockerfile
-docker push *your-docker-login*/catalog-api
-docker build -t *your-docker-login*/cart-api . -f Services\Cart\Cart.API\Dockerfile
-docker push *your-docker-login*/cart-api
-docker build -t *your-docker-login*/order-api . -f Services\Purchase\Purchse.API\Dockerfile
-docker push *your-docker-login*/order-api
-```
+<pre><code>./uploadDockerImages.ps1 <i>your-docker-login</i>
+</code></pre>
+
 **Provision Me**
 : Create the Azure infrastructure for Me in an Azure Resource Group of your choosing [^1]. Confirm the Azure resources are all available in the location you choose (I used eastus).
 ```
@@ -99,8 +88,8 @@ Note: AAD B2C infrastructure is not yet part of automated provisioning. It requi
 
 ### TO DO
 - Implement semantic-release versioning 
-- Better micro-services, front-ends, Event Bus, aggregation, and SignalR
-- Script initial Docker image build and push
+- Improve frontend
+- Aggregation, GPRC and SignalR
 - Script AAD-B2C environment provisioning
 
 [^1]: The Azure Container Apps Managed Environment creates an additional Resource Group for Kubernetes that it controls
