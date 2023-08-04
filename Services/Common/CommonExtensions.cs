@@ -207,7 +207,7 @@ public static class CommonExtensions
             //   "Identity": {
             //     "ExternalUrl": "http://identity",
             //     "Scopes": {
-            //         "basket": "Basket API"
+            //         "cart": "Cart API"
             //      }
             //    }
             // }
@@ -239,7 +239,7 @@ public static class CommonExtensions
         // {
         //   "Identity": {
         //     "Url": "http://identity",
-        //     "Audience": "basket"
+        //     "Audience": "cart"
         //    }
         // }
 

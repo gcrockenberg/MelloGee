@@ -45,7 +45,7 @@ public class CatalogItem
 
     /// <summary>
     /// Decrements the quantity of a particular item in inventory and ensures the restockThreshold hasn't
-    /// been breached. If so, a RestockRequest is generated in CheckThreshold. 
+    /// been breached. If so, a RestockRequest event is generated in CheckThreshold. 
     /// 
     /// If there is sufficient stock of an item, then the integer returned at the end of this call should be the same as quantityDesired. 
     /// In the event that there is not sufficient stock available, the method will remove whatever stock is available and return that quantity to the client.
@@ -62,7 +62,7 @@ public class CatalogItem
             throw new CatalogDomainException($"Empty stock, product item {Name} is sold out");
         }
 
-        if (quantityDesired <= 0)
+        if (quantityDesired < 1)
         {
             throw new CatalogDomainException($"Item units desired should be greater than zero");
         }

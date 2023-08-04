@@ -7,11 +7,14 @@ builder.AddServiceDefaults();                               // Extension
 builder.Services.AddControllers();
 builder.Services.AddProblemDetails();
 
-// Application specific services from this project's extensions
+// Services defined in extensions
 builder.Services.AddHealthChecks(builder.Configuration)
     .AddDbContexts(builder.Configuration)
     .AddApplicationOptions(builder.Configuration)
     .AddIntegrationServices();
+
+builder.Services.AddTransient<OrderStatusChangedToAwaitingValidationIntegrationEventHandler>();
+builder.Services.AddTransient<OrderStatusChangedToPaidIntegrationEventHandler>();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -31,6 +34,9 @@ app.UseServiceDefaults();
 app.MapPicApi();
 app.MapControllers();
 
+var eventBus = app.Services.GetRequiredService<IEventBus>();
+eventBus.Subscribe<OrderStatusChangedToAwaitingValidationIntegrationEvent, OrderStatusChangedToAwaitingValidationIntegrationEventHandler>();
+eventBus.Subscribe<OrderStatusChangedToPaidIntegrationEvent, OrderStatusChangedToPaidIntegrationEventHandler>();
 
 
 // REVIEW: Database seeding for development. Shouldn't be here in production

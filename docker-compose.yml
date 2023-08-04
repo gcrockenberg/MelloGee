@@ -112,7 +112,7 @@ services:
     image: order-api
     build:
       context: .
-      dockerfile: Services/Order/Order.API/Dockerfile
+      dockerfile: Services/Purchase/Purchase.API/Dockerfile
     deploy:
       resources:
         limits:
@@ -120,6 +120,9 @@ services:
         reservations:
           memory: 64MB
     memswap_limit: 128MB
+    depends_on:
+      - me-rabbitmq
+      - me-sql-data
 
   # catalogapi:
   #   image: catalogapi

@@ -34,9 +34,9 @@ public class ProductPriceChangedIntegrationEventHandler : IIntegrationEventHandl
     {
         var itemsToUpdate = cart?.Items?.Where(x => x.ProductId == productId).ToList();
 
-        if (itemsToUpdate != null)
+        if (itemsToUpdate != null && 0 < itemsToUpdate.Count)
         {
-            _logger.LogInformation("ProductPriceChangedIntegrationEventHandler - Updating items in basket for session: {SessionId} ({@Items})", cart.SessionId, itemsToUpdate);
+            _logger.LogInformation("ProductPriceChangedIntegrationEventHandler - Updating items in cart for SessionId: {SessionId} ({@Items})", cart.SessionId, itemsToUpdate);
 
             foreach (var item in itemsToUpdate)
             {

@@ -16,6 +16,7 @@ global using Me.Services.Catalog.API.Data;
 global using Me.Services.Catalog.API.Data.EntityConfigurations;
 global using Me.Services.Catalog.API.Extensions;
 global using Me.Services.Catalog.API.IntegrationEvents;
+global using Me.Services.Catalog.API.IntegrationEvents.EventHandlers;
 global using Me.Services.Catalog.API.IntegrationEvents.Events;
 global using Me.Services.Catalog.API.Model;
 global using Me.Services.Catalog.API.ViewModel;

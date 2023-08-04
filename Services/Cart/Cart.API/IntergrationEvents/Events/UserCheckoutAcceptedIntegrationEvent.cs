@@ -32,12 +32,12 @@ public record UserCheckoutAcceptedIntegrationEvent : IntegrationEvent
 
     public Guid RequestId { get; init; }
 
-    public CustomerCart Basket { get; }
+    public CustomerCart Cart { get; }
 
     public UserCheckoutAcceptedIntegrationEvent(string userId, string userName, string city, string street,
         string state, string country, string zipCode, string cardNumber, string cardHolderName,
         DateTime cardExpiration, string cardSecurityNumber, int cardTypeId, string buyer, Guid requestId,
-        CustomerCart basket)
+        CustomerCart cart)
     {
         UserId = userId;
         UserName = userName;
@@ -52,7 +52,7 @@ public record UserCheckoutAcceptedIntegrationEvent : IntegrationEvent
         CardSecurityNumber = cardSecurityNumber;
         CardTypeId = cardTypeId;
         Buyer = buyer;
-        Basket = basket;
+        Cart = cart;
         RequestId = requestId;
     }
 

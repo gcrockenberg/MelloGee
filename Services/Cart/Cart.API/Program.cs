@@ -11,7 +11,7 @@ builder.Services.AddHealthChecks(builder.Configuration)    // Extension
     .AddRedis(builder.Configuration);
 
 builder.Services.AddTransient<ProductPriceChangedIntegrationEventHandler>();
-//builder.Services.AddTransient<OrderStartedIntegrationEventHandler>();               
+builder.Services.AddTransient<OrderStartedIntegrationEventHandler>();               
 
 builder.Services.AddTransient<ICartRepository, RedisCartRepository>();
 builder.Services.AddTransient<IIdentityService, IdentityService>();
@@ -36,12 +36,9 @@ if (app.Environment.IsDevelopment())
     //Microsoft.IdentityModel.Logging.IdentityModelEventSource.ShowPII = true;
     //app.UseDeveloperExceptionPage();
 
-    // Swagger handled in UseServiceDefaults
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    // Swagger handled in UseServiceDefaults as OpenAPI
 }
 
-//app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
@@ -50,6 +47,6 @@ app.MapControllers();
 
 var eventBus = app.Services.GetRequiredService<IEventBus>();
 eventBus.Subscribe<ProductPriceChangedIntegrationEvent, ProductPriceChangedIntegrationEventHandler>();
-// eventBus.Subscribe<OrderStartedIntegrationEvent, OrderStartedIntegrationEventHandler>();
+eventBus.Subscribe<OrderStartedIntegrationEvent, OrderStartedIntegrationEventHandler>();
 
 app.Run();

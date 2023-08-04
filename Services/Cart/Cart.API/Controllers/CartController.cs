@@ -66,7 +66,6 @@ public class CartController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<KeyValuePair<string, string>>> CheckoutAsync([FromBody] CartCheckout cartCheckout, [FromHeader(Name = "x-requestid")] string requestId)
     {
-        this._logger.LogInformation("--> CartCheckout: {cartCheckout}", JsonSerializer.Serialize(cartCheckout));
         var userId = _identityService.GetUserIdentity();
 
         cartCheckout.RequestId = (Guid.TryParse(requestId, out Guid guid) && guid != Guid.Empty) ?
@@ -91,7 +90,7 @@ public class CartController : ControllerBase
             cartCheckout.CardExpiration, cartCheckout.CardSecurityNumber, cartCheckout.CardTypeId, cartCheckout.Buyer, cartCheckout.RequestId, cart);
 
         // Once cart is checkout, sends an integration event to
-        // ordering.api to convert cart to order and proceeds with
+        // Purchase.API to convert cart to order and proceeds with
         // order creation process
         try
         {

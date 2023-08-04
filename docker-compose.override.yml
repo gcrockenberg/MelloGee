@@ -33,7 +33,7 @@ services:
       # ConnectionStrings__CatalogDb: server=me-my-sql;port=3306;database=Me.Services.CatalogDb;uid=root;password=
       # ConnectionStrings__CatalogDb: server=me-mariadb;port=3306;uid=root;password=;database=Me.Services.CatalogDb
       EventBus__RetryCount: 5
-      PicBaseUrl: ${ME_STORAGE_CATALOG_URL}
+      PicBaseUrl: http://localhost/c/api/v1/catalog/items/[0]/pic/
       #      - AzureStorageAccountName=${ME_AZURE_STORAGE_CATALOG_NAME}
       #      - AzureStorageAccountKey=${ME_AZURE_STORAGE_CATALOG_KEY}
       UseCustomizationData: False
@@ -75,7 +75,7 @@ services:
       AzureAdB2C__ClientId: ${ME_AzureAdB2C_ClientId}
       AzureAdB2C__SignedOutCallbackPath: ${ME_AzureAdB2C_SignedOutCallbackPath}
       AzureAdB2C__SignUpSignInPolicyId: ${ME_AzureAdB2C_SignUpSignInPolicyId}
-      ConnectionStrings__OrderingDb: ${ME_AZURE_ORDERING_DB:-Server=sqldata;Database=Me.Services.OrderingDb;User Id=sa;Password=Pass@word;Encrypt=False;TrustServerCertificate=true}
+      ConnectionStrings__PurchaseDb: Server=me-sql-data;Database=Me.Services.PurchaseDb;User Id=sa;Password=${ME_MSSQL_SA_PASSWORD};Encrypt=False;TrustServerCertificate=true
       ConnectionStrings__EventBus: ${ME_ConnectionStrings_EventBus}
       EventBus__RetryCount: 5
       UseCustomizationData: True
@@ -83,14 +83,10 @@ services:
       #      - ApplicationInsights__InstrumentationKey=${INSTRUMENTATION_KEY}
       #      - OrchestratorType=${ORCHESTRATOR_TYPE}
       UseLoadTest: ${USE_LOADTEST:-False}
-      GRPC_PORT: 81
-      PORT: 80
       PATH_BASE: /order-api
     ports:
       - "5102:80"
       - "9102:81"
-    volumes:
-      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
 
     # catalogapi:
     #   environment:

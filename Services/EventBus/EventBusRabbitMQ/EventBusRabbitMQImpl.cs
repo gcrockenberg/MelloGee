@@ -80,7 +80,7 @@ public class EventBusRabbitMQImpl : IEventBus, IDisposable
             var properties = channel.CreateBasicProperties();
             properties.DeliveryMode = 2; // persistent
 
-            _logger.LogTrace("Publishing event to RabbitMQ: {EventId}", @event.Id);
+            _logger.LogInformation("Publishing event to RabbitMQ: {IntegrationEventId} - ({@IntegrationEvent})", @event.Id, @event);
 
             channel.BasicPublish(
                 exchange: BROKER_NAME,
