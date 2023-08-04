@@ -100,7 +100,7 @@ var defaultResources = {
 @description('The Container App microservices')
 var microservices = [
   {
-    skip: true
+    skip: false
     addToAPIM: false
     apiPath: ''
     //connectKeyVault: false
@@ -114,7 +114,7 @@ var microservices = [
     resources: defaultResources
   }
   {
-    skip: true
+    skip: false
     addToAPIM: false
     apiPath: ''
     //connectKeyVault: false
@@ -164,7 +164,7 @@ var microservices = [
     resources: defaultResources   // Less demanding that SQL Server
   }
   {
-    skip: true
+    skip: false
     addToAPIM: false
     apiPath: ''
     //connectKeyVault: false

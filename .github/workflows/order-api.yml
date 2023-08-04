@@ -10,11 +10,10 @@ permissions:
   id-token: write
 env:
   CONTAINER_APP_RESOURCE_GROUP_NAME: MelloGee
-  CONTAINER_APPS_ENVIRONMENT: env-me-dev-eastus
   CONTAINER_APP_CONTAINER_NAME: container-main
   CONTAINER_APP_NAME: me-order-api
   CONTAINER_REGISTRY_LOGIN_SERVER: registry.hub.docker.com
-  DOCKER_FILE_PATH: Services/Order/Order.API/Dockerfile
+  DOCKER_FILE_PATH: Services/Purchase/Purchase.API/Dockerfile
   PROJECT_NAME_FOR_DOCKER: order-api
 jobs:
   build:

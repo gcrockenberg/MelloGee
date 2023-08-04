@@ -11,7 +11,7 @@ A project to demonstrate full-stack aspects of a microservice based solution hos
 - Azure Blob Storage - login customization
 - SQL Server Container App service for demo purposes
 - RabbitMQ Event Bus Container App service for demo purposes
-- Redis caching as a Container App service for demo purposes
+- Redis Container App service for demo purposes
 - Angular SPA with Tailwind CSS
 - Stripe for order checkout
 
@@ -63,7 +63,7 @@ docker build -t *your-docker-login*/catalog-api . -f Services\Catalog\Catalog.AP
 docker push *your-docker-login*/catalog-api
 docker build -t *your-docker-login*/cart-api . -f Services\Cart\Cart.API\Dockerfile
 docker push *your-docker-login*/cart-api
-docker build -t *your-docker-login*/order-api . -f Services\Order\Order.API\Dockerfile
+docker build -t *your-docker-login*/order-api . -f Services\Purchase\Purchse.API\Dockerfile
 docker push *your-docker-login*/order-api
 ```
 **Provision Me**
