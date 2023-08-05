@@ -26,7 +26,7 @@ A project to demonstrate full-stack aspects of a microservice based solution hos
 </ul>
 
 ### Currently working on 
-- [Cart -> checkout](https://green-wave-08182290f.3.azurestaticapps.net)
+- [Orders + UI](https://green-wave-08182290f.3.azurestaticapps.net)
 
 <h1>How to use Me</h1>
 

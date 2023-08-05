@@ -63,7 +63,7 @@ var microserviceCommonEnvironment = [
     name: 'ConnectionStrings__EventBus'
     value: 'me-rabbitmq'
   }
-  {    
+  {
     name: 'EventBus__RetryCount'
     value: '5'
   }
@@ -77,12 +77,10 @@ var microserviceCommonSecrets = [
   }
 ]
 
-
 @description('Microsoft should add this to thier standard environment suffixes list')
 var apiManagementSuffix = 'azure-api.net'
 
 var apimName = environmentType == 'dev' ? '${solutionName}-dev' : solutionName
-
 
 // Allowed CPU - Memory combinations: 
 // [cpu: 0.25, memory: 0.5Gi]; 
@@ -100,7 +98,7 @@ var defaultResources = {
 @description('The Container App microservices')
 var microservices = [
   {
-    skip: true
+    skip: false
     addToAPIM: false
     apiPath: ''
     //connectKeyVault: false
@@ -144,7 +142,7 @@ var microservices = [
       memory: '2.0Gi'
     }
   }
-  { // Not currently used. Focused on SQL Server
+  {// Not currently used. Focused on SQL Server
     skip: true
     addToAPIM: false
     apiPath: ''
@@ -161,10 +159,10 @@ var microservices = [
         value: 'true'
       }
     ]
-    resources: defaultResources   // Less demanding that SQL Server
+    resources: defaultResources // Less demanding that SQL Server
   }
   {
-    skip: true
+    skip: false
     addToAPIM: false
     apiPath: ''
     //connectKeyVault: false
@@ -178,7 +176,7 @@ var microservices = [
     resources: defaultResources
   }
   {
-    skip: true
+    skip: false
     addToAPIM: true
     apiPath: 'c'
     //connectKeyVault: false
@@ -195,19 +193,19 @@ var microservices = [
         }
       ])
     environment: concat(microserviceCommonEnvironment, [
-      {
-        name: 'ConnectionStrings__CatalogDb'
-        secretRef: 'connectionstrings-catalogdb'
-      }
-      {
-        name: 'PicBaseUrl' 
-        value: 'https://${apimName}.${apiManagementSuffix}/c/api/v1/catalog/items/[0]/pic/'
-      }
-    ])
+        {
+          name: 'ConnectionStrings__CatalogDb'
+          secretRef: 'connectionstrings-catalogdb'
+        }
+        {
+          name: 'PicBaseUrl'
+          value: 'https://${apimName}.${apiManagementSuffix}/c/api/v1/catalog/items/[0]/pic/'
+        }
+      ])
     resources: defaultResources
   }
   {
-    skip: true
+    skip: false
     addToAPIM: true
     apiPath: 'b'
     //connectKeyVault: false
@@ -216,26 +214,17 @@ var microservices = [
     minScale: 0
     targetPort: 80
     transport: 'http'
-    secrets: concat(microserviceCommonSecrets, [
-        {
-          name: 'stripe-configuration-apikey'
-          value: stripeApiKey
-        }
-      ])
+    secrets: microserviceCommonSecrets
     environment: concat(microserviceCommonEnvironment, [
         {
           name: 'ConnectionStrings__Redis'
           value: 'me-cart-data'
         }
-        {
-          name: 'stripe-configuration-apikey'
-          secretRef: 'stripe-configuration-apikey'
-        }
       ])
-      resources: defaultResources
-    }
+    resources: defaultResources
+  }
   {
-    skip: true
+    skip: false
     addToAPIM: true
     apiPath: 'o'
     //connectKeyVault: false
@@ -245,29 +234,29 @@ var microservices = [
     targetPort: 80
     transport: 'http'
     secrets: concat(microserviceCommonSecrets, [
-      {
-        name: 'connectionstrings-purchasedb'
-        value: 'Server=${solutionName}-sql-data;Database=Me.Services.PurchaseDb;User Id=sa;Password=${msSqlSaPassword};Encrypt=False;TrustServerCertificate=true'
-        //value: 'server=${solutionName}-mariadb;port=3306;uid=root;password=;database=Me.Services.CatalogDb'
-      }
-      {
-        name: 'stripe-configuration-apikey'
-        value: stripeApiKey
-      }
-    ])
+        {
+          name: 'connectionstrings-purchasedb'
+          value: 'Server=${solutionName}-sql-data;Database=Me.Services.PurchaseDb;User Id=sa;Password=${msSqlSaPassword};Encrypt=False;TrustServerCertificate=true'
+          //value: 'server=${solutionName}-mariadb;port=3306;uid=root;password=;database=Me.Services.CatalogDb'
+        }
+        {
+          name: 'stripe-configuration-apikey'
+          value: stripeApiKey
+        }
+      ])
     environment: concat(microserviceCommonEnvironment, [
-      {
-        name: 'ConnectionStrings__PurchaseDb'
-        secretRef: 'connectionstrings-purchasedb'
-      }
-      {
-        name: 'stripe-configuration-apikey'
-        secretRef: 'stripe-configuration-apikey'
-      }
-    ])
+        {
+          name: 'ConnectionStrings__PurchaseDb'
+          secretRef: 'connectionstrings-purchasedb'
+        }
+        {
+          name: 'stripe-configuration-apikey'
+          secretRef: 'stripe-configuration-apikey'
+        }
+      ])
     resources: defaultResources
   }
-  { // Test service
+  {// Test service
     skip: true
     addToAPIM: false
     apiPath: ''
