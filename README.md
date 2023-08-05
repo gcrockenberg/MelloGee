@@ -18,10 +18,12 @@ A project to demonstrate full-stack aspects of a microservice based solution hos
 ![Me architecture](Images/Me%20Architecture.png)
 
 <h1>Notes</h1>
-- The steps below were established on my Windows 10 machine 
-- For demo purposes the Azure hosting is configured with free or consumption plans so performance will be poor
-- The Azure resources can be scaled and set for auto scaling to meet demand
-- For global scaling the solution can be configured as a geode or stamped pattern
+<ul>
+<li>The steps below were established on my Windows 10 machine</li>
+<li>For demo purposes the Azure hosting is configured with free or consumption plans so performance will be poor</li>
+<li>The Azure resources can be scaled and set for auto scaling to meet demand</li>
+<li>For global scaling the solution can be configured as a geode or stamped pattern</li>
+</ul>
 
 ### Currently working on 
 - [Cart -> checkout](https://green-wave-08182290f.3.azurestaticapps.net)
@@ -66,40 +68,40 @@ az deployment group create --template-file bicep/main.bicep
 
 <h3>GitHub Actions CI/CD Repository Secrets</h3>
 <p>The following Repository Secrets support CI/CD deployments:</p>
-<ol>
+<ul>
 <li><a href="https://docs.docker.com/docker-hub/access-tokens/">DOCKERHUB_TOKEN</a> - Container images will be pushed to Docker</li>
 <li>DOCKERHUB_USERNAME</li>
 <li>AZURE_SUBSCRIPTION_ID - Azure Container App Revisions will pull images from Docker (Supports OIDC login)</li>
 <li>AZURE_TENANT_ID - (Supports OIDC login)</li>
 <li><a href="https://learn.microsoft.com/en-us/azure/static-web-apps/deployment-token-management">STATIC_WEB_APP_DEPLOY_TOKEN</a></li>
-</ol>
+</ul>
 
 <h3>GitHub Actions CI/CD Environment Secrets (dev)</h3>
 <p>The following Environment Secrets support the beginning of CI/CD dev/prod isolation</p>
-<ol>
+<ul>
 <li>AZURE_CLIENT_ID - User Assigned Identity "uai-GitHubOIDC" provisioned above -> Settings -> Properties</li>
 <li>STORAGE_ACCOUNT_KEY - For login customization deployment</li>
-</ol>
+</ul>
 
 <h3>Testing</h3>
-<ol>
+<ul>
 <li>Verify the .github/*.yml env variables match your configuration</li>
 <li>You might want to comment out "on: push: paths:" from GitHub yml files to force CI/CD to run</li>
 <li>Test APIs that were imported into APIM</li>
 <li>Open Container App console in Azure portal and curl the APIs, view the logs. The Container Apps are configured to scale to 0. An APIM call will wake them.</li>
 <li>Navigate to your static web app.</li>
-</ol>
+</ul>
 
 <h2>That's it so far</h2>
 <p>Container Apps Environment is external. Container Apps ingress is limited to APIM and internal container services. The containers have curl installed for quick API checks but you can change ingress to allow public access. EventBus and GRPC enable inter-service communication. APIM connects to the Container Apps as Backend Services. CORS is handled in APIM.</p>
 
 <h2>TO DO</h2>
-<ol>
+<ul>
 <li>Implement semantic-release versioning</li>
 <li>Improve frontend</li>
 <li>Aggregation, GPRC and SignalR</li>
 <li>Script AAD-B2C environment provisioning</li>
-</ol>
+</ul>
 
 <br/><br/>
 <sup>1</sup> The Azure Container Apps Managed Environment creates an additional Resource Group for Kubernetes that it controls
