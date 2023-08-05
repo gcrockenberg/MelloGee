@@ -4,8 +4,8 @@
 @tailwind utilities;
 
 /* Some third party fonts */
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap');
+/* @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700&display=swap'); */
+/* @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap'); */
 
 body {
     @apply h-full overflow-x-hidden;
@@ -14,3 +14,23 @@ body {
 html {
     @apply h-full
 }
+
+.mainSlider .swiper-pagination-bullets {
+    bottom: 1.5rem;
+  }
+  .mainSlider .swiper-pagination-bullet,
+  .productSlider .swiper-pagination-bullet {
+    background: #f6cd46;
+  }
+  
+  .productSlider .swiper-button-prev::after {
+    font-size: 2rem;
+  }
+  
+  .productSlider .swiper-button-prev::after,
+  .productSlider .swiper-button-next::after {
+    font-size: 2rem;
+    color: #f6cd46;
+    padding: 2rem;
+    width: 200px;
+  }
