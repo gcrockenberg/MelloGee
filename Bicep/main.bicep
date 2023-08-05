@@ -77,10 +77,11 @@ var microserviceCommonSecrets = [
   }
 ]
 
-@description('Microsoft should add this to thier standard environment suffixes list')
-var apiManagementSuffix = 'azure-api.net'
+// @description('Microsoft should add this to thier standard environment suffixes list')
+// var apiManagementSuffix = 'azure-api.net'
 
 var apimName = environmentType == 'dev' ? '${solutionName}-dev' : solutionName
+var storageAccountName = 'st${solutionName}${environmentType}'
 
 // Allowed CPU - Memory combinations: 
 // [cpu: 0.25, memory: 0.5Gi]; 
@@ -199,7 +200,8 @@ var microservices = [
         }
         {
           name: 'PicBaseUrl'
-          value: 'https://${apimName}.${apiManagementSuffix}/c/api/v1/catalog/items/[0]/pic/'
+          value: 'https://${storageAccountName}.z13.web.${environment().suffixes.storage}/Catalog/[0].png'
+          //value: 'https://${apimName}.${apiManagementSuffix}/c/api/v1/catalog/items/[0]/pic/'
         }
       ])
     resources: defaultResources
@@ -397,6 +399,7 @@ module staticWebAppModule 'modules/staticWebApp.bicep' = {
 module storageWebsiteHostingModule 'modules/storageWebsiteHosting.bicep' = {
   name: 'storageWebsiteHostingTemplate'
   params: {
+    storageAccountName: storageAccountName
     environmentType: environmentType
     location: location
     solutionName: solutionName

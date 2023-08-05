@@ -17,9 +17,11 @@ param environmentType string
 @description('The location into which your Azure resources should be deployed.')
 param location string
 
+param storageAccountName string
+
 
 resource storageAccount 'Microsoft.Storage/storageAccounts@2022-09-01' = {
-  name: 'st${solutionName}${environmentType}'
+  name: storageAccountName
   location: location
   sku: {
     name: 'Standard_LRS'
@@ -164,3 +166,5 @@ resource deploymentScript 'Microsoft.Resources/deploymentScripts@2020-10-01' = {
     ]
   }
 }
+
+output blobStaticWebsiteEndpoint string = storageAccount.properties.primaryEndpoints.web

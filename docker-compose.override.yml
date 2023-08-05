@@ -33,7 +33,7 @@ services:
       # ConnectionStrings__CatalogDb: server=me-my-sql;port=3306;database=Me.Services.CatalogDb;uid=root;password=
       # ConnectionStrings__CatalogDb: server=me-mariadb;port=3306;uid=root;password=;database=Me.Services.CatalogDb
       EventBus__RetryCount: 5
-      PicBaseUrl: http://localhost/c/api/v1/catalog/items/[0]/pic/
+      PicBaseUrl: https://stmedev.z13.web.core.windows.net/Catalog/[0].png
       #      - AzureStorageAccountName=${ME_AZURE_STORAGE_CATALOG_NAME}
       #      - AzureStorageAccountKey=${ME_AZURE_STORAGE_CATALOG_KEY}
       UseCustomizationData: False
