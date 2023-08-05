@@ -4,7 +4,6 @@ import { CartService } from 'src/app/services/cart/cart.service';
 import { ICart } from 'src/app/models/cart/cart.model';
 import { Subscription } from 'rxjs';
 import { RouterLink, RouterLinkActive } from '@angular/router';
-import { IStripeCancelComponent } from 'src/app/models/order/stripe-cancel-route.model';
 
 @Component({
   selector: 'app-cart',
@@ -13,7 +12,7 @@ import { IStripeCancelComponent } from 'src/app/models/order/stripe-cancel-route
   templateUrl: './cart.component.html',
   styleUrls: ['./cart.component.scss']
 })
-export class CartComponent implements OnDestroy, IStripeCancelComponent {
+export class CartComponent implements OnDestroy {
   private _subscriptions: Subscription[] = [];
 
   readonly cart: WritableSignal<ICart> = signal({
@@ -64,11 +63,6 @@ export class CartComponent implements OnDestroy, IStripeCancelComponent {
     if (newQuantity) {
       this._cartService.changeQuantity(itemIndex, newQuantity);
     }
-  }
-
-
-  isStripeCancelComponent(): this is IStripeCancelComponent {
-    throw new Error('Method not implemented.');
   }
 
 

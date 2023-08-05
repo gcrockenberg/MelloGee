@@ -37,14 +37,21 @@ public class CartController : ControllerBase
     }
 
 
+    /// <summary>
+    /// This client Cart keeps the plain SessionId cookie. The Service tracks SessionId + RemoteIpAddress
+    /// If the RemoteIpAddress changes then the Cart is lost
+    /// </summary>
+    /// <param name="cart"></param>
+    /// <returns></returns>
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<CustomerCart>> UpdateCartAsync([FromBody] CustomerCart cart)
     {
-        string originalBuyerId = cart.SessionId;
+        string originalSessionId = cart.SessionId;
 
-        cart.SessionId = originalBuyerId + Request.HttpContext.Connection.RemoteIpAddress;
+        cart.SessionId = originalSessionId + Request.HttpContext.Connection.RemoteIpAddress;
+        _logger.LogInformation("--> Cart SessionId: {sessionId}", cart.SessionId);
 
         if (null == cart || string.IsNullOrEmpty(cart.SessionId))
         {
@@ -52,7 +59,7 @@ public class CartController : ControllerBase
         }
 
         cart = await _repository.UpdateCartAsync(cart);
-        cart.SessionId = originalBuyerId;
+        cart.SessionId = originalSessionId;
 
         return Ok(cart);
     }

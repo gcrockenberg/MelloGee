@@ -1,4 +1,4 @@
-namespace Me.Cart.API.IntegrationEvents.EventHandlers;
+namespace Me.Services.Cart.API.IntegrationEvents.EventHandlers;
 
 public class OrderStartedIntegrationEventHandler : IIntegrationEventHandler<OrderStartedIntegrationEvent>
 {

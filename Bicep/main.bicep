@@ -100,7 +100,7 @@ var defaultResources = {
 @description('The Container App microservices')
 var microservices = [
   {
-    skip: false
+    skip: true
     addToAPIM: false
     apiPath: ''
     //connectKeyVault: false
@@ -164,7 +164,7 @@ var microservices = [
     resources: defaultResources   // Less demanding that SQL Server
   }
   {
-    skip: false
+    skip: true
     addToAPIM: false
     apiPath: ''
     //connectKeyVault: false
@@ -178,7 +178,7 @@ var microservices = [
     resources: defaultResources
   }
   {
-    skip: false
+    skip: true
     addToAPIM: true
     apiPath: 'c'
     //connectKeyVault: false
@@ -207,7 +207,7 @@ var microservices = [
     resources: defaultResources
   }
   {
-    skip: false
+    skip: true
     addToAPIM: true
     apiPath: 'b'
     //connectKeyVault: false
@@ -224,18 +224,18 @@ var microservices = [
       ])
     environment: concat(microserviceCommonEnvironment, [
         {
-          name: 'stripe-configuration-apikey'
-          secretRef: 'stripe-configuration-apikey'
-        }
-        {
           name: 'ConnectionStrings__Redis'
           value: 'me-cart-data'
+        }
+        {
+          name: 'stripe-configuration-apikey'
+          secretRef: 'stripe-configuration-apikey'
         }
       ])
       resources: defaultResources
     }
   {
-    skip: false
+    skip: true
     addToAPIM: true
     apiPath: 'o'
     //connectKeyVault: false
@@ -250,11 +250,19 @@ var microservices = [
         value: 'Server=${solutionName}-sql-data;Database=Me.Services.PurchaseDb;User Id=sa;Password=${msSqlSaPassword};Encrypt=False;TrustServerCertificate=true'
         //value: 'server=${solutionName}-mariadb;port=3306;uid=root;password=;database=Me.Services.CatalogDb'
       }
+      {
+        name: 'stripe-configuration-apikey'
+        value: stripeApiKey
+      }
     ])
     environment: concat(microserviceCommonEnvironment, [
       {
         name: 'ConnectionStrings__PurchaseDb'
         secretRef: 'connectionstrings-purchasedb'
+      }
+      {
+        name: 'stripe-configuration-apikey'
+        secretRef: 'stripe-configuration-apikey'
       }
     ])
     resources: defaultResources

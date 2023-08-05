@@ -93,7 +93,7 @@ az deployment group create --template-file bicep/main.bicep
 </ul>
 
 <h2>That's it so far</h2>
-<p>Container Apps Environment is external. Container Apps ingress is limited to APIM and internal container services. The containers have curl installed for quick API checks but you can change ingress to allow public access. EventBus and GRPC enable inter-service communication. APIM connects to the Container Apps as Backend Services. CORS is handled in APIM.</p>
+<p>Container Apps Environment is external. Container Apps ingress is limited to APIM and internal container services. The containers have curl installed for quick API checks but you can change ingress to allow public access. EventBus and gRPC enable inter-service communication. APIM connects to the Container Apps as Backend Services. CORS is handled in APIM.</p>
 
 <h2>TO DO</h2>
 <ul>

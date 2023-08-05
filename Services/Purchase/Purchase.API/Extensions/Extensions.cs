@@ -15,6 +15,7 @@ internal static class Extensions
         return services;
     }
 
+
     public static IServiceCollection AddDbContexts(this IServiceCollection services, IConfiguration configuration)
     {
         static void ConfigureSqlOptions(SqlServerDbContextOptionsBuilder sqlOptions)
@@ -38,6 +39,24 @@ internal static class Extensions
 
         return services;
     }
+
+
+    public static IServiceCollection AddGrpcServices(this IServiceCollection services)
+    {
+        services.AddTransient<GrpcExceptionInterceptor>();
+
+        services.AddScoped<ICartService, CartService>();
+
+        services.AddGrpcClient<Cart.CartClient>((services, options) =>
+        {            
+            var grpcCart = services.GetRequiredService<IConfiguration>()["grpcCart"];
+            services.GetRequiredService<ILogger<Cart.CartClient>>().LogInformation("--> Adding gRPC Cart endpoint: {grpcCart}", grpcCart);
+            options.Address = new Uri(grpcCart);
+        }).AddInterceptor<GrpcExceptionInterceptor>();
+
+        return services;
+    }
+
 
     public static IServiceCollection AddIntegrationServices(this IServiceCollection services)
     {
@@ -73,4 +92,5 @@ internal static class Extensions
 
         return services;
     }
+
 }

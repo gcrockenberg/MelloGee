@@ -64,7 +64,7 @@ services:
       - "5103:80"
       - "9103:81"
     volumes:
-      # Rquired secret: "stripe-configuration-apikey"
+      # Required secret: "stripe-configuration-apikey"
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
 
   me-order-api:
@@ -77,6 +77,7 @@ services:
       AzureAdB2C__SignUpSignInPolicyId: ${ME_AzureAdB2C_SignUpSignInPolicyId}
       ConnectionStrings__PurchaseDb: Server=me-sql-data;Database=Me.Services.PurchaseDb;User Id=sa;Password=${ME_MSSQL_SA_PASSWORD};Encrypt=False;TrustServerCertificate=true
       ConnectionStrings__EventBus: ${ME_ConnectionStrings_EventBus}
+      GrpcCart: "http://me-cart-api:81"
       EventBus__RetryCount: 5
       UseCustomizationData: True
       CheckUpdateTime: 30000
@@ -87,6 +88,9 @@ services:
     ports:
       - "5102:80"
       - "9102:81"
+    volumes:
+      # Required secret: "stripe-configuration-apikey"
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
 
     # catalogapi:
     #   environment:

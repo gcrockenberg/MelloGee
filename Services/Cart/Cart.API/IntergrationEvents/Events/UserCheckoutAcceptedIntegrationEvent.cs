@@ -1,4 +1,4 @@
-namespace Me.Cart.API.IntegrationEvents.Events;
+namespace Me.Services.Cart.API.IntegrationEvents.Events;
 
 public record UserCheckoutAcceptedIntegrationEvent : IntegrationEvent
 {

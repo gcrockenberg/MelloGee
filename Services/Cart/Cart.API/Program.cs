@@ -4,6 +4,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();                               // Extension
 
+builder.Services.AddGrpc();
 builder.Services.AddControllers();
 builder.Services.AddProblemDetails();
 
@@ -16,10 +17,6 @@ builder.Services.AddTransient<OrderStartedIntegrationEventHandler>();
 builder.Services.AddTransient<ICartRepository, RedisCartRepository>();
 builder.Services.AddTransient<IIdentityService, IdentityService>();
 
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
 // Using environment secrets
 Console.WriteLine($"--> Stripe config loaded: {string.IsNullOrWhiteSpace(StripeConfiguration.ApiKey)}");
 StripeConfiguration.ApiKey = builder.Configuration["stripe-configuration-apikey"];
@@ -27,6 +24,7 @@ StripeConfiguration.ApiKey = builder.Configuration["stripe-configuration-apikey"
 var app = builder.Build();
 
 app.UseServiceDefaults();     // Extension
+app.MapGrpcService<CartService>();
 
 if (app.Environment.IsDevelopment())
 {

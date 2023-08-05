@@ -1,3 +1,5 @@
+using Stripe;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
@@ -10,6 +12,8 @@ builder.Services.AddHealthChecks(builder.Configuration)
     .AddDbContexts(builder.Configuration)
     .AddApplicationOptions(builder.Configuration)
     .AddIntegrationServices();
+
+builder.Services.AddGrpcServices();
 
 var services = builder.Services;
 
@@ -41,9 +45,9 @@ services.AddTransient<IIntegrationEventHandler<OrderStockConfirmedIntegrationEve
 services.AddTransient<IIntegrationEventHandler<OrderStockRejectedIntegrationEvent>, OrderStockRejectedIntegrationEventHandler>();
 services.AddTransient<IIntegrationEventHandler<UserCheckoutAcceptedIntegrationEvent>, UserCheckoutAcceptedIntegrationEventHandler>();
 
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-// builder.Services.AddEndpointsApiExplorer();
-// builder.Services.AddSwaggerGen();
+// Using environment secrets
+Console.WriteLine($"--> Stripe config loaded: {string.IsNullOrWhiteSpace(StripeConfiguration.ApiKey)}");
+StripeConfiguration.ApiKey = builder.Configuration["stripe-configuration-apikey"];
 
 var app = builder.Build();
 

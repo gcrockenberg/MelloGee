@@ -1,4 +1,4 @@
-namespace Me.Cart.API.IntegrationEvents.Events;
+namespace Me.Services.Cart.API.IntegrationEvents.Events;
 
 // Integration Events notes:
 // An Event is "something that has happened in the past", therefore its name has to be

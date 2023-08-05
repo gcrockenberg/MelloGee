@@ -1,4 +1,4 @@
-namespace Me.Cart.API.Repositories;
+namespace Me.Services.Cart.API.Repositories;
 
 public class RedisCartRepository : ICartRepository
 {

@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
 import { IOrderItem } from 'src/app/models/order/order-item.model';
 import { IOrder } from 'src/app/models/order/order.model';
-import { CartService } from './cart.service';
+import { CartService } from '../cart/cart.service';
 import { SecurityService } from '../security/security.service';
 import { UserData } from 'src/app/models/security/user-data.model';
 import { ICart } from 'src/app/models/cart/cart.model';
 import { ConfigurationService } from '../configuration/configuration.service';
 import { Observable, map, switchMap, tap } from 'rxjs';
 import { DataService } from '../data/data.service';
+import { ICartCheckout } from 'src/app/models/cart/cart-checkout.model';
 
 @Injectable({
   providedIn: 'root'
@@ -32,15 +33,31 @@ export class OrderService {
   }
 
 
-  createLinkToCheckout(): Observable<string> {
+  // createLinkToCheckout(): Observable<string> {
+  //   if (!this._configurationService.isReady) {
+  //     return this._configurationService.settingsLoaded$
+  //       .pipe(switchMap(x => this.createLinkToCheckout()))
+  //   }
+
+  //   let url: string = this._orderUrl + 'checkout';
+
+  //   return this._dataService.post(url, {})
+  //     .pipe<string>(
+  //       map((response: any) => {
+  //         //this.basketWrapperService.orderCreated();
+  //         return response.value as string;
+  //       }));
+  // }
+  
+  setCartCheckout(cartCheckout: ICartCheckout): Observable<string> {
     if (!this._configurationService.isReady) {
       return this._configurationService.settingsLoaded$
-        .pipe(switchMap(x => this.createLinkToCheckout()))
+        .pipe(switchMap(x => this.setCartCheckout(cartCheckout)))
     }
 
-    let url: string = this._orderUrl + 'create-checkout-session';
+    let url: string = this._orderUrl + 'checkout';
 
-    return this._dataService.post(url, {})
+    return this._dataService.post(url, cartCheckout)
       .pipe<string>(
         map((response: any) => {
           //this.basketWrapperService.orderCreated();

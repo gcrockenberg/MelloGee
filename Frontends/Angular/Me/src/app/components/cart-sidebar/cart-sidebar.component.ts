@@ -9,7 +9,7 @@ import { Subscription } from 'rxjs';
 import { ICart } from 'src/app/models/cart/cart.model';
 import { CartItemComponent } from "../cart-item/cart-item.component";
 import { RouterLink, RouterLinkActive } from '@angular/router';
-import { OrderService } from 'src/app/services/cart/order.service';
+import { OrderService } from 'src/app/services/order/order.service';
 import { IOrder } from 'src/app/models/order/order.model';
 import { ICartCheckout } from 'src/app/models/cart/cart-checkout.model';
 import { SecurityService } from 'src/app/services/security/security.service';
@@ -106,7 +106,7 @@ export class CartSidebarComponent implements ISidebar, OnDestroy {
     let order: IOrder = this._orderService.createOrderFromCartAndIdentity();
     let cartCheckout: ICartCheckout = this._cartService.createCartCheckoutFromOrder(order);
 
-    this._cartService.setCartCheckout(cartCheckout)
+    this._orderService.setCartCheckout(cartCheckout)
       .subscribe((url: string) => {
         window.location.href = url;
       });
