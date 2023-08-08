@@ -14,23 +14,29 @@ const urlPrefix = '/c/api/v1/catalog/';
   providedIn: 'root'
 })
 export class CatalogService {
-  private catalogUrl: string = '';
-  private brandUrl: string = '';
-  private typesUrl: string = '';
+  private _catalogUrl: string = '';
+  private _brandsUrl: string = '';
+  private _typesUrl: string = '';
 
   constructor(
     private _configurationService: ConfigurationService,
     private _dataService: DataService,
   ) {
     if (_configurationService.isReady) { 
-      this.catalogUrl = this._configurationService.serverSettings.catalogUrl + urlPrefix + 'items';
-      this.brandUrl = this._configurationService.serverSettings.catalogUrl + urlPrefix + 'catalogbrands';
-      this.typesUrl = this._configurationService.serverSettings.catalogUrl + urlPrefix + 'catalogtypes';
+      this._catalogUrl = this._configurationService.serverSettings.catalogUrl + urlPrefix + 'items';
+      this._brandsUrl = this._configurationService.serverSettings.catalogUrl + urlPrefix + 'catalogbrands';
+      this._typesUrl = this._configurationService.serverSettings.catalogUrl + urlPrefix + 'catalogtypes';
+      console.log(`--> catalogUrl: ${this._catalogUrl}`);
+      console.log(`--> brandsUrl: ${this._brandsUrl}`);
+      console.log(`--> typesUrl: ${this._typesUrl}`);
     } else {
       this._configurationService.settingsLoaded$.subscribe(x => {
-        this.catalogUrl = this._configurationService.serverSettings.catalogUrl + urlPrefix + 'items';
-        this.brandUrl = this._configurationService.serverSettings.catalogUrl + urlPrefix + 'catalogbrands';
-        this.typesUrl = this._configurationService.serverSettings.catalogUrl + urlPrefix + 'catalogtypes';
+        this._catalogUrl = this._configurationService.serverSettings.catalogUrl + urlPrefix + 'items';
+        this._brandsUrl = this._configurationService.serverSettings.catalogUrl + urlPrefix + 'catalogbrands';
+        this._typesUrl = this._configurationService.serverSettings.catalogUrl + urlPrefix + 'catalogtypes';
+        console.log(`--> catalogUrl: ${this._catalogUrl}`);
+        console.log(`--> brandsUrl: ${this._brandsUrl}`);
+        console.log(`--> typesUrl: ${this._typesUrl}`);
       });
     }
   }
@@ -42,13 +48,13 @@ export class CatalogService {
         .pipe(switchMap(x => this.getCatalog(pageIndex, pageSize, brand, type)))
     }
 
-    let url = this.catalogUrl;
+    let url = this._catalogUrl;
 
     if (type) {
-      url = this.catalogUrl + '/type/' + ((type) ? type.toString() : '') + '/brand/' + ((brand) ? brand.toString() : '');
+      url = this._catalogUrl + '/type/' + ((type) ? type.toString() : '') + '/brand/' + ((brand) ? brand.toString() : '');
     }
     else if (brand) {
-      url = this.catalogUrl + '/type/all' + '/brand/' + ((brand) ? brand.toString() : '');
+      url = this._catalogUrl + '/type/all' + '/brand/' + ((brand) ? brand.toString() : '');
     }
 
     url = url + '?pageIndex=' + pageIndex + '&pageSize=' + pageSize;
@@ -66,7 +72,7 @@ export class CatalogService {
         .pipe(switchMap(x => this.getCatalogItem(itemId)))
     }
 
-    let url = this.catalogUrl + `/${itemId}`;
+    let url = this._catalogUrl + `/${itemId}`;
 
     return this._dataService.get<ICatalogItem>(url)
       .pipe(tap((response: ICatalogItem) => {
@@ -81,7 +87,7 @@ export class CatalogService {
         .pipe(switchMap(x => this.getBrands()))
     }
 
-    return this._dataService.get<ICatalogBrand[]>(this.brandUrl)
+    return this._dataService.get<ICatalogBrand[]>(this._brandsUrl)
       .pipe(tap((response: ICatalogBrand[]) => {
         return response;
       }));
@@ -94,7 +100,7 @@ export class CatalogService {
         .pipe(switchMap(x => this.getTypes()))
     }
 
-    return this._dataService.get<ICatalogType[]>(this.typesUrl)
+    return this._dataService.get<ICatalogType[]>(this._typesUrl)
       .pipe(tap((response: ICatalogType[]) => {
         return response;
       }));

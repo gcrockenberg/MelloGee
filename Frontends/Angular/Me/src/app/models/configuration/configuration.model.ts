@@ -1,6 +1,6 @@
 export const Constants = {
     IDENTITY_URL: 'identityUrl',
-    PURCHASE_URL: 'catalogUrl',
+    CATALOG_URL: 'catalogUrl',
     ORDER_URL: 'orderUrl',
     CART_URL: 'cartUrl',
     SIGNAL_R_HUB_URL: 'signalrHubUrlUrl',
