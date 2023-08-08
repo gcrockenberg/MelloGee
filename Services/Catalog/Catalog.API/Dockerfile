@@ -22,6 +22,8 @@ COPY "Services/EventBus/EventBusServiceBus/EventBusServiceBus.csproj" "Services/
 COPY "Services/EventBus/EventBusServiceBus/EventBusServiceBus.csproj" "Services/EventBus/IntegrationEventLogEF/IntegrationEventLogEF.csproj"
 COPY "Services/Catalog/Catalog.API/Catalog.API.csproj" "Services/Catalog/Catalog.API/Catalog.API.csproj"
 COPY "Services/Cart/Cart.API/Cart.API.csproj" "Services/Cart/Cart.API/Cart.API.csproj"
+COPY "Services/Purchase/Purchase.Domain/Purchase.Domain.csproj" "Services/Purchase/Purchase.Domain/Purchase.Domain.csproj"
+COPY "Services/Purchase/Purchase.Infrastructure/Purchase.Infrastructure.csproj" "Services/Purchase/Purchase.Infrastructure/Purchase.Infrastructure.csproj"
 COPY "Services/Purchase/Purchase.API/Purchase.API.csproj" "Services/Purchase/Purchase.API/Purchase.API.csproj"
 COPY "Directory.Packages.props" "Directory.Packages.props"
 

@@ -10,9 +10,16 @@ public class IntegrationEventLogService : IIntegrationEventLogService, IDisposab
     public IntegrationEventLogService(DbConnection dbConnection)
     {
         _dbConnection = dbConnection ?? throw new ArgumentNullException(nameof(dbConnection));
+        // --------------------- MariaDb ----------------------------------------------
+        // LTS version specified in Dockerfile
+        // https://hub.docker.com/_/mariadb/tags
+        var serverVersion = new MariaDbServerVersion(new Version(11, 0, 2));
+        // --------------------- End MariaDb ------------------------------------------
+
         _integrationEventLogContext = new IntegrationEventLogContext(
             new DbContextOptionsBuilder<IntegrationEventLogContext>()
-                .UseSqlServer(_dbConnection)
+                .UseMySql(_dbConnection, serverVersion)
+                //.UseSqlServer(_dbConnection)
                 .Options);
 
         _eventTypes = Assembly.Load(Assembly.GetEntryAssembly().FullName)

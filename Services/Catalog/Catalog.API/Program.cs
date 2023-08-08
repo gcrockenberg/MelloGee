@@ -2,6 +2,18 @@
 
 var builder = WebApplication.CreateBuilder(args);
 
+// When testing on dektop outside of Docker
+// builder.Services.AddCors(options =>
+// {
+//     options.AddDefaultPolicy(
+//         policy =>
+//         {
+//             policy.WithOrigins("*").WithHeaders("*");
+//         });
+// });
+
+
+builder.Logging.AddFilter("Microsoft.EntityFrameworkCore.Database.Command", LogLevel.Warning);
 builder.AddServiceDefaults();                               // Extension
 
 builder.Services.AddControllers();
@@ -21,6 +33,9 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
+// When dugging on dektop outside of Docker
+// app.UseCors();
+
 app.UseServiceDefaults();
 
 // Expose Swagger so APIM can import APIs
@@ -38,45 +53,18 @@ var eventBus = app.Services.GetRequiredService<IEventBus>();
 eventBus.Subscribe<OrderStatusChangedToAwaitingValidationIntegrationEvent, OrderStatusChangedToAwaitingValidationIntegrationEventHandler>();
 eventBus.Subscribe<OrderStatusChangedToPaidIntegrationEvent, OrderStatusChangedToPaidIntegrationEventHandler>();
 
-
-// REVIEW: Database seeding for development. Shouldn't be here in production
-// The following retry loop is not needed for SQL Server
-// Configuring Connection Resiliency: https://docs.microsoft.com/en-us/ef/core/miscellaneous/connection-resiliency 
-//      sqlOptions.EnableRetryOnFailure(
-var settings = app.Services.GetService<IOptions<CatalogSettings>>();
-// Database container startup can vary
-var logger = app.Services.GetService<ILogger<CatalogContextSeed>>();
-int tryCount = 0, maxAttempts = 6, retryInterval = 10000;
-do
+using (var scope = app.Services.CreateScope())
 {
-    try
-    {
-        logger.LogError("--> DataPrep attempt: {count}", tryCount + 1);
-        using (var scope = app.Services.CreateScope())
-        {
-            var context = scope.ServiceProvider.GetRequiredService<CatalogContext>();
-            await context.Database.MigrateAsync();
+    var settings = app.Services.GetService<IOptions<CatalogSettings>>();
+    var logger = app.Services.GetService<ILogger<CatalogContextSeed>>();
+    var context = scope.ServiceProvider.GetRequiredService<CatalogContext>();
+    await context.Database.MigrateAsync();
 
-            await new CatalogContextSeed().SeedAsync(context, app.Environment, settings, logger);
-            
-            var integEventContext = scope.ServiceProvider.GetRequiredService<IntegrationEventLogContext>();
-            await integEventContext.Database.MigrateAsync();
-            break;
-        }
-    }
-    catch (Exception ex)
-    {
-        logger.LogError("--> Error attempting to prep database: {ex}", ex);
-    }
-    if (tryCount < maxAttempts)
-    {
-        logger.LogInformation("--> Sleeping before retry ...");
-        Thread.Sleep(retryInterval);
-        tryCount++;
-    }
-} while (tryCount < maxAttempts);
+    await new CatalogContextSeed().SeedAsync(context, app.Environment, settings, logger);
 
-
+    var integEventContext = scope.ServiceProvider.GetRequiredService<IntegrationEventLogContext>();
+    await integEventContext.Database.MigrateAsync();
+}
 
 app.Run();
 //app.RunAsync();

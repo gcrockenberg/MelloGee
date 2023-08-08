@@ -47,12 +47,12 @@ export class CartService {
     }
 
     if (this._configurationService.isReady) {
-      this._cartUrl = this._configurationService.serverSettings.purchaseUrl + '/b/api/v1/cart/';
+      this._cartUrl = this._configurationService.serverSettings.cartUrl + '/b/api/v1/cart/';
       this._getCart();
     }
     else {
       this._configurationService.settingsLoaded$.subscribe(x => {
-        this._cartUrl = this._configurationService.serverSettings.purchaseUrl + '/b/api/v1/cart/';
+        this._cartUrl = this._configurationService.serverSettings.cartUrl + '/b/api/v1/cart/';
         this._getCart();
       });
     }

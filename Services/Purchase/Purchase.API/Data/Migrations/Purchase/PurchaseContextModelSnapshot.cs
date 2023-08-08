@@ -22,16 +22,16 @@ namespace Purchase.API.Migrations.Purchase
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.HasSequence("buyerseq", "purchase")
+            modelBuilder.HasSequence("buyerseq")
                 .IncrementsBy(10);
 
             modelBuilder.HasSequence("orderitemseq")
                 .IncrementsBy(10);
 
-            modelBuilder.HasSequence("orderseq", "purchase")
+            modelBuilder.HasSequence("orderseq")
                 .IncrementsBy(10);
 
-            modelBuilder.HasSequence("paymentseq", "purchase")
+            modelBuilder.HasSequence("paymentseq")
                 .IncrementsBy(10);
 
             modelBuilder.Entity("Me.Services.Purchase.Domain.AggregatesModel.BuyerAggregate.Buyer", b =>
@@ -40,7 +40,7 @@ namespace Purchase.API.Migrations.Purchase
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseHiLo(b.Property<int>("Id"), "buyerseq", "purchase");
+                    SqlServerPropertyBuilderExtensions.UseHiLo(b.Property<int>("Id"), "buyerseq");
 
                     b.Property<string>("IdentityGuid")
                         .IsRequired()
@@ -49,21 +49,24 @@ namespace Purchase.API.Migrations.Purchase
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("IdentityGuid")
                         .IsUnique();
 
-                    b.ToTable("buyers", "purchase");
+                    b.ToTable("buyers", (string)null);
                 });
 
             modelBuilder.Entity("Me.Services.Purchase.Domain.AggregatesModel.BuyerAggregate.CardType", b =>
                 {
                     b.Property<int>("Id")
-                        .HasColumnType("int")
-                        .HasDefaultValue(1);
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -72,7 +75,7 @@ namespace Purchase.API.Migrations.Purchase
 
                     b.HasKey("Id");
 
-                    b.ToTable("cardtypes", "purchase");
+                    b.ToTable("cardtypes", (string)null);
                 });
 
             modelBuilder.Entity("Me.Services.Purchase.Domain.AggregatesModel.BuyerAggregate.PaymentMethod", b =>
@@ -81,7 +84,7 @@ namespace Purchase.API.Migrations.Purchase
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseHiLo(b.Property<int>("Id"), "paymentseq", "purchase");
+                    SqlServerPropertyBuilderExtensions.UseHiLo(b.Property<int>("Id"), "paymentseq");
 
                     b.Property<int>("BuyerId")
                         .HasColumnType("int");
@@ -110,7 +113,7 @@ namespace Purchase.API.Migrations.Purchase
 
                     b.Property<DateTime>("_expiration")
                         .HasMaxLength(25)
-                        .HasColumnType("datetime2")
+                        .HasColumnType("datetime")
                         .HasColumnName("Expiration");
 
                     b.HasKey("Id");
@@ -119,7 +122,7 @@ namespace Purchase.API.Migrations.Purchase
 
                     b.HasIndex("_cardTypeId");
 
-                    b.ToTable("paymentmethods", "purchase");
+                    b.ToTable("paymentmethods", (string)null);
                 });
 
             modelBuilder.Entity("Me.Services.Purchase.Domain.AggregatesModel.OrderAggregate.Order", b =>
@@ -128,17 +131,17 @@ namespace Purchase.API.Migrations.Purchase
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseHiLo(b.Property<int>("Id"), "orderseq", "purchase");
+                    SqlServerPropertyBuilderExtensions.UseHiLo(b.Property<int>("Id"), "orderseq");
 
                     b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(5000)");
 
                     b.Property<int?>("_buyerId")
                         .HasColumnType("int")
                         .HasColumnName("BuyerId");
 
                     b.Property<DateTime>("_orderDate")
-                        .HasColumnType("datetime2")
+                        .HasColumnType("datetime")
                         .HasColumnName("OrderDate");
 
                     b.Property<int>("_orderStatusId")
@@ -157,7 +160,7 @@ namespace Purchase.API.Migrations.Purchase
 
                     b.HasIndex("_paymentMethodId");
 
-                    b.ToTable("orders", "purchase");
+                    b.ToTable("orders", (string)null);
                 });
 
             modelBuilder.Entity("Me.Services.Purchase.Domain.AggregatesModel.OrderAggregate.OrderItem", b =>
@@ -179,12 +182,12 @@ namespace Purchase.API.Migrations.Purchase
                         .HasColumnName("Discount");
 
                     b.Property<string>("_pictureUrl")
-                        .HasColumnType("nvarchar(max)")
+                        .HasColumnType("nvarchar(1000)")
                         .HasColumnName("PictureUrl");
 
                     b.Property<string>("_productName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
+                        .HasColumnType("nvarchar(1000)")
                         .HasColumnName("ProductName");
 
                     b.Property<decimal>("_unitPrice")
@@ -199,14 +202,13 @@ namespace Purchase.API.Migrations.Purchase
 
                     b.HasIndex("OrderId");
 
-                    b.ToTable("orderItems", "purchase");
+                    b.ToTable("orderItems", (string)null);
                 });
 
             modelBuilder.Entity("Me.Services.Purchase.Domain.AggregatesModel.OrderAggregate.OrderStatus", b =>
                 {
                     b.Property<int>("Id")
-                        .HasColumnType("int")
-                        .HasDefaultValue(1);
+                        .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -215,25 +217,26 @@ namespace Purchase.API.Migrations.Purchase
 
                     b.HasKey("Id");
 
-                    b.ToTable("orderstatus", "purchase");
+                    b.ToTable("orderstatus", (string)null);
                 });
 
             modelBuilder.Entity("Me.Services.Purchase.Infrastructure.Idempotency.ClientRequest", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("UUID");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
 
                     b.Property<DateTime>("Time")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime");
 
                     b.HasKey("Id");
 
-                    b.ToTable("requests", "purchase");
+                    b.ToTable("requests", (string)null);
                 });
 
             modelBuilder.Entity("Me.Services.Purchase.Domain.AggregatesModel.BuyerAggregate.PaymentMethod", b =>
@@ -276,31 +279,31 @@ namespace Purchase.API.Migrations.Purchase
                                 .ValueGeneratedOnAdd()
                                 .HasColumnType("int");
 
-                            SqlServerPropertyBuilderExtensions.UseHiLo(b1.Property<int>("OrderId"), "orderseq", "purchase");
+                            SqlServerPropertyBuilderExtensions.UseHiLo(b1.Property<int>("OrderId"), "orderseq");
 
                             b1.Property<string>("City")
                                 .IsRequired()
-                                .HasColumnType("nvarchar(max)");
+                                .HasColumnType("nvarchar(1000)");
 
                             b1.Property<string>("Country")
                                 .IsRequired()
-                                .HasColumnType("nvarchar(max)");
+                                .HasColumnType("nvarchar(1000)");
 
                             b1.Property<string>("State")
                                 .IsRequired()
-                                .HasColumnType("nvarchar(max)");
+                                .HasColumnType("nvarchar(1000)");
 
                             b1.Property<string>("Street")
                                 .IsRequired()
-                                .HasColumnType("nvarchar(max)");
+                                .HasColumnType("nvarchar(1000)");
 
                             b1.Property<string>("ZipCode")
                                 .IsRequired()
-                                .HasColumnType("nvarchar(max)");
+                                .HasColumnType("nvarchar(100)");
 
                             b1.HasKey("OrderId");
 
-                            b1.ToTable("orders", "purchase");
+                            b1.ToTable("orders");
 
                             b1.WithOwner()
                                 .HasForeignKey("OrderId");

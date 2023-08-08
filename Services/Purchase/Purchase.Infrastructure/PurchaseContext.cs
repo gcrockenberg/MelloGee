@@ -27,15 +27,15 @@ public class PurchaseContext : DbContext, IUnitOfWork
         System.Diagnostics.Debug.WriteLine("PurchaseContext::ctor ->" + this.GetHashCode());
     }
 
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    protected override void OnModelCreating(ModelBuilder builder)
     {
-        modelBuilder.ApplyConfiguration(new ClientRequestEntityTypeConfiguration());
-        modelBuilder.ApplyConfiguration(new PaymentMethodEntityTypeConfiguration());
-        modelBuilder.ApplyConfiguration(new OrderEntityTypeConfiguration());
-        modelBuilder.ApplyConfiguration(new OrderItemEntityTypeConfiguration());
-        modelBuilder.ApplyConfiguration(new CardTypeEntityTypeConfiguration());
-        modelBuilder.ApplyConfiguration(new OrderStatusEntityTypeConfiguration());
-        modelBuilder.ApplyConfiguration(new BuyerEntityTypeConfiguration());
+        builder.ApplyConfiguration(new CardTypeEntityTypeConfiguration());
+        builder.ApplyConfiguration(new ClientRequestEntityTypeConfiguration());
+        builder.ApplyConfiguration(new PaymentMethodEntityTypeConfiguration());
+        builder.ApplyConfiguration(new OrderEntityTypeConfiguration());
+        builder.ApplyConfiguration(new OrderItemEntityTypeConfiguration());
+        builder.ApplyConfiguration(new OrderStatusEntityTypeConfiguration());
+        builder.ApplyConfiguration(new BuyerEntityTypeConfiguration());
     }
 
     public async Task<bool> SaveEntitiesAsync(CancellationToken cancellationToken = default)
@@ -110,8 +110,10 @@ public class PurchaseContextDesignFactory : IDesignTimeDbContextFactory<Purchase
 {
     public PurchaseContext CreateDbContext(string[] args)
     {
+        var serverVersion = new MariaDbServerVersion(new Version(11, 0, 2));
         var optionsBuilder = new DbContextOptionsBuilder<PurchaseContext>()
-            .UseSqlServer("Server=.;Initial Catalog=Me.Services.PurchaseDb;Integrated Security=true");
+            .UseMySql("server=localhost;port=3306;uid=root;password=;database=Me.Services.PurchaseDb", serverVersion);
+            // .UseSqlServer("Server=.;Initial Catalog=Me.Services.PurchaseDb;Integrated Security=true");
 
         return new PurchaseContext(optionsBuilder.Options, new NoMediator());
     }

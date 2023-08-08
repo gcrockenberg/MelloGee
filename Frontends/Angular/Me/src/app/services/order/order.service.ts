@@ -23,11 +23,11 @@ export class OrderService {
     private _dataService: DataService) {
 
     if (this._configurationService.isReady) {
-      this._orderUrl = this._configurationService.serverSettings.purchaseUrl + '/o/api/v1/order/';
+      this._orderUrl = this._configurationService.serverSettings.orderUrl + '/o/api/v1/order/';
     }
     else {
       this._configurationService.settingsLoaded$.subscribe(x => {
-        this._orderUrl = this._configurationService.serverSettings.purchaseUrl + '/o/api/v1/order/';
+        this._orderUrl = this._configurationService.serverSettings.orderUrl + '/o/api/v1/order/';
       });
     }
   }

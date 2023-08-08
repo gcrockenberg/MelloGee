@@ -68,11 +68,11 @@ eventBus.Subscribe<OrderPaymentSucceededIntegrationEvent, IIntegrationEventHandl
 using (var scope = app.Services.CreateScope())
 {
     var context = scope.ServiceProvider.GetRequiredService<PurchaseContext>();
+    await context.Database.MigrateAsync();
+
     var env = app.Services.GetService<IWebHostEnvironment>();
     var settings = app.Services.GetService<IOptions<PurchaseSettings>>();
     var logger = app.Services.GetService<ILogger<PurchaseContextSeed>>();
-    await context.Database.MigrateAsync();
-
     await new PurchaseContextSeed().SeedAsync(context, env, settings, logger);
     var integEventContext = scope.ServiceProvider.GetRequiredService<IntegrationEventLogContext>();
     await integEventContext.Database.MigrateAsync();

@@ -5,12 +5,12 @@ class OrderStatusEntityTypeConfiguration
 {
     public void Configure(EntityTypeBuilder<OrderStatus> orderStatusConfiguration)
     {
-        orderStatusConfiguration.ToTable("orderstatus", PurchaseContext.DEFAULT_SCHEMA);
+        orderStatusConfiguration.ToTable("orderstatus");
 
         orderStatusConfiguration.HasKey(o => o.Id);
 
         orderStatusConfiguration.Property(o => o.Id)
-            .HasDefaultValue(1)
+            //.HasDefaultValue(1)
             .ValueGeneratedNever()
             .IsRequired();
 

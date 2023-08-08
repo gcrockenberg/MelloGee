@@ -4,15 +4,18 @@ namespace Me.Services.Catalog.API.Controllers;
 [ApiController]
 public class CatalogController : ControllerBase
 {
+    private readonly ILogger _logger;
     private readonly CatalogContext _catalogContext;
     private readonly ICatalogIntegrationEventService _catalogIntegrationEventService;
     private readonly CatalogSettings _settings;
 
     public CatalogController(
-        CatalogContext context, 
-        IOptionsSnapshot<CatalogSettings> settings, 
-        ICatalogIntegrationEventService catalogIntegrationEventService)
+        CatalogContext context,
+        IOptionsSnapshot<CatalogSettings> settings,
+        ICatalogIntegrationEventService catalogIntegrationEventService,
+        ILogger<CatalogController> logger)
     {
+        _logger = logger;
         _catalogContext = context ?? throw new ArgumentNullException(nameof(context));
         _catalogIntegrationEventService = catalogIntegrationEventService ?? throw new ArgumentNullException(nameof(catalogIntegrationEventService));
         _settings = settings.Value;
@@ -51,6 +54,7 @@ public class CatalogController : ControllerBase
             .OrderBy(c => c.Name)
             .Skip(pageSize * pageIndex)
             .Take(pageSize)
+            .AsNoTracking()
             .ToListAsync();
 
         itemsOnPage = _ChangeUriPlaceholder(itemsOnPage);
@@ -59,7 +63,7 @@ public class CatalogController : ControllerBase
 
         return Ok(model);
     }
-    
+
 
     private async Task<List<CatalogItem>> ItemsByIdsAsync(string ids)
     {
@@ -73,7 +77,10 @@ public class CatalogController : ControllerBase
         var idsToSelect = numIds
             .Select(id => id.Value);
 
-        var items = await _catalogContext.CatalogItems.Where(ci => idsToSelect.Contains(ci.Id)).ToListAsync();
+        var items = await _catalogContext.CatalogItems
+            .Where(ci => idsToSelect.Contains(ci.Id))
+            .AsNoTracking()
+            .ToListAsync();
 
         items = _ChangeUriPlaceholder(items);
 
@@ -91,7 +98,9 @@ public class CatalogController : ControllerBase
             return BadRequest();
         }
 
-        var item = await _catalogContext.CatalogItems.SingleOrDefaultAsync(ci => ci.Id == id);
+        var item = await _catalogContext.CatalogItems
+            .AsNoTracking()
+            .SingleOrDefaultAsync(ci => ci.Id == id);
 
         var baseUri = _settings.PicBaseUrl;
         var azureStorageEnabled = _settings.AzureStorageEnabled;
@@ -114,12 +123,14 @@ public class CatalogController : ControllerBase
     {
         var totalItems = await _catalogContext.CatalogItems
             .Where(c => c.Name.StartsWith(name))
+            .AsNoTracking()
             .LongCountAsync();
 
         var itemsOnPage = await _catalogContext.CatalogItems
             .Where(c => c.Name.StartsWith(name))
             .Skip(pageSize * pageIndex)
             .Take(pageSize)
+            .AsNoTracking()
             .ToListAsync();
 
         itemsOnPage = _ChangeUriPlaceholder(itemsOnPage);
@@ -135,7 +146,8 @@ public class CatalogController : ControllerBase
     {
         var root = (IQueryable<CatalogItem>)_catalogContext.CatalogItems
             .Include(item => item.CatalogBrand)
-            .Include(item => item.CatalogType);
+            .Include(item => item.CatalogType)
+            .AsNoTracking();
 
         root = root.Where(ci => ci.CatalogTypeId == catalogTypeId);
 
@@ -163,7 +175,7 @@ public class CatalogController : ControllerBase
     [Route("items/type/all/brand/{catalogBrandId:int?}")]
     public async Task<ActionResult<PaginatedItemsViewModel<CatalogItem>>> ItemsByBrandIdAsync(int? catalogBrandId, [FromQuery] int pageSize = 10, [FromQuery] int pageIndex = 0)
     {
-        var root = (IQueryable<CatalogItem>)_catalogContext.CatalogItems;
+        var root = (IQueryable<CatalogItem>)_catalogContext.CatalogItems.AsNoTracking();
 
         if (catalogBrandId.HasValue)
         {
@@ -189,7 +201,7 @@ public class CatalogController : ControllerBase
     [Route("catalogtypes")]
     public async Task<ActionResult<List<CatalogType>>> CatalogTypesAsync()
     {
-        return await _catalogContext.CatalogTypes.ToListAsync();
+        return await _catalogContext.CatalogTypes.AsNoTracking().ToListAsync();
     }
 
 
@@ -198,7 +210,7 @@ public class CatalogController : ControllerBase
     [Route("catalogbrands")]
     public async Task<ActionResult<List<CatalogBrand>>> CatalogBrandsAsync()
     {
-        return await _catalogContext.CatalogBrands.ToListAsync();
+        return await _catalogContext.CatalogBrands.AsNoTracking().ToListAsync();
     }
 
 

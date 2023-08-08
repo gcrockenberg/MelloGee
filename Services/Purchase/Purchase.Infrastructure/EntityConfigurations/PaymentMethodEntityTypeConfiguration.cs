@@ -5,14 +5,14 @@ class PaymentMethodEntityTypeConfiguration
 {
     public void Configure(EntityTypeBuilder<PaymentMethod> paymentConfiguration)
     {
-        paymentConfiguration.ToTable("paymentmethods", PurchaseContext.DEFAULT_SCHEMA);
+        paymentConfiguration.ToTable("paymentmethods");
 
         paymentConfiguration.HasKey(b => b.Id);
 
         paymentConfiguration.Ignore(b => b.DomainEvents);
 
         paymentConfiguration.Property(b => b.Id)
-            .UseHiLo("paymentseq", PurchaseContext.DEFAULT_SCHEMA);
+            .UseHiLo("paymentseq");
 
         paymentConfiguration.Property<int>("BuyerId")
             .IsRequired();

@@ -7,17 +7,17 @@ services:
       - "6379:6379"
 
   # Default SQL Server port 1433
-  me-sql-data:
-    environment:
-      MSSQL_SA_PASSWORD: ${ME_MSSQL_SA_PASSWORD}
-    ports:
-      - "1433:1433"
- 
-  # me-mariadb:
+  # me-sql-data:
   #   environment:
-  #     MARIADB_ALLOW_EMPTY_ROOT_PASSWORD: true
+  #     MSSQL_SA_PASSWORD: ${ME_MSSQL_SA_PASSWORD}
   #   ports:
-  #     - "3306:3306"
+  #     - "1433:1433"
+ 
+  me-mariadb:
+    environment:
+      MARIADB_ALLOW_EMPTY_ROOT_PASSWORD: true
+    ports:
+      - "3306:3306"
 
 
   me-rabbitmq:
@@ -29,9 +29,9 @@ services:
     environment:
       ASPNETCORE_ENVIRONMENT: Development
       ConnectionStrings__EventBus: ${ME_ConnectionStrings_EventBus}
-      ConnectionStrings__CatalogDb: Server=me-sql-data;Database=Me.Services.CatalogDb;User Id=sa;Password=${ME_MSSQL_SA_PASSWORD};Encrypt=False;TrustServerCertificate=true
+      # ConnectionStrings__CatalogDb: Server=me-sql-data;Database=Me.Services.CatalogDb;User Id=sa;Password=${ME_MSSQL_SA_PASSWORD};Encrypt=False;TrustServerCertificate=true
       # ConnectionStrings__CatalogDb: server=me-my-sql;port=3306;database=Me.Services.CatalogDb;uid=root;password=
-      # ConnectionStrings__CatalogDb: server=me-mariadb;port=3306;uid=root;password=;database=Me.Services.CatalogDb
+      ConnectionStrings__CatalogDb: server=me-mariadb;port=3306;uid=root;password=;database=Me.Services.CatalogDb
       EventBus__RetryCount: 5
       PicBaseUrl: https://stmedev.z13.web.core.windows.net/Catalog/[0].png
       #      - AzureStorageAccountName=${ME_AZURE_STORAGE_CATALOG_NAME}
@@ -75,7 +75,8 @@ services:
       AzureAdB2C__ClientId: ${ME_AzureAdB2C_ClientId}
       AzureAdB2C__SignedOutCallbackPath: ${ME_AzureAdB2C_SignedOutCallbackPath}
       AzureAdB2C__SignUpSignInPolicyId: ${ME_AzureAdB2C_SignUpSignInPolicyId}
-      ConnectionStrings__PurchaseDb: Server=me-sql-data;Database=Me.Services.PurchaseDb;User Id=sa;Password=${ME_MSSQL_SA_PASSWORD};Encrypt=False;TrustServerCertificate=true
+      # ConnectionStrings__PurchaseDb: Server=me-sql-data;Database=Me.Services.PurchaseDb;User Id=sa;Password=${ME_MSSQL_SA_PASSWORD};Encrypt=False;TrustServerCertificate=true
+      ConnectionStrings__PurchaseDb: server=me-mariadb;port=3306;uid=root;password=;database=Me.Services.PurchaseDb
       ConnectionStrings__EventBus: ${ME_ConnectionStrings_EventBus}
       GrpcCart: "http://me-cart-api:81"
       EventBus__RetryCount: 5

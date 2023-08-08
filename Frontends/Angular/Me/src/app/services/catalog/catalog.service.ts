@@ -7,7 +7,8 @@ import { ICatalogBrand } from 'src/app/models/catalog/catalog-brand.model';
 import { ICatalogType } from 'src/app/models/catalog/catalog-type.model';
 import { ICatalogItem } from 'src/app/models/catalog/catalog-item.model';
 
-const baseUrl = '';
+const urlPrefix = '/c/api/v1/catalog/';
+//const urlPrefix = '/api/v1/catalog/';
 
 @Injectable({
   providedIn: 'root'
@@ -21,15 +22,15 @@ export class CatalogService {
     private _configurationService: ConfigurationService,
     private _dataService: DataService,
   ) {
-    if (_configurationService.isReady) {
-      this.catalogUrl = this._configurationService.serverSettings.purchaseUrl + '/c/api/v1/catalog/items';
-      this.brandUrl = this._configurationService.serverSettings.purchaseUrl + '/c/api/v1/catalog/catalogbrands';
-      this.typesUrl = this._configurationService.serverSettings.purchaseUrl + '/c/api/v1/catalog/catalogtypes';
+    if (_configurationService.isReady) { 
+      this.catalogUrl = this._configurationService.serverSettings.catalogUrl + urlPrefix + 'items';
+      this.brandUrl = this._configurationService.serverSettings.catalogUrl + urlPrefix + 'catalogbrands';
+      this.typesUrl = this._configurationService.serverSettings.catalogUrl + urlPrefix + 'catalogtypes';
     } else {
       this._configurationService.settingsLoaded$.subscribe(x => {
-        this.catalogUrl = this._configurationService.serverSettings.purchaseUrl + '/c/api/v1/catalog/items';
-        this.brandUrl = this._configurationService.serverSettings.purchaseUrl + '/c/api/v1/catalog/catalogbrands';
-        this.typesUrl = this._configurationService.serverSettings.purchaseUrl + '/c/api/v1/catalog/catalogtypes';
+        this.catalogUrl = this._configurationService.serverSettings.catalogUrl + urlPrefix + 'items';
+        this.brandUrl = this._configurationService.serverSettings.catalogUrl + urlPrefix + 'catalogbrands';
+        this.typesUrl = this._configurationService.serverSettings.catalogUrl + urlPrefix + 'catalogtypes';
       });
     }
   }

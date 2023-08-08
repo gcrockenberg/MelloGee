@@ -27,6 +27,7 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Polly" />
+    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" />
     <PackageReference Include="Stripe.net" />
     <PackageReference Include="Swashbuckle.AspNetCore" />
     <PackageReference Include="System.Data.SqlClient" />

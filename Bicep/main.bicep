@@ -33,9 +33,9 @@ param githubOrganizationOrUsername string
 @secure()
 param stripeApiKey string
 
-@description('Required to configure SQL Server. 8 character min, 3 of following - uppercase, lowercase, digit, non-alphanumeric')
-@secure()
-param msSqlSaPassword string
+// @description('Required to configure SQL Server. 8 character min, 3 of following - uppercase, lowercase, digit, non-alphanumeric')
+// @secure()
+// param msSqlSaPassword string
 
 @description('Naming rules for CA env variables: allowed characters are a-z, A-Z, 0-9 and _')
 var microserviceCommonEnvironment = [
@@ -99,7 +99,7 @@ var defaultResources = {
 @description('The Container App microservices')
 var microservices = [
   {
-    skip: false
+    skip: true
     addToAPIM: false
     apiPath: ''
     //connectKeyVault: false
@@ -112,38 +112,38 @@ var microservices = [
     environment: []
     resources: defaultResources
   }
-  {
-    skip: false
-    addToAPIM: false
-    apiPath: ''
-    //connectKeyVault: false
-    containerAppName: '${solutionName}-sql-data'
-    dockerImageName: '${dockerHubUsername}/sqlserver:latest'
-    minScale: 1
-    targetPort: 1433
-    transport: 'tcp'
-    secrets: [
-      {
-        name: 'container-registry-password'
-        value: dockerHubPasswordOrToken
-      }
-      {
-        name: 'mssql-sa-password'
-        value: msSqlSaPassword
-      }
-    ]
-    environment: [
-      {
-        name: 'MSSQL_SA_PASSWORD'
-        secretRef: 'mssql-sa-password'
-      }
-    ]
-    resources: {
-      cpu: '1.0'
-      memory: '2.0Gi'
-    }
-  }
-  {// Not currently used. Focused on SQL Server
+  // { // Skipping SQL Server due to resource requirement costs
+  //   skip: true
+  //   addToAPIM: false
+  //   apiPath: ''
+  //   //connectKeyVault: false
+  //   containerAppName: '${solutionName}-sql-data'
+  //   dockerImageName: '${dockerHubUsername}/sqlserver:latest'
+  //   minScale: 1
+  //   targetPort: 1433
+  //   transport: 'tcp'
+  //   secrets: [
+  //     {
+  //       name: 'container-registry-password'
+  //       value: dockerHubPasswordOrToken
+  //     }
+  //     {
+  //       name: 'mssql-sa-password'
+  //       value: msSqlSaPassword
+  //     }
+  //   ]
+  //   environment: [
+  //     {
+  //       name: 'MSSQL_SA_PASSWORD'
+  //       secretRef: 'mssql-sa-password'
+  //     }
+  //   ]
+  //   resources: {
+  //     cpu: '1.0'
+  //     memory: '2.0Gi' // 2G minimum requirement
+  //   }
+  // }
+  { // Using MariaDb for demo because it requires 1/4 of the resources vs SQL Server
     skip: true
     addToAPIM: false
     apiPath: ''
@@ -163,7 +163,7 @@ var microservices = [
     resources: defaultResources // Less demanding that SQL Server
   }
   {
-    skip: false
+    skip: true
     addToAPIM: false
     apiPath: ''
     //connectKeyVault: false
@@ -177,7 +177,7 @@ var microservices = [
     resources: defaultResources
   }
   {
-    skip: false
+    skip: true
     addToAPIM: true
     apiPath: 'c'
     //connectKeyVault: false
@@ -189,8 +189,8 @@ var microservices = [
     secrets: concat(microserviceCommonSecrets, [
         {
           name: 'connectionstrings-catalogdb'
-          value: 'Server=${solutionName}-sql-data;Database=Me.Services.CatalogDb;User Id=sa;Password=${msSqlSaPassword};Encrypt=False;TrustServerCertificate=true'
-          //value: 'server=${solutionName}-mariadb;port=3306;uid=root;password=;database=Me.Services.CatalogDb'
+          //value: 'Server=${solutionName}-sql-data;Database=Me.Services.CatalogDb;User Id=sa;Password=${msSqlSaPassword};Encrypt=False;TrustServerCertificate=true'
+          value: 'server=${solutionName}-mariadb;port=3306;uid=root;password=;database=Me.Services.CatalogDb'
         }
       ])
     environment: concat(microserviceCommonEnvironment, [
@@ -207,7 +207,7 @@ var microservices = [
     resources: defaultResources
   }
   {
-    skip: false
+    skip: true
     addToAPIM: true
     apiPath: 'b'
     //connectKeyVault: false
@@ -238,8 +238,8 @@ var microservices = [
     secrets: concat(microserviceCommonSecrets, [
         {
           name: 'connectionstrings-purchasedb'
-          value: 'Server=${solutionName}-sql-data;Database=Me.Services.PurchaseDb;User Id=sa;Password=${msSqlSaPassword};Encrypt=False;TrustServerCertificate=true'
-          //value: 'server=${solutionName}-mariadb;port=3306;uid=root;password=;database=Me.Services.CatalogDb'
+          //value: 'Server=${solutionName}-sql-data;Database=Me.Services.PurchaseDb;User Id=sa;Password=${msSqlSaPassword};Encrypt=False;TrustServerCertificate=true'
+          value: 'server=${solutionName}-mariadb;port=3306;uid=root;password=;database=Me.Services.PurchaseDb'
         }
         {
           name: 'stripe-configuration-apikey'
@@ -258,35 +258,35 @@ var microservices = [
       ])
     resources: defaultResources
   }
-  {// Test service
-    skip: true
-    addToAPIM: false
-    apiPath: ''
-    //connectKeyVault: false
-    containerAppName: '${solutionName}-coffee-api'
-    dockerImageName: '${dockerHubUsername}/coffeeapi:latest'
-    minScale: 1
-    targetPort: 80
-    transport: 'http'
-    secrets: microserviceCommonSecrets
-    // concat(microserviceCommonSecrets, [
-    //   {
-    //     name: 'connectionstrings-coffeedb'
-    //     value: 'server=${solutionName}-my-sql;port=3306;database=coffeedb;uid=root;password='
-    //   }
-    // ])
-    environment: [
-      // {
-      //   name: 'ConnectionStrings__CoffeeDb'
-      //   secretRef: 'connectionstrings-coffeedb'
-      // }
-      {
-        name: 'ConnectionStrings__CoffeeDb'
-        value: 'server=${solutionName}-mariadb;port=3306;uid=root;password=;database=coffeedb'
-      }
-    ]
-    resources: defaultResources
-  }
+  // {// Test service
+  //   skip: true
+  //   addToAPIM: false
+  //   apiPath: ''
+  //   //connectKeyVault: false
+  //   containerAppName: '${solutionName}-coffee-api'
+  //   dockerImageName: '${dockerHubUsername}/coffeeapi:latest'
+  //   minScale: 1
+  //   targetPort: 80
+  //   transport: 'http'
+  //   secrets: microserviceCommonSecrets
+  //   // concat(microserviceCommonSecrets, [
+  //   //   {
+  //   //     name: 'connectionstrings-coffeedb'
+  //   //     value: 'server=${solutionName}-my-sql;port=3306;database=coffeedb;uid=root;password='
+  //   //   }
+  //   // ])
+  //   environment: [
+  //     // {
+  //     //   name: 'ConnectionStrings__CoffeeDb'
+  //     //   secretRef: 'connectionstrings-coffeedb'
+  //     // }
+  //     {
+  //       name: 'ConnectionStrings__CoffeeDb'
+  //       value: 'server=${solutionName}-mariadb;port=3306;uid=root;password=;database=coffeedb'
+  //     }
+  //   ]
+  //   resources: defaultResources
+  // }
 ]
 
 var filteredMicroservices = [for (item, i) in microservices: item.skip != true ? item : []]

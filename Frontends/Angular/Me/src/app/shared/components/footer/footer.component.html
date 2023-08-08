@@ -1,29 +1,29 @@
-<div class="w-full bg-[#F5F5F3] py-20">
+<div class="w-full py-20 border-t">
     <div class="max-w-container mx-auto grid grid-cols-1 md:grid-cols-2  xl:grid-cols-6 px-4 gap-10">
         <div class="col-span-2">
-            <app-footer-list-title title="Me foot" />
+            <app-footer-list-title title="Me footer" />
             <div class="flex flex-col gap-6">
                 <p class="text-base w-full xl:w-[80%]">
-                    Normally I have two but one will suffice for now.
+                    Needs a soccer ...
                 </p>
                 <ul class="flex items-center gap-2">
                     <a href="https://www.youtube.com" target="_blank" rel="noreferrer">
-                        <li class="w-7 h-7 bg-white hover:text-white cursor-pointer text-lg rounded-full flex justify-center items-center hover:bg-black duration-300">
+                        <li class="w-7 h-7 hover:text-white cursor-pointer text-lg rounded-full flex justify-center items-center hover:bg-black duration-300">
                             <ng-icon name="bootstrapYoutube" />
                         </li>
                     </a>
                     <a href="https://github.com/gcrockenberg" target="_blank" rel="noreferrer">
-                        <li class="w-7 h-7 bg-white hover:text-white cursor-pointer text-lg rounded-full flex justify-center items-center hover:bg-black duration-300">
+                        <li class="w-7 h-7 hover:text-white cursor-pointer text-lg rounded-full flex justify-center items-center hover:bg-black duration-300">
                             <ng-icon name="bootstrapGithub" />
                         </li>
                     </a>
                     <a href="https://www.facebook.com" target="_blank" rel="noreferrer">
-                        <li class="w-7 h-7 bg-white hover:text-white cursor-pointer text-lg rounded-full flex justify-center items-center hover:bg-black duration-300">
+                        <li class="w-7 h-7 hover:text-white cursor-pointer text-lg rounded-full flex justify-center items-center hover:bg-black duration-300">
                             <ng-icon name="bootstrapFacebook" />
                         </li>
                     </a>
                     <a href="https://www.linkedin.com" target="_blank" rel="noreferrer">
-                        <li class="w-7 h-7 bg-white hover:text-white cursor-pointer text-lg rounded-full flex justify-center items-center hover:bg-black duration-300">
+                        <li class="w-7 h-7 hover:text-white cursor-pointer text-lg rounded-full flex justify-center items-center hover:bg-black duration-300">
                             <ng-icon name="bootstrapLinkedin" />
                         </li>
                     </a>
@@ -81,14 +81,14 @@
             </ul>
         </div>
         <div class="col-span-2 flex flex-col items-center w-full px-4">
-            <app-footer-list-title title="Subscribe to our newsletter." />
+            <app-footer-list-title title="Subscribe to Me newsletter" />
             <div class="w-full">
                 <p class="text-center mb-4">
-                    A at pellentesque et mattis porta enim elementum.
+                    A at pellentesque et mattis porta enim and stuff.
                 </p>
                 <p *ngIf="subscription()"
                     class="w-full text-center text-base font-titleFont font-semibold text-green-600">
-                    Subscribed Successfully !
+                    You did it!
                 </p>
                 <div *ngIf="!subscription()"
                     class="w-full flex-col xl:flex-row flex justify-between items-center gap-4">
@@ -105,7 +105,7 @@
                 )} -->
                     </div>
                     <button (click)="handleSubscription()"
-                        class="bg-white text-lightText w-[30%] h-10 hover:bg-black hover:text-white duration-300 text-base tracking-wide">
+                        class="text-lightText w-[30%] h-10 bg-gray-800 hover:bg-black hover:text-white duration-300 text-base tracking-wide">
                         Subscribe
                     </button>
                 </div>

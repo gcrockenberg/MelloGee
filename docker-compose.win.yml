@@ -1,0 +1,94 @@
+# Please refer https://aka.ms/HTTPSinContainer on how to setup an https developer certificate for your ASP.NET Core service.
+
+version: '3.4'
+
+services:
+
+  me-catalog-api:
+    image: catalog-api
+    build:
+      context: .
+      dockerfile: Services/Catalog/Catalog.API/Dockerfile.windows
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ConnectionStrings__EventBus: host.docker.internal
+      ConnectionStrings__CatalogDb: Server=host.docker.internal;Database=Me.Services.CatalogDb;User Id=sa;Password=${ME_MSSQL_SA_PASSWORD};Encrypt=False;TrustServerCertificate=true
+      # ConnectionStrings__CatalogDb: server=me-my-sql;port=3306;database=Me.Services.CatalogDb;uid=root;password=
+      # ConnectionStrings__CatalogDb: server=me-mariadb;port=3306;uid=root;password=;database=Me.Services.CatalogDb
+      EventBus__RetryCount: 5
+      PicBaseUrl: https://stmedev.z13.web.core.windows.net/Catalog/[0].png
+      #      - AzureStorageAccountName=${ME_AZURE_STORAGE_CATALOG_NAME}
+      #      - AzureStorageAccountKey=${ME_AZURE_STORAGE_CATALOG_KEY}
+      UseCustomizationData: False
+      AzureStorageEnabled: False
+      #      - ApplicationInsights__InstrumentationKey=${INSTRUMENTATION_KEY}
+      #      - OrchestratorType=${ORCHESTRATOR_TYPE}
+      PATH_BASE: /catalog-api
+    ports:
+      - "5101:80"
+      - "9101:81"
+    # deploy:
+    #   resources:
+    #     limits:
+    #       memory: 256MB
+    #     reservations:
+    #       memory: 128MB
+    # memswap_limit: 256MB
+
+  # me-cart-api:
+  #   image: cart-api
+  #   build:
+  #     context: .
+  #     dockerfile: Services/Cart/Cart.API/Dockerfile
+  #   deploy:
+  #     resources:
+  #       limits:
+  #         memory: 128MB
+  #       reservations:
+  #         memory: 64MB
+  #   memswap_limit: 128MB
+  #   depends_on:
+  #     - me-cart-data
+  #     - me-rabbitmq
+
+  # me-order-api:
+  #   image: order-api
+  #   build:
+  #     context: .
+  #     dockerfile: Services/Purchase/Purchase.API/Dockerfile
+  #   deploy:
+  #     resources:
+  #       limits:
+  #         memory: 128MB
+  #       reservations:
+  #         memory: 64MB
+  #   memswap_limit: 128MB
+  #   depends_on:
+  #     - me-rabbitmq
+  #     - me-sql-data
+
+  # catalogapi:
+  #   image: catalogapi
+  #   build:
+  #     context: .
+  #     dockerfile: Services/CatalogService/Dockerfile
+  #   deploy:
+  #     resources:
+  #       limits:
+  #         memory: 128MB
+  #       reservations:
+  #         memory: 64MB
+  #   memswap_limit: 128MB
+
+  # coffeeapi:
+  #   image: coffeeapi
+  #   build:
+  #     context: .
+  #     dockerfile: Services/Coffee/Coffee.API/Dockerfile
+  #   deploy:
+  #     resources:
+  #       limits:
+  #         memory: 128MB
+  #       reservations:
+  #         memory: 64MB
+  #   memswap_limit: 128MB

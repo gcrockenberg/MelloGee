@@ -36,7 +36,25 @@ public static class Extensions
     /// configure the MVC services.</returns>
     public static IServiceCollection AddDbContexts(this IServiceCollection services, IConfiguration configuration)
     {
-        static void ConfigureSqlOptions(SqlServerDbContextOptionsBuilder sqlOptions)
+        // static void ConfigureSqlOptions(SqlServerDbContextOptionsBuilder sqlOptions)
+        // {
+        //     sqlOptions.MigrationsAssembly(typeof(Program).Assembly.FullName);
+
+        //     // Configuring Connection Resiliency: https://docs.microsoft.com/en-us/ef/core/miscellaneous/connection-resiliency 
+        //     sqlOptions.EnableRetryOnFailure(
+        //         maxRetryCount: 15,
+        //         maxRetryDelay: TimeSpan.FromSeconds(30),
+        //         errorNumbersToAdd: null);
+        // };
+        //"server=localhost;port=3306;uid=root;password=;database=Me.Services.CatalogDb"; // For migrations
+        var connectionString = configuration.GetRequiredConnectionString("CatalogDb");
+        // --------------------- MariaDb ----------------------------------------------
+        // LTS version specified in Dockerfile
+        // https://hub.docker.com/_/mariadb/tags
+        //var serverVersion = new MariaDbServerVersion(new Version(11, 0, 2));
+        // --------------------- End MariaDb ------------------------------------------
+        
+        static void ConfigureSqlOptions(MySqlDbContextOptionsBuilder sqlOptions)
         {
             sqlOptions.MigrationsAssembly(typeof(Program).Assembly.FullName);
 
@@ -49,29 +67,22 @@ public static class Extensions
 
         services.AddDbContext<CatalogContext>(options =>
         {
-            // --------------------- MariaDb ----------------------------------------------
-            //var connectionString = builder.Configuration.GetConnectionString("CatalogDb");
-            // LTS version specified in Dockerfile
-            // https://hub.docker.com/_/mariadb/tags
-            //var serverVersion = new MariaDbServerVersion(new Version(11, 0, 2));
-            //builder.Services.AddDbContext<CatalogContext>(options =>
-            //            options.UseMySql(connectionString, serverVersion));
+            // MariaDb
+            options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString), ConfigureSqlOptions);
             // The following three options help with debugging, but should
             // be changed or removed for production.
             // .LogTo(Console.WriteLine, LogLevel.Information)
             // .EnableSensitiveDataLogging()
             // .EnableDetailedErrors());
-            // --------------------- End MariaDb ------------------------------------------
-            var connectionString = configuration.GetRequiredConnectionString("CatalogDb");
 
-            options.UseSqlServer(connectionString, ConfigureSqlOptions);
+            // SQL Server
+            //options.UseSqlServer(connectionString, ConfigureSqlOptions);
         });
 
         services.AddDbContext<IntegrationEventLogContext>(options =>
         {
-            var connectionString = configuration.GetRequiredConnectionString("CatalogDb");
-
-            options.UseSqlServer(connectionString, ConfigureSqlOptions);
+            options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString), ConfigureSqlOptions);
+            //options.UseSqlServer(connectionString, ConfigureSqlOptions);
         });
 
         return services;
@@ -87,26 +98,25 @@ public static class Extensions
     /// configure the MVC services.</returns>
     public static IServiceCollection AddApplicationOptions(this IServiceCollection services, IConfiguration configuration)
     {
-        return services
-            .Configure<CatalogSettings>(configuration)
-            // TODO: Move to the new problem details middleware
-            .Configure<ApiBehaviorOptions>(options =>
+        return services.Configure<CatalogSettings>(configuration)
+        // TODO: Move to the new problem details middleware
+        .Configure<ApiBehaviorOptions>(options =>
+        {
+            options.InvalidModelStateResponseFactory = context =>
             {
-                options.InvalidModelStateResponseFactory = context =>
+                var problemDetails = new ValidationProblemDetails(context.ModelState)
                 {
-                    var problemDetails = new ValidationProblemDetails(context.ModelState)
-                    {
-                        Instance = context.HttpContext.Request.Path,
-                        Status = StatusCodes.Status400BadRequest,
-                        Detail = "Please refer to the errors property for additional details."
-                    };
-
-                    return new BadRequestObjectResult(problemDetails)
-                    {
-                        ContentTypes = { "application/problem+json", "application/problem+xml" }
-                    };
+                    Instance = context.HttpContext.Request.Path,
+                    Status = StatusCodes.Status400BadRequest,
+                    Detail = "Please refer to the errors property for additional details."
                 };
-            });
+
+                return new BadRequestObjectResult(problemDetails)
+                {
+                    ContentTypes = { "application/problem+json", "application/problem+xml" }
+                };
+            };
+        });
     }
 
 

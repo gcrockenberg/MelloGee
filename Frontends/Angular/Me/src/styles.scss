@@ -6,31 +6,32 @@
 /* Some third party fonts */
 /* @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700&display=swap'); */
 /* @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap'); */
+@import url('https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 
-body {
-    @apply h-full overflow-x-hidden;
+// body {
+//   @apply h-full overflow-x-hidden;
+// }
+
+// html {
+//   @apply h-full
+// }
+@layer base {
+  body {
+    @apply font-primary bg-body text-white;
+  }
+  .h2 {
+    @apply text-3xl capitalize;
+  }
+  .grad {
+    @apply bg-gradient-to-t from-[#1F2126] to-[#33363D] drop-shadow-2xl;
+  }
+  .btn {
+    @apply h-[50px] flex justify-center items-center rounded-[8px] px-10 py-[10px] text-sm uppercase font-bold;
+  }
+  .btn-accent {
+    @apply bg-accent text-primary hover:bg-accent-hover transition-all;
+  }
+  .input {
+    @apply h-[50px] rounded-[8px] w-full outline-none px-6 text-primary;
+  }
 }
-
-html {
-    @apply h-full
-}
-
-.mainSlider .swiper-pagination-bullets {
-    bottom: 1.5rem;
-  }
-  .mainSlider .swiper-pagination-bullet,
-  .productSlider .swiper-pagination-bullet {
-    background: #f6cd46;
-  }
-  
-  .productSlider .swiper-button-prev::after {
-    font-size: 2rem;
-  }
-  
-  .productSlider .swiper-button-prev::after,
-  .productSlider .swiper-button-next::after {
-    font-size: 2rem;
-    color: #f6cd46;
-    padding: 2rem;
-    width: 200px;
-  }

@@ -5,14 +5,14 @@ class BuyerEntityTypeConfiguration
 {
     public void Configure(EntityTypeBuilder<Buyer> buyerConfiguration)
     {
-        buyerConfiguration.ToTable("buyers", PurchaseContext.DEFAULT_SCHEMA);
+        buyerConfiguration.ToTable("buyers");
 
         buyerConfiguration.HasKey(b => b.Id);
 
         buyerConfiguration.Ignore(b => b.DomainEvents);
 
         buyerConfiguration.Property(b => b.Id)
-            .UseHiLo("buyerseq", PurchaseContext.DEFAULT_SCHEMA);
+            .UseHiLo("buyerseq");
 
         buyerConfiguration.Property(b => b.IdentityGuid)
             .HasMaxLength(200)
@@ -21,7 +21,8 @@ class BuyerEntityTypeConfiguration
         buyerConfiguration.HasIndex("IdentityGuid")
             .IsUnique(true);
 
-        buyerConfiguration.Property(b => b.Name);
+        buyerConfiguration.Property(b => b.Name)
+            .HasMaxLength(1000);
 
         buyerConfiguration.HasMany(b => b.PaymentMethods)
             .WithOne()

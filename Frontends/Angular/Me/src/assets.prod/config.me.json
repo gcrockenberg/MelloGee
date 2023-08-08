@@ -1,5 +1,5 @@
 {
-  "purchaseUrl": "https://me-dev.azure-api.net",
+  "calatogUrl": "https://me-dev.azure-api.net",
   "signalrHubUrl": "https://me-dev.azure-api.net",
   "activateCampaignDetailFunction": false
 }

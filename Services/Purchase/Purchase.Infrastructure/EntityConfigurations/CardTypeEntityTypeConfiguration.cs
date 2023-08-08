@@ -5,13 +5,13 @@ class CardTypeEntityTypeConfiguration
 {
     public void Configure(EntityTypeBuilder<CardType> cardTypesConfiguration)
     {
-        cardTypesConfiguration.ToTable("cardtypes", PurchaseContext.DEFAULT_SCHEMA);
+        cardTypesConfiguration.ToTable("cardtypes");
 
         cardTypesConfiguration.HasKey(ct => ct.Id);
 
         cardTypesConfiguration.Property(ct => ct.Id)
-            .HasDefaultValue(1)
-            .ValueGeneratedNever()
+            //.HasDefaultValue(1)
+            //.ValueGeneratedNever()
             .IsRequired();
 
         cardTypesConfiguration.Property(ct => ct.Name)

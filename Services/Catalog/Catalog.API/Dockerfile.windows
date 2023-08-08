@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/aspnet:8.0.0-preview.6 AS base
+FROM mcr.microsoft.com/dotnet/aspnet:8.0.0-preview.6-nanoserver-1809 AS base
 WORKDIR /app
 EXPOSE 80
 EXPOSE 443
@@ -7,8 +7,22 @@ EXPOSE 443
 ENV Kestrel__Endpoints__HTTP__Url=http://+:80
 ENV Kestrel__Endpoints__GRPC__Url=http://+:81
 ENV Kestrel__Endpoints__GRPC__Protocols=Http2
+ENV ASPNETCORE_ENVIRONMENT=Development
+ENV ConnectionStrings__EventBus=host.docker.internal
+ENV ConnectionStrings__CatalogDb=Server=host.docker.internal;Database=Me.Services.CatalogDb;User Id=sa;Password=${ME_MSSQL_SA_PASSWORD};Encrypt=False;TrustServerCertificate=true
+      # ConnectionStrings__CatalogDb: server=me-my-sql;port=3306;database=Me.Services.CatalogDb;uid=root;password=
+      # ConnectionStrings__CatalogDb: server=me-mariadb;port=3306;uid=root;password=;database=Me.Services.CatalogDb
+ENV EventBus__RetryCount=5
+ENV PicBaseUrl=https://stmedev.z13.web.core.windows.net/Catalog/[0].png
+      #      - AzureStorageAccountName=${ME_AZURE_STORAGE_CATALOG_NAME}
+      #      - AzureStorageAccountKey=${ME_AZURE_STORAGE_CATALOG_KEY}
+ENV UseCustomizationData=False
+ENV AzureStorageEnabled=False
+      #      - ApplicationInsights__InstrumentationKey=${INSTRUMENTATION_KEY}
+      #      - OrchestratorType=${ORCHESTRATOR_TYPE}
+ENV PATH_BASE=/catalog-api
 
-FROM mcr.microsoft.com/dotnet/sdk:8.0.100-preview.6 AS build
+FROM mcr.microsoft.com/dotnet/sdk:8.0.100-preview.6-nanoserver-1809 AS build
 WORKDIR /src
 
 # It's important to keep lines from here down to "COPY . ." identical in all Dockerfiles
@@ -30,13 +44,12 @@ COPY "Directory.Packages.props" "Directory.Packages.props"
 RUN dotnet restore "MeServices.sln"
 
 COPY . .
-WORKDIR /src/Services/Cart/Cart.API
+WORKDIR /src/Services/Catalog/Catalog.API
 RUN dotnet publish -c Release -o /app
+COPY "Services/Catalog/Catalog.API/Pics" "/app/Pics"
 FROM build AS publish
 
 FROM base AS final
-RUN apt-get update && apt-get install -y curl
-RUN apt-get install redis-tools -y
 WORKDIR /app
 COPY --from=publish /app .
-ENTRYPOINT ["dotnet", "Cart.API.dll"]
+ENTRYPOINT ["dotnet", "Catalog.API.dll"]

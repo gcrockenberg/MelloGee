@@ -4,14 +4,14 @@ class OrderEntityTypeConfiguration : IEntityTypeConfiguration<Order>
 {
     public void Configure(EntityTypeBuilder<Order> orderConfiguration)
     {
-        orderConfiguration.ToTable("orders", PurchaseContext.DEFAULT_SCHEMA);
+        orderConfiguration.ToTable("orders");
 
         orderConfiguration.HasKey(o => o.Id);
 
         orderConfiguration.Ignore(b => b.DomainEvents);
 
         orderConfiguration.Property(o => o.Id)
-            .UseHiLo("orderseq", PurchaseContext.DEFAULT_SCHEMA);
+            .UseHiLo("orderseq");
 
         //Address value object persisted as owned entity type supported since EF Core 2.0
         orderConfiguration
@@ -20,7 +20,7 @@ class OrderEntityTypeConfiguration : IEntityTypeConfiguration<Order>
                 // Explicit configuration of the shadow key property in the owned type 
                 // as a workaround for a documented issue in EF Core 5: https://github.com/dotnet/efcore/issues/20740
                 a.Property<int>("OrderId")
-                .UseHiLo("orderseq", PurchaseContext.DEFAULT_SCHEMA);
+                .UseHiLo("orderseq");
                 a.WithOwner();
             });
 

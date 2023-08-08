@@ -18,23 +18,53 @@ internal static class Extensions
 
     public static IServiceCollection AddDbContexts(this IServiceCollection services, IConfiguration configuration)
     {
-        static void ConfigureSqlOptions(SqlServerDbContextOptionsBuilder sqlOptions)
+        var logger = services.BuildServiceProvider().GetRequiredService<ILogger<DbContext>>();
+        //"server=localhost;port=3306;uid=root;password=;database=Me.Services.PurchaseDb"; // For migrations
+        var connectionString = configuration.GetRequiredConnectionString("PurchaseDb");
+
+        // static void ConfigureSqlOptions(SqlServerDbContextOptionsBuilder sqlOptions)
+        // {
+        //     sqlOptions.MigrationsAssembly(typeof(Program).Assembly.FullName);
+
+        //     // Configuring Connection Resiliency: https://docs.microsoft.com/en-us/ef/core/miscellaneous/connection-resiliency 
+
+        //     sqlOptions.EnableRetryOnFailure(maxRetryCount: 15, maxRetryDelay: TimeSpan.FromSeconds(30), errorNumbersToAdd: null);
+        // };
+
+        static void ConfigureSqlOptions(MySqlDbContextOptionsBuilder sqlOptions)
         {
             sqlOptions.MigrationsAssembly(typeof(Program).Assembly.FullName);
 
             // Configuring Connection Resiliency: https://docs.microsoft.com/en-us/ef/core/miscellaneous/connection-resiliency 
-
-            sqlOptions.EnableRetryOnFailure(maxRetryCount: 15, maxRetryDelay: TimeSpan.FromSeconds(30), errorNumbersToAdd: null);
+            sqlOptions.EnableRetryOnFailure(
+                maxRetryCount: 15, 
+                maxRetryDelay: TimeSpan.FromSeconds(30), 
+                errorNumbersToAdd: null);
         };
 
         services.AddDbContext<PurchaseContext>(options =>
         {
-            options.UseSqlServer(configuration.GetRequiredConnectionString("PurchaseDb"), ConfigureSqlOptions);
+            logger.LogInformation("--> PurchaseContext connectionString: {connectionString}", connectionString);
+            // MariaDb
+            options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString), ConfigureSqlOptions);
+            // The following three options help with debugging, but should
+            // be changed or removed for production.
+            //  .LogTo(Console.WriteLine, LogLevel.Trace)
+            //  .EnableSensitiveDataLogging()
+            //  .EnableDetailedErrors();
+
+            // SQL Server
+            //options.UseSqlServer(connectionString, ConfigureSqlOptions);
         });
 
         services.AddDbContext<IntegrationEventLogContext>(options =>
         {
-            options.UseSqlServer(configuration.GetRequiredConnectionString("PurchaseDb"), ConfigureSqlOptions);
+            logger.LogInformation("--> IntegrationEventLogContext connectionString: {connectionString}", connectionString);
+            options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString), ConfigureSqlOptions);
+            // .LogTo(Console.WriteLine, LogLevel.Trace)
+            //  .EnableSensitiveDataLogging()
+            //  .EnableDetailedErrors();
+            //options.UseSqlServer(connectionString, ConfigureSqlOptions);
         });
 
         return services;
