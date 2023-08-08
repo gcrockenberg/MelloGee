@@ -99,7 +99,7 @@ var defaultResources = {
 @description('The Container App microservices')
 var microservices = [
   {
-    skip: true
+    skip: false
     addToAPIM: false
     apiPath: ''
     //connectKeyVault: false
@@ -144,7 +144,7 @@ var microservices = [
   //   }
   // }
   { // Using MariaDb for demo because it requires 1/4 of the resources vs SQL Server
-    skip: true
+    skip: false
     addToAPIM: false
     apiPath: ''
     //connectKeyVault: false
@@ -163,7 +163,7 @@ var microservices = [
     resources: defaultResources // Less demanding that SQL Server
   }
   {
-    skip: true
+    skip: false
     addToAPIM: false
     apiPath: ''
     //connectKeyVault: false
@@ -177,7 +177,7 @@ var microservices = [
     resources: defaultResources
   }
   {
-    skip: true
+    skip: false
     addToAPIM: true
     apiPath: 'c'
     //connectKeyVault: false
@@ -207,7 +207,7 @@ var microservices = [
     resources: defaultResources
   }
   {
-    skip: true
+    skip: false
     addToAPIM: true
     apiPath: 'b'
     //connectKeyVault: false

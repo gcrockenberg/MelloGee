@@ -1,5 +1,7 @@
 {
   "calatogUrl": "https://me-dev.azure-api.net",
+  "orderUrl": "https://me-dev.azure-api.net",
+  "cartUrl": "https://me-dev.azure-api.net",
   "signalrHubUrl": "https://me-dev.azure-api.net",
   "activateCampaignDetailFunction": false
 }
