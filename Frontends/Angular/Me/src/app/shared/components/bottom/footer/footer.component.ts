@@ -34,7 +34,6 @@ export class FooterComponent {
   handleSubscription() {
     if (typeof this.emailInfo != 'undefined' && 0 < this.emailInfo.length) {
       this.subscription.set(true);
-      console.log(`--> subscribe email: ${this.emailInfo}`);
     }
     this.subscription.set(false);
   }

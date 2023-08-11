@@ -35,13 +35,11 @@ export class PagerComponent implements OnInit, OnChanges {
 
   onNextClicked(event: any) {
       event.preventDefault();
-      console.log('Pager next clicked');
       this.changed.emit(this.model.actualPage + 1);
   }
 
   onPreviousCliked(event: any) {
       event.preventDefault();
-      console.log('Pager previous clicked');
       this.changed.emit(this.model.actualPage - 1);
   }
 }

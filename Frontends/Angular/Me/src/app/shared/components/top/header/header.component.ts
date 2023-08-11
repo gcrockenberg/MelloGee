@@ -67,7 +67,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
 
   login(userFlowRequest?: RedirectRequest | PopupRequest) {
-    console.log('redirectUri: ', window.location.origin);
     this._securityService.login(userFlowRequest);
   }
 

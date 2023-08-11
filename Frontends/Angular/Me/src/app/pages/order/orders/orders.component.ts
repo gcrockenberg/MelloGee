@@ -32,7 +32,6 @@ export class OrdersComponent implements OnInit, IStripeSuccessComponent, IStripe
     this._orderService.getOrders()
       .pipe(catchError((err) => this._handleError(err)))
       .subscribe((orders: IOrderSummary[]) => {
-        console.log(orders);
         this.orders.set(orders);
       });
   }

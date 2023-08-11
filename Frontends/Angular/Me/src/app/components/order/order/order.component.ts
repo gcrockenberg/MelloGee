@@ -13,7 +13,6 @@ import { OrderItemComponent } from "../order-item/order-item.component";
 export class OrderComponent {
   private _order!: IOrder;
   @Input() set order(value: IOrder) {
-    console.log('--> received order: ', value);
     this._order = value;
   }
   get order(): IOrder { return this._order }

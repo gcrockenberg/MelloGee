@@ -45,9 +45,6 @@ export class OrderService {
     let cart: ICart = this._cartService.cart;
     let identityInfo: UserData = this._securityService.userData;
 
-    console.log(cart);
-    console.log(identityInfo);
-
     // Identity data mapping
     order.street = identityInfo.streetAddress;
     order.city = identityInfo.city;

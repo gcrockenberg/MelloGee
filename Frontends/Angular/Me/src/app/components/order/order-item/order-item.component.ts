@@ -12,7 +12,6 @@ import { IOrderItem } from 'src/app/models/order/order-item.model';
 export class OrderItemComponent {
   private _orderItem!: IOrderItem;
   @Input() set orderItem(value: IOrderItem) {
-    console.log('--> received order item: ', value);
     this._orderItem = value;
   }
   get orderItem(): IOrderItem { return this._orderItem }
