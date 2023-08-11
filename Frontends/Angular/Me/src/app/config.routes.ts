@@ -10,6 +10,9 @@ import { ProfileComponent } from './pages/profile/profile.component';
 import { NotFoundComponent } from './pages/not-found/not-found/not-found.component';
 import { CartComponent } from './pages/cart/cart/cart.component';
 import { OrdersComponent } from './pages/order/orders/orders.component';
+import { ProductsComponent } from './pages/products/products.component';
+import { SearchResultsComponent } from './pages/search/search-results/search-results.component';
+import { ProductDetailsComponent } from './pages/product-details/product-details.component';
 
 export const routes: Routes = [
     {
@@ -20,6 +23,18 @@ export const routes: Routes = [
     {
         path: 'catalog',
         component: CatalogComponent
+    },
+    {
+        path: 'products/:typeId',
+        component: ProductsComponent
+    },
+    {
+        path: 'product-details/:id',
+        component: ProductDetailsComponent
+    },
+    {
+        path: 'search/:searchTerm',
+        component: SearchResultsComponent
     },
     {
         path: 'cart',

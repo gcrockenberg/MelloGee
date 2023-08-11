@@ -85,7 +85,7 @@ export class CartService {
   }
 
 
-  changeQuantity(cartItemIndex: number, newQuantity: number) {
+  changeItemQuantity(cartItemIndex: number, newQuantity: number) {
     if (1 > newQuantity) {
       throw new Error(`Invalid cart item quantity: ${newQuantity}`);
     }
@@ -145,7 +145,7 @@ export class CartService {
   }
 
 
-  decreaseQuantity(cartItemIndex: number) {
+  decreaseItemQuantity(cartItemIndex: number) {
     if (this.cart.items.length <= cartItemIndex || 0 > cartItemIndex) {
       throw new Error(`Invalid cart item index: ${cartItemIndex}`);
     }
@@ -158,7 +158,7 @@ export class CartService {
   }
 
 
-  increaseQuantity(cartItemIndex: number) {
+  increaseItemQuantity(cartItemIndex: number) {
     if (this.cart.items.length <= cartItemIndex || 0 > cartItemIndex) {
       throw new Error(`Invalid cart item index: ${cartItemIndex}`);
     }
@@ -174,7 +174,7 @@ export class CartService {
     }
 
     this.cart.items.splice(cartItemIndex, 1);
-    this._postCartAndBroadcast;
+    this._postCartAndBroadcast();
   }
 
 
@@ -217,7 +217,9 @@ export class CartService {
   private _postCartAndBroadcast() {
     if (!this._configurationService.isReady) {
       this._configurationService.settingsLoaded$
-        .subscribe(() => this._postCartAndBroadcast())
+        .subscribe(() => { 
+          this._postCartAndBroadcast();
+        })
     } else {
       this.cart.sessionId = this._cookieService.get('SessionId');
 
@@ -226,6 +228,7 @@ export class CartService {
       this._dataService.post<ICart>(this._cartUrl, this.cart)
         .subscribe((response: ICart) => {
           this.cart = response;
+          this._cartUpdateSource.next(this.cart);
         });
 
       // Notify listeners

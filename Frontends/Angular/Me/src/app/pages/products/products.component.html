@@ -1,0 +1,20 @@
+<div class="pt-36 mb-8">
+    <div class="containe mx-auto">
+        <div class="flex gap-x-[30px]">
+            <app-category-nav />
+            <main>
+                <div class="py-3 text-xl uppercase text-center lg:text-left">
+                    {{ 0 < items().length ? 'category ' + productType() + ' (' + items().length + ')' : 
+                    'no results found for category ' + productType() }}
+                </div>
+                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-[15px] md:gap-[30px]">
+                    <!-- products grid -->
+                    <div *ngFor="let item of items()">
+                        <app-product [product]="item" />
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+</div>
+<app-catalog-item-modal />

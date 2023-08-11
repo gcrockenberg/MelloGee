@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { AppComponent } from './app.component';
 import { Component } from '@angular/core';
-import { HeaderComponent } from './shared/components/header/header.component';
+import { HeaderComponent } from './shared/components/top/header/header.component';
 import { RouterOutlet, provideRouter } from '@angular/router';
 
 

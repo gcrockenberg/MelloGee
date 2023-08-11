@@ -1,1 +1,6 @@
-<p class="text-black">orders works!</p>
+<div class="pt-36">
+    <h1 class="px-6">Orders</h1>
+    <div *ngFor="let order of orders()">
+        <app-order-summary [orderSummary]="order" />
+    </div>
+</div>

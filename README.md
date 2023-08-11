@@ -16,6 +16,7 @@ A project to demonstrate full-stack aspects of a microservice based solution hos
 - Stripe for order checkout
 
 ![Me architecture](Images/Me%20Architecture.png)
+![Me Purchase Db](Images/PurchaseDB.png)
 
 <h1>Notes</h1>
 <ul>

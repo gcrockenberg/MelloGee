@@ -11,6 +11,7 @@ class OrderEntityTypeConfiguration : IEntityTypeConfiguration<Order>
         orderConfiguration.Ignore(b => b.DomainEvents);
 
         orderConfiguration.Property(o => o.Id)
+            //.ValueGeneratedOnAdd();
             .UseHiLo("orderseq");
 
         //Address value object persisted as owned entity type supported since EF Core 2.0
@@ -24,11 +25,15 @@ class OrderEntityTypeConfiguration : IEntityTypeConfiguration<Order>
                 a.WithOwner();
             });
 
-        orderConfiguration
-            .Property<int?>("_buyerId")
-            .UsePropertyAccessMode(PropertyAccessMode.Field)
-            .HasColumnName("BuyerId")
-            .IsRequired(false);
+        // orderConfiguration
+        //     .Property<int?>("_buyerId")
+        //     .UsePropertyAccessMode(PropertyAccessMode.Field)
+        //     .HasColumnName("BuyerId")
+        //     .IsRequired(false);
+
+        orderConfiguration.HasOne(e => e.Buyer)
+        .WithMany(e => e.Orders)
+        .HasForeignKey(e => e.BuyerId);
 
         orderConfiguration
             .Property<DateTime>("_orderDate")
@@ -43,11 +48,11 @@ class OrderEntityTypeConfiguration : IEntityTypeConfiguration<Order>
             .HasColumnName("OrderStatusId")
             .IsRequired();
 
-        orderConfiguration
-            .Property<int?>("_paymentMethodId")
-            .UsePropertyAccessMode(PropertyAccessMode.Field)
-            .HasColumnName("PaymentMethodId")
-            .IsRequired(false);
+        // orderConfiguration
+        //     .Property<int?>("_paymentMethodId")
+        //     .UsePropertyAccessMode(PropertyAccessMode.Field)
+        //     .HasColumnName("PaymentMethodId")
+        //     .IsRequired(false);
 
         orderConfiguration.Property<string>("Description").IsRequired(false);
 
@@ -57,18 +62,18 @@ class OrderEntityTypeConfiguration : IEntityTypeConfiguration<Order>
         //Set as field (New since EF 1.1) to access the OrderItem collection property through its field
         navigation.SetPropertyAccessMode(PropertyAccessMode.Field);
 
-        orderConfiguration.HasOne<PaymentMethod>()
-            .WithMany()
-            // .HasForeignKey("PaymentMethodId")
-            .HasForeignKey("_paymentMethodId")
-            .IsRequired(false)
-            .OnDelete(DeleteBehavior.Restrict);
+        // orderConfiguration.HasOne<PaymentMethod>()
+        //     .WithMany()
+        //     // .HasForeignKey("PaymentMethodId")
+        //     .HasForeignKey("_paymentMethodId")
+        //     .IsRequired(false)
+        //     .OnDelete(DeleteBehavior.Restrict);
 
-        orderConfiguration.HasOne<Buyer>()
-            .WithMany()
-            .IsRequired(false)
-            // .HasForeignKey("BuyerId");
-            .HasForeignKey("_buyerId");
+        // orderConfiguration.HasOne<Buyer>()
+        //     .WithMany()
+        //     .IsRequired(false)
+        //     // .HasForeignKey("BuyerId");
+        //     .HasForeignKey("_buyerId");
 
         orderConfiguration.HasOne(o => o.OrderStatus)
             .WithMany()

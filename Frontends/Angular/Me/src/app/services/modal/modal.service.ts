@@ -9,9 +9,8 @@ export class ModalService {
     private modals: IModal[] = [];
 
     add(modal: IModal) {
-        // ensure component has a unique id attribute
         if (!modal.id || this.modals.find(x => x.id === modal.id)) {
-            throw new Error(`Modal id: ${ modal.id } must be unique. Modal count: ${ this.modals.length }`);
+            return;
         }
 
         // add modal to array of active modals

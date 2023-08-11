@@ -1,0 +1,21 @@
+<div class="pt-36 lg:pt-8 pb-8">
+    <div class="container mx-auto">
+        <div class="flex gap-x-[30px]">
+            <app-category-nav />
+            <div>
+                <div class="py-3 text-xl uppercase text-center lg:text-left">
+                    {{ 0 < items().length ? items().length + ' results for ' + searchTerm : 
+                    'no results found for ' + searchTerm }}
+                </div>
+                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-[15px] md:gap-[30px]">
+                    <!-- products grid -->
+                    <div *ngFor="let item of items()">
+                        <app-product [product]="item" />
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<app-catalog-item-modal id="catalog-items-modal" />

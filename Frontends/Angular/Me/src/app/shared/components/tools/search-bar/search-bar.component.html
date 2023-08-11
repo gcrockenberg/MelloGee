@@ -1,0 +1,6 @@
+<form class="relative w-full {{ isAnimating() ? 'animate-shake' : 'animate-none' }}" (submit)="handleSubmit($event)" action="submit">
+    <input #searchInput (input)="setSearchTerm($event)" class="input" type="text" placeholder="Search for a product...">
+    <button class="btn btn-accent absolute top-0 right-0 rounded-tl-none rounded-bl-none">
+        <ng-icon class="text-xl transition" name="bootstrapSearch" />
+    </button>
+</form>

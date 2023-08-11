@@ -6,5 +6,5 @@ import { WritableSignal } from "@angular/core";
  */
 export interface ISidebar {
     id: string;
-    isOpen: WritableSignal<boolean>;
+    readonly isOpen: WritableSignal<boolean>;
 }

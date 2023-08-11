@@ -7,21 +7,25 @@ public class Buyer
 
     public string Name { get; private set; }
 
-    private List<PaymentMethod> _paymentMethods;
 
-    public IEnumerable<PaymentMethod> PaymentMethods => _paymentMethods.AsReadOnly();
+    private List<PaymentMethod> _paymentMethods;
+    public virtual IEnumerable<PaymentMethod> PaymentMethods => _paymentMethods.AsReadOnly();
+
+    public virtual ICollection<Order> Orders { get; } = new List<Order>();
+
 
     protected Buyer()
     {
-
         _paymentMethods = new List<PaymentMethod>();
     }
+    
 
     public Buyer(string identity, string name) : this()
     {
         IdentityGuid = !string.IsNullOrWhiteSpace(identity) ? identity : throw new ArgumentNullException(nameof(identity));
         Name = !string.IsNullOrWhiteSpace(name) ? name : throw new ArgumentNullException(nameof(name));
     }
+
 
     public PaymentMethod VerifyOrAddPaymentMethod(
         int cardTypeId, string alias, string cardNumber,
@@ -32,7 +36,7 @@ public class Buyer
 
         if (existingPayment != null)
         {
-            AddDomainEvent(new BuyerPaymentMethodVerifiedDomainEvent(this, existingPayment, orderId));
+            //AddDomainEvent(new BuyerPaymentMethodVerifiedDomainEvent(this, existingPayment, orderId));
 
             return existingPayment;
         }
@@ -41,7 +45,7 @@ public class Buyer
 
         _paymentMethods.Add(payment);
 
-        AddDomainEvent(new BuyerPaymentMethodVerifiedDomainEvent(this, payment, orderId));
+        //AddDomainEvent(new BuyerPaymentMethodVerifiedDomainEvent(this, payment, orderId));
 
         return payment;
     }

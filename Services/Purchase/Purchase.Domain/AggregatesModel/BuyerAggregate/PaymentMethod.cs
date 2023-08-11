@@ -15,14 +15,15 @@ public class PaymentMethod : Entity
 
     public PaymentMethod(int cardTypeId, string alias, string cardNumber, string securityNumber, string cardHolderName, DateTime expiration)
     {
-        _cardNumber = !string.IsNullOrWhiteSpace(cardNumber) ? cardNumber : throw new PurchaseDomainException(nameof(cardNumber));
-        _securityNumber = !string.IsNullOrWhiteSpace(securityNumber) ? securityNumber : throw new PurchaseDomainException(nameof(securityNumber));
-        _cardHolderName = !string.IsNullOrWhiteSpace(cardHolderName) ? cardHolderName : throw new PurchaseDomainException(nameof(cardHolderName));
+        _cardNumber = !string.IsNullOrWhiteSpace(cardNumber) ? cardNumber : "stripe";               // throw new PurchaseDomainException(nameof(cardNumber));
+        _securityNumber = !string.IsNullOrWhiteSpace(securityNumber) ? securityNumber : "stripe";   // throw new PurchaseDomainException(nameof(securityNumber));
+        _cardHolderName = !string.IsNullOrWhiteSpace(cardHolderName) ? cardHolderName : "stripe";   // throw new PurchaseDomainException(nameof(cardHolderName));
 
-        if (expiration < DateTime.UtcNow)
-        {
-            throw new PurchaseDomainException(nameof(expiration));
-        }
+        // Stripe
+        // if (expiration < DateTime.UtcNow)
+        // {
+        //     throw new PurchaseDomainException(nameof(expiration));
+        // }
 
         _alias = alias;
         _expiration = expiration;

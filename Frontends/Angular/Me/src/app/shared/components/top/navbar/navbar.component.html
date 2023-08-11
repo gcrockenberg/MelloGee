@@ -1,0 +1,68 @@
+<header class="w-full fixed top-0 z-40 py-3 transition duration-500 {{ showBackground() ? 'bg-zinc-900 bg-opacity-90' : '' }}">
+    <a (click)="handleLogoClicked()" class="absolute top-2 left-2">
+        <img class="object-cover w-16 h-16 lg:w-24 lg:h-24 rounded-full border-2 border-zinc-800 
+             {{ logoClicked() ? 'animate-spin' : 'animate-none' }} transition-all"
+            src="assets/images/GerardAvatarPray.png" alt="avatar" >
+    </a>
+    <div class="
+        py-3
+        flex
+        flex-row
+        justify-between
+        items-center">
+
+        <!-- flex display will override hidden (aka display: none) when activated -->
+        <div class="
+            ml-24
+            lg:ml-32
+            flex-row
+            duration-500
+            gap-6
+            hidden
+            md:flex">
+            <app-navbar-item label="Catalog" href="/catalog" />
+            <app-navbar-item label="3D" href="/3D" />
+            <app-navbar-item label="Secure" href="/secure" />
+        </div>
+
+        <div class="hidden mx-8 w-full lg:flex xl:max-w-[734px]">
+            <app-search-bar class="w-full" />
+        </div>
+
+        <!-- Mobile -->
+        <!-- hidden (aka display: none) will override flex display when activated -->
+        <div (click)="setShowMobileMenu()"
+            class="md:hidden flex flex-row items-center gap-2 ml-20 cursor-pointer relative">
+            <ng-icon class="text-3xl transition {{ showMobileMenu() ? 'rotate-180' : 'rotate-0' }}"
+                name="bootstrapJustify" />
+            <app-mobile-menu [visible]="showMobileMenu()" />
+        </div>
+        <!--End Mobile-->
+
+        <div class="flex flex-row gap-7 items-center mr-12">
+            <app-cart-status />
+            <!-- <div class="text-gray-200 hover:text-gray-300 cursor-pointer transition">
+                <ng-icon class="text-white transition" name="bootstrapSearch" />
+            </div> -->
+            <div class="text-gray-200 hover:text-gray-300 cursor-pointer transition">
+                <ng-icon class="text-white transition" name="bootstrapBell" />
+            </div>
+            <button *ngIf="!isAuthorized()" (click)="login()" type="submit"
+                class="bg-red-600 py-2 px-4 text-white rounded-md w-full hover:bg-red-700 transition">
+                Login
+            </button>
+            <div *ngIf="isAuthorized()" (click)="setShowAccountMenu()"
+                class="flex flex-row items-center gap-2 cursor-pointer relative">
+                <div class="w-6 h-6 lg:w-10 lg:h-10 rounded-md overflow-hidden">
+                    <img src="/assets/images/default-blue.png" alt="Profile">
+                </div>
+                <ng-icon class="text-white transition {{ showAccountMenu() ? 'rotate-180' : 'rotate-0' }}"
+                    name="bootstrapChevronDown" />
+                <app-account-menu [visible]="showAccountMenu()" />
+            </div>
+        </div>
+    </div>
+    <div class="lg:hidden px-6 mt-2">
+        <app-search-bar />
+    </div>
+</header>

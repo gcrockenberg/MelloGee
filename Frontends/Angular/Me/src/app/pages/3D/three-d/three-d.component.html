@@ -1,15 +1,12 @@
-<div class="flex items-center h-full justify-center bg-black">
+<div class="relative h-screen flex flex-row justify-center">
     <video aria-hidden="true" class="h-[56.25.vw] w-full object-cover brightness-[60%]" autoplay loop muted
         oncanplay="this.play()" onloadedmetadata="this.muted = true">
         <source src="assets/videos/space.mp4"> Your browser does not support the video tag.
     </video>
-<model-viewer alt="Neil Armstrong's Spacesuit from the Smithsonian Digitization Programs Office and National Air and Space Museum" 
-    class="absolute top-0 right-0 bottom-0 left-0 h-full w-full"
-    src="assets/models/NeilArmstrong.glb" 
-    ar 
-    environment-image="assets/environments/moon_1k.hdr" 
-    poster="assets/models/NeilArmstrong.webp" 
-    shadow-intensity="1" 
-    camera-controls touch-action="pan-y">
-</model-viewer>
+    <model-viewer
+        alt="Neil Armstrong's Spacesuit from the Smithsonian Digitization Programs Office and National Air and Space Museum"
+        class="absolute top-20 bottom-0 h-full transition-all" src="assets/models/NeilArmstrong.glb" ar
+        environment-image="assets/environments/moon_1k.hdr" poster="assets/models/NeilArmstrong.webp"
+        shadow-intensity="1" camera-controls touch-action="pan-y">
+    </model-viewer>
 </div>

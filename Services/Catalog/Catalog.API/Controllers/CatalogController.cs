@@ -99,6 +99,8 @@ public class CatalogController : ControllerBase
         }
 
         var item = await _catalogContext.CatalogItems
+            .Include(item => item.CatalogBrand)
+            .Include(item => item.CatalogType)
             .AsNoTracking()
             .SingleOrDefaultAsync(ci => ci.Id == id);
 
@@ -128,6 +130,31 @@ public class CatalogController : ControllerBase
 
         var itemsOnPage = await _catalogContext.CatalogItems
             .Where(c => c.Name.StartsWith(name))
+            .Skip(pageSize * pageIndex)
+            .Take(pageSize)
+            .AsNoTracking()
+            .ToListAsync();
+
+        itemsOnPage = _ChangeUriPlaceholder(itemsOnPage);
+
+        return new PaginatedItemsViewModel<CatalogItem>(pageIndex, pageSize, totalItems, itemsOnPage);
+    }
+
+
+    // GET api/v1/[controller]/items/search/sampleterm[?pageSize=3&pageIndex=10]
+    [HttpGet]
+    [Route("items/search/{term:minlength(1)}")]
+    public async Task<ActionResult<PaginatedItemsViewModel<CatalogItem>>> ItemsSearchAsync(string term, [FromQuery] int pageSize = 10, [FromQuery] int pageIndex = 0)
+    {
+        var totalItems = await _catalogContext.CatalogItems
+            .Where(c => c.Name.Contains(term))
+            .AsNoTracking()
+            .LongCountAsync();
+
+        var itemsOnPage = await _catalogContext.CatalogItems
+            .Include(item => item.CatalogBrand)
+            .Include(item => item.CatalogType)
+            .Where(c => c.Name.Contains(term))
             .Skip(pageSize * pageIndex)
             .Take(pageSize)
             .AsNoTracking()

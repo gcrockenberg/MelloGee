@@ -19,9 +19,10 @@ internal static class Extensions
     public static IServiceCollection AddDbContexts(this IServiceCollection services, IConfiguration configuration)
     {
         var logger = services.BuildServiceProvider().GetRequiredService<ILogger<DbContext>>();
-        //"server=localhost;port=3306;uid=root;password=;database=Me.Services.PurchaseDb"; // For migrations
-        var connectionString = configuration.GetRequiredConnectionString("PurchaseDb");
 
+// To provide the connection string for Migrations
+// $env:ConnectionStrings__PurchaseDb='server=localhost;port=3306;uid=root;password=;database=Me.Services.PurchaseDb'
+        var connectionString = configuration.GetRequiredConnectionString("PurchaseDb");
         // static void ConfigureSqlOptions(SqlServerDbContextOptionsBuilder sqlOptions)
         // {
         //     sqlOptions.MigrationsAssembly(typeof(Program).Assembly.FullName);
@@ -33,18 +34,16 @@ internal static class Extensions
 
         static void ConfigureSqlOptions(MySqlDbContextOptionsBuilder sqlOptions)
         {
-            sqlOptions.MigrationsAssembly(typeof(Program).Assembly.FullName);
-
+            sqlOptions.MigrationsAssembly(typeof(Program).Assembly.FullName)
             // Configuring Connection Resiliency: https://docs.microsoft.com/en-us/ef/core/miscellaneous/connection-resiliency 
-            sqlOptions.EnableRetryOnFailure(
-                maxRetryCount: 15, 
-                maxRetryDelay: TimeSpan.FromSeconds(30), 
-                errorNumbersToAdd: null);
+                .EnableRetryOnFailure(
+                    maxRetryCount: 15, 
+                    maxRetryDelay: TimeSpan.FromSeconds(30), 
+                    errorNumbersToAdd: null);
         };
 
         services.AddDbContext<PurchaseContext>(options =>
         {
-            logger.LogInformation("--> PurchaseContext connectionString: {connectionString}", connectionString);
             // MariaDb
             options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString), ConfigureSqlOptions);
             // The following three options help with debugging, but should
@@ -59,7 +58,6 @@ internal static class Extensions
 
         services.AddDbContext<IntegrationEventLogContext>(options =>
         {
-            logger.LogInformation("--> IntegrationEventLogContext connectionString: {connectionString}", connectionString);
             options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString), ConfigureSqlOptions);
             // .LogTo(Console.WriteLine, LogLevel.Trace)
             //  .EnableSensitiveDataLogging()

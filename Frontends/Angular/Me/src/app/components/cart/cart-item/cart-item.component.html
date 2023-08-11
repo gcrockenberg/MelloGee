@@ -1,0 +1,40 @@
+<div class="flex gap-x-4">
+    <a class="w-[70px] h-[70px]" (click)="displayItemDetails()">
+        <img class="" [src]="item().pictureUrl" alt="Product image">
+    </a>
+    <div class="flex-1">
+        <div class="flex justify-between gap-x-4 mb-3">
+            <a class="" (click)="displayItemDetails()">
+                {{item().productName}}
+            </a>
+            <!-- the remove icon -->
+            <div class="flex justify-center items-center cursor-pointer text-[24px] hover:text-accent transition-all"
+                (click)="removeItem()">
+                <ng-icon class="" name="bootstrapX" />
+            </div>
+        </div>
+
+        <div class="flex items-center gap-x-12">
+            <!-- quantity and price -->
+            <div class="flex gap-x-4 mb-2">
+                <app-quantity-buttons class="w-[100px]" *ngIf="9 < item().quantity" [value]="item().quantity"
+                    (onIncreaseQuantity)="increaseQuantity()" (onDecreaseQuantity)="decreaseQuantity()"
+                    (onChangeQuantity)="changeQuantity($event)" />
+                <app-quantity-select class="w-[100px]" *ngIf="10 > item().quantity" [value]="item().quantity"
+                    (onChangeQuantity)="changeQuantity($event)" />
+            </div>
+            <!-- subtotal -->
+            <div class="text-accent text-xl">
+                $ {{ subTotal() | number: '1.2-2' }}
+            </div>
+        </div>
+
+        <!-- unit price -->
+        <div class="">
+            <span class="text-accent">
+                $ {{ item().unitPrice | number: '1.2-2' }} ea.
+            </span>
+        </div>
+
+    </div>
+</div>

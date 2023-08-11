@@ -12,6 +12,7 @@ class BuyerEntityTypeConfiguration
         buyerConfiguration.Ignore(b => b.DomainEvents);
 
         buyerConfiguration.Property(b => b.Id)
+            //.ValueGeneratedOnAdd();
             .UseHiLo("buyerseq");
 
         buyerConfiguration.Property(b => b.IdentityGuid)

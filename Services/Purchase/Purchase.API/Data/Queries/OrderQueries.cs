@@ -15,18 +15,28 @@ public class OrderQueries
 
     public async Task<Order> GetOrderAsync(int id)
     {
-        using var connection = new SqlConnection(_connectionString);
+        //using var connection = new SqlConnection(_connectionString);
+        using var connection = new MySqlConnection(_connectionString);
         connection.Open();
 
         var result = await connection.QueryAsync<dynamic>(
-            @"select o.[Id] as ordernumber,o.OrderDate as date, o.Description as description,
-                    o.Address_City as city, o.Address_Country as country, o.Address_State as state, o.Address_Street as street, o.Address_ZipCode as zipcode,
-                    os.Name as status, 
-                    oi.ProductName as productname, oi.Units as units, oi.UnitPrice as unitprice, oi.PictureUrl as pictureurl
-                    FROM purchase.Orders o
-                    LEFT JOIN purchase.Orderitems oi ON o.Id = oi.orderid 
-                    LEFT JOIN purchase.orderstatus os on o.OrderStatusId = os.Id
-                    WHERE o.Id=@id"
+            @"SELECT o.Id AS ordernumber, 
+                o.OrderDate as date, 
+                o.Description as description,
+                o.Address_City as city, 
+                o.Address_Country as country, 
+                o.Address_State as state, 
+                o.Address_Street as street, 
+                o.Address_ZipCode as zipcode,
+                os.Name as status, 
+                oi.ProductName as productname, 
+                oi.Units as units, 
+                oi.UnitPrice as unitprice, 
+                oi.PictureUrl as pictureurl
+            FROM orders o
+            LEFT JOIN orderItems oi ON o.Id = oi.orderid 
+            LEFT JOIN orderstatus os on o.OrderStatusId = os.Id
+            WHERE o.Id=@id"
                 , new { id }
             );
 
@@ -39,17 +49,23 @@ public class OrderQueries
 
     public async Task<IEnumerable<OrderSummary>> GetOrdersFromUserAsync(Guid userId)
     {
-        using var connection = new SqlConnection(_connectionString);
+        //using var connection = new SqlConnection(_connectionString);
+        using var connection = new MySqlConnection(_connectionString);
         connection.Open();
 
-        return await connection.QueryAsync<OrderSummary>(@"SELECT o.[Id] as ordernumber,o.[OrderDate] as [date],os.[Name] as [status], SUM(oi.units*oi.unitprice) as total
-                    FROM [purchase].[Orders] o
-                    LEFT JOIN[purchase].[orderitems] oi ON  o.Id = oi.orderid 
-                    LEFT JOIN[purchase].[orderstatus] os on o.OrderStatusId = os.Id                     
-                    LEFT JOIN[purchase].[buyers] ob on o.BuyerId = ob.Id
-                    WHERE ob.IdentityGuid = @userId
-                    GROUP BY o.[Id], o.[OrderDate], os.[Name] 
-                    ORDER BY o.[Id]", new { userId });
+        return await connection.QueryAsync<OrderSummary>(
+            @"SELECT o.Id as ordernumber,
+                o.OrderDate as date,
+                os.Name as STATUS, 
+                SUM(oi.units*oi.unitprice) as total
+            FROM orders o
+            LEFT JOIN orderItems oi ON  o.Id = oi.orderid 
+            LEFT JOIN orderstatus os on o.OrderStatusId = os.Id                     
+            LEFT JOIN buyers ob on o.BuyerId = ob.Id
+            WHERE ob.IdentityGuid = @userId
+            GROUP BY o.Id, o.OrderDate, os.Name 
+            ORDER BY o.Id", 
+            new { userId });
     }
 
 

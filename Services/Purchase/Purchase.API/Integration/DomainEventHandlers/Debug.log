@@ -1,0 +1,621 @@
+2023-08-10 21:09:05       Authorization was successful.
+2023-08-10 21:09:05       --> Adding gRPC Cart endpoint: http://me-cart-api:81
+2023-08-10 21:09:06       grpc client created, request = ba5020f5-9dee-4232-b0bf-1f81e09e3d33::ffff:172.18.0.8
+2023-08-10 21:09:06       Starting gRPC call. Method type: 'Unary', URI: 'http://me-cart-api:81/CartApi.Cart/GetCartBySessionId'.
+
+2023-08-10 21:09:06       Sending request http://me-cart-api:81/CartApi.Cart/GetCartBySessionId.
+
+2023-08-10 21:09:06       Start processing HTTP request POST http://me-cart-api:81/CartApi.Cart/GetCartBySessionId
+2023-08-10 21:09:06       Request Headers:
+2023-08-10 21:09:06       User-Agent: grpc-dotnet/2.55.0, (.NET 8.0.0-preview.6.23329.7; CLR 8.0.0; net7.0; linux; x64)
+2023-08-10 21:09:06       TE: trailers
+2023-08-10 21:09:06       grpc-accept-encoding: identity,gzip,deflate
+2023-08-10 21:09:06       Content-Type: application/grpc
+
+2023-08-10 21:09:06       Starting connect callback for me-cart-api:81.
+
+2023-08-10 21:09:06       Sending message.
+2023-08-10 21:09:06       Serialized 'GrpcCart.CartRequest' to 55 byte message.
+2023-08-10 21:09:06       Message sent.
+
+2023-08-10 21:09:06       Received HTTP response headers after 323.8817ms - 200
+
+2023-08-10 21:09:06       Response Headers:
+2023-08-10 21:09:06       Date: Fri, 11 Aug 2023 01:09:06 GMT
+2023-08-10 21:09:06       Server: Kestrel
+2023-08-10 21:09:06       Content-Type: application/grpc
+2023-08-10 21:09:06       End processing HTTP request after 392.3739ms - 200
+
+2023-08-10 21:09:06       Response headers received.
+2023-08-10 21:09:06       Reading message.
+2023-08-10 21:09:06       Deserializing 482 byte message to 'GrpcCart.CustomerCartResponse'.
+2023-08-10 21:09:06       Received message.
+2023-08-10 21:09:06       Finished gRPC call.
+2023-08-10 21:09:07       grpc response { "sessionid": "ba5020f5-9dee-4232-b0bf-1f81e09e3d33::ffff:172.18.0.8", "items": [ { "id": "2dc7fb79-e87a-4353-837d-6ca4dac5f7ae", "productid": 5, "productname": "Roslyn Red Sheet", "unitprice": 8.5, "quantity": 1, "pictureurl": "https://stmedev.z13.web.core.windows.net/Catalog/5.png" }, { "id": "a63605b7-23f1-4c10-a8dd-23ccc0c32967", "productid": 31, "productname": "Women's Short Sleeve Moisture", "unitprice": 7.95, "quantity": 1, "pictureurl": "https://stmedev.z13.web.core.windows.net/Catalog/31.png" }, { "id": "94b101a1-24b6-400c-839a-b47a2b5244a8", "productid": 28, "productname": "Women's Hooded Faux Leather Moto Biker Jacket", "unitprice": 29.95, "quantity": 1, "pictureurl": "https://stmedev.z13.web.core.windows.net/Catalog/28.png" } ] }
+2023-08-10 21:09:07       Retrieved Cart via gRPC: Me.Services.Purchase.API.Data.Models.CustomerCart
+
+2023-08-10 21:09:07       Sending command: IdentifiedCommand<CreateOrderCommand,Boolean> - Id: c5d0c52f-98a5-48ec-b4d6-8265fb90f15c (Me.Services.Purchase.API.MediatR.Commands.IdentifiedCommand`2[Me.Services.Purchase.API.MediatR.Commands.CreateOrderCommand,System.Boolean])
+2023-08-10 21:09:07       INSTANCE CREATED - IdentifiedCommandValidator
+
+2023-08-10 21:09:07       Entity Framework Core 7.0.9 initialized 'PurchaseContext' using provider 'Pomelo.EntityFrameworkCore.MySql:7.0.0' with options: MigrationsAssembly=Purchase.API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null ServerVersion 11.0.2-mariadb 
+2023-08-10 21:09:07       Creating DbConnection.
+
+2023-08-10 21:09:07       Handling command IdentifiedCommand<CreateOrderCommand,Boolean> (Me.Services.Purchase.API.MediatR.Commands.IdentifiedCommand`2[Me.Services.Purchase.API.MediatR.Commands.CreateOrderCommand,System.Boolean])
+MediatR.Behaviors.ValidatorBehavior[0]
+2023-08-10 21:09:07       Validating command IdentifiedCommand<CreateOrderCommand,Boolean>
+2023-08-10 21:09:07       Opening connection to database 'Me.Services.PurchaseDb' on server 'me-mariadb'.
+
+2023-08-10 21:09:07       Beginning transaction with isolation level 'ReadCommitted'.
+2023-08-10 21:09:07       Begin transaction 19822465-471f-4b20-94ae-6b7500dca319 for IdentifiedCommand<CreateOrderCommand,Boolean> (Me.Services.Purchase.API.MediatR.Commands.IdentifiedCommand`2[Me.Services.Purchase.API.MediatR.Commands.CreateOrderCommand,System.Boolean])
+2023-08-10 21:09:07       Compiling query expression: 
+2023-08-10 21:09:07       'DbSet<ClientRequest>()
+2023-08-10 21:09:07           .FirstOrDefault(e => object.Equals(
+2023-08-10 21:09:07               objA: EF.Property<object>(e, "Id"), 
+2023-08-10 21:09:07               objB: __get_Item_0))'
+
+2023-08-10 21:09:07       Generated query execution expression: 
+2023-08-10 21:09:07       'queryContext => ShapedQueryCompilingExpressionVisitor.SingleOrDefaultAsync<ClientRequest>(
+2023-08-10 21:09:07           asyncEnumerable: new SingleQueryingEnumerable<ClientRequest>(
+2023-08-10 21:09:07               (RelationalQueryContext)queryContext, 
+2023-08-10 21:09:07               RelationalCommandCache.QueryExpression(
+2023-08-10 21:09:07                   Projection Mapping:
+2023-08-10 21:09:07                       EmptyProjectionMember -> Dictionary<IProperty, int> { [Property: ClientRequest.Id (Guid) Required PK AfterSave:Throw ValueGenerated.OnAdd, 0], [Property: ClientRequest.Name (string) Required MaxLength(1000), 1], [Property: ClientRequest.Time (DateTime) Required, 2] }
+2023-08-10 21:09:07                   SELECT TOP(1) r.Id, r.Name, r.Time
+2023-08-10 21:09:07                   FROM requests AS r
+2023-08-10 21:09:07                   WHERE r.Id == @__get_Item_0), 
+2023-08-10 21:09:07               ReaderColumn[] { ReaderColumn<Guid>, ReaderColumn<object>, ReaderColumn<DateTime> }, 
+2023-08-10 21:09:07               Func<QueryContext, DbDataReader, ResultContext, SingleQueryResultCoordinator, ClientRequest>, 
+2023-08-10 21:09:07               Me.Services.Purchase.Infrastructure.PurchaseContext, 
+2023-08-10 21:09:07               False, 
+2023-08-10 21:09:07               False, 
+2023-08-10 21:09:07               True
+2023-08-10 21:09:07           ), 
+
+2023-08-10 21:09:07       Executed DbCommand (66ms) [Parameters=[@__get_Item_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+2023-08-10 21:09:07       SELECT `r`.`Id`, `r`.`Name`, `r`.`Time`
+2023-08-10 21:09:07       FROM `requests` AS `r`
+2023-08-10 21:09:07       WHERE `r`.`Id` = @__get_Item_0
+2023-08-10 21:09:07       LIMIT 1
+
+2023-08-10 21:09:07       Created DbCommand for 'ExecuteReader' (0ms).
+2023-08-10 21:09:07       Executed DbCommand (16ms) [Parameters=[@__get_Item_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+2023-08-10 21:09:07       SELECT `r`.`Id`, `r`.`Name`, `r`.`Time`
+2023-08-10 21:09:07       FROM `requests` AS `r`
+2023-08-10 21:09:07       WHERE `r`.`Id` = @__get_Item_0
+2023-08-10 21:09:07       LIMIT 1
+
+EntityFrameworkCore.ChangeTracking[10806]
+2023-08-10 21:09:07       Context 'PurchaseContext' started tracking 'ClientRequest' entity. 
+2023-08-10 21:09:07       SaveChanges starting for 'PurchaseContext'.
+2023-08-10 21:09:08       DetectChanges completed for 'PurchaseContext'.
+
+EntityFrameworkCore.Database.Transaction[20212]
+2023-08-10 21:09:08       Created transaction savepoint.
+
+2023-08-10 21:09:08       Created DbCommand for 'ExecuteReader' (2ms).
+2023-08-10 21:09:08       Executed DbCommand (66ms) [Parameters=[@p0='?' (DbType = Guid), @p1='?' (Size = 1000), @p2='?' (DbType = DateTime)], CommandType='Text', CommandTimeout='30']
+2023-08-10 21:09:08       SET AUTOCOMMIT = 1;
+2023-08-10 21:09:08       INSERT INTO `requests` (`Id`, `Name`, `Time`)
+2023-08-10 21:09:08       VALUES (@p0, @p1, @p2);
+
+EntityFrameworkCore.Database.Transaction[20216]
+2023-08-10 21:09:08       Released transaction savepoint.
+
+EntityFrameworkCore.ChangeTracking[10807]
+2023-08-10 21:09:08       An entity of type 'ClientRequest' tracked by 'PurchaseContext' changed state from 'Added' to 'Unchanged'. 
+2023-08-10 21:09:08       SaveChanges completed for 'PurchaseContext' with 1 entities written to the database.
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Update the "requests" table with the "CreateOrderCommand" ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+
+
+MediatR.Commands.IdentifiedCommandHandler[0]        "<-- MediatR Command Router and de-duplicator"
+2023-08-10 21:09:08       Sending command: CreateOrderCommand - UserId: 07fbb900-ab24-44b0-a94b-a66449cd49ad (Me.Services.Purchase.API.MediatR.Commands.CreateOrderCommand)
+MediatR.Validations.CreateOrderCommandValidator[0]  "<-- MediatR step 1 - Registered in Program.cs"
+2023-08-10 21:09:08       INSTANCE CREATED - CreateOrderCommandValidator 
+2023-08-10 21:09:08       Validating command CreateOrderCommand
+
+
+CREATE_ORDER_EVENT_HANDLER
+Integration.PurchaseIntegrationEventService[0]      "<-- Issue EventBus event"
+2023-08-10 21:09:08       Enqueuing integration event 16900b13-a82d-428c-8e66-cf76c9d56654 to repository (OrderStartedIntegrationEvent { Id = 16900b13-a82d-428c-8e66-cf76c9d56654, CreationDate = 08/11/2023 01:09:08, UserId = 07fbb900-ab24-44b0-a94b-a66449cd49ad, SourceCartSessionId = ba5020f5-9dee-4232-b0bf-1f81e09e3d33::ffff:172.18.0.8 })
+2023-08-10 21:09:08       Creating Order - Order: Me.Services.Purchase.Domain.AggregatesModel.OrderAggregate.Order
+EntityFrameworkCore.ChangeTracking[10808]           "<-- OrderRepository.Add(Order)"    vv" HiLo "vv                  vv" I could re-run with the MySql logging on "vv
+2023-08-10 21:09:08       'PurchaseContext' generated a temporary value for the property 'Id.Order'. Consider using 'DbContextOptionsBuilder.EnableSensitiveDataLogging' to see key values.
+2023-08-10 21:09:08       Context 'PurchaseContext' started tracking 'Order' entity.                        "<-- could turn on logging"
+2023-08-10 21:09:08       Context 'PurchaseContext' started tracking 'Address' entity.      "<-- Created Order "                      
+ChangeTracking[10808]                                       vv" HiLo "vv
+2023-08-10 21:09:08       'PurchaseContext' generated a temporary value for the property 'Id.OrderItem'.    "<-- could turn on logging"
+2023-08-10 21:09:08       Context 'PurchaseContext' started tracking 'OrderItem' entity.    "<-- Created OrderItem "                      
+ChangeTracking[10808]                                       vv" HiLo "vv
+2023-08-10 21:09:08       'PurchaseContext' generated a temporary value for the property 'Id.OrderItem'.    "<-- could turn on logging"
+2023-08-10 21:09:08       Context 'PurchaseContext' started tracking 'OrderItem' entity.    "<-- Created OrderItem "                    
+ChangeTracking[10808]                                       vv" HiLo "vv
+2023-08-10 21:09:08       'PurchaseContext' generated a temporary value for the property 'Id.OrderItem'.    "<-- could turn on logging"
+2023-08-10 21:09:08       Context 'PurchaseContext' started tracking 'OrderItem' entity.    "<-- Created OrderItem "
+ChangeTracking[10801]
+2023-08-10 21:09:08       DetectChanges completed for 'PurchaseContext'.
+
+Microsoft.EntityFrameworkCore.Query[10111]
+2023-08-10 21:09:08       Compiling query expression: 
+2023-08-10 21:09:08       'DbSet<Buyer>()
+2023-08-10 21:09:08           .Include(b => b.PaymentMethods)
+2023-08-10 21:09:08           .Where(b => b.IdentityGuid == __identity_0)
+2023-08-10 21:09:08           .SingleOrDefault()'
+Query[10112]
+2023-08-10 21:09:08       Including navigation: 'Buyer.PaymentMethods'.
+EntityFrameworkCore.Database.Command[20101]     vv" Query Buyer cartesian PaymentMethods "vv
+2023-08-10 21:09:08       Executed DbCommand (4ms) [Parameters=[@__identity_0='?' (Size = 200)], CommandType='Text', CommandTimeout='30']
+2023-08-10 21:09:08       SELECT `t`.`Id`, `t`.`IdentityGuid`, `t`.`Name`, `p`.`Id`, `p`.`BuyerId`, `p`.`Alias`, `p`.`CardHolderName`, `p`.`CardNumber`, `p`.`CardTypeId`, `p`.`Expiration`
+2023-08-10 21:09:08       FROM (
+2023-08-10 21:09:08           SELECT `b`.`Id`, `b`.`IdentityGuid`, `b`.`Name`
+2023-08-10 21:09:08           FROM `buyers` AS `b`
+2023-08-10 21:09:08           WHERE `b`.`IdentityGuid` = @__identity_0
+2023-08-10 21:09:08           LIMIT 2
+2023-08-10 21:09:08       ) AS `t`
+2023-08-10 21:09:08       LEFT JOIN `paymentmethods` AS `p` ON `t`.`Id` = `p`.`BuyerId`
+2023-08-10 21:09:08       ORDER BY `t`.`Id`
+
+EntityFrameworkCore.ChangeTracking[10808]                  vv" HiLo "vv
+2023-08-10 21:09:08       'PurchaseContext' generated a temporary value for the property 'Id.Buyer'.        "<-- could turn on logging"
+2023-08-10 21:09:08       Context 'PurchaseContext' started tracking 'Buyer' entity.        "<-- Created Buyer "
+ChangeTracking[10808]                                      vv" HiLo "vv
+2023-08-10 21:09:08       'PurchaseContext' generated a temporary value for the property 'Id.PaymentMethod'. "<-- could turn on logging"
+2023-08-10 21:09:08       Context 'PurchaseContext' started tracking 'PaymentMethod' entity. "<-- Created PaymentMethod "
+ChangeTracking[10801]
+2023-08-10 21:09:08       DetectChanges completed for 'PurchaseContext'.
+
+EntityFrameworkCore.Query[10111]
+2023-08-10 21:09:08       Compiling query expression: 
+2023-08-10 21:09:08       'DbSet<Order>()
+2023-08-10 21:09:08           .Include(x => x.Address)
+2023-08-10 21:09:08           .FirstOrDefault(o => o.Id == __orderId_0)'
+Query[10112]
+2023-08-10 21:09:08       Including navigation: 'Order.Address'.
+EntityFrameworkCore.Database.Command[20101]               "NOW WE'RE QUERYING THE ORDER BUT THE TRANSACTION HASN'T COMMITTED"
+2023-08-10 21:09:09       Executed DbCommand (3ms) [Parameters=[@__orderId_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+2023-08-10 21:09:09       SELECT `o`.`Id`, `o`.`Description`, `o`.`BuyerId`, `o`.`OrderDate`, `o`.`OrderStatusId`, `o`.`PaymentMethodId`, `o`.`Address_City`, `o`.`Address_Country`, `o`.`Address_State`, `o`.`Address_Street`, `o`.`Address_ZipCode`
+2023-08-10 21:09:09       FROM `orders` AS `o`
+2023-08-10 21:09:09       WHERE `o`.`Id` = @__orderId_0
+2023-08-10 21:09:09       LIMIT 1
+EntityFrameworkCore.ChangeTracking[10801]
+2023-08-10 21:09:09       DetectChanges completed for 'PurchaseContext'.
+
+EntityFrameworkCore.Query[10111]
+2023-08-10 21:09:09       Compiling query expression: 
+2023-08-10 21:09:09       'DbSet<OrderItem>()
+2023-08-10 21:09:09           .Where(e => EF.Property<int>(e, "OrderId") == __p_0)
+2023-08-10 21:09:09           .AsTracking()'
+EntityFrameworkCore.Database.Command[20101]                "THE ORDER ITEMS"
+2023-08-10 21:09:09       Executed DbCommand (6ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+2023-08-10 21:09:09       SELECT `o`.`Id`, `o`.`OrderId`, `o`.`ProductId`, `o`.`Discount`, `o`.`PictureUrl`, `o`.`ProductName`, `o`.`UnitPrice`, `o`.`Units`
+2023-08-10 21:09:09       FROM `orderItems` AS `o`
+2023-08-10 21:09:09       WHERE `o`.`OrderId` = @__p_0
+
+Microsoft.EntityFrameworkCore.Query[10111]
+2023-08-10 21:09:09       Compiling query expression: 
+2023-08-10 21:09:09       'DbSet<OrderStatus>()
+2023-08-10 21:09:09           .Where(e => EF.Property<int>(e, "Id") == __p_0)
+2023-08-10 21:09:09           .AsTracking()'
+EntityFrameworkCore.Database.Command[20101]                 "THE ORDER STATUS THAT MATCHES THE ORDER"
+2023-08-10 21:09:09       Executed DbCommand (1ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+2023-08-10 21:09:09       SELECT `o`.`Id`, `o`.`Name`
+2023-08-10 21:09:09       FROM `orderstatus` AS `o`
+2023-08-10 21:09:09       WHERE `o`.`Id` = @__p_0
+
+EntityFrameworkCore.ChangeTracking[10805]                   "DID THE ORDER.STATUS CHANGE OR THE OrderSTatus ENTITY ??????"
+2023-08-10 21:09:09       The navigation 'Order.OrderStatus' was detected as changed. 
+2023-08-10 21:09:09       Context 'PurchaseContext' started tracking 'OrderStatus' entity.    "<--- ?????"
+
+Integration.DomainEventHandlers.UpdateOrderWhenBuyerAndPaymentMethodVerifiedDomainEventHandler[2]
+2023-08-10 21:09:09       Order with Id: 0 has been successfully updated with a payment method Payment (0)   "ORDERS CREATED WITH PaymentMethod NULL"
+
+============================================================ " FINALLY SAVING CHANGES " ==============================================================
+
+EntityFrameworkCore.Update[10004]        
+2023-08-10 21:09:09       SaveChanges starting for 'PurchaseContext'.
+EntityFrameworkCore.ChangeTracking[10800]
+2023-08-10 21:09:09       DetectChanges starting for 'PurchaseContext'.
+ChangeTracking[10802]
+2023-08-10 21:09:09       The unchanged property 'Order._buyerId' was detected as changed and will be marked as modified.
+ChangeTracking[10803]
+2023-08-10 21:09:09       The foreign key property 'Order._buyerId' was detected as changed.
+ChangeTracking[10802]
+2023-08-10 21:09:09       The unchanged property 'Order._paymentMethodId' was detected as changed and will be marked as modified.
+ChangeTracking[10803]
+2023-08-10 21:09:09       The foreign key property 'Order._paymentMethodId' was detected as changed.
+ChangeTracking[10801]
+2023-08-10 21:09:09       DetectChanges completed for 'PurchaseContext'.
+
+EntityFrameworkCore.Update[20700]
+2023-08-10 21:09:09       Executing 2 update commands as a batch.
+EntityFrameworkCore.Database.Transaction[20213]
+2023-08-10 21:09:09       Created transaction savepoint.
+
+EntityFrameworkCore.Database.Command[20103]
+2023-08-10 21:09:09       Created DbCommand for 'ExecuteReader' (0ms).
+Command[20100]
+2023-08-10 21:09:09       Executed DbCommand (3ms) [Parameters=[@p0='?' (Size = 200), @p1='?' (Size = 1000), @p2='?' (Size = 4000), @p3='?' (DbType = Int32), @p4='?' (DbType = DateTime), @p5='?' (DbType = Int32), @p6='?' (DbType = Int32), @p7='?' (Size = 4000), @p8='?' (Size = 4000), @p9='?' (Size = 4000), @p10='?' (Size = 4000), @p11='?' (Size = 4000)], CommandType='Text', CommandTimeout='30']
+2023-08-10 21:09:09       INSERT INTO `buyers` (`IdentityGuid`, `Name`)
+2023-08-10 21:09:09       VALUES (@p0, @p1)
+2023-08-10 21:09:09       RETURNING `Id`;
+2023-08-10 21:09:09       INSERT INTO `orders` (`Description`, `BuyerId`, `OrderDate`, `OrderStatusId`, `PaymentMethodId`, `Address_City`, `Address_Country`, `Address_State`, `Address_Street`, `Address_ZipCode`)
+2023-08-10 21:09:09       VALUES (@p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9, @p10, @p11)
+2023-08-10 21:09:09       RETURNING `Id`;
+EntityFrameworkCore.ChangeTracking[10803]
+2023-08-10 21:09:09       The foreign key property 'Buyer.Id' was detected as changed.              
+ChangeTracking[10803]
+2023-08-10 21:09:09       The foreign key property 'PaymentMethod.BuyerId' was detected as changed.
+EntityFrameworkCore.Database.Transaction[20214]
+2023-08-10 21:09:09       Rolled back to transaction savepoint.
+Transaction[20216]
+2023-08-10 21:09:09       Released transaction savepoint.
+2023-08-10 21:09:09 fail: Microsoft.EntityFrameworkCore.Update[10000]
+2023-08-10 21:09:09       An exception occurred in the database while saving changes for context type 'Me.Services.Purchase.Infrastructure.PurchaseContext'.
+2023-08-10 21:09:09       Microsoft.EntityFrameworkCore.DbUpdateException: An error occurred while saving the entity changes. See the inner exception for details.
+2023-08-10 21:09:09        ---> MySqlConnector.MySqlException (0x80004005): Cannot add or update a child row: a foreign key constraint fails (`Me.Services.PurchaseDb`.`orders`, CONSTRAINT `FK_orders_buyers_BuyerId` FOREIGN KEY (`BuyerId`) REFERENCES `buyers` (`Id`))
+2023-08-10 21:09:09          at MySqlConnector.Core.ResultSet.<ScanRowAsync>g__ScanRowAsyncAwaited|9_0(ResultSet resultSet, Task`1 payloadTask, Row row, CancellationToken token) in /_/src/MySqlConnector/Core/ResultSet.cs:line 244
+2023-08-10 21:09:09          at MySqlConnector.Core.ResultSet.ReadAsync(IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ResultSet.cs:line 199
+2023-08-10 21:09:09          at MySqlConnector.MySqlDataReader.ReadAsync(CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlDataReader.cs:line 38
+2023-08-10 21:09:09          at Pomelo.EntityFrameworkCore.MySql.Update.Internal.MySqlModificationCommandBatch.ConsumeResultSetAsync(Int32 startCommandIndex, RelationalDataReader reader, CancellationToken cancellationToken)
+2023-08-10 21:09:09          at Microsoft.EntityFrameworkCore.Update.AffectedCountModificationCommandBatch.ConsumeAsync(RelationalDataReader reader, CancellationToken cancellationToken)
+2023-08-10 21:09:09          --- End of inner exception stack trace ---
+2023-08-10 21:09:09          at Microsoft.EntityFrameworkCore.Update.AffectedCountModificationCommandBatch.ConsumeAsync(RelationalDataReader reader, CancellationToken cancellationToken)
+2023-08-10 21:09:09          at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+2023-08-10 21:09:09          at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+2023-08-10 21:09:09          at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+2023-08-10 21:09:09          at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+2023-08-10 21:09:09          at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+2023-08-10 21:09:09          at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(IList`1 entriesToSave, CancellationToken cancellationToken)
+2023-08-10 21:09:09          at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(StateManager stateManager, Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+2023-08-10 21:09:09          at Microsoft.EntityFrameworkCore.Storage.ExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+2023-08-10 21:09:09          at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+2023-08-10 21:09:09       Microsoft.EntityFrameworkCore.DbUpdateException: An error occurred while saving the entity changes. See the inner exception for details.
+2023-08-10 21:09:09        ---> MySqlConnector.MySqlException (0x80004005): Cannot add or update a child row: a foreign key constraint fails (`Me.Services.PurchaseDb`.`orders`, CONSTRAINT `FK_orders_buyers_BuyerId` FOREIGN KEY (`BuyerId`) REFERENCES `buyers` (`Id`))
+2023-08-10 21:09:09          at MySqlConnector.Core.ResultSet.<ScanRowAsync>g__ScanRowAsyncAwaited|9_0(ResultSet resultSet, Task`1 payloadTask, Row row, CancellationToken token) in /_/src/MySqlConnector/Core/ResultSet.cs:line 244
+2023-08-10 21:09:09          at MySqlConnector.Core.ResultSet.ReadAsync(IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ResultSet.cs:line 199
+2023-08-10 21:09:09          at MySqlConnector.MySqlDataReader.ReadAsync(CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlDataReader.cs:line 38
+2023-08-10 21:09:09          at Pomelo.EntityFrameworkCore.MySql.Update.Internal.MySqlModificationCommandBatch.ConsumeResultSetAsync(Int32 startCommandIndex, RelationalDataReader reader, CancellationToken cancellationToken)
+2023-08-10 21:09:09          at Microsoft.EntityFrameworkCore.Update.AffectedCountModificationCommandBatch.ConsumeAsync(RelationalDataReader reader, CancellationToken cancellationToken)
+2023-08-10 21:09:09          --- End of inner exception stack trace ---
+2023-08-10 21:09:09          at Microsoft.EntityFrameworkCore.Update.AffectedCountModificationCommandBatch.ConsumeAsync(RelationalDataReader reader, CancellationToken cancellationToken)
+2023-08-10 21:09:09          at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+2023-08-10 21:09:09          at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+2023-08-10 21:09:09          at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+2023-08-10 21:09:09          at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+2023-08-10 21:09:09          at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+2023-08-10 21:09:09          at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(IList`1 entriesToSave, CancellationToken cancellationToken)
+2023-08-10 21:09:09          at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(StateManager stateManager, Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+2023-08-10 21:09:09          at Microsoft.EntityFrameworkCore.Storage.ExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+2023-08-10 21:09:09          at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+2023-08-10 21:09:09 fail: Me.Services.Purchase.API.MediatR.Behaviors.TransactionBehavior[0]
+2023-08-10 21:09:09       Error Handling transaction for CreateOrderCommand (Me.Services.Purchase.API.MediatR.Commands.CreateOrderCommand)
+2023-08-10 21:09:09       Microsoft.EntityFrameworkCore.DbUpdateException: An error occurred while saving the entity changes. See the inner exception for details.
+2023-08-10 21:09:09        ---> MySqlConnector.MySqlException (0x80004005): Cannot add or update a child row: a foreign key constraint fails (`Me.Services.PurchaseDb`.`orders`, CONSTRAINT `FK_orders_buyers_BuyerId` FOREIGN KEY (`BuyerId`) REFERENCES `buyers` (`Id`))
+2023-08-10 21:09:09          at MySqlConnector.Core.ResultSet.<ScanRowAsync>g__ScanRowAsyncAwaited|9_0(ResultSet resultSet, Task`1 payloadTask, Row row, CancellationToken token) in /_/src/MySqlConnector/Core/ResultSet.cs:line 244
+2023-08-10 21:09:09          at MySqlConnector.Core.ResultSet.ReadAsync(IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ResultSet.cs:line 199
+2023-08-10 21:09:09          at MySqlConnector.MySqlDataReader.ReadAsync(CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlDataReader.cs:line 38
+2023-08-10 21:09:09          at Pomelo.EntityFrameworkCore.MySql.Update.Internal.MySqlModificationCommandBatch.ConsumeResultSetAsync(Int32 startCommandIndex, RelationalDataReader reader, CancellationToken cancellationToken)
+2023-08-10 21:09:09          at Microsoft.EntityFrameworkCore.Update.AffectedCountModificationCommandBatch.ConsumeAsync(RelationalDataReader reader, CancellationToken cancellationToken)
+2023-08-10 21:09:09          --- End of inner exception stack trace ---
+2023-08-10 21:09:09          at Microsoft.EntityFrameworkCore.Update.AffectedCountModificationCommandBatch.ConsumeAsync(RelationalDataReader reader, CancellationToken cancellationToken)
+2023-08-10 21:09:09          at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+2023-08-10 21:09:09          at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+2023-08-10 21:09:09          at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+2023-08-10 21:09:09          at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+2023-08-10 21:09:09          at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+2023-08-10 21:09:09          at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(IList`1 entriesToSave, CancellationToken cancellationToken)
+2023-08-10 21:09:09          at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(StateManager stateManager, Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+2023-08-10 21:09:09          at Microsoft.EntityFrameworkCore.Storage.ExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+2023-08-10 21:09:09          at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+2023-08-10 21:09:09          at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+2023-08-10 21:09:09          at Me.Services.Purchase.Infrastructure.PurchaseContext.SaveEntitiesAsync(CancellationToken cancellationToken) in /src/Services/Purchase/Purchase.Infrastructure/PurchaseContext.cs:line 53
+2023-08-10 21:09:09          at Me.Services.Purchase.API.Integration.DomainEventHandlers.ValidateOrAddBuyerAggregateWhenOrderStartedDomainEventHandler.Handle(OrderStartedDomainEvent domainEvent, CancellationToken cancellationToken) in /src/Services/Purchase/Purchase.API/Integration/DomainEventHandlers/ValidateOrAddBuyerAggregateWhenOrderStartedDomainEventHandler.cs:line 43
+2023-08-10 21:09:09          at MediatR.NotificationPublishers.ForeachAwaitPublisher.Publish(IEnumerable`1 handlerExecutors, INotification notification, CancellationToken cancellationToken)
+2023-08-10 21:09:09          at Me.Services.Purchase.Infrastructure.MediatorExtension.DispatchDomainEventsAsync(IMediator mediator, PurchaseContext ctx) in /src/Services/Purchase/Purchase.Infrastructure/MediatorExtensions.cs:line 19
+2023-08-10 21:09:09          at Me.Services.Purchase.Infrastructure.PurchaseContext.SaveEntitiesAsync(CancellationToken cancellationToken) in /src/Services/Purchase/Purchase.Infrastructure/PurchaseContext.cs:line 49
+2023-08-10 21:09:09          at Me.Services.Purchase.API.MediatR.Commands.CreateOrderCommandHandler.Handle(CreateOrderCommand message, CancellationToken cancellationToken) in /src/Services/Purchase/Purchase.API/MediatR/Commands/CreateOrderCommandHandler.cs:line 52
+2023-08-10 21:09:09          at Me.Services.Purchase.API.MediatR.Behaviors.TransactionBehavior`2.Handle(TRequest request, RequestHandlerDelegate`1 next, CancellationToken cancellationToken) in /src/Services/Purchase/Purchase.API/MediatR/Behaviors/TransactionBehavior.cs:line 29
+2023-08-10 21:09:09 info: Me.Services.Purchase.API.MediatR.Behaviors.TransactionBehavior[0]
+2023-08-10 21:09:09       Commit transaction 19822465-471f-4b20-94ae-6b7500dca319 for IdentifiedCommand<CreateOrderCommand,Boolean>
+
+2023-08-10 21:09:09 dbug: Microsoft.EntityFrameworkCore.Update[10004]
+2023-08-10 21:09:09       SaveChanges starting for 'PurchaseContext'.
+2023-08-10 21:09:09 dbug: Microsoft.EntityFrameworkCore.ChangeTracking[10800]
+2023-08-10 21:09:09       DetectChanges starting for 'PurchaseContext'.
+2023-08-10 21:09:09 dbug: Microsoft.EntityFrameworkCore.ChangeTracking[10802]
+2023-08-10 21:09:09       The unchanged property 'Buyer.Id' was detected as changed and will be marked as modified. Consider using 'DbContextOptionsBuilder.EnableSensitiveDataLogging' to see property values.
+2023-08-10 21:09:09 dbug: Microsoft.EntityFrameworkCore.ChangeTracking[10803]
+2023-08-10 21:09:09       The foreign key property 'Buyer.Id' was detected as changed. Consider using 'DbContextOptionsBuilder.EnableSensitiveDataLogging' to see property values.
+2023-08-10 21:09:09 dbug: Microsoft.EntityFrameworkCore.ChangeTracking[10802]
+2023-08-10 21:09:09       The unchanged property 'PaymentMethod.BuyerId' was detected as changed and will be marked as modified. Consider using 'DbContextOptionsBuilder.EnableSensitiveDataLogging' to see property values.
+2023-08-10 21:09:09 dbug: Microsoft.EntityFrameworkCore.ChangeTracking[10803]
+2023-08-10 21:09:09       The foreign key property 'PaymentMethod.BuyerId' was detected as changed. Consider using 'DbContextOptionsBuilder.EnableSensitiveDataLogging' to see property values.
+2023-08-10 21:09:09 dbug: Microsoft.EntityFrameworkCore.ChangeTracking[10801]
+2023-08-10 21:09:09       DetectChanges completed for 'PurchaseContext'.
+2023-08-10 21:09:09 dbug: Microsoft.EntityFrameworkCore.Update[20700]
+2023-08-10 21:09:09       Executing 2 update commands as a batch.
+2023-08-10 21:09:09 dbug: Microsoft.EntityFrameworkCore.Database.Transaction[20212]
+2023-08-10 21:09:09       Creating transaction savepoint.
+2023-08-10 21:09:09 dbug: Microsoft.EntityFrameworkCore.Database.Transaction[20213]
+2023-08-10 21:09:09       Created transaction savepoint.
+2023-08-10 21:09:09 dbug: Microsoft.EntityFrameworkCore.Database.Command[20103]
+2023-08-10 21:09:09       Creating DbCommand for 'ExecuteReader'.
+2023-08-10 21:09:09 dbug: Microsoft.EntityFrameworkCore.Database.Command[20104]
+2023-08-10 21:09:09       Created DbCommand for 'ExecuteReader' (0ms).
+2023-08-10 21:09:09 dbug: Microsoft.EntityFrameworkCore.Database.Command[20106]
+2023-08-10 21:09:09       Initialized DbCommand for 'ExecuteReader' (0ms).
+2023-08-10 21:09:09 dbug: Microsoft.EntityFrameworkCore.Database.Command[20100]
+2023-08-10 21:09:09       Executing DbCommand [Parameters=[@p0='?' (Size = 200), @p1='?' (Size = 1000), @p2='?' (Size = 4000), @p3='?' (DbType = Int32), @p4='?' (DbType = DateTime), @p5='?' (DbType = Int32), @p6='?' (DbType = Int32), @p7='?' (Size = 4000), @p8='?' (Size = 4000), @p9='?' (Size = 4000), @p10='?' (Size = 4000), @p11='?' (Size = 4000)], CommandType='Text', CommandTimeout='30']
+2023-08-10 21:09:09       INSERT INTO `buyers` (`IdentityGuid`, `Name`)
+2023-08-10 21:09:09       VALUES (@p0, @p1)
+2023-08-10 21:09:09       RETURNING `Id`;
+2023-08-10 21:09:09       INSERT INTO `orders` (`Description`, `BuyerId`, `OrderDate`, `OrderStatusId`, `PaymentMethodId`, `Address_City`, `Address_Country`, `Address_State`, `Address_Street`, `Address_ZipCode`)
+2023-08-10 21:09:09       VALUES (@p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9, @p10, @p11)
+2023-08-10 21:09:09       RETURNING `Id`;
+2023-08-10 21:09:09 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+2023-08-10 21:09:09       Executed DbCommand (1ms) [Parameters=[@p0='?' (Size = 200), @p1='?' (Size = 1000), @p2='?' (Size = 4000), @p3='?' (DbType = Int32), @p4='?' (DbType = DateTime), @p5='?' (DbType = Int32), @p6='?' (DbType = Int32), @p7='?' (Size = 4000), @p8='?' (Size = 4000), @p9='?' (Size = 4000), @p10='?' (Size = 4000), @p11='?' (Size = 4000)], CommandType='Text', CommandTimeout='30']
+2023-08-10 21:09:09       INSERT INTO `buyers` (`IdentityGuid`, `Name`)
+2023-08-10 21:09:09       VALUES (@p0, @p1)
+2023-08-10 21:09:09       RETURNING `Id`;
+2023-08-10 21:09:09       INSERT INTO `orders` (`Description`, `BuyerId`, `OrderDate`, `OrderStatusId`, `PaymentMethodId`, `Address_City`, `Address_Country`, `Address_State`, `Address_Street`, `Address_ZipCode`)
+2023-08-10 21:09:09       VALUES (@p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9, @p10, @p11)
+2023-08-10 21:09:09       RETURNING `Id`;
+2023-08-10 21:09:09 dbug: Microsoft.EntityFrameworkCore.ChangeTracking[10803]
+2023-08-10 21:09:09       The foreign key property 'Buyer.Id' was detected as changed. Consider using 'DbContextOptionsBuilder.EnableSensitiveDataLogging' to see property values.
+2023-08-10 21:09:09 dbug: Microsoft.EntityFrameworkCore.ChangeTracking[10803]
+2023-08-10 21:09:09       The foreign key property 'PaymentMethod.BuyerId' was detected as changed. Consider using 'DbContextOptionsBuilder.EnableSensitiveDataLogging' to see property values.
+2023-08-10 21:09:09 dbug: Microsoft.EntityFrameworkCore.Database.Command[20301]
+2023-08-10 21:09:09       Closing data reader to 'Me.Services.PurchaseDb' on server 'me-mariadb'.
+2023-08-10 21:09:09 dbug: Microsoft.EntityFrameworkCore.Database.Command[20300]
+2023-08-10 21:09:09       A data reader for 'Me.Services.PurchaseDb' on server 'me-mariadb' is being disposed after spending 1ms reading results.
+2023-08-10 21:09:09 dbug: Microsoft.EntityFrameworkCore.Database.Transaction[20214]
+2023-08-10 21:09:09       Rolling back to transaction savepoint.
+2023-08-10 21:09:09 dbug: Microsoft.EntityFrameworkCore.Database.Transaction[20215]
+2023-08-10 21:09:09       Rolled back to transaction savepoint.
+2023-08-10 21:09:09 dbug: Microsoft.EntityFrameworkCore.Database.Transaction[20216]
+2023-08-10 21:09:09       Releasing transaction savepoint.
+2023-08-10 21:09:09 dbug: Microsoft.EntityFrameworkCore.Database.Transaction[20217]
+2023-08-10 21:09:09       Released transaction savepoint.
+2023-08-10 21:09:09 fail: Microsoft.EntityFrameworkCore.Update[10000]
+2023-08-10 21:09:09       An exception occurred in the database while saving changes for context type 'Me.Services.Purchase.Infrastructure.PurchaseContext'.
+2023-08-10 21:09:09       Microsoft.EntityFrameworkCore.DbUpdateException: An error occurred while saving the entity changes. See the inner exception for details.
+2023-08-10 21:09:09        ---> MySqlConnector.MySqlException (0x80004005): Cannot add or update a child row: a foreign key constraint fails (`Me.Services.PurchaseDb`.`orders`, CONSTRAINT `FK_orders_buyers_BuyerId` FOREIGN KEY (`BuyerId`) REFERENCES `buyers` (`Id`))
+2023-08-10 21:09:09          at MySqlConnector.Core.ResultSet.<ScanRowAsync>g__ScanRowAsyncAwaited|9_0(ResultSet resultSet, Task`1 payloadTask, Row row, CancellationToken token) in /_/src/MySqlConnector/Core/ResultSet.cs:line 244
+2023-08-10 21:09:09          at MySqlConnector.Core.ResultSet.ReadAsync(IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ResultSet.cs:line 199
+2023-08-10 21:09:09          at MySqlConnector.MySqlDataReader.ReadAsync(CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlDataReader.cs:line 38
+2023-08-10 21:09:09          at Pomelo.EntityFrameworkCore.MySql.Update.Internal.MySqlModificationCommandBatch.ConsumeResultSetAsync(Int32 startCommandIndex, RelationalDataReader reader, CancellationToken cancellationToken)
+2023-08-10 21:09:09          at Microsoft.EntityFrameworkCore.Update.AffectedCountModificationCommandBatch.ConsumeAsync(RelationalDataReader reader, CancellationToken cancellationToken)
+2023-08-10 21:09:09          --- End of inner exception stack trace ---
+2023-08-10 21:09:09          at Microsoft.EntityFrameworkCore.Update.AffectedCountModificationCommandBatch.ConsumeAsync(RelationalDataReader reader, CancellationToken cancellationToken)
+2023-08-10 21:09:09          at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+2023-08-10 21:09:09          at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+2023-08-10 21:09:09          at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+2023-08-10 21:09:09          at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+2023-08-10 21:09:09          at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+2023-08-10 21:09:09          at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(IList`1 entriesToSave, CancellationToken cancellationToken)
+2023-08-10 21:09:09          at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(StateManager stateManager, Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+2023-08-10 21:09:09          at Microsoft.EntityFrameworkCore.Storage.ExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+2023-08-10 21:09:09          at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+2023-08-10 21:09:09       Microsoft.EntityFrameworkCore.DbUpdateException: An error occurred while saving the entity changes. See the inner exception for details.
+2023-08-10 21:09:09        ---> MySqlConnector.MySqlException (0x80004005): Cannot add or update a child row: a foreign key constraint fails (`Me.Services.PurchaseDb`.`orders`, CONSTRAINT `FK_orders_buyers_BuyerId` FOREIGN KEY (`BuyerId`) REFERENCES `buyers` (`Id`))
+2023-08-10 21:09:09          at MySqlConnector.Core.ResultSet.<ScanRowAsync>g__ScanRowAsyncAwaited|9_0(ResultSet resultSet, Task`1 payloadTask, Row row, CancellationToken token) in /_/src/MySqlConnector/Core/ResultSet.cs:line 244
+2023-08-10 21:09:09          at MySqlConnector.Core.ResultSet.ReadAsync(IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ResultSet.cs:line 199
+2023-08-10 21:09:09          at MySqlConnector.MySqlDataReader.ReadAsync(CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlDataReader.cs:line 38
+2023-08-10 21:09:09          at Pomelo.EntityFrameworkCore.MySql.Update.Internal.MySqlModificationCommandBatch.ConsumeResultSetAsync(Int32 startCommandIndex, RelationalDataReader reader, CancellationToken cancellationToken)
+2023-08-10 21:09:09          at Microsoft.EntityFrameworkCore.Update.AffectedCountModificationCommandBatch.ConsumeAsync(RelationalDataReader reader, CancellationToken cancellationToken)
+2023-08-10 21:09:09          --- End of inner exception stack trace ---
+2023-08-10 21:09:09          at Microsoft.EntityFrameworkCore.Update.AffectedCountModificationCommandBatch.ConsumeAsync(RelationalDataReader reader, CancellationToken cancellationToken)
+2023-08-10 21:09:09          at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+2023-08-10 21:09:09          at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+2023-08-10 21:09:09          at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+2023-08-10 21:09:09          at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+2023-08-10 21:09:09          at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+2023-08-10 21:09:09          at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(IList`1 entriesToSave, CancellationToken cancellationToken)
+2023-08-10 21:09:09          at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(StateManager stateManager, Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+2023-08-10 21:09:09          at Microsoft.EntityFrameworkCore.Storage.ExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+2023-08-10 21:09:09          at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+2023-08-10 21:09:09 dbug: Microsoft.EntityFrameworkCore.Database.Transaction[20211]
+2023-08-10 21:09:09       Rolling back transaction.
+2023-08-10 21:09:09 dbug: Microsoft.EntityFrameworkCore.Database.Transaction[20203]
+2023-08-10 21:09:09       Rolled back transaction.
+2023-08-10 21:09:09 dbug: Microsoft.EntityFrameworkCore.Database.Connection[20002]
+2023-08-10 21:09:09       Closing connection to database 'Me.Services.PurchaseDb' on server 'me-mariadb'.
+2023-08-10 21:09:09 dbug: Microsoft.EntityFrameworkCore.Database.Connection[20003]
+2023-08-10 21:09:09       Closed connection to database 'Me.Services.PurchaseDb' on server 'me-mariadb' (1ms).
+2023-08-10 21:09:09 dbug: Microsoft.EntityFrameworkCore.Database.Transaction[20204]
+2023-08-10 21:09:09       Disposing transaction.
+2023-08-10 21:09:09 fail: Me.Services.Purchase.API.MediatR.Behaviors.TransactionBehavior[0]
+2023-08-10 21:09:09       Error Handling transaction for IdentifiedCommand<CreateOrderCommand,Boolean> (Me.Services.Purchase.API.MediatR.Commands.IdentifiedCommand`2[Me.Services.Purchase.API.MediatR.Commands.CreateOrderCommand,System.Boolean])
+2023-08-10 21:09:09       Microsoft.EntityFrameworkCore.DbUpdateException: An error occurred while saving the entity changes. See the inner exception for details.
+2023-08-10 21:09:09        ---> MySqlConnector.MySqlException (0x80004005): Cannot add or update a child row: a foreign key constraint fails (`Me.Services.PurchaseDb`.`orders`, CONSTRAINT `FK_orders_buyers_BuyerId` FOREIGN KEY (`BuyerId`) REFERENCES `buyers` (`Id`))
+2023-08-10 21:09:09          at MySqlConnector.Core.ResultSet.<ScanRowAsync>g__ScanRowAsyncAwaited|9_0(ResultSet resultSet, Task`1 payloadTask, Row row, CancellationToken token) in /_/src/MySqlConnector/Core/ResultSet.cs:line 244
+2023-08-10 21:09:09          at MySqlConnector.Core.ResultSet.ReadAsync(IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ResultSet.cs:line 199
+2023-08-10 21:09:09          at MySqlConnector.MySqlDataReader.ReadAsync(CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlDataReader.cs:line 38
+2023-08-10 21:09:09          at Pomelo.EntityFrameworkCore.MySql.Update.Internal.MySqlModificationCommandBatch.ConsumeResultSetAsync(Int32 startCommandIndex, RelationalDataReader reader, CancellationToken cancellationToken)
+2023-08-10 21:09:09          at Microsoft.EntityFrameworkCore.Update.AffectedCountModificationCommandBatch.ConsumeAsync(RelationalDataReader reader, CancellationToken cancellationToken)
+2023-08-10 21:09:09          --- End of inner exception stack trace ---
+2023-08-10 21:09:09          at Microsoft.EntityFrameworkCore.Update.AffectedCountModificationCommandBatch.ConsumeAsync(RelationalDataReader reader, CancellationToken cancellationToken)
+2023-08-10 21:09:09          at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+2023-08-10 21:09:09          at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+2023-08-10 21:09:09          at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+2023-08-10 21:09:09          at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+2023-08-10 21:09:09          at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+2023-08-10 21:09:09          at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(IList`1 entriesToSave, CancellationToken cancellationToken)
+2023-08-10 21:09:09          at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(StateManager stateManager, Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+2023-08-10 21:09:09          at Microsoft.EntityFrameworkCore.Storage.ExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+2023-08-10 21:09:09          at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+2023-08-10 21:09:09          at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+2023-08-10 21:09:09          at Me.Services.Purchase.Infrastructure.PurchaseContext.CommitTransactionAsync(IDbContextTransaction transaction) in /src/Services/Purchase/Purchase.Infrastructure/PurchaseContext.cs:line 74
+2023-08-10 21:09:09          at Me.Services.Purchase.API.MediatR.Behaviors.TransactionBehavior`2.<>c__DisplayClass4_0.<<Handle>b__0>d.MoveNext() in /src/Services/Purchase/Purchase.API/MediatR/Behaviors/TransactionBehavior.cs:line 47
+2023-08-10 21:09:09       --- End of stack trace from previous location ---
+2023-08-10 21:09:09          at Me.Services.Purchase.API.MediatR.Behaviors.TransactionBehavior`2.<>c__DisplayClass4_0.<<Handle>b__0>d.MoveNext() in /src/Services/Purchase/Purchase.API/MediatR/Behaviors/TransactionBehavior.cs:line 52
+2023-08-10 21:09:09       --- End of stack trace from previous location ---
+2023-08-10 21:09:09          at Microsoft.EntityFrameworkCore.ExecutionStrategyExtensions.<>c.<<ExecuteAsync>b__3_0>d.MoveNext()
+2023-08-10 21:09:09       --- End of stack trace from previous location ---
+2023-08-10 21:09:09          at Microsoft.EntityFrameworkCore.Storage.ExecutionStrategy.<>c__DisplayClass30_0`2.<<ExecuteAsync>b__0>d.MoveNext()
+2023-08-10 21:09:09       --- End of stack trace from previous location ---
+2023-08-10 21:09:09          at Microsoft.EntityFrameworkCore.Storage.ExecutionStrategy.ExecuteImplementationAsync[TState,TResult](Func`4 operation, Func`4 verifySucceeded, TState state, CancellationToken cancellationToken)
+2023-08-10 21:09:09          at Microsoft.EntityFrameworkCore.Storage.ExecutionStrategy.ExecuteImplementationAsync[TState,TResult](Func`4 operation, Func`4 verifySucceeded, TState state, CancellationToken cancellationToken)
+2023-08-10 21:09:09          at Microsoft.EntityFrameworkCore.Storage.ExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+2023-08-10 21:09:09          at Me.Services.Purchase.API.MediatR.Behaviors.TransactionBehavior`2.Handle(TRequest request, RequestHandlerDelegate`1 next, CancellationToken cancellationToken) in /src/Services/Purchase/Purchase.API/MediatR/Behaviors/TransactionBehavior.cs:line 34
+2023-08-10 21:09:09 trce: Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker[52]
+2023-08-10 21:09:09       Action Filter: Before executing OnActionExecuted on filter Microsoft.AspNetCore.Mvc.Infrastructure.ModelStateInvalidFilter.
+2023-08-10 21:09:09 trce: Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker[53]
+2023-08-10 21:09:09       Action Filter: After executing OnActionExecuted on filter Microsoft.AspNetCore.Mvc.Infrastructure.ModelStateInvalidFilter.
+2023-08-10 21:09:09 trce: Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker[52]
+2023-08-10 21:09:09       Action Filter: Before executing OnActionExecuted on filter Microsoft.AspNetCore.Mvc.ModelBinding.UnsupportedContentTypeFilter.
+2023-08-10 21:09:09 trce: Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker[53]
+2023-08-10 21:09:09       Action Filter: After executing OnActionExecuted on filter Microsoft.AspNetCore.Mvc.ModelBinding.UnsupportedContentTypeFilter.
+2023-08-10 21:09:09 info: Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker[105]
+2023-08-10 21:09:09       Executed action Me.Services.Purchase.API.Controllers.OrdersController.CheckoutAsync (Purchase.API) in 3665.542ms
+2023-08-10 21:09:09 info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]
+2023-08-10 21:09:09       Executed endpoint 'Me.Services.Purchase.API.Controllers.OrdersController.CheckoutAsync (Purchase.API)'
+2023-08-10 21:09:09 fail: Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware[1]
+2023-08-10 21:09:09       An unhandled exception has occurred while executing the request.
+2023-08-10 21:09:09       Microsoft.EntityFrameworkCore.DbUpdateException: An error occurred while saving the entity changes. See the inner exception for details.
+2023-08-10 21:09:09        ---> MySqlConnector.MySqlException (0x80004005): Cannot add or update a child row: a foreign key constraint fails (`Me.Services.PurchaseDb`.`orders`, CONSTRAINT `FK_orders_buyers_BuyerId` FOREIGN KEY (`BuyerId`) REFERENCES `buyers` (`Id`))
+2023-08-10 21:09:09          at MySqlConnector.Core.ResultSet.<ScanRowAsync>g__ScanRowAsyncAwaited|9_0(ResultSet resultSet, Task`1 payloadTask, Row row, CancellationToken token) in /_/src/MySqlConnector/Core/ResultSet.cs:line 244
+2023-08-10 21:09:09          at MySqlConnector.Core.ResultSet.ReadAsync(IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ResultSet.cs:line 199
+2023-08-10 21:09:09          at MySqlConnector.MySqlDataReader.ReadAsync(CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlDataReader.cs:line 38
+2023-08-10 21:09:09          at Pomelo.EntityFrameworkCore.MySql.Update.Internal.MySqlModificationCommandBatch.ConsumeResultSetAsync(Int32 startCommandIndex, RelationalDataReader reader, CancellationToken cancellationToken)
+2023-08-10 21:09:09          at Microsoft.EntityFrameworkCore.Update.AffectedCountModificationCommandBatch.ConsumeAsync(RelationalDataReader reader, CancellationToken cancellationToken)
+2023-08-10 21:09:09          --- End of inner exception stack trace ---
+2023-08-10 21:09:09          at Microsoft.EntityFrameworkCore.Update.AffectedCountModificationCommandBatch.ConsumeAsync(RelationalDataReader reader, CancellationToken cancellationToken)
+2023-08-10 21:09:09          at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+2023-08-10 21:09:09          at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+2023-08-10 21:09:09          at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+2023-08-10 21:09:09          at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+2023-08-10 21:09:09          at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+2023-08-10 21:09:09          at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(IList`1 entriesToSave, CancellationToken cancellationToken)
+2023-08-10 21:09:09          at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(StateManager stateManager, Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+2023-08-10 21:09:09          at Microsoft.EntityFrameworkCore.Storage.ExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+2023-08-10 21:09:09          at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+2023-08-10 21:09:09          at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+2023-08-10 21:09:09          at Me.Services.Purchase.Infrastructure.PurchaseContext.CommitTransactionAsync(IDbContextTransaction transaction) in /src/Services/Purchase/Purchase.Infrastructure/PurchaseContext.cs:line 74
+2023-08-10 21:09:09          at Me.Services.Purchase.API.MediatR.Behaviors.TransactionBehavior`2.<>c__DisplayClass4_0.<<Handle>b__0>d.MoveNext() in /src/Services/Purchase/Purchase.API/MediatR/Behaviors/TransactionBehavior.cs:line 47
+2023-08-10 21:09:09       --- End of stack trace from previous location ---
+2023-08-10 21:09:09          at Me.Services.Purchase.API.MediatR.Behaviors.TransactionBehavior`2.<>c__DisplayClass4_0.<<Handle>b__0>d.MoveNext() in /src/Services/Purchase/Purchase.API/MediatR/Behaviors/TransactionBehavior.cs:line 52
+2023-08-10 21:09:09       --- End of stack trace from previous location ---
+2023-08-10 21:09:09          at Microsoft.EntityFrameworkCore.ExecutionStrategyExtensions.<>c.<<ExecuteAsync>b__3_0>d.MoveNext()
+2023-08-10 21:09:09       --- End of stack trace from previous location ---
+2023-08-10 21:09:09          at Microsoft.EntityFrameworkCore.Storage.ExecutionStrategy.<>c__DisplayClass30_0`2.<<ExecuteAsync>b__0>d.MoveNext()
+2023-08-10 21:09:09       --- End of stack trace from previous location ---
+2023-08-10 21:09:09          at Microsoft.EntityFrameworkCore.Storage.ExecutionStrategy.ExecuteImplementationAsync[TState,TResult](Func`4 operation, Func`4 verifySucceeded, TState state, CancellationToken cancellationToken)
+2023-08-10 21:09:09          at Microsoft.EntityFrameworkCore.Storage.ExecutionStrategy.ExecuteImplementationAsync[TState,TResult](Func`4 operation, Func`4 verifySucceeded, TState state, CancellationToken cancellationToken)
+2023-08-10 21:09:09          at Microsoft.EntityFrameworkCore.Storage.ExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+2023-08-10 21:09:09          at Me.Services.Purchase.API.MediatR.Behaviors.TransactionBehavior`2.Handle(TRequest request, RequestHandlerDelegate`1 next, CancellationToken cancellationToken) in /src/Services/Purchase/Purchase.API/MediatR/Behaviors/TransactionBehavior.cs:line 34
+2023-08-10 21:09:09          at Me.Services.Purchase.API.MediatR.Behaviors.ValidatorBehavior`2.Handle(TRequest request, RequestHandlerDelegate`1 next, CancellationToken cancellationToken) in /src/Services/Purchase/Purchase.API/MediatR/Behaviors/ValidatorBehavior.cs:line 34
+2023-08-10 21:09:09          at Me.Services.Purchase.API.MediatR.Behaviors.LoggingBehavior`2.Handle(TRequest request, RequestHandlerDelegate`1 next, CancellationToken cancellationToken) in /src/Services/Purchase/Purchase.API/MediatR/Behaviors/LoggingBehavior.cs:line 11
+2023-08-10 21:09:09          at Me.Services.Purchase.API.Controllers.OrdersController.CheckoutAsync(CartCheckout cartCheckout, String requestId) in /src/Services/Purchase/Purchase.API/Controllers/OrdersController.cs:line 124
+2023-08-10 21:09:09          at lambda_method37(Closure, Object)
+2023-08-10 21:09:09          at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.AwaitableObjectResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+2023-08-10 21:09:09          at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Logged|12_1(ControllerActionInvoker invoker)
+2023-08-10 21:09:09          at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+2023-08-10 21:09:09          at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+2023-08-10 21:09:09          at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+2023-08-10 21:09:09          at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeInnerFilterAsync>g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+2023-08-10 21:09:09          at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+2023-08-10 21:09:09          at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+2023-08-10 21:09:09          at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+2023-08-10 21:09:09          at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|6_0(Endpoint endpoint, Task requestTask, ILogger logger)
+2023-08-10 21:09:09          at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+2023-08-10 21:09:09          at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+2023-08-10 21:09:09          at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+2023-08-10 21:09:09          at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+2023-08-10 21:09:09          at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddlewareImpl.Invoke(HttpContext context)
+2023-08-10 21:09:09 dbug: Microsoft.AspNetCore.Server.Kestrel.Connections[9]
+2023-08-10 21:09:09       Connection id "0HMSQ0U749UA0" completed keep alive response.
+2023-08-10 21:09:09 dbug: Microsoft.EntityFrameworkCore.Infrastructure[10407]
+2023-08-10 21:09:09       'PurchaseContext' disposed.
+2023-08-10 21:09:09 dbug: Microsoft.EntityFrameworkCore.Database.Connection[20007]
+2023-08-10 21:09:09       Disposing connection to database 'Me.Services.PurchaseDb' on server 'me-mariadb'.
+2023-08-10 21:09:09 dbug: Microsoft.EntityFrameworkCore.Database.Connection[20008]
+2023-08-10 21:09:09       Disposed connection to database 'Me.Services.PurchaseDb' on server 'me-mariadb' (3ms).
+2023-08-10 21:09:09 info: Microsoft.AspNetCore.Hosting.Diagnostics[2]
+2023-08-10 21:09:09       Request finished HTTP/1.1 POST http://localhost/api/v1/orders/checkout - 500 - text/plain;+charset=utf-8 5056.2080ms
+2023-08-10 21:10:21 trce: Grpc.Net.Client.Balancer.Internal.SocketConnectivitySubchannelTransport[8]
+2023-08-10 21:10:21       Subchannel id '1' disposing stream for me-cart-api:81. Transport has 0 active streams.
+2023-08-10 21:10:21 dbug: Grpc.Net.Client.Balancer.Subchannel[11]
+2023-08-10 21:10:21       Subchannel id '1' state changed to Idle. Detail: 'Disconnected.'.
+2023-08-10 21:10:21 trce: Grpc.Net.Client.Balancer.Subchannel[14]
+2023-08-10 21:10:21       Subchannel id '1' executing state changed registration '1-1'.
+2023-08-10 21:10:21 trce: Grpc.Net.Client.Balancer.PickFirstBalancer[1]
+2023-08-10 21:10:21       Processing subchannel id '1' state changed to Idle. Detail: 'Disconnected.'.
+2023-08-10 21:10:21 dbug: Grpc.Net.Client.Balancer.Internal.ConnectionManager[3]
+2023-08-10 21:10:21       Channel state updated to Idle.
+2023-08-10 21:10:21 dbug: Grpc.Net.Client.Balancer.Internal.ConnectionManager[4]
+2023-08-10 21:10:21       Channel picker updated.
+2023-08-10 21:11:05 dbug: Microsoft.Extensions.Http.DefaultHttpClientFactory[103]
+2023-08-10 21:11:05       HttpMessageHandler expired after 120000ms for client 'CartClient'
+2023-08-10 21:11:15 dbug: Microsoft.Extensions.Http.DefaultHttpClientFactory[100]
+2023-08-10 21:11:15       Starting HttpMessageHandler cleanup cycle with 1 items
+2023-08-10 21:11:16 dbug: Microsoft.Extensions.Http.DefaultHttpClientFactory[101]
+2023-08-10 21:11:16       Ending HttpMessageHandler cleanup cycle after 0.078ms - processed: 0 items - remaining: 1 items
+2023-08-10 21:11:19 dbug: Microsoft.AspNetCore.Server.Kestrel.Connections[10]
+2023-08-10 21:11:19       Connection id "0HMSQ0U749UA0" disconnecting.
+2023-08-10 21:11:19 dbug: Microsoft.AspNetCore.Server.Kestrel.Connections[2]
+2023-08-10 21:11:19       Connection id "0HMSQ0U749UA0" stopped.
+2023-08-10 21:11:19 dbug: Microsoft.AspNetCore.Server.Kestrel.Transport.Sockets[7]
+2023-08-10 21:11:19       Connection id "0HMSQ0U749UA0" sending FIN because: "The Socket transport's send loop completed gracefully."
+2023-08-10 21:11:26 dbug: Microsoft.Extensions.Http.DefaultHttpClientFactory[100]
+2023-08-10 21:11:26       Starting HttpMessageHandler cleanup cycle with 1 items
+2023-08-10 21:11:26 dbug: Microsoft.Extensions.Http.DefaultHttpClientFactory[101]
+2023-08-10 21:11:26       Ending HttpMessageHandler cleanup cycle after 0.0116ms - processed: 0 items - remaining: 1 items
+2023-08-10 21:11:36 dbug: Microsoft.Extensions.Http.DefaultHttpClientFactory[100]
+2023-08-10 21:11:36       Starting HttpMessageHandler cleanup cycle with 1 items
+2023-08-10 21:11:36 dbug: Microsoft.Extensions.Http.DefaultHttpClientFactory[101]
+2023-08-10 21:11:36       Ending HttpMessageHandler cleanup cycle after 0.0196ms - processed: 0 items - remaining: 1 items
+2023-08-10 21:11:46 dbug: Microsoft.Extensions.Http.DefaultHttpClientFactory[100]
+2023-08-10 21:11:46       Starting HttpMessageHandler cleanup cycle with 1 items
+2023-08-10 21:11:46 dbug: Microsoft.Extensions.Http.DefaultHttpClientFactory[101]
+2023-08-10 21:11:46       Ending HttpMessageHandler cleanup cycle after 0.0037ms - processed: 0 items - remaining: 1 items
+2023-08-10 21:11:56 dbug: Microsoft.Extensions.Http.DefaultHttpClientFactory[100]
+2023-08-10 21:11:56       Starting HttpMessageHandler cleanup cycle with 1 items
+2023-08-10 21:11:56 dbug: Microsoft.Extensions.Http.DefaultHttpClientFactory[101]
+2023-08-10 21:11:56       Ending HttpMessageHandler cleanup cycle after 0.0138ms - processed: 0 items - remaining: 1 items
+2023-08-10 21:12:06 dbug: Microsoft.Extensions.Http.DefaultHttpClientFactory[100]
+2023-08-10 21:12:06       Starting HttpMessageHandler cleanup cycle with 1 items
+2023-08-10 21:12:06 dbug: Microsoft.Extensions.Http.DefaultHttpClientFactory[101]
+2023-08-10 21:12:06       Ending HttpMessageHandler cleanup cycle after 0.0165ms - processed: 0 items - remaining: 1 items
+2023-08-10 21:12:16 dbug: Microsoft.Extensions.Http.DefaultHttpClientFactory[100]
+2023-08-10 21:12:16       Starting HttpMessageHandler cleanup cycle with 1 items
+2023-08-10 21:12:16 dbug: Microsoft.Extensions.Http.DefaultHttpClientFactory[101]
+2023-08-10 21:12:16       Ending HttpMessageHandler cleanup cycle after 0.0281ms - processed: 0 items - remaining: 1 items
+2023-08-10 21:12:26 dbug: Microsoft.Extensions.Http.DefaultHttpClientFactory[100]
+2023-08-10 21:12:26       Starting HttpMessageHandler cleanup cycle with 1 items
+2023-08-10 21:12:26 dbug: Microsoft.Extensions.Http.DefaultHttpClientFactory[101]
+2023-08-10 21:12:26       Ending HttpMessageHandler cleanup cycle after 0.0131ms - processed: 0 items - remaining: 1 items
+2023-08-10 21:12:36 dbug: Microsoft.Extensions.Http.DefaultHttpClientFactory[100]
+2023-08-10 21:12:36       Starting HttpMessageHandler cleanup cycle with 1 items
+2023-08-10 21:12:36 dbug: Microsoft.Extensions.Http.DefaultHttpClientFactory[101]
+2023-08-10 21:12:36       Ending HttpMessageHandler cleanup cycle after 0.0478ms - processed: 0 items - remaining: 1 items
+2023-08-10 21:12:46 dbug: Microsoft.Extensions.Http.DefaultHttpClientFactory[100]
+2023-08-10 21:12:46       Starting HttpMessageHandler cleanup cycle with 1 items
+2023-08-10 21:12:46 dbug: Microsoft.Extensions.Http.DefaultHttpClientFactory[101]
+2023-08-10 21:12:46       Ending HttpMessageHandler cleanup cycle after 0.0117ms - processed: 0 items - remaining: 1 items
+2023-08-10 21:12:56 dbug: Microsoft.Extensions.Http.DefaultHttpClientFactory[100]
+2023-08-10 21:12:56       Starting HttpMessageHandler cleanup cycle with 1 items
+2023-08-10 21:12:56 dbug: Microsoft.Extensions.Http.DefaultHttpClientFactory[101]
+2023-08-10 21:12:56       Ending HttpMessageHandler cleanup cycle after 0.0135ms - processed: 0 items - remaining: 1 items
+2023-08-10 21:13:06 dbug: Microsoft.Extensions.Http.DefaultHttpClientFactory[100]
+2023-08-10 21:13:06       Starting HttpMessageHandler cleanup cycle with 1 items
+2023-08-10 21:13:06 dbug: Microsoft.Extensions.Http.DefaultHttpClientFactory[101]
+2023-08-10 21:13:06       Ending HttpMessageHandler cleanup cycle after 0.0141ms - processed: 0 items - remaining: 1 items
+2023-08-10 21:13:16 dbug: Microsoft.Extensions.Http.DefaultHttpClientFactory[100]
+2023-08-10 21:13:16       Starting HttpMessageHandler cleanup cycle with 1 items
+2023-08-10 21:13:16 dbug: Microsoft.Extensions.Http.DefaultHttpClientFactory[101]
+2023-08-10 21:13:16       Ending HttpMessageHandler cleanup cycle after 0.0136ms - processed: 0 items - remaining: 1 items
+2023-08-10 21:13:26 dbug: Microsoft.Extensions.Http.DefaultHttpClientFactory[100]
+2023-08-10 21:13:26       Starting HttpMessageHandler cleanup cycle with 1 items
+2023-08-10 21:13:26 dbug: Microsoft.Extensions.Http.DefaultHttpClientFactory[101]
+2023-08-10 21:13:26       Ending HttpMessageHandler cleanup cycle after 0.0075ms - processed: 0 items - remaining: 1 items
+2023-08-10 21:13:36 dbug: Microsoft.Extensions.Http.DefaultHttpClientFactory[100]
+2023-08-10 21:13:36       Starting HttpMessageHandler cleanup cycle with 1 items
+2023-08-10 21:13:36 dbug: Microsoft.Extensions.Http.DefaultHttpClientFactory[101]
+2023-08-10 21:13:36       Ending HttpMessageHandler cleanup cycle after 0.0334ms - processed: 0 items - remaining: 1 items
+2023-08-10 21:13:46 dbug: Microsoft.Extensions.Http.DefaultHttpClientFactory[100]
+2023-08-10 21:13:46       Starting HttpMessageHandler cleanup cycle with 1 items
+2023-08-10 21:13:46 dbug: Microsoft.Extensions.Http.DefaultHttpClientFactory[101]
+2023-08-10 21:13:46       Ending HttpMessageHandler cleanup cycle after 0.0119ms - processed: 0 items - remaining: 1 items

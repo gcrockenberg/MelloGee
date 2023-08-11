@@ -1,0 +1,25 @@
+<swiper-container #swiperRef class="mainSlider h-full bg-primary xl:bg-mainSlider xl:bg-no-repeat max-w-lg lg:max-w-none
+    rounded-[8px] overflow-hidden drop-shadow-2xl" 
+    initial-slide="0" slides-per-view="auto" navigation="false" pagination="true" loop="true" init="false"
+    (activeindexchange)="onActiveIndexChange()">
+    <swiper-slide class="w-full overflow-hidden" *ngFor="let slide of sliderData">
+        <div class="flex flex-col lg:flex-row h-full p-[20px] md:p-[60px] items-center">
+            <!-- text -->
+            <div class="w-full lg:flex-1">
+                <div class="uppercase mb-1 text-center lg:text-left">
+                    {{slide.preTitle}}
+                </div>
+                <div class="text-3xl md:text-[46px] font-semibold uppercase leading-none text-center lg:text-left mb-8 xl:mb-20">
+                    {{slide.titlePart1}}<br/>
+                    {{slide.titlePart2}}<br/>
+                    {{slide.titlePart3}}
+                </div>
+                <button class="btn btn-accent mx-auto lg:mx-0">Shop now</button>
+            </div>
+            <!-- image -->
+            <div class="flex-1 mt-10 lg:mt-auto">
+                <img class="xl:absolute xl:-right-16 xl:-bottom-12 h-60 lg:h-auto" src="{{slide.img}}" alt="">
+            </div>
+        </div>
+    </swiper-slide>
+</swiper-container>

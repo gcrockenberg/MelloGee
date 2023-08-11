@@ -21,7 +21,8 @@ public class OrderRepository
     {
         var order = await _context
                             .Orders
-                            .Include(x => x.Address)
+                            .Include(o => o.Address)
+                            .Include(o => o.Buyer)
                             .FirstOrDefaultAsync(o => o.Id == orderId);
         if (order == null)
         {
@@ -40,6 +41,14 @@ public class OrderRepository
 
         return order;
     }
+
+
+    public void SetBuyerLocal(int orderId, int buyerId)
+    {
+        var order = _context.Orders.Local.SingleOrDefault(o => o.Id == orderId);
+        var buyer = _context.Buyers.Local.SingleOrDefault(b => b.Id == buyerId);
+    }
+
 
     public void Update(Order order)
     {

@@ -1,6 +1,6 @@
 namespace Me.Services.Purchase.API.Extensions;
 
-internal static partial class OrderingApiTrace
+internal static partial class PurchaseApiTrace
 {
     [LoggerMessage(EventId = 1, EventName = "OrderStatusUpdated", Level = LogLevel.Trace, Message = "Order with Id: {OrderId} has been successfully updated to status {Status} ({Id})")]
     public static partial void LogOrderStatusUpdated(ILogger logger, int orderId, string status, int id);

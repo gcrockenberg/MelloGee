@@ -1,0 +1,12 @@
+<div class="flex">
+    <div (click)="decreaseQuantity()"
+        class="flex justify-center items-center cursor-pointer rounded-tl-md rounded-bl-md h-12 min-w-[25px] bg-white">
+        <ng-icon class="text-primary" name="bootstrapDash" />
+    </div>
+    <input class="text-primary w-full text-center placeholder:text-primary h-12 outline-accent" type="number" min="1" max="100"
+        [value]="value" (blur)="handleInput($event)" (keyup.enter)="handleInput($event)">
+    <div (click)="increaseQuantity()"
+        class="flex justify-center items-center cursor-pointer rounded-tr-md rounded-br-md h-12 min-w-[25px] bg-white">
+        <ng-icon class="text-primary" name="bootstrapPlusLg" />
+    </div>
+</div>

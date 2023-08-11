@@ -1,0 +1,23 @@
+<div (click)="displayItemDetails()" class="grad w-full h-[362px] rounded-[8px] overflow-hidden relative group">
+    <!-- badge -->
+    <div *ngIf="item().isNew"
+        class="absolute top-4 right-4 bg-accent text-primary text-[12px] font-extrabold uppercase px-2 rounded-full z-10">
+        new
+    </div>
+    <!-- image -->
+    <div class="w-full h-[200px] flex items-center justify-center relative">
+        <img class="w-[160px] h-[160px] group-hover:scale-90 transition-all" [src]="item().pictureUri" alt="">
+    </div>
+    <!-- text -->
+    <div class="px-6 pb-8 flex flex-col">
+        <div class="text-sm text-accent capitalize mb-2">
+            {{item().catalogType.type}}
+        </div>
+        <div class="text-[15px] mb-4 lg:mb-9">
+            {{item().name.substring(0, 35)}}<span *ngIf="item().name.length > 35">...</span>
+        </div>
+        <div class="text-lg text-accent">
+            $ {{ item().price | number: '1.2-2'}}
+        </div>
+    </div>
+</div>

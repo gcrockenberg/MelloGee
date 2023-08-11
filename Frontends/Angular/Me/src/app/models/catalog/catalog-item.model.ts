@@ -12,4 +12,5 @@ export interface ICatalogItem {
     catalogTypeId: number;
     catalogType: ICatalogType;
     units: number;
+    isNew: boolean;
 }

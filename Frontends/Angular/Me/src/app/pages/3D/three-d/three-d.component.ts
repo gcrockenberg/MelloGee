@@ -1,4 +1,4 @@
-import { CUSTOM_ELEMENTS_SCHEMA, Component, OnInit, Renderer2 } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import "external/ajax.googleapis.com_ajax_libs_model-viewer_3.1.1_model-viewer.min.js"
 

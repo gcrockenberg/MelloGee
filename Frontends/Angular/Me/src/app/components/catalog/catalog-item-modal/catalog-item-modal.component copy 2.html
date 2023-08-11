@@ -1,0 +1,40 @@
+<div *ngIf="isOpen()" (click)="modalService.close()" class="
+    z-50
+    transition 
+    duration-300 
+    bg-black 
+    bg-opacity-80
+    overflow-x-hidden 
+    overflow-y-auto 
+    fixed
+    inset-0
+    flex flex-col p-12">
+    <section *ngIf="!itemLoaded()" class="h-screen flex justify-center items-center">
+        Loading...
+    </section>
+    <section class="flex flex-col relative rounded-3xl bg-black">
+        <!-- close icon -->
+        <div class="absolute top-0 right-0 m-6 cursor-pointer">
+            <ng-icon class="text-3xl transition" name="bootstrapXLg" />
+        </div>
+        <div class="container mx-auto">
+            <div class="flex flex-col lg:flex-row items-center">
+                <div class="flex flex-1 justify-center items-center">
+                    <img [src]="item().pictureUri" alt="">
+                </div>
+                <div class="flex-1 items-center text-center lg:text-left p-8">
+                    <h1 class="text-[26px] font-medium mb-2 max-w-[450px] mx-auto lg:mx-0">
+                        {{ item().name }}
+                    </h1>
+                    <div class="text-xl text-red-500 font-medium mb-6">
+                        $ {{ item().price | number: '1.2-2' }}
+                    </div>
+                    <p class="mb-8">{{ item().description }}</p>
+                    <button (click)="$event.stopPropagation(); addToCart()"
+                        class="btn btn-accent w-full max-w-[400px]">Add to cart</button>
+                </div>
+            </div>
+            <app-related-products />
+        </div>
+    </section>
+</div>

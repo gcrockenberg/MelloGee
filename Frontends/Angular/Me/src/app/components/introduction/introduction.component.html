@@ -1,16 +1,16 @@
-<div class="relative h-[56.25vw]">
+<div class="relative h-screen flex flex-row justify-center">
     <video aria-hidden="true" class="h-[56.25.vw] w-full object-cover brightness-[60%]" autoplay loop muted
         oncanplay="this.play()" onloadedmetadata="this.muted = true">
         <source src="assets/videos/rave1.mp4"> Your browser does not support the video tag.
     </video>
-    <div class="absolute top-[30%] md:top-[40%] right-0 bottom-0 left-0 pointer-events-none">
-            <div class="text-center relative z-10 h-100 mx-auto">
-                <div class="font-roboto text-white text-1xl md:text-5xl h-full lg:text-6xl font-bold drop-shadow-xl leading-tight">
+    <div class="absolute top-0 bottom-0 flex flex-col justify-center transition-all">
+            <div class="text-center">
+                <div class="text-3xl md:text-5xl h-full lg:text-6xl font-bold drop-shadow-xl leading-tight transition-all">
                     Me
-                    <div>A microservices demo</div>
-                </div>
-                <p class="text-blue-100 text-xl md:text-2xl leading-snug mt-4">currently developed out of New
+                    <div class="mb-8">A microservices demo</div>
+                    <p class="text-blue-100 mb-3 md:mb-0 text-xl md:text-2xl leading-snug transition-all">currently developed out of New
                     Jersey, USA</p>
+                </div>                
             </div>
     </div>
 </div>

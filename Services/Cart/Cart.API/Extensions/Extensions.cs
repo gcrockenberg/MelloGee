@@ -13,7 +13,8 @@ public static class Extensions
         return services.AddSingleton(sp =>
         {
             var redisConfig = ConfigurationOptions.Parse(configuration.GetRequiredConnectionString("redis"), true);
-
+            redisConfig.ConnectRetry = 60;
+            
             return ConnectionMultiplexer.Connect(redisConfig);
         });
     }

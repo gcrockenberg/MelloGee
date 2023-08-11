@@ -1,0 +1,30 @@
+<div class="{{ visible ? 'left-0' : '-left-full' }} fixed top-0 bottom-0 z-30 w-full h-screen transition-all duration-200
+            bg-primary p-8">
+    <!-- close icon -->
+    <div (click)="closeMenu()" class="flex justify-end mb-8 cursor-pointer">
+        <ng-icon class="text-3xl transition" name="bootstrapXLg" />
+    </div>
+
+    <div class="flex flex-col gap-y-8">
+        <div class="flex flex-col gap-y-8">
+            <div class="hover:underline">
+                <a routerLink="catalog" routerLinkActive="underline" ariaCurrentWhenActive="page"
+                    [routerLinkActiveOptions]="{exact: true}">Catalog</a>
+            </div>
+            <div class="hover:underline">
+                <a routerLink="3D" routerLinkActive="underline" ariaCurrentWhenActive="page"
+                    [routerLinkActiveOptions]="{exact: true}">3D</a>
+            </div>
+            <div class="hover:underline">
+                <a routerLink="secure" routerLinkActive="underline" ariaCurrentWhenActive="page"
+                    [routerLinkActiveOptions]="{exact: true}">Secure</a>
+            </div>
+        </div>
+        <div class="bg-white w-full h-[1px]"></div>
+        <div class="flex flex-col gap-y-8">
+            <div class="uppercase cursor-pointer font-medium" *ngFor="let type of catalogTypes()">
+                <a [routerLink]="['/products', type.id]">{{type.type}}</a>
+            </div>
+        </div>
+    </div>
+</div>

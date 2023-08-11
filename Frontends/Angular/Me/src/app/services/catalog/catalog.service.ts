@@ -22,34 +22,27 @@ export class CatalogService {
     private _configurationService: ConfigurationService,
     private _dataService: DataService,
   ) {
-    if (_configurationService.isReady) { 
+    if (_configurationService.isReady) {
       this._catalogUrl = this._configurationService.serverSettings.catalogUrl + urlPrefix + 'items';
       this._brandsUrl = this._configurationService.serverSettings.catalogUrl + urlPrefix + 'catalogbrands';
       this._typesUrl = this._configurationService.serverSettings.catalogUrl + urlPrefix + 'catalogtypes';
-      console.log(`--> catalogUrl: ${this._catalogUrl}`);
-      console.log(`--> brandsUrl: ${this._brandsUrl}`);
-      console.log(`--> typesUrl: ${this._typesUrl}`);
     } else {
       this._configurationService.settingsLoaded$.subscribe(x => {
         this._catalogUrl = this._configurationService.serverSettings.catalogUrl + urlPrefix + 'items';
         this._brandsUrl = this._configurationService.serverSettings.catalogUrl + urlPrefix + 'catalogbrands';
         this._typesUrl = this._configurationService.serverSettings.catalogUrl + urlPrefix + 'catalogtypes';
-        console.log(`--> catalogUrl: ${this._catalogUrl}`);
-        console.log(`--> brandsUrl: ${this._brandsUrl}`);
-        console.log(`--> typesUrl: ${this._typesUrl}`);
       });
     }
   }
 
 
-  getCatalog(pageIndex: number, pageSize: number, brand?: number, type?: number): Observable<ICatalog> {
+  getCatalog(pageIndex: number, pageSize: number, type?: number, brand?: number): Observable<ICatalog> {
     if (!this._configurationService.isReady) {
       return this._configurationService.settingsLoaded$
-        .pipe(switchMap(x => this.getCatalog(pageIndex, pageSize, brand, type)))
+        .pipe(switchMap(x => this.getCatalog(pageIndex, pageSize, type, brand)))
     }
 
     let url = this._catalogUrl;
-
     if (type) {
       url = this._catalogUrl + '/type/' + ((type) ? type.toString() : '') + '/brand/' + ((brand) ? brand.toString() : '');
     }
@@ -61,6 +54,23 @@ export class CatalogService {
 
     return this._dataService.get<ICatalog>(url)
       .pipe(tap((response: ICatalog) => {
+        response.data.forEach(item => item.isNew = (Math.random() < 0.15));
+        return response;
+      }));
+  }
+
+
+  searchCatalog(pageIndex: number, pageSize: number, searchTerm: string): Observable<ICatalog> {
+    if (!this._configurationService.isReady) {
+      return this._configurationService.settingsLoaded$
+        .pipe(switchMap(x => this.searchCatalog(pageIndex, pageSize, searchTerm)))
+    }
+
+    let url = `${this._catalogUrl}/search/${searchTerm}?pageIndex=${pageIndex}&pageSize=${pageSize}`;
+
+    return this._dataService.get<ICatalog>(url)
+      .pipe(tap((response: ICatalog) => {
+        response.data.forEach(item => item.isNew = (Math.random() < 0.15));
         return response;
       }));
   }

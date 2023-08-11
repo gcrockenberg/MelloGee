@@ -15,10 +15,7 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
 export class CartComponent implements OnDestroy {
   private _subscriptions: Subscription[] = [];
 
-  readonly cart: WritableSignal<ICart> = signal({
-    sessionId: '',
-    items: []
-  });
+  readonly cart: WritableSignal<ICart> = signal(<ICart>{});
 
   readonly subTotal: Signal<number> = computed(() => {
     let totalPrice = 0;
@@ -61,7 +58,7 @@ export class CartComponent implements OnDestroy {
   changeQuantity(event: any, itemIndex: number) {
     let newQuantity = event.target.value;
     if (newQuantity) {
-      this._cartService.changeQuantity(itemIndex, newQuantity);
+      this._cartService.changeItemQuantity(itemIndex, newQuantity);
     }
   }
 

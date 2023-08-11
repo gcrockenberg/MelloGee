@@ -1,34 +1,26 @@
 import { Component, OnInit, WritableSignal, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CatalogService } from 'src/app/services/catalog/catalog.service';
-import { ConfigurationService } from 'src/app/services/configuration/configuration.service';
-import { SecurityService } from 'src/app/services/security/security.service';
 import { catchError, throwError } from 'rxjs';
 import { ICatalog } from 'src/app/models/catalog/catalog.model';
 import { IPager } from 'src/app/models/utils/pager.model';
 import { ICatalogBrand } from 'src/app/models/catalog/catalog-brand.model';
 import { ICatalogType } from 'src/app/models/catalog/catalog-type.model';
-import { PagerComponent } from "../../shared/components/pager/pager.component";
-import { ICatalogItem } from 'src/app/models/catalog/catalog-item.model';
-import { CatalogItemsComponent } from "../../components/catalog-items/catalog-items.component";
-import { CatalogItemModalComponent } from "../../components/catalog-item-modal/catalog-item-modal.component";
-import { CartSidebarComponent } from "../../components/cart-sidebar/cart-sidebar.component";
+import { PagerComponent } from "../../shared/components/tools/pager/pager.component";
+import { CatalogItemModalComponent } from "../../components/catalog/catalog-item-modal/catalog-item-modal.component";
+import { LatestProductsComponent } from "../../components/catalog/latest-products/latest-products.component";
+import { HeroComponent } from "../../components/hero/hero/hero.component";
 
 @Component({
     selector: 'app-catalog',
     standalone: true,
     templateUrl: './catalog.component.html',
     styleUrls: ['./catalog.component.scss'],
-    imports: [CommonModule, PagerComponent, CatalogItemsComponent, CatalogItemModalComponent, CartSidebarComponent]
+    imports: [CommonModule, PagerComponent, CatalogItemModalComponent, LatestProductsComponent, HeroComponent]
 })
 export class CatalogComponent implements OnInit {
   errorReceived: boolean = false;
-  catalog: WritableSignal<ICatalog> = signal({
-    count: 0,
-    data: [],
-    pageIndex: 0,
-    pageSize: 0
-  });
+  readonly catalog: WritableSignal<ICatalog> = signal(<ICatalog>{});
   paginationInfo!: IPager;
   brands: ICatalogBrand[] = [];
   types: ICatalogType[] = [];
@@ -39,19 +31,6 @@ export class CatalogComponent implements OnInit {
 
   
   ngOnInit(): void {
-    // Configuration Settings:
-    this.loadData();
-
-    // Subscribe to login and logout observable
-    // this.authSubscription = this.securityService.authenticationChallenge$.subscribe(res => {
-    //     this.authenticated = res;
-    // });
-  }
-
-
-  loadData() {
-    this.getBrands();
-    this.getTypes();
     this.getCatalog(12, 0);
   }
 
@@ -77,7 +56,6 @@ export class CatalogComponent implements OnInit {
   }
 
 
-
   getCatalog(pageSize: number, pageIndex: number, brand?: number, type?: number) {
     this.errorReceived = false;
     this._catalogService.getCatalog(pageIndex, pageSize, brand, type)
@@ -93,6 +71,7 @@ export class CatalogComponent implements OnInit {
         };
       });
   }
+  
 
   onBrandFilterChanged(event: any) {
     event.preventDefault();

@@ -1,0 +1,17 @@
+<div *ngIf="visible" class="bg-black w-80 absolute top-14 right-0 p-8 flex-col border-2 border-gray-800">
+    <div class="flex flex-col gap-y-8">
+        <div (click)="editProfile()" class="px-3 group/item flex flex-row gap-3 w-full">
+            <img class="w-8 rounded-md" src="/assets/images/default-blue.png" alt="Profile">
+            <p class="text-sm group-hover/item:underline">
+                Profile
+            </p>
+        </div>
+        <div routerLink="orders" class="px-3 text-sm hover:underline">
+            Orders
+        </div>
+        <div class="bg-white w-full h-[1px]"></div>
+        <div (click)="logout()" class="px-3 text-sm hover:underline">
+            Leave Me
+        </div>
+    </div>
+</div>

@@ -25,15 +25,18 @@ public abstract class Entity
         _domainEvents.Add(eventItem);
     }
 
+
     public void RemoveDomainEvent(INotification eventItem)
     {
         _domainEvents?.Remove(eventItem);
     }
 
+
     public void ClearDomainEvents()
     {
         _domainEvents?.Clear();
     }
+
 
     public bool IsTransient()
     {
@@ -72,6 +75,8 @@ public abstract class Entity
             return base.GetHashCode();
 
     }
+
+
     public static bool operator ==(Entity left, Entity right)
     {
         if (Object.Equals(left, null))
@@ -80,8 +85,11 @@ public abstract class Entity
             return left.Equals(right);
     }
 
+
     public static bool operator !=(Entity left, Entity right)
     {
         return !(left == right);
     }
+
+
 }

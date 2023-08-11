@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace Me.Services.Purchase.Domain.AggregatesModel.OrderAggregate;
 
 public class Order
@@ -11,8 +13,14 @@ public class Order
     // Address is a Value Object pattern example persisted as EF Core 2.0 owned entity
     public Address Address { get; private set; }
 
-    public int? GetBuyerId => _buyerId;
-    private int? _buyerId;
+    public int BuyerId { get; private set; }
+    public virtual Buyer Buyer { get; set; }
+    //private int _buyerId;
+
+
+    public PaymentMethod PaymentMethod { get; set; }
+    //private int _paymentMethodId;
+
 
     public OrderStatus OrderStatus { get; private set; }
     private int _orderStatusId;
@@ -31,7 +39,6 @@ public class Order
     private readonly List<OrderItem> _orderItems;
     public IReadOnlyCollection<OrderItem> OrderItems => _orderItems;
 
-    private int? _paymentMethodId;
 
     public static Order NewDraft()
     {
@@ -46,19 +53,20 @@ public class Order
         _isDraft = false;
     }
 
+
     public Order(string userId, string userName, Address address, int cardTypeId, string cardNumber, string cardSecurityNumber,
-            string cardHolderName, DateTime cardExpiration, int? buyerId = null, int? paymentMethodId = null) : this()
+            string cardHolderName, DateTime cardExpiration) : this() //, int buyerId, int? paymentMethodId = null) : this()
     {
-        _buyerId = buyerId;
-        _paymentMethodId = paymentMethodId;
+        //_buyerId = buyerId;
+        //_paymentMethodId = paymentMethodId;
         _orderStatusId = OrderStatus.Submitted.Id;
         _orderDate = DateTime.UtcNow;
         Address = address;
 
         // Add the OrderStarterDomainEvent to the domain events collection 
         // to be raised/dispatched when comitting changes into the Database [ After DbContext.SaveChanges() ]
-        AddOrderStartedDomainEvent(userId, userName, cardTypeId, cardNumber,
-                                    cardSecurityNumber, cardHolderName, cardExpiration);
+        // AddOrderStartedDomainEvent(userId, userName, cardTypeId, cardNumber,
+        //                             cardSecurityNumber, cardHolderName, cardExpiration);
     }
 
     // DDD Patterns comment
@@ -92,12 +100,12 @@ public class Order
 
     public void SetPaymentId(int id)
     {
-        _paymentMethodId = id;
+        //_paymentMethodId = id;
     }
 
     public void SetBuyerId(int id)
     {
-        _buyerId = id;
+        //_buyerId = id;
     }
 
     public void SetAwaitingValidationStatus()

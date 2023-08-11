@@ -45,6 +45,10 @@ services.AddTransient<IIntegrationEventHandler<OrderStockConfirmedIntegrationEve
 services.AddTransient<IIntegrationEventHandler<OrderStockRejectedIntegrationEvent>, OrderStockRejectedIntegrationEventHandler>();
 services.AddTransient<IIntegrationEventHandler<UserCheckoutAcceptedIntegrationEvent>, UserCheckoutAcceptedIntegrationEventHandler>();
 
+// Domain integration event handlers
+services.AddTransient<INotificationHandler<OrderStartedDomainEvent>, ValidateOrAddBuyerAggregateWhenOrderStartedDomainEventHandler>();
+services.AddTransient<INotificationHandler<BuyerPaymentMethodVerifiedDomainEvent>, UpdateOrderWhenBuyerAndPaymentMethodVerifiedDomainEventHandler>();
+
 // Using environment secrets
 Console.WriteLine($"--> Stripe config loaded: {string.IsNullOrWhiteSpace(StripeConfiguration.ApiKey)}");
 StripeConfiguration.ApiKey = builder.Configuration["stripe-configuration-apikey"];

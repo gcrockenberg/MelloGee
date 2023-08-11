@@ -6,7 +6,7 @@ import { WritableSignal } from "@angular/core";
  */
 export interface IModal {
     id: string;
-    isOpen: WritableSignal<boolean>;
+    readonly isOpen: WritableSignal<boolean>;
     open(): void;
     close(): void;
     setTarget<T>(target: T): void;

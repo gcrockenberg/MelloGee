@@ -6,15 +6,16 @@ import { SecurityService } from '../security/security.service';
 import { UserData } from 'src/app/models/security/user-data.model';
 import { ICart } from 'src/app/models/cart/cart.model';
 import { ConfigurationService } from '../configuration/configuration.service';
-import { Observable, map, switchMap, tap } from 'rxjs';
+import { Observable, map, of, switchMap, tap } from 'rxjs';
 import { DataService } from '../data/data.service';
 import { ICartCheckout } from 'src/app/models/cart/cart-checkout.model';
+import { IOrderSummary } from 'src/app/models/order/order-summary.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class OrderService {
-  private _orderUrl: string = '';
+  private _ordersUrl: string = '';
 
   constructor(
     private _cartService: CartService,
@@ -23,46 +24,13 @@ export class OrderService {
     private _dataService: DataService) {
 
     if (this._configurationService.isReady) {
-      this._orderUrl = this._configurationService.serverSettings.orderUrl + '/o/api/v1/order/';
+      this._ordersUrl = this._configurationService.serverSettings.orderUrl + '/o/api/v1/orders/';
     }
     else {
       this._configurationService.settingsLoaded$.subscribe(x => {
-        this._orderUrl = this._configurationService.serverSettings.orderUrl + '/o/api/v1/order/';
+        this._ordersUrl = this._configurationService.serverSettings.orderUrl + '/o/api/v1/orders/';
       });
     }
-  }
-
-
-  // createLinkToCheckout(): Observable<string> {
-  //   if (!this._configurationService.isReady) {
-  //     return this._configurationService.settingsLoaded$
-  //       .pipe(switchMap(x => this.createLinkToCheckout()))
-  //   }
-
-  //   let url: string = this._orderUrl + 'checkout';
-
-  //   return this._dataService.post(url, {})
-  //     .pipe<string>(
-  //       map((response: any) => {
-  //         //this.basketWrapperService.orderCreated();
-  //         return response.value as string;
-  //       }));
-  // }
-  
-  setCartCheckout(cartCheckout: ICartCheckout): Observable<string> {
-    if (!this._configurationService.isReady) {
-      return this._configurationService.settingsLoaded$
-        .pipe(switchMap(x => this.setCartCheckout(cartCheckout)))
-    }
-
-    let url: string = this._orderUrl + 'checkout';
-
-    return this._dataService.post(url, cartCheckout)
-      .pipe<string>(
-        map((response: any) => {
-          //this.basketWrapperService.orderCreated();
-          return response.value as string;
-        }));
   }
 
 
@@ -112,5 +80,40 @@ export class OrderService {
 
     return order;
   }
+
+
+  getOrders(): Observable<IOrderSummary[]> {
+    if (!this._configurationService.isReady) {
+      return this._configurationService.settingsLoaded$
+        .pipe(switchMap(x => this.getOrders()))
+    }
+
+    let url = this._ordersUrl;
+
+    return this._dataService.get(url).pipe<IOrderSummary[]>(tap((response: any) => {
+      if (response) {
+        return response;
+      }
+      return of([]);
+    }));
+  }
+
+
+  setCartCheckout(cartCheckout: ICartCheckout): Observable<string> {
+    if (!this._configurationService.isReady) {
+      return this._configurationService.settingsLoaded$
+        .pipe(switchMap(x => this.setCartCheckout(cartCheckout)))
+    }
+
+    let url: string = this._ordersUrl + 'checkout';
+
+    return this._dataService.post(url, cartCheckout)
+      .pipe<string>(
+        map((response: any) => {
+          //this.basketWrapperService.orderCreated();
+          return response.value as string;
+        }));
+  }
+
 
 }
