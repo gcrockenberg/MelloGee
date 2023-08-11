@@ -1,20 +1,21 @@
-name: me-catalog-api - Build and deploy API image to container app (Image only)
+name: me-catalog-api - Build and deploy .NET API to container app
 on:
   push:
     branches:
     - main
     paths:
-    - Services/Catalog/Catalog.API**
+    - Services/CatalogService**
 # Permission to support Azure login using OIDC
 permissions:
   id-token: write
 env:
   CONTAINER_APP_RESOURCE_GROUP_NAME: MelloGee
+  CONTAINER_APPS_ENVIRONMENT: env-me-dev-eastus
   CONTAINER_APP_CONTAINER_NAME: container-main
   CONTAINER_APP_NAME: me-catalog-api
   CONTAINER_REGISTRY_LOGIN_SERVER: registry.hub.docker.com
-  DOCKER_FILE_PATH: Services/Catalog/Catalog.API/Dockerfile
-  PROJECT_NAME_FOR_DOCKER: catalog-api
+  DOCKER_FILE_PATH: Services/CatalogService/Dockerfile
+  PROJECT_NAME_FOR_DOCKER: catalogapi
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -53,7 +54,7 @@ jobs:
       uses: docker/build-push-action@v2
       with:
         push: true 
-        tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.PROJECT_NAME_FOR_DOCKER }}
+        tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.PROJECT_NAME_FOR_DOCKER }}:${{ github.sha }}
         file: ${{ env.DOCKER_FILE_PATH }}
   deploy:
     runs-on: ubuntu-latest
@@ -77,19 +78,20 @@ jobs:
     - name: Deploy to containerapp
       uses: azure/CLI@v1
       with:
+        # Depoy from Azure Container Registry
+#        inlineScript: >
+#          az config set extension.use_dynamic_install=yes_without_prompt
+#
+#          az containerapp registry set --name ${{ env.CONTAINER_APP_NAME }} --resource-group ${{ env.CONTAINER_APP_RESOURCE_GROUP_NAME }} --server ${{ env.CONTAINER_REGISTRY_LOGIN_SERVER }} --username ${{ secrets.mellogeeacr_USERNAME_9A5D }} --password ${{ secrets.mellogeeacr_PASSWORD_9A5D }}
+#
+#          az containerapp update --name ${{ env.CONTAINER_APP_NAME }} --container-name ${{ env.CONTAINER_APP_CONTAINER_NAME }} --resource-group ${{ env.CONTAINER_APP_RESOURCE_GROUP_NAME }} --image ${{ env.CONTAINER_REGISTRY_LOGIN_SERVER }}/${{ env.PROJECT_NAME_FOR_DOCKER }}:${{ github.sha }}
         # Depoy from Docker Hub Container Registry
         inlineScript: >
-          echo "Install az extensions on the fly, as needed"
-
           az config set extension.use_dynamic_install=yes_without_prompt
-
-          echo "Configure the Docker registry"
 
           az containerapp registry set --name ${{ env.CONTAINER_APP_NAME }} --resource-group ${{ env.CONTAINER_APP_RESOURCE_GROUP_NAME }} --username ${{ secrets.DOCKERHUB_USERNAME }} --password ${{ secrets.DOCKERHUB_TOKEN }} --server ${{ env.CONTAINER_REGISTRY_LOGIN_SERVER }} 
 
-          echo "Update Container App image - force revision"
-          
-          az containerapp update --name ${{ env.CONTAINER_APP_NAME }} --resource-group ${{ env.CONTAINER_APP_RESOURCE_GROUP_NAME }} --image ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.PROJECT_NAME_FOR_DOCKER }}
-    - name: Logout
+          az containerapp update --name ${{ env.CONTAINER_APP_NAME }} --resource-group ${{ env.CONTAINER_APP_RESOURCE_GROUP_NAME }} --image ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.PROJECT_NAME_FOR_DOCKER }}:${{ github.sha }}
+    - name: logout
       run: >
         az logout

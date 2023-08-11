@@ -44,6 +44,7 @@ export class SecurityService {
     private _msalService: MsalService,
     private _msalBroadcastService: MsalBroadcastService,
   ) {
+    console.log('--> environment: ', environment);
     this._destroyRef.onDestroy(() => this._OnDestroy());
     this._msalInstance = _msalService.instance;
     this._initialize();

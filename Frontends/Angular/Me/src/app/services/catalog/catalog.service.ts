@@ -36,21 +36,22 @@ export class CatalogService {
   }
 
 
-  getCatalog(pageIndex: number, pageSize: number, type?: number, brand?: number): Observable<ICatalog> {
+  /**
+   * @param pageIndex 
+   * @param pageSize 
+   * @param typeId Start at 1
+   * @param brandId Start at 1
+   * @returns 
+   */
+  getCatalog(pageIndex: number, pageSize: number, typeId?: number, brandId?: number): Observable<ICatalog> {
     if (!this._configurationService.isReady) {
       return this._configurationService.settingsLoaded$
-        .pipe(switchMap(x => this.getCatalog(pageIndex, pageSize, type, brand)))
+        .pipe(switchMap(x => this.getCatalog(pageIndex, pageSize, typeId, brandId)))
     }
 
     let url = this._catalogUrl;
-    if (type) {
-      url = this._catalogUrl + '/type/' + ((type) ? type.toString() : '') + '/brand/' + ((brand) ? brand.toString() : '');
-    }
-    else if (brand) {
-      url = this._catalogUrl + '/type/all' + '/brand/' + ((brand) ? brand.toString() : '');
-    }
-
-    url = url + '?pageIndex=' + pageIndex + '&pageSize=' + pageSize;
+    url = `${url}/type/${typeId ? typeId : -1}/brand/${brandId ? brandId : -1}`
+    url = `${url}?pageIndex=${pageIndex}&pageSize=${pageSize}`;
 
     return this._dataService.get<ICatalog>(url)
       .pipe(tap((response: ICatalog) => {

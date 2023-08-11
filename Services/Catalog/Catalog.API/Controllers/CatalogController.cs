@@ -168,17 +168,21 @@ public class CatalogController : ControllerBase
 
     // GET api/v1/[controller]/items/type/1/brand[?pageSize=3&pageIndex=10]
     [HttpGet]
-    [Route("items/type/{catalogTypeId}/brand/{catalogBrandId:int?}")]
-    public async Task<ActionResult<PaginatedItemsViewModel<CatalogItem>>> ItemsByTypeIdAndBrandIdAsync(int catalogTypeId, int? catalogBrandId, [FromQuery] int pageSize = 10, [FromQuery] int pageIndex = 0)
+    [Route("items/type/{catalogTypeId}/brand/{catalogBrandId:int}")]
+    public async Task<ActionResult<PaginatedItemsViewModel<CatalogItem>>> ItemsByTypeIdAndBrandIdAsync(int catalogTypeId, int catalogBrandId = -1, [FromQuery] int pageSize = 10, [FromQuery] int pageIndex = 0)
     {
+        _logger.LogInformation("--> catalogTypeId: {type}, catalogBrandId: {brand}", catalogTypeId, catalogBrandId);
         var root = (IQueryable<CatalogItem>)_catalogContext.CatalogItems
             .Include(item => item.CatalogBrand)
             .Include(item => item.CatalogType)
             .AsNoTracking();
 
-        root = root.Where(ci => ci.CatalogTypeId == catalogTypeId);
+        if (0 < catalogTypeId)
+        {
+            root = root.Where(ci => ci.CatalogTypeId == catalogTypeId);
+        }
 
-        if (catalogBrandId.HasValue)
+        if (0 < catalogBrandId)
         {
             root = root.Where(ci => ci.CatalogBrandId == catalogBrandId);
         }

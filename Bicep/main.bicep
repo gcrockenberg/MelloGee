@@ -207,7 +207,7 @@ var microservices = [
     resources: defaultResources
   }
   {
-    skip: false
+    skip: true
     addToAPIM: true
     apiPath: 'b'
     //connectKeyVault: false
@@ -226,7 +226,7 @@ var microservices = [
     resources: defaultResources
   }
   {
-    skip: false
+    skip: true
     addToAPIM: true
     apiPath: 'o'
     //connectKeyVault: false
