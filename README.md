@@ -30,7 +30,7 @@ A project to demonstrate full-stack aspects of a microservice based solution hos
 
 <h2>Currently working on</h2>
 <ul> 
-<li><a href="https://green-wave-08182290f.3.azurestaticapps.net">Orders + checkout</a> <-- Link to current version
+<li><a href="https://green-wave-08182290f.3.azurestaticapps.net">Google auth, login and profile</a> <-- Link to current version
 <li>Azure hosting for demo is configured with free or consumption plans which scale to 0 when unused. Initial perfomance might be poor as the services "wake up".</li>
 </ul>
 

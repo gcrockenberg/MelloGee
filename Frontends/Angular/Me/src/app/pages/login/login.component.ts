@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { AuthService } from '../../services/auth/auth.service';
 import { Router } from '@angular/router';
 import { InputComponent } from "../../shared/components/input/input.component";
 
@@ -24,7 +23,6 @@ export class LoginComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private auth: AuthService,
     private router: Router) { }
   
   
@@ -37,41 +35,7 @@ export class LoginComponent implements OnInit {
   }
 
 
-  onSubmit() { 
-    console.log('SIGN IN: ', this.form?.value);
-    const { email, password } = this.form?.getRawValue();
-
-    // Test saimon@devdactic.com, 123456
-    this.auth.login(email, password).subscribe({
-      next: (res) => { 
-        console.log('LOGIN RESULT: ', res);
-        this.router.navigateByUrl('/me');
-      },
-      error: (err: any) => { 
-        console.log('LOGIN ERROR: ', err);
-        this.error = 'Login failed';
-      }
-    });
-  }
-
-  
-  createAccount() {
-    console.log('CREATE ACCOUNT: ', this.form?.value);
-    const { email, password } = this.form?.getRawValue();
-
-    // Test saimon@devdactic.com, 123456
-    this.auth.register(email, password).subscribe({
-      next: (res) => {
-        console.log('REGISTER RESULT: ', res);
-        this.router.navigateByUrl('/me');
-      },
-      error: (err: any) => {
-        console.log('REGISTER ERROR: ', err);
-        this.error = 'Registration failed';
-      }
-    });
-  }
-
+  onSubmit() { }
 
   /**
    * Switch from login mode to register mode.
