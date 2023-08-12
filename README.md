@@ -15,10 +15,10 @@ A project to demonstrate full-stack aspects of a microservice based solution hos
 - Angular SPA with Tailwind CSS
 - Stripe for order checkout
 
-##Bicep provisioning
+## Bicep provisioning
 ![Me architecture](Images/Me%20Architecture.png)
 
-##Purchase database
+## Purchase database
 ![Me Purchase Db](Images/PurchaseDB.png)
 
 <h1>Notes</h1>
