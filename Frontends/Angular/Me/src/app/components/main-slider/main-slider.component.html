@@ -1,8 +1,8 @@
 <swiper-container #swiperRef class="mainSlider h-full bg-primary xl:bg-mainSlider xl:bg-no-repeat max-w-lg lg:max-w-none
     rounded-[8px] overflow-hidden drop-shadow-2xl" 
-    initial-slide="0" slides-per-view="auto" navigation="false" pagination="true" loop="true" init="false"
+    initial-slide="0" slides-per-view="auto" pagination autoplay init="false"
     (activeindexchange)="onActiveIndexChange()">
-    <swiper-slide class="w-full overflow-hidden" *ngFor="let slide of sliderData">
+    <swiper-slide  data-swiper-autoplay="6000" class="w-full overflow-hidden" *ngFor="let slide of sliderData">
         <div class="flex flex-col lg:flex-row h-full p-[20px] md:p-[60px] items-center">
             <!-- text -->
             <div class="w-full lg:flex-1">

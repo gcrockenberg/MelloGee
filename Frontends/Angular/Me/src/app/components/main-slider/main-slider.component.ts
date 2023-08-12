@@ -53,27 +53,8 @@ export class MainSliderComponent {
         font-size: 2rem;
         color: #f6cd46;  
       }`],
-      // breakpoints: {
-      //   320: {
-      //     slidesPerView: 1,
-      //     spaceBetween: 30
-      //   },
-      //   768: {
-      //     slidesPerView: 2,
-      //     spaceBetween: 30
-      //   },
-      //   1024: {
-      //     slidesPerView: 2,
-      //     spaceBetween: 30
-      //   },
-      //   1440: {
-      //     slidesPerView: 1,
-      //     spaceBetween: 30
-      //   }
-      // },
       pagination: {
-        clickable: true,
-
+        clickable: true
       }
     }
 
