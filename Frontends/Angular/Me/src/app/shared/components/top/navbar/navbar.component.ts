@@ -10,6 +10,7 @@ import { Subscription } from 'rxjs';
 import { SecurityService } from 'src/app/services/security/security.service';
 import { SearchBarComponent } from "../../tools/search-bar/search-bar.component";
 import { Router } from '@angular/router';
+import { OrderService } from 'src/app/services/order/order.service';
 
 const TOP_OFFSET: number = 66;
 
@@ -39,13 +40,18 @@ export class NavbarComponent implements OnDestroy {
     readonly logoClicked: WritableSignal<boolean> = signal(false);
 
     constructor(
-        private _securityService: SecurityService, private _router: Router) {
+        private _securityService: SecurityService,
+        private _router: Router,
+        private _orderService: OrderService) {
         this.isAuthorized.set(_securityService.isAuthorized);
         // Handle authorization updates
         this._subscriptions.push(
             this._securityService.isAutorizedUpdate$
                 .subscribe((newIsAuthorized: boolean) => {
                     this.isAuthorized.set(newIsAuthorized);
+                    if (newIsAuthorized) {
+                        this._wakeSecureApis();
+                    }
                 })
         );
     }
@@ -96,4 +102,13 @@ export class NavbarComponent implements OnDestroy {
     }
 
 
+    /**
+     * This reduces poor experience from APIs scaled to 0 in demo environment
+     * The non-secure APIs (Catalog and Cart) are awoken by components in the header and footer
+     */
+    private _wakeSecureApis() {
+        this._orderService.getOrders().subscribe();
+    }
+
+    
 }

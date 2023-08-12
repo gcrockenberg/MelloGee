@@ -17,7 +17,6 @@ import {
   SsoSilentRequest
 } from '@azure/msal-browser';
 import { ClaimFields, UserData } from 'src/app/models/security/user-data.model';
-import { OrderService } from '../order/order.service';
 
 
 /**
@@ -43,8 +42,7 @@ export class SecurityService {
 
   constructor(
     private _msalService: MsalService,
-    private _msalBroadcastService: MsalBroadcastService,
-    private _orderService: OrderService
+    private _msalBroadcastService: MsalBroadcastService
   ) {
     console.log('--> environment: ', environment);
     this._destroyRef.onDestroy(() => this._OnDestroy());
@@ -284,17 +282,7 @@ export class SecurityService {
     if (this.isAuthorized != isAuthorized) {
       this.isAuthorized = isAuthorized;
       this._isAuthorizedSource.next(this.isAuthorized);
-      this._wakeSecureApis();
     }
-  }
-
-
-  /**
-   * This reduces poor experience from APIs scaled to 0 in demo environment
-   * The non-secure APIs (Catalog and Cart) are awoken by components in the header and footer
-   */
-  private _wakeSecureApis() {
-    this._orderService.getOrders().subscribe();
   }
 
 
