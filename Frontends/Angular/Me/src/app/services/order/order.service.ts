@@ -38,11 +38,11 @@ export class OrderService {
     let identityInfo: UserData = this._securityService.userData;
 
     // Identity data mapping
-    order.street = identityInfo.streetAddress;
-    order.city = identityInfo.city;
-    order.country = identityInfo.country;
-    order.state = identityInfo.state;
-    order.zipcode = identityInfo.postalCode;
+    order.street = (identityInfo.streetAddress) ? identityInfo.streetAddress : '';
+    order.city = (identityInfo.city) ? identityInfo.city : '';
+    order.country = (identityInfo.country) ? identityInfo.country : '';
+    order.state = (identityInfo.state) ? identityInfo.state : '';
+    order.zipcode = (identityInfo.postalCode) ? identityInfo.postalCode : '';
     order.cardexpiration = new Date(Date.now());
     order.cardnumber = '';
     order.cardsecuritynumber = '';
