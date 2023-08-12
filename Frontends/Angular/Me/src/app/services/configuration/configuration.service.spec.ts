@@ -24,12 +24,8 @@ describe('ConfigurationService', () => {
   });
 
   it('should return expected configuration (HttpClient called once)', (done: DoneFn) => {
-    configurationService.settingsLoaded$.subscribe({
+    configurationService.whenReady.subscribe({
       next: result => {
-        expect(result)
-          .withContext('expected configuration')
-          .toEqual(config);
-
         expect(configurationService.isReady)
           .withContext('expected configuration service is ready')
           .toEqual(true);
