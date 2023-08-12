@@ -1,3 +1,4 @@
+# To push Container environment changes rerun Bicep script
 name: me-catalog-api - Build and deploy API image to container app (Image only)
 on:
   push:

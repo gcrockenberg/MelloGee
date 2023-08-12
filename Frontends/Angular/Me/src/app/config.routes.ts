@@ -5,20 +5,20 @@ import { MainComponent } from './pages/main/main.component';
 import { DeleteMyDataComponent } from './pages/delete-my-data/delete-my-data.component';
 import { PrivacyComponent } from './pages/privacy/privacy.component';
 import { SecureComponent } from './pages/secure/secure.component';
-import { CatalogComponent } from './pages/catalog/catalog.component';
+import { CatalogComponent } from './pages/catalog/catalog/catalog.component';
 import { ProfileComponent } from './pages/profile/profile.component';
 import { NotFoundComponent } from './pages/not-found/not-found/not-found.component';
 import { CartComponent } from './pages/cart/cart/cart.component';
 import { OrdersComponent } from './pages/order/orders/orders.component';
-import { ProductsComponent } from './pages/products/products.component';
+import { ProductsComponent } from './pages/catalog/products/products.component';
 import { SearchResultsComponent } from './pages/search/search-results/search-results.component';
-import { ProductDetailsComponent } from './pages/product-details/product-details.component';
+import { ProductDetailsComponent } from './pages/catalog/product-details/product-details.component';
+import { OrderDetailsComponent } from './pages/order/order-details/order-details.component';
 
 export const routes: Routes = [
     {
         path: '',
         component: MainComponent,
-
     },
     {
         path: 'catalog',
@@ -43,6 +43,13 @@ export const routes: Routes = [
     {
         path: 'orders',
         component: OrdersComponent,
+        canActivate: [
+            MsalGuard
+        ]
+    },
+    {
+        path: 'order-details/:id',
+        component: OrderDetailsComponent,
         canActivate: [
             MsalGuard
         ]

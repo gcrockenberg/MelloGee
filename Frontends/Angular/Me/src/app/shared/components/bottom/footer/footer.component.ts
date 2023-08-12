@@ -37,4 +37,15 @@ export class FooterComponent {
     }
     this.subscription.set(false);
   }
+
+
+  scrollToTop() {
+    window.scroll({
+      top: 0,
+      left: 0,
+      behavior: 'smooth'
+    });
+  }
+
+
 }

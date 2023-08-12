@@ -5,30 +5,33 @@ import { ICatalog } from 'src/app/models/catalog/catalog.model';
 import { SliderComponent } from "../slider/slider.component";
 
 @Component({
-    selector: 'app-related-products',
-    standalone: true,
-    templateUrl: './related-products.component.html',
-    styleUrls: ['./related-products.component.scss'],
-    imports: [CommonModule, SliderComponent]
+  selector: 'app-related-products',
+  standalone: true,
+  templateUrl: './related-products.component.html',
+  styleUrls: ['./related-products.component.scss'],
+  imports: [CommonModule, SliderComponent]
 })
 export class RelatedProductsComponent {
   readonly relatedCatalog: WritableSignal<ICatalog> = signal(<ICatalog>{});
-  
+
   private _productTypeId: number = -1;
   @Input() public set productTypeId(value: number) {
     this._productTypeId = value;
-    if (-1 < value) {
-      this._loadRelated();
-    }
+    this._loadRelated();
   }
 
-  constructor(private _catalogService: CatalogService) {}
+  constructor(private _catalogService: CatalogService) { }
 
 
   private _loadRelated() {
+    if (1 > this.productTypeId) return;
+
     this._catalogService.getCatalog(0, 12, this._productTypeId)
-      .subscribe(catalog => { 
+      .subscribe(catalog => {
         this.relatedCatalog.set(catalog);
       });
   }
+
 }
+
+

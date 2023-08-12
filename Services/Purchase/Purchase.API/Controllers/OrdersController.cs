@@ -14,17 +14,21 @@ public class OrdersController : ControllerBase
     private readonly ILogger<OrdersController> _logger;
     private readonly IEventBus _eventBus;
     private readonly ICartService _cartService;
+    private readonly ICartRepository _cartRepository;
 
     public OrdersController(
         IMediator mediator, IIdentityService identityService, IOrderQueries orderQueries,
-        ILogger<OrdersController> logger, IEventBus eventBus, ICartService cartService)
+        ILogger<OrdersController> logger, IEventBus eventBus, ICartService cartService, ICartRepository cartRepository)
     {
         _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         _orderQueries = orderQueries ?? throw new ArgumentNullException(nameof(orderQueries));
         _identityService = identityService ?? throw new ArgumentNullException(nameof(identityService));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _eventBus = eventBus ?? throw new ArgumentNullException(nameof(eventBus));
-        _cartService = cartService ?? throw new ArgumentNullException(nameof(cartService));
+
+        // See Program.cs why this is duplicated
+        _cartService = cartService ?? throw new ArgumentNullException(nameof(cartService));        
+        _cartRepository = cartRepository ?? throw new ArgumentNullException(nameof(cartRepository));
     }
 
 
@@ -97,7 +101,8 @@ public class OrdersController : ControllerBase
         string compositeId = cartCheckout.CartSessionId + Request.HttpContext.Connection.RemoteIpAddress;
 
         // Use gRPC to get Cart
-        var cart = await _cartService.GetBySessionIdAsync(compositeId); //_repository.GetCartAsync(compositeId);
+        //var cart = await _cartService.GetBySessionIdAsync(compositeId); //_repository.GetCartAsync(compositeId);
+        var cart = await _cartRepository.GetCartAsync(compositeId);
         if (cart == null)
         {
             return BadRequest();

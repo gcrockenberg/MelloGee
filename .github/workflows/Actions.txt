@@ -1,0 +1,3 @@
+Move Actions scripts into the on-hold folder to prevent them from running on push.
+Be intentional about what you want to run to prevent unneeded resource costs.
+Services that were uploaded by Bicep scripts do not need to be uploaded again by Actions.

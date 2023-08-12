@@ -5,10 +5,10 @@ import { catchError, switchMap, throwError } from 'rxjs';
 import { ICatalog } from 'src/app/models/catalog/catalog.model';
 import { IPager } from 'src/app/models/utils/pager.model';
 import { CatalogService } from 'src/app/services/catalog/catalog.service';
-import { CategoryNavComponent } from "../../components/catalog/category-nav/category-nav.component";
-import { ProductComponent } from "../../components/catalog/product/product.component";
+import { CategoryNavComponent } from "src/app/components/catalog/category-nav/category-nav.component";
+import { ProductComponent } from "src/app/components/catalog/product/product.component";
 import { ICatalogItem } from 'src/app/models/catalog/catalog-item.model';
-import { CatalogItemModalComponent } from "../../components/catalog/catalog-item-modal/catalog-item-modal.component";
+import { CatalogItemModalComponent } from "src/app/components/catalog/catalog-item-modal/catalog-item-modal.component";
 
 @Component({
     selector: 'app-products',

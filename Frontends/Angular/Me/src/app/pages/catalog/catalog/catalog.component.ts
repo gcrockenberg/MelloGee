@@ -6,10 +6,10 @@ import { ICatalog } from 'src/app/models/catalog/catalog.model';
 import { IPager } from 'src/app/models/utils/pager.model';
 import { ICatalogBrand } from 'src/app/models/catalog/catalog-brand.model';
 import { ICatalogType } from 'src/app/models/catalog/catalog-type.model';
-import { PagerComponent } from "../../shared/components/tools/pager/pager.component";
-import { CatalogItemModalComponent } from "../../components/catalog/catalog-item-modal/catalog-item-modal.component";
-import { LatestProductsComponent } from "../../components/catalog/latest-products/latest-products.component";
-import { HeroComponent } from "../../components/hero/hero/hero.component";
+import { PagerComponent } from "src/app/shared/components/tools/pager/pager.component";
+import { CatalogItemModalComponent } from "src/app/components/catalog/catalog-item-modal/catalog-item-modal.component";
+import { LatestProductsComponent } from "src/app/components/catalog/latest-products/latest-products.component";
+import { HeroComponent } from "src/app/components/hero/hero.component";
 
 @Component({
     selector: 'app-catalog',

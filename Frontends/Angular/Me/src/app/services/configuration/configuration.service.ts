@@ -12,9 +12,13 @@ export class ConfigurationService {
   serverSettings!: IConfiguration;
 
   // observable that is fired when settings are loaded from server
-  private _settingsLoadedSource = new Subject<any>();
-  settingsLoaded$ = this._settingsLoadedSource.asObservable();
+  private readonly _settingsLoadedSource = new Subject<any>();
+  private readonly settingsLoaded$ = this._settingsLoadedSource.asObservable();
   isReady: boolean = false;
+  readonly whenReady = new Observable((observer) => {
+    if (this.isReady) observer.next();
+    this.settingsLoaded$.subscribe(() => observer.next());
+  });
 
   constructor(private _http: HttpClient, private _storageService: StorageService) {
     this._load();

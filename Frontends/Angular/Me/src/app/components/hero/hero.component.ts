@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MainSliderComponent } from "../../main-slider/main-slider.component";
-import { CategoryNavComponent } from "../../catalog/category-nav/category-nav.component";
+import { MainSliderComponent } from "../main-slider/main-slider.component";
+import { CategoryNavComponent } from "../catalog/category-nav/category-nav.component";
 
 @Component({
     selector: 'app-hero',

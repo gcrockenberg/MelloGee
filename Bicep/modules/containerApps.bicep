@@ -396,7 +396,7 @@ var ipSecurityRestrictionsForAPIMConsuptionPlan = [for (ipRange, i) in eastusDat
   description: 'Allow request from data center ip range ${i}'
 }]
 @description('Provision container app - CI/CD completes the api deployment')
-resource containerApp 'Microsoft.App/containerApps@2023-04-01-preview' = {
+resource containerApp 'Microsoft.App/containerApps@2023-05-01' = {
   name: containerAppName
   location: location
   properties: {

@@ -37,7 +37,16 @@ export class ProductComponent {
 
   displayItemDetails() {    
     this._router.navigate([`/product-details/${this.item().id}`]); 
+    this.gotoTop();
     //this._modalService.open(CATALOG_ITEM_MODAL, this.item().id)
   }
 
+
+  gotoTop() {
+    window.scroll({
+      top: 0,
+      left: 0,
+      behavior: 'smooth'
+    });
+  }
 }

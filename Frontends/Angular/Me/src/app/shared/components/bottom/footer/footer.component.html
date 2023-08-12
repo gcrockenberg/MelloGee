@@ -1,6 +1,6 @@
 <footer class="w-full py-10 border-t">
-    <div class="max-w-container mx-auto grid grid-cols-3 md:grid-cols-4  xl:grid-cols-7 px-4 gap-10">
-        <div class="col-span-3 md:col-span-2 ">
+    <div class="max-w-container mx-auto grid grid-cols-2 md:grid-cols-4 xl:grid-cols-6 px-4 gap-10">
+        <div class="col-span-2">
             <app-footer-list-title title="Me footer" />
             <div class="flex flex-col gap-6">
                 <p class="text-base w-full xl:w-[80%]">
@@ -37,17 +37,17 @@
                 </div>
             </div>
         </div>
-        <div>
+        <div class="border-t md:border-none pt-6 md:pt-0">
             <app-footer-list-title title="Shop" />
 
             <div class="flex flex-col gap-2">
-                <div *ngFor="let type of catalogTypes()">
+                <div *ngFor="let type of catalogTypes()" (click)="scrollToTop()">
                     <a class="font-titleFont text-base text-lightText hover:text-black hover:underline decoration-[1px] decoration-gray-500 underline-offset-2 cursor-pointer duration-300"
                         [routerLink]="['/products', type.id]">{{type.type}}</a>
                 </div>
             </div>
         </div>
-        <div>
+        <div class="border-t md:border-none pt-6 md:pt-0">
             <app-footer-list-title title="Policies" />
             <ul class="flex flex-col gap-2">
                 <li
@@ -64,9 +64,9 @@
                 </li>
             </ul>
         </div>
-        <div class="col-span-3 lg:col-span-2 flex flex-col items-center w-full px-4">
+        <div class="col-span-2 md:col-span-4 xl:col-span-2 flex flex-col items-center w-full px-4 pt-6 xl:pt-0 border-t xl:border-none">
             <app-footer-list-title title="Subscribe to Me newsletter" />
-            <div class="w-full">
+            <div class="flex flex-col w-full items-center justify-center">
                 <p class="text-center text-white/70">
                     A at pellentesque et mattis and stuff.
                 </p>
@@ -75,7 +75,7 @@
                     You did it!
                 </p>
                 <div *ngIf="!subscription()"
-                    class="w-full flex-col xl:flex-row flex justify-between items-center gap-4">
+                    class="flex-col xl:flex-row flex justify-between items-center gap-4">
                     <!-- form -->
                     <form class="w-full mx-auto flex flex-col md:flex-row gap-5 my-14">
                         <input class="input" type="text" autocomplete="email" placeholder="Your email address" />

@@ -15,23 +15,26 @@ A project to demonstrate full-stack aspects of a microservice based solution hos
 - Angular SPA with Tailwind CSS
 - Stripe for order checkout
 
+##Bicep provisioning
 ![Me architecture](Images/Me%20Architecture.png)
+
+##Purchase database
 ![Me Purchase Db](Images/PurchaseDB.png)
 
 <h1>Notes</h1>
 <ul>
 <li>The steps below were established on my Windows 10 machine</li>
-<li>The Azure resources can be scaled and set for auto scaling to meet demand</li>
-<li>For global scaling the solution can be configured using a geode or stamped pattern</li>
+<li>The Azure resources can be configured to auto scaling based upon demand</li>
+<li>Global scaling can be configured using a geode or stamped pattern</li>
 </ul>
 
 <h2>Currently working on</h2>
 <ul> 
-<li><a href="https://green-wave-08182290f.3.azurestaticapps.net">Orders + UI</a> <-- Link to current version
+<li><a href="https://green-wave-08182290f.3.azurestaticapps.net">Orders + checkout</a> <-- Link to current version
 <li>Azure hosting for demo is configured with free or consumption plans which scale to 0 when unused. Initial perfomance might be poor as the services "wake up".</li>
 </ul>
 
-<h1>How to use Me</h1>
+<h1>Deploying Me</h1>
 
 <h2>Local</h2>
 <p>After cloning Me</p>

@@ -78,6 +78,7 @@ services:
       # ConnectionStrings__PurchaseDb: Server=me-sql-data;Database=Me.Services.PurchaseDb;User Id=sa;Password=${ME_MSSQL_SA_PASSWORD};Encrypt=False;TrustServerCertificate=true
       ConnectionStrings__PurchaseDb: server=me-mariadb;port=3306;uid=root;password=;database=Me.Services.PurchaseDb
       ConnectionStrings__EventBus: ${ME_ConnectionStrings_EventBus}
+      ConnectionStrings__Redis: ${ME_ConnectionStrings_Redis}
       GrpcCart: "http://me-cart-api:81"
       EventBus__RetryCount: 5
       UseCustomizationData: True

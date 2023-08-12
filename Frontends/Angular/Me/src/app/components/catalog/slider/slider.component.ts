@@ -67,11 +67,11 @@ export class SliderComponent implements OnInit {
           spaceBetween: 30
         },
         768: {
-          slidesPerView: 2,
+          slidesPerView: 3,
           spaceBetween: 30
         },
         1024: {
-          slidesPerView: 2,
+          slidesPerView: 4,
           spaceBetween: 30
         },
         1440: {
@@ -101,5 +101,6 @@ export class SliderComponent implements OnInit {
   onActiveIndexChange() {
     console.log(this.swiper?.activeIndex);
   }
+
 
 }

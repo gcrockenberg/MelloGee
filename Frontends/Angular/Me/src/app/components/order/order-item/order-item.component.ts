@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, WritableSignal, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IOrderItem } from 'src/app/models/order/order-item.model';
 
@@ -10,10 +10,10 @@ import { IOrderItem } from 'src/app/models/order/order-item.model';
   styleUrls: ['./order-item.component.scss']
 })
 export class OrderItemComponent {
-  private _orderItem!: IOrderItem;
-  @Input() set orderItem(value: IOrderItem) {
-    this._orderItem = value;
+  readonly item: WritableSignal<IOrderItem> = signal(<IOrderItem>{});
+  @Input() set product(value: IOrderItem) {
+    this.item.set(value);
   }
-  get orderItem(): IOrderItem { return this._orderItem }
+  get product(): IOrderItem { return this.item() }
   
 }

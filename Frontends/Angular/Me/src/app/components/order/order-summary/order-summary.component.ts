@@ -1,6 +1,7 @@
 import { Component, Input, WritableSignal, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { IOrderSummary } from 'src/app/models/order/order-summary.model';
+import { Router } from '@angular/router';
+import { IOrderSummary } from 'src/app/models/order/order.model';
 
 @Component({
   selector: 'app-order-summary',
@@ -12,8 +13,13 @@ import { IOrderSummary } from 'src/app/models/order/order-summary.model';
 export class OrderSummaryComponent {
   order: WritableSignal<IOrderSummary> = signal(<IOrderSummary>{});
   @Input() set orderSummary(value: IOrderSummary) {
-    console.log('--> received order: ', value);
     this.order.set(value);
   }
   get orderSummary(): IOrderSummary { return this.order() }
+
+  constructor(private _router: Router) {}
+
+  displayOrderDetails() {    
+    this._router.navigate([`/order-details/${this.order().ordernumber}`]); 
+  }
 }

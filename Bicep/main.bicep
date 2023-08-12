@@ -99,7 +99,7 @@ var defaultResources = {
 @description('The Container App microservices')
 var microservices = [
   {
-    skip: true
+    skip: false
     addToAPIM: false
     apiPath: ''
     //connectKeyVault: false
@@ -144,7 +144,7 @@ var microservices = [
   //   }
   // }
   { // Using MariaDb for demo because it requires 1/4 of the resources vs SQL Server
-    skip: true
+    skip: false
     addToAPIM: false
     apiPath: ''
     //connectKeyVault: false
@@ -163,7 +163,7 @@ var microservices = [
     resources: defaultResources // Less demanding that SQL Server
   }
   {
-    skip: true
+    skip: false
     addToAPIM: false
     apiPath: ''
     //connectKeyVault: false
@@ -207,7 +207,7 @@ var microservices = [
     resources: defaultResources
   }
   {
-    skip: true
+    skip: false
     addToAPIM: true
     apiPath: 'b'
     //connectKeyVault: false
@@ -226,7 +226,7 @@ var microservices = [
     resources: defaultResources
   }
   {
-    skip: true
+    skip: false
     addToAPIM: true
     apiPath: 'o'
     //connectKeyVault: false
@@ -254,6 +254,14 @@ var microservices = [
         {
           name: 'stripe-configuration-apikey'
           secretRef: 'stripe-configuration-apikey'
+        }
+        { // ACA prevents gRPC due to Ingress port limitations https://github.com/microsoft/azure-container-apps/issues/763
+          name: 'GrpcCart'
+          value: 'http://me-cart-api:81'
+        }
+        { // Using direct call to Redis until port limitation is resolved
+          name: 'ConnectionStrings__Redis'
+          value: 'me-cart-data'
         }
       ])
     resources: defaultResources

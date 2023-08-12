@@ -4,7 +4,7 @@
             Browse Categories
         </div>
         <div class="flex flex-col gap-y-6 p-6">
-            <div class="uppercase cursor-pointer" *ngFor="let type of catalogTypes()">
+            <div class="uppercase cursor-pointer" *ngFor="let type of catalogTypes()" (click)="scrollToTop()">
                 <a [routerLink]="['/products', type.id]" >{{type.type}}</a>
             </div>
         </div>

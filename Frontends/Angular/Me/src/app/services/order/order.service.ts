@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { IOrderItem } from 'src/app/models/order/order-item.model';
-import { IOrder } from 'src/app/models/order/order.model';
+import { IOrder, IOrderStatus, IOrderSummary } from 'src/app/models/order/order.model';
 import { CartService } from '../cart/cart.service';
 import { SecurityService } from '../security/security.service';
 import { UserData } from 'src/app/models/security/user-data.model';
@@ -9,7 +9,6 @@ import { ConfigurationService } from '../configuration/configuration.service';
 import { Observable, map, of, switchMap, tap } from 'rxjs';
 import { DataService } from '../data/data.service';
 import { ICartCheckout } from 'src/app/models/cart/cart-checkout.model';
-import { IOrderSummary } from 'src/app/models/order/order-summary.model';
 
 @Injectable({
   providedIn: 'root'
@@ -23,14 +22,8 @@ export class OrderService {
     private _configurationService: ConfigurationService,
     private _dataService: DataService) {
 
-    if (this._configurationService.isReady) {
-      this._ordersUrl = this._configurationService.serverSettings.orderUrl + '/o/api/v1/orders/';
-    }
-    else {
-      this._configurationService.settingsLoaded$.subscribe(x => {
-        this._ordersUrl = this._configurationService.serverSettings.orderUrl + '/o/api/v1/orders/';
-      });
-    }
+      _configurationService.whenReady
+        .subscribe(() => this._ordersUrl = this._configurationService.serverSettings.orderUrl + '/o/api/v1/orders/')
   }
 
 
@@ -40,7 +33,6 @@ export class OrderService {
    * @returns The Order object
    */
   createOrderFromCartAndIdentity(): IOrder {
-
     let order: IOrder = <IOrder>{};
     let cart: ICart = this._cartService.cart;
     let identityInfo: UserData = this._securityService.userData;
@@ -80,35 +72,45 @@ export class OrderService {
 
 
   getOrders(): Observable<IOrderSummary[]> {
-    if (!this._configurationService.isReady) {
-      return this._configurationService.settingsLoaded$
-        .pipe(switchMap(x => this.getOrders()))
-    }
+    return this._configurationService.whenReady
+      .pipe(switchMap(x => {
+          let url = this._ordersUrl;
 
-    let url = this._ordersUrl;
+          return this._dataService.get(url)
+            .pipe<IOrderSummary[]>(
+              tap((response: any) => {
+                return (response) ? response : of([]);
+              }));
+        }));
+  }
 
-    return this._dataService.get(url).pipe<IOrderSummary[]>(tap((response: any) => {
-      if (response) {
-        return response;
-      }
-      return of([]);
-    }));
+
+  getOrderStatus(orderId: number): Observable<IOrderStatus> {
+    if (1 > orderId) return of(<IOrderStatus>{});
+
+    return this._configurationService.whenReady
+      .pipe(switchMap(x => {
+          let url = `${this._ordersUrl}${orderId}`;
+
+          return this._dataService.get(url)
+            .pipe<IOrderStatus>(
+              tap((response: any) => {
+                return (response) ? response : of([]);
+              }));
+        }));
   }
 
 
   setCartCheckout(cartCheckout: ICartCheckout): Observable<string> {
-    if (!this._configurationService.isReady) {
-      return this._configurationService.settingsLoaded$
-        .pipe(switchMap(x => this.setCartCheckout(cartCheckout)))
-    }
+    return this._configurationService.whenReady
+      .pipe(switchMap(x => {
+          let url: string = this._ordersUrl + 'checkout';
 
-    let url: string = this._ordersUrl + 'checkout';
-
-    return this._dataService.post(url, cartCheckout)
-      .pipe<string>(
-        map((response: any) => {
-          //this.basketWrapperService.orderCreated();
-          return response.value as string;
+          return this._dataService.post(url, cartCheckout)
+            .pipe<string>(
+              map((response: any) => {
+                return response.value as string;
+              }));
         }));
   }
 

@@ -5,8 +5,8 @@ import { IStripeCancelComponent } from 'src/app/models/order/stripe-cancel-route
 import { OrderService } from 'src/app/services/order/order.service';
 import { catchError, throwError } from 'rxjs';
 import { OrderComponent } from "../../../components/order/order/order.component";
-import { IOrderSummary } from 'src/app/models/order/order-summary.model';
 import { OrderSummaryComponent } from "../../../components/order/order-summary/order-summary.component";
+import { IOrderSummary } from 'src/app/models/order/order.model';
 
 @Component({
     selector: 'app-orders',

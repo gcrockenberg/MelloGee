@@ -1,0 +1,37 @@
+import { Component, OnInit, WritableSignal, signal } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { OrderService } from 'src/app/services/order/order.service';
+import { IOrderStatus } from 'src/app/models/order/order.model';
+import { ActivatedRoute } from '@angular/router';
+import { switchMap } from 'rxjs';
+import { OrderComponent } from "../../../components/order/order/order.component";
+import { OrderItemComponent } from "../../../components/order/order-item/order-item.component";
+
+@Component({
+    selector: 'app-order-details',
+    standalone: true,
+    templateUrl: './order-details.component.html',
+    styleUrls: ['./order-details.component.scss'],
+    imports: [CommonModule, OrderComponent, OrderItemComponent]
+})
+export class OrderDetailsComponent implements OnInit {
+  readonly order: WritableSignal<IOrderStatus> = signal(<IOrderStatus>{});
+
+  constructor(
+    private _orderService: OrderService,
+    private _route: ActivatedRoute) { }
+
+
+  ngOnInit(): void {
+    this._route.paramMap
+      .pipe(
+        switchMap((params) => {
+          let orderId = Number(params.get('id'));
+          return this._orderService.getOrderStatus(orderId)
+        })).subscribe((orderStatus) => {
+          this.order.set(orderStatus);
+        });
+  }
+
+
+}

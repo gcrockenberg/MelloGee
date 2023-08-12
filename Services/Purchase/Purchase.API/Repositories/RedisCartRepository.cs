@@ -1,4 +1,4 @@
-namespace Me.Services.Cart.API.Repositories;
+namespace Me.Services.Purchase.API.Repositories;
 
 public class RedisCartRepository : ICartRepository
 {
@@ -13,19 +13,6 @@ public class RedisCartRepository : ICartRepository
         _database = redis.GetDatabase();
     }
 
-    public async Task<bool> DeleteCartAsync(string id)
-    {
-        return await _database.KeyDeleteAsync(id);
-    }
-
-    public IEnumerable<string> GetCartIds()
-    {
-        var server = GetServer();
-        var data = server.Keys();
-
-        return data?.Select(k => k.ToString());
-    }
-
 
     public async Task<CustomerCart> GetCartAsync(string cartId)
     {
@@ -37,19 +24,6 @@ public class RedisCartRepository : ICartRepository
         }
         
         return JsonSerializer.Deserialize<CustomerCart>(data, JsonDefaults.CaseInsensitiveOptions);
-    }
-
-
-    public async Task<CustomerCart> UpdateCartAsync(CustomerCart cart)
-    {
-        var created = await _database.StringSetAsync(cart.SessionId, JsonSerializer.Serialize(cart, JsonDefaults.CaseInsensitiveOptions));
-
-        if (!created)
-        {
-            return null;
-        }
-
-        return await GetCartAsync(cart.SessionId);
     }
 
 

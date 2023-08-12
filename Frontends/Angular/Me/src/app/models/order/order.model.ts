@@ -21,3 +21,30 @@ export interface IOrder {
     expiration: string;
     cardsecuritynumber: string;
 }
+
+/**
+ * Display the status of orders after Checkout
+ */
+export interface IOrderSummary {
+    ordernumber: string;
+    status: string;
+    date: Date;
+    total: number;
+    }
+
+    /**
+ * Display the status of orders after Checkout
+ */
+export interface IOrderStatus {
+    ordernumber: string;
+    status: string;
+    description: string;
+    street: string;
+    date: Date;
+    city: number;
+    state: string;
+    zipcode: string;
+    country: number;
+    total: number;
+    orderitems: IOrderItem[];
+}

@@ -116,10 +116,10 @@ services:
     deploy:
       resources:
         limits:
-          memory: 128MB
+          memory: 256MB
         reservations:
-          memory: 64MB
-    memswap_limit: 128MB
+          memory: 128MB
+    memswap_limit: 256MB
     depends_on:
       - me-rabbitmq
       - me-mariadb

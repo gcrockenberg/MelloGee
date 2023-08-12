@@ -77,7 +77,7 @@ internal static class Extensions
 
         services.AddGrpcClient<Cart.CartClient>((services, options) =>
         {            
-            var grpcCart = services.GetRequiredService<IConfiguration>()["grpcCart"];
+            var grpcCart = services.GetRequiredService<IConfiguration>()["GrpcCart"];
             services.GetRequiredService<ILogger<Cart.CartClient>>().LogInformation("--> Adding gRPC Cart endpoint: {grpcCart}", grpcCart);
             options.Address = new Uri(grpcCart);
         }).AddInterceptor<GrpcExceptionInterceptor>();
@@ -119,6 +119,18 @@ internal static class Extensions
         });
 
         return services;
+    }
+
+
+    public static IServiceCollection AddRedis(this IServiceCollection services, IConfiguration configuration)
+    {
+        return services.AddSingleton(sp =>
+        {
+            var redisConfig = ConfigurationOptions.Parse(configuration.GetRequiredConnectionString("redis"), true);
+            redisConfig.ConnectRetry = 60;
+            
+            return ConnectionMultiplexer.Connect(redisConfig);
+        });
     }
 
 }

@@ -11,12 +11,20 @@ builder.Services.AddControllers();
 builder.Services.AddHealthChecks(builder.Configuration)
     .AddDbContexts(builder.Configuration)
     .AddApplicationOptions(builder.Configuration)
-    .AddIntegrationServices();
-
-builder.Services.AddGrpcServices();
+    .AddIntegrationServices()
+    .AddRedis(builder.Configuration);
+;
 
 var services = builder.Services;
 
+// Syncronous inter-service communication
+services.AddGrpcServices();     // ACA prevents gRPC due to port limitations
+services.AddTransient<ICartRepository, RedisCartRepository>();  // Temporarily using direct call to data
+// End 
+
+//
+// MediatR integration event management
+//
 services.AddMediatR(cfg =>
 {
     cfg.RegisterServicesFromAssemblyContaining(typeof(Program));
@@ -48,10 +56,13 @@ services.AddTransient<IIntegrationEventHandler<UserCheckoutAcceptedIntegrationEv
 // Domain integration event handlers
 services.AddTransient<INotificationHandler<OrderStartedDomainEvent>, ValidateOrAddBuyerAggregateWhenOrderStartedDomainEventHandler>();
 services.AddTransient<INotificationHandler<BuyerPaymentMethodVerifiedDomainEvent>, UpdateOrderWhenBuyerAndPaymentMethodVerifiedDomainEventHandler>();
+//
+// End integration event
+//
 
 // Using environment secrets
-Console.WriteLine($"--> Stripe config loaded: {string.IsNullOrWhiteSpace(StripeConfiguration.ApiKey)}");
 StripeConfiguration.ApiKey = builder.Configuration["stripe-configuration-apikey"];
+Console.WriteLine($"--> Stripe config loaded: {!string.IsNullOrWhiteSpace(StripeConfiguration.ApiKey)}");
 
 var app = builder.Build();
 

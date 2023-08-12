@@ -46,20 +46,10 @@ export class CartService {
       );
     }
 
-    if (this._configurationService.isReady) {
+    _configurationService.whenReady.subscribe(() => {
       this._cartUrl = this._configurationService.serverSettings.cartUrl + '/b/api/v1/cart/';
       this._getCart();
-    }
-    else {
-      this._configurationService.settingsLoaded$.subscribe(x => {
-        this._cartUrl = this._configurationService.serverSettings.cartUrl + '/b/api/v1/cart/';
-        this._getCart();
-      });
-    }
-
-    // this.cartWrapperService.orderCreated$.subscribe(x => {
-    //     this.dropCart();
-    // });
+    });
   }
 
 
@@ -179,27 +169,22 @@ export class CartService {
 
 
   setCartCheckout(cartCheckout: ICartCheckout): Observable<string> {
-    if (!this._configurationService.isReady) {
-      return this._configurationService.settingsLoaded$
-        .pipe(switchMap(x => this.setCartCheckout(cartCheckout)))
-    }
+    return this._configurationService.whenReady
+      .pipe(switchMap(x => {
+        let url: string = this._cartUrl + 'checkout';
 
-    let url: string = this._cartUrl + 'checkout';
-
-    return this._dataService.post(url, cartCheckout)
-      .pipe<string>(
-        map((response: any) => {
-          //this.basketWrapperService.orderCreated();
-          return response.value as string;
-        }));
+        return this._dataService.post(url, cartCheckout)
+          .pipe<string>(
+            map((response: any) => {
+              //this.basketWrapperService.orderCreated();
+              return response.value as string;
+            }));
+      }));
   }
 
 
   private _getCart() {
-    if (!this._configurationService.isReady) {
-      this._configurationService.settingsLoaded$
-        .subscribe(() => this._getCart())
-    } else {
+    return this._configurationService.whenReady.subscribe(x => {
       let url: string = this._cartUrl + this._cookieService.get('SessionId');
 
       this._dataService.get<ICart>(url)
@@ -210,17 +195,12 @@ export class CartService {
           this.cart = response;
           this._cartUpdateSource.next(this.cart);
         });
-    }
+    });
   }
 
 
   private _postCartAndBroadcast() {
-    if (!this._configurationService.isReady) {
-      this._configurationService.settingsLoaded$
-        .subscribe(() => { 
-          this._postCartAndBroadcast();
-        })
-    } else {
+    this._configurationService.whenReady.subscribe(() => {
       this.cart.sessionId = this._cookieService.get('SessionId');
 
       // Sever update no await
@@ -233,7 +213,7 @@ export class CartService {
 
       // Notify listeners
       this._cartUpdateSource.next(this.cart);
-    }
+    });
   }
 
 }

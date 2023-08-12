@@ -1,4 +1,19 @@
-<p>order works!</p>
-<div *ngFor="let item of order.orderItems">
-    <app-order-item />
+<div class="flex flex-col justify-center bg-primary p-6 xl:p-8 rounded-lg">
+    <div class="uppercase text-accent text-lg font-medium mb-2">
+        {{ order().status }}
+    </div>
+    <h2 class="h2 mb-4">
+        Order: {{order().ordernumber}}
+    </h2>
+    <div class="mb-6">
+    <p class="mb-4">{{ order().date | date:'medium'}}</p>
+    <p *ngIf="order().street">{{ order().street }}</p>
+    <p *ngIf="order().city">{{ order().city }}</p>
+    <p *ngIf="order().zipcode">{{ order().zipcode }}</p>
+    </div>
+    <div class="flex items-center gap-x-8">
+        <div class="text-3xl text-accent font-semibold">
+            $ {{ order().total | number: '1.2-2' }}
+        </div>
+    </div>
 </div>
