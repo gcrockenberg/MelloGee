@@ -17,10 +17,6 @@ builder.Services.AddTransient<OrderStartedIntegrationEventHandler>();
 builder.Services.AddTransient<ICartRepository, RedisCartRepository>();
 builder.Services.AddTransient<IIdentityService, IdentityService>();
 
-// Using environment secrets
-Console.WriteLine($"--> Stripe config loaded: {string.IsNullOrWhiteSpace(StripeConfiguration.ApiKey)}");
-StripeConfiguration.ApiKey = builder.Configuration["stripe-configuration-apikey"];
-
 var app = builder.Build();
 
 app.UseServiceDefaults();     // Extension

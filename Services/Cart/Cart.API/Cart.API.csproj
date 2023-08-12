@@ -13,8 +13,6 @@
     <PackageReference Include="Grpc.AspNetCore" />
     <PackageReference Include="Microsoft.AspNetCore.DataProtection.StackExchangeRedis" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" />
-    <PackageReference Include="Microsoft.Identity.Web" />
-    <PackageReference Include="Stripe.net" />
     <PackageReference Include="Swashbuckle.AspNetCore" />
   </ItemGroup>
 

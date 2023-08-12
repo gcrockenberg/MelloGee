@@ -1,7 +1,6 @@
 
 global using Grpc.Core;
 global using GrpcCart;
-global using Me.Services.Cart.API.DTO;
 global using Me.Services.Cart.API.IntegrationEvents.EventHandlers;
 global using Me.Services.Cart.API.IntegrationEvents.Events;
 global using Me.Services.Cart.API.Model;
@@ -13,9 +12,6 @@ global using Me.Services.EventBus.Events;
 global using Microsoft.AspNetCore.Authorization;
 global using Microsoft.AspNetCore.Http;
 global using Microsoft.AspNetCore.Mvc;
-global using Microsoft.Identity.Web.Resource;
 global using StackExchange.Redis;
-global using Stripe;
-global using Stripe.Checkout;
 global using System.ComponentModel.DataAnnotations;
 global using System.Text.Json;

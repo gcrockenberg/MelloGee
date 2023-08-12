@@ -93,20 +93,17 @@ public class OrdersController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<KeyValuePair<string, string>>> CheckoutAsync([FromBody] CartCheckout cartCheckout, [FromHeader(Name = "x-requestid")] string requestId)
     {
-        var userId = _identityService.GetUserIdentity();
-
         cartCheckout.RequestId = (Guid.TryParse(requestId, out Guid guid) && guid != Guid.Empty) ?
             guid : cartCheckout.RequestId;
 
-        string compositeId = cartCheckout.CartSessionId + Request.HttpContext.Connection.RemoteIpAddress;
 
         // Making direct call until Microsoft releases update allowing multiple ports/transports for ACA containers
         // Use gRPC to get Cart
         //var cart = await _cartService.GetBySessionIdAsync(compositeId); //_repository.GetCartAsync(compositeId);
-        var cart = await _cartRepository.GetCartAsync(compositeId);
+        var cart = await _cartRepository.GetCartAsync(cartCheckout.CartSessionId);
         if (cart == null)
         {
-            _logger.LogInformation("--> Error retrieving Cart for cartId: {cartId}", compositeId);
+            _logger.LogInformation("--> Error retrieving Cart for cartId: {cartId}", cartCheckout.CartSessionId);
             foreach (var key in _cartRepository.GetCartIds())
             {
                 _logger.LogInformation("--> Existing Redis key: {key}", key);
