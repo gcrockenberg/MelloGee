@@ -100,15 +100,15 @@ public class OrdersController : ControllerBase
 
         string compositeId = cartCheckout.CartSessionId + Request.HttpContext.Connection.RemoteIpAddress;
 
+        // Making direct call until Microsoft releases update allowing multiple ports/transports for ACA containers
         // Use gRPC to get Cart
         //var cart = await _cartService.GetBySessionIdAsync(compositeId); //_repository.GetCartAsync(compositeId);
         var cart = await _cartRepository.GetCartAsync(compositeId);
         if (cart == null)
         {
+            _logger.LogInformation("--> Error retrieving Cart for cartId: {cartId}", compositeId);
             return BadRequest();
         }
-
-        _logger.LogInformation("Retrieved Cart via gRPC: {cart}", cart);
 
         // Create the order via Mediator which, if Order creation is successful, will emit OrderCreated IntegrationEvent so Cart can clear itself
         var createOrderCommand = new CreateOrderCommand(cart.Items, _identityService.GetUserIdentity(), _identityService.GetUserName(),
@@ -127,6 +127,7 @@ public class OrdersController : ControllerBase
         var orderSuccessfullyCreated = await _mediator.Send(requestCreateOrder);
         if (!orderSuccessfullyCreated)
         {
+            _logger.LogInformation("--> Error creating Order: _mediator.Send(requestCreateOrder);");
             return BadRequest();
         }
 
