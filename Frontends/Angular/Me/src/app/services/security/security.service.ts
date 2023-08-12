@@ -284,6 +284,7 @@ export class SecurityService {
     if (this.isAuthorized != isAuthorized) {
       this.isAuthorized = isAuthorized;
       this._isAuthorizedSource.next(this.isAuthorized);
+      this._wakeSecureApis();
     }
   }
 
