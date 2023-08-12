@@ -109,6 +109,10 @@ export class OrderService {
           return this._dataService.post(url, cartCheckout)
             .pipe<string>(
               map((response: any) => {
+                // This should happen automatically on the server via Integration Event
+                // Still seeing items in Cart after refresh
+                // TODO: Investigate and remove 
+                this._cartService.clearCart();
                 return response.value as string;
               }));
         }));
