@@ -107,6 +107,10 @@ public class OrdersController : ControllerBase
         if (cart == null)
         {
             _logger.LogInformation("--> Error retrieving Cart for cartId: {cartId}", compositeId);
+            foreach (var key in _cartRepository.GetCartIds())
+            {
+                _logger.LogInformation("--> Existing Redis key: {key}", key);
+            }
             return BadRequest();
         }
 

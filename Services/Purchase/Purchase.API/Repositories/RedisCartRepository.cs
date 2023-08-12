@@ -27,6 +27,15 @@ public class RedisCartRepository : ICartRepository
     }
 
 
+    public IEnumerable<string> GetCartIds()
+    {
+        var server = GetServer();
+        var data = server.Keys();
+
+        return data?.Select(k => k.ToString());
+    }
+
+
     private IServer GetServer()
     {
         var endpoint = _redis.GetEndPoints();
