@@ -1,7 +1,12 @@
 <div class="pt-36 mb-8 mx-6 md:mx-8">
-    <div routerLink="orders" >
-        <ng-icon class="transition" name="bootstrapChevronLeft" />
-        Me Orders
+    <div class="flex flex-col gap-y-4 pb-6">
+        <div routerLink="/orders" class="flex flex-row gap-x-4 items-center cursor-pointer">
+            <ng-icon class="transition" name="bootstrapChevronLeft" />
+            All Me Orders
+        </div>
+        <div class="h2 flex justify-center lg:justify-normal">
+            Order Details
+        </div>
     </div>
     <div class="flex gap-[30px] flex-col lg:flex-row">
         <app-order class="flex-1" [orderStatus]="order()" />

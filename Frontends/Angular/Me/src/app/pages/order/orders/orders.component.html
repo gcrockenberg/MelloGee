@@ -1,5 +1,5 @@
 <div class="pt-36 mb-8 mx-6 md:mx-8">
-    <h1 class="py-3 text-xl uppercase text-center lg:text-left">Me Orders</h1>
+    <h1 class="h2 flex justify-center lg:justify-normal pb-6 text-center lg:text-left">Me Orders</h1>
     <div class="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
         <div *ngFor="let order of orders()">
             <app-order-summary [orderSummary]="order" />
