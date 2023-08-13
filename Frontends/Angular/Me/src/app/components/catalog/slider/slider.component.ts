@@ -99,7 +99,7 @@ export class SliderComponent implements OnInit {
 
 
   onActiveIndexChange() {
-    console.log(this.swiper?.activeIndex);
+    //console.log(this.swiper?.activeIndex);
   }
 
 

@@ -73,7 +73,7 @@ export class MainSliderComponent {
 
 
   onActiveIndexChange() {
-    console.log(this.swiper?.activeIndex);
+    //console.log(this.swiper?.activeIndex);
   }
 
 
