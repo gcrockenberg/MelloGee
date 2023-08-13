@@ -6,13 +6,17 @@ import { ActivatedRoute } from '@angular/router';
 import { switchMap } from 'rxjs';
 import { OrderComponent } from "../../../components/order/order/order.component";
 import { OrderItemComponent } from "../../../components/order/order-item/order-item.component";
+import { NgIconComponent, provideIcons } from '@ng-icons/core';
+import { bootstrapChevronLeft } from '@ng-icons/bootstrap-icons';
+import { RouterLink } from '@angular/router';
 
 @Component({
     selector: 'app-order-details',
     standalone: true,
     templateUrl: './order-details.component.html',
     styleUrls: ['./order-details.component.scss'],
-    imports: [CommonModule, OrderComponent, OrderItemComponent]
+    imports: [CommonModule, NgIconComponent, OrderComponent, OrderItemComponent, RouterLink],
+    providers: [provideIcons({ bootstrapChevronLeft })]   
 })
 export class OrderDetailsComponent implements OnInit {
   readonly order: WritableSignal<IOrderStatus> = signal(<IOrderStatus>{});

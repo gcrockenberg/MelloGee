@@ -6,6 +6,7 @@ import { NavbarComponent } from "./shared/components/top/navbar/navbar.component
 import { FooterComponent } from './shared/components/bottom/footer/footer.component';
 import { CartSidebarComponent } from "./components/cart/cart-sidebar/cart-sidebar.component";
 import { AltFooterComponent } from "./shared/components/bottom/alt-footer/alt-footer.component";
+import { MsalService } from '@azure/msal-angular';
 
 declare const gtag: Function;   // Google analytics
 
@@ -27,8 +28,12 @@ declare const gtag: Function;   // Google analytics
 export class AppComponent {
   title: string = 'me'; 
 
-  constructor(private _router: Router) {
+  constructor(
+    private _router: Router, 
+    private _msalService: MsalService) {
 
+      _msalService.instance.initialize();
+      
     // Report page navigations to Google analytics
     _router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {

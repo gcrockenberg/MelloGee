@@ -8,7 +8,7 @@ import { Configuration } from '@azure/msal-browser';
    * https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-permissions-and-consent#openid-connect-scopes
    */
 const LOGIN_REQUEST: MsalGuardAuthRequest = {
-    scopes: ['openid'],
+    scopes: [],
 };
 /**
    * An optional silentRequest object can be used to achieve silent SSO

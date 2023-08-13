@@ -63,9 +63,6 @@ services:
     ports:
       - "5103:80"
       - "9103:81"
-    volumes:
-      # Required secret: "stripe-configuration-apikey"
-      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
 
   me-order-api:
     environment:
@@ -93,28 +90,4 @@ services:
     volumes:
       # Required secret: "stripe-configuration-apikey"
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
-
-    # catalogapi:
-    #   environment:
-    #     - ASPNETCORE_ENVIRONMENT=Development
-    #     - ASPNETCORE_URLS=https://+:443;http://+:80
-    #   volumes:
-    #     - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
-    # Direct, external access to API within composed environment
-    # ports:
-    #   - 8080:80
-    #   - 8081:443
-
-  # coffeeapi:
-  #   environment:
-  #     ASPNETCORE_ENVIRONMENT: Development
-  #     ASPNETCORE_HTTPS_PORT: 8083
-  #     ASPNETCORE_URLS: "https://+:443;http://+:80"
-  #     # ConnectionStrings__CoffeeDb: server=me-my-sql;port=3306;database=coffeedb;uid=root;password=
-  #     ConnectionStrings__CoffeeDb: server=me-mariadb;port=3306;uid=root;password=;database=coffeedb
-  #   volumes:
-  #       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
-  #   ports:
-  #     - 8082:80
-  #     - 8083:443
 

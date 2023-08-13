@@ -45,10 +45,10 @@
                 <ng-icon class="text-white transition" name="bootstrapSearch" />
             </div> -->
             <div class="text-gray-200 hover:text-gray-300 cursor-pointer transition">
-                <ng-icon class="text-white transition" name="bootstrapBell" />
+                <ng-icon class=" transition" name="bootstrapBell" />
             </div>
             <button *ngIf="!isAuthorized()" (click)="login()" type="submit"
-                class="bg-red-600 py-2 px-4 text-white rounded-md w-full hover:bg-red-700 transition">
+                class="bg-red-600 py-2 px-4 rounded-md w-full hover:bg-red-700 transition">
                 Login
             </button>
             <div *ngIf="isAuthorized()" (click)="setShowAccountMenu()"
@@ -56,7 +56,7 @@
                 <div class="w-6 h-6 lg:w-10 lg:h-10 rounded-md overflow-hidden">
                     <img src="/assets/images/default-blue.png" alt="Profile">
                 </div>
-                <ng-icon class="text-white transition {{ showAccountMenu() ? 'rotate-180' : 'rotate-0' }}"
+                <ng-icon class=" transition {{ showAccountMenu() ? 'rotate-180' : 'rotate-0' }}"
                     name="bootstrapChevronDown" />
                 <app-account-menu [visible]="showAccountMenu()" />
             </div>

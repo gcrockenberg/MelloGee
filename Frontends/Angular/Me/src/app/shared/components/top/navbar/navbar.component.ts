@@ -50,7 +50,8 @@ export class NavbarComponent implements OnDestroy {
                 .subscribe((newIsAuthorized: boolean) => {
                     this.isAuthorized.set(newIsAuthorized);
                     if (newIsAuthorized) {
-                        this._wakeSecureApis();
+                        setTimeout(() =>
+                        this._wakeSecureApis(), 10000);
                     }
                 })
         );
