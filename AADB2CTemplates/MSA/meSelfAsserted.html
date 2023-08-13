@@ -970,6 +970,16 @@
     .qrCodeInfo {
       float: left
     }
+    
+    #meBackground {
+      filter: brightness(0.6);
+      height: 986px;
+      max-width: 100%;
+      object-fit: cover;
+      overflow-clip-margin: content-box;
+      vertical-align: middle;
+      width: 1887px;
+    }
 
     /* endinject */
   </style>
@@ -978,8 +988,12 @@
 
 <body>
   <div id="background_branding_container" data-tenant-branding-background-color="true">
-    <img data-tenant-branding-background="true"
-      src="https://login.microsoftonline.com/templates/src/backgrounds/4-2.png" alt="Illustration" />
+    <video id="meBackground" aria-hidden="true" class="h-[56.25.vw] w-full object-cover brightness-[60%]" autoplay loop muted
+        oncanplay="this.play()" onloadedmetadata="this.muted = true" data-tenant-branding-background="true">
+        <source src="https://stmedev.z13.web.core.windows.net/src/videos/mushroom.mp4"> Your browser does not support the video tag.
+    </video>
+    <!-- <img data-tenant-branding-background="true"
+      src="https://login.microsoftonline.com/templates/src/backgrounds/4-2.png" alt="Illustration" /> -->
   </div>
   <div class="container  self_asserted_container " role="presentation">
     <div class="row">
