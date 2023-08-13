@@ -37,9 +37,10 @@ services:
     deploy:
       resources:
         limits:
-          memory: 2048MB
+          memory: 512MB
         reservations:
-          memory: 1024MB
+          memory: 256MB
+    memswap_limit: 512MB
 
   me-rabbitmq:
     image: rabbitmq
