@@ -15,7 +15,7 @@ A project to demonstrate full-stack aspects of a microservice based solution hos
 - Angular SPA with Tailwind CSS
 - Stripe for order checkout
 - gRPC
-- SignalR
+- SignalR - connected with login
 
 ## Bicep provisioning
 ![Me architecture](Images/Me%20Architecture.png)
