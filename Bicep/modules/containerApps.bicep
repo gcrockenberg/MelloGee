@@ -7,6 +7,7 @@
 
 param addToAPIM bool
 param apimName string
+param enableIngress bool
 //param apimIpAddress string =''
 param apiPath string
 //param connectKeyVault bool
@@ -406,14 +407,14 @@ resource containerApp 'Microsoft.App/containerApps@2023-05-01' = {
       secrets: containerSecrets
       registries: containerRegistries
       activeRevisionsMode: 'Single'
-      ingress: {
+      ingress: ((enableIngress) ? {
         external: addToAPIM
         transport: transport
         allowInsecure: (transport == 'http')
         targetPort: targetPort
         stickySessions: {
           affinity: stickySessionAffinity
-        }
+        } 
         ipSecurityRestrictions: (addToAPIM) ? ipSecurityRestrictionsForAPIMConsuptionPlan : []   //[ 
         //   {  // For APIM Developer plan
         //     name: 'allow-apim-access'
@@ -421,7 +422,7 @@ resource containerApp 'Microsoft.App/containerApps@2023-05-01' = {
         //     ipAddressRange: '${apimIpAddress}/32' 
         //   }
         // ]
-      }
+      } : null)
     }
     template: {
       containers: [

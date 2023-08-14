@@ -36,7 +36,7 @@ export class SignalRService {
             }
           });
 
-        this.transmitFakeMessages();
+        //this.transmitFakeMessages();
       })
   }
 

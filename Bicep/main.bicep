@@ -101,6 +101,7 @@ var microservices = [
   {
     skip: true
     addToAPIM: false
+    enableIngress: true
     apiPath: ''
     //connectKeyVault: false
     containerAppName: '${solutionName}-cart-data'
@@ -148,6 +149,7 @@ var microservices = [
   { // Using MariaDb for demo because it requires 1/4 of the resources vs SQL Server
     skip: true
     addToAPIM: false
+    enableIngress: true
     apiPath: ''
     //connectKeyVault: false
     containerAppName: '${solutionName}-mariadb'
@@ -168,6 +170,7 @@ var microservices = [
   {
     skip: true
     addToAPIM: false
+    enableIngress: true
     apiPath: ''
     //connectKeyVault: false
     containerAppName: '${solutionName}-rabbitmq'
@@ -185,6 +188,7 @@ var microservices = [
   {
     skip: false
     addToAPIM: false
+    enableIngress: false
     apiPath: ''
     //connectKeyVault: false
     containerAppName: '${solutionName}-signalr'
@@ -209,6 +213,7 @@ var microservices = [
   {
     skip: true
     addToAPIM: true
+    enableIngress: true
     apiPath: 'c'
     //connectKeyVault: false
     containerAppName: '${solutionName}-catalog-api'
@@ -240,6 +245,7 @@ var microservices = [
   {
     skip: true
     addToAPIM: true
+    enableIngress: true
     apiPath: 'b'
     //connectKeyVault: false
     containerAppName: '${solutionName}-cart-api'
@@ -260,6 +266,7 @@ var microservices = [
   {
     skip: true
     addToAPIM: true
+    enableIngress: true
     apiPath: 'o'
     //connectKeyVault: false
     containerAppName: '${solutionName}-order-api'
@@ -401,10 +408,11 @@ module containerAppModule 'modules/containerApps.bicep' = [for (microservice, in
     containerSecrets: microservice.secrets
     environmentVariables: microservice.environment
     addToAPIM: microservice.addToAPIM
+    enableIngress: microservice.enableIngress
     //apimIpAddress: apiManagementGateway.outputs.ipAddress
     apimName: apiManagementGateway.outputs.name
     apiPath: microservice.apiPath
-    //    connectKeyVault: microservice.connectKeyVault
+    //connectKeyVault: microservice.connectKeyVault
     containerAppName: microservice.containerAppName
     containerAppManagedEnvironmentName: containerAppsManagedEnvironment.name
     dockerHubUsername: dockerHubUsername
@@ -413,8 +421,8 @@ module containerAppModule 'modules/containerApps.bicep' = [for (microservice, in
     targetPort: microservice.targetPort
     transport: microservice.transport
     stickySessionAffinity: microservice.stickySessionAffinity
-    //    keyVaultId: keyVaultForSolution.outputs.id
-    //    keyVaultName: keyVaultForSolution.outputs.name
+    //keyVaultId: keyVaultForSolution.outputs.id
+    //keyVaultName: keyVaultForSolution.outputs.name
     location: location
   }
 }]

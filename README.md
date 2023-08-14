@@ -14,6 +14,8 @@ A project to demonstrate full-stack aspects of a microservice based solution hos
 - Redis Container App service for demo purposes
 - Angular SPA with Tailwind CSS
 - Stripe for order checkout
+- gRPC
+- SignalR
 
 ## Bicep provisioning
 ![Me architecture](Images/Me%20Architecture.png)
@@ -30,7 +32,7 @@ A project to demonstrate full-stack aspects of a microservice based solution hos
 
 <h2>Currently working on</h2>
 <ul> 
-<li><a href="https://green-wave-08182290f.3.azurestaticapps.net">SignalR</a> <-- Link to current version
+<li><a href="https://green-wave-08182290f.3.azurestaticapps.net">Embedded Stripe - eliminate redirect</a> <-- Link to current version
 <li>Azure hosting for demo is configured with free or consumption plans which scale to 0 when unused. Initial perfomance might be poor as the services "wake up".</li>
 </ul>
 
@@ -103,10 +105,12 @@ az deployment group create --template-file bicep/main.bicep
 
 <h2>TO DO</h2>
 <ul>
-<li>Implement semantic-release versioning</li>
-<li>Improve frontend</li>
-<li>Aggregation, GPRC and SignalR</li>
+<li>Improve mobile UI</li>
+<li>Fulfillment integration</li>
+<li>Full catalog with paging, eliminate dead links</li>
+<li>Customize profile form?</li>
 <li>Script AAD-B2C environment provisioning</li>
+<li>Implement semantic-release versioning</li>
 </ul>
 
 <br/><br/>
