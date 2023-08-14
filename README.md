@@ -15,7 +15,7 @@ A project to demonstrate full-stack aspects of a microservice based solution hos
 - Angular SPA with Tailwind CSS
 - Stripe for order checkout
 - gRPC - [restricted in Azure Container Apps](https://github.com/microsoft/azure-container-apps/issues/763)
-- SignalR - connected with login
+- SignalR - connected with login. [APIM limitations with consumption plans](https://learn.microsoft.com/en-us/azure/api-management/websocket-api?tabs=portal)
 
 ## Bicep provisioning
 ![Me architecture](Images/Me%20Architecture.png)
