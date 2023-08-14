@@ -146,7 +146,7 @@ var microservices = [
   //  stickySessionAffinity: 'none'
   // }
   { // Using MariaDb for demo because it requires 1/4 of the resources vs SQL Server
-    skip: false
+    skip: true
     addToAPIM: false
     apiPath: ''
     //connectKeyVault: false
@@ -180,6 +180,8 @@ var microservices = [
     resources: defaultResources
     stickySessionAffinity: 'none'
   }
+  // APIM has many restrictions for WebSockets for demo just expose container app
+  // https://learn.microsoft.com/en-us/azure/api-management/websocket-api?tabs=portal
   {
     skip: false
     addToAPIM: false
