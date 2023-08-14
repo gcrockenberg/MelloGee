@@ -14,7 +14,7 @@ A project to demonstrate full-stack aspects of a microservice based solution hos
 - Redis Container App service for demo purposes
 - Angular SPA with Tailwind CSS
 - Stripe for order checkout
-- gRPC
+- gRPC - [restricted in Azure Container Apps](https://github.com/microsoft/azure-container-apps/issues/763)
 - SignalR - connected with login
 
 ## Bicep provisioning
