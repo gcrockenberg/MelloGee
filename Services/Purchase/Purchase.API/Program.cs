@@ -1,6 +1,7 @@
-using Stripe;
+using Stripe; // Keep here to avoid ambiguous File references
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Logging.AddFilter("Microsoft.EntityFrameworkCore.Database.Command", LogLevel.Warning);
 
 builder.AddServiceDefaults();
 //builder.Services.AddGrpc();
@@ -54,8 +55,10 @@ services.AddTransient<IIntegrationEventHandler<OrderStockRejectedIntegrationEven
 services.AddTransient<IIntegrationEventHandler<UserCheckoutAcceptedIntegrationEvent>, UserCheckoutAcceptedIntegrationEventHandler>();
 
 // Domain integration event handlers
-services.AddTransient<INotificationHandler<OrderStartedDomainEvent>, ValidateOrAddBuyerAggregateWhenOrderStartedDomainEventHandler>();
 services.AddTransient<INotificationHandler<BuyerPaymentMethodVerifiedDomainEvent>, UpdateOrderWhenBuyerAndPaymentMethodVerifiedDomainEventHandler>();
+services.AddTransient<INotificationHandler<OrderCancelledDomainEvent>, OrderCancelledDomainEventHandler>();
+services.AddTransient<INotificationHandler<OrderStatusChangedToAwaitingValidationDomainEvent>, OrderStatusChangedToAwaitingValidationDomainEventHandler>();
+services.AddTransient<INotificationHandler<OrderStatusChangedToStockConfirmedDomainEvent>, OrderStatusChangedToStockConfirmedDomainEventHandler>();
 //
 // End integration event
 //

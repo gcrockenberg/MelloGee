@@ -99,7 +99,7 @@ var defaultResources = {
 @description('The Container App microservices')
 var microservices = [
   {
-    skip: false
+    skip: true
     addToAPIM: false
     apiPath: ''
     //connectKeyVault: false
@@ -111,6 +111,7 @@ var microservices = [
     secrets: microserviceCommonSecrets
     environment: []
     resources: defaultResources
+    stickySessionAffinity: 'none'
   }
   // { // Skipping SQL Server due to resource requirement costs
   //   skip: true
@@ -142,6 +143,7 @@ var microservices = [
   //     cpu: '1.0'
   //     memory: '2.0Gi' // 2G minimum requirement
   //   }
+  //  stickySessionAffinity: 'none'
   // }
   { // Using MariaDb for demo because it requires 1/4 of the resources vs SQL Server
     skip: false
@@ -161,9 +163,10 @@ var microservices = [
       }
     ]
     resources: defaultResources // Less demanding that SQL Server
+    stickySessionAffinity: 'none'
   }
   {
-    skip: false
+    skip: true
     addToAPIM: false
     apiPath: ''
     //connectKeyVault: false
@@ -175,9 +178,34 @@ var microservices = [
     secrets: microserviceCommonSecrets
     environment: []
     resources: defaultResources
+    stickySessionAffinity: 'none'
   }
   {
     skip: false
+    addToAPIM: false
+    apiPath: ''
+    //connectKeyVault: false
+    containerAppName: '${solutionName}-signalr'
+    dockerImageName: '${dockerHubUsername}/signalr:latest'
+    minScale: 1
+    targetPort: 80
+    transport: 'http'
+    secrets: microserviceCommonSecrets
+    environment: concat(microserviceCommonEnvironment, [
+      {
+        name: 'AllowedOrigins'
+        value: 'https://green-wave-08182290f.3.azurestaticapps.net' // Automate this
+      }
+      {
+        name: 'ASPNETCORE_URLS'
+        value: 'http://0.0.0.0:80'
+      }
+    ])
+    resources: defaultResources
+    stickySessionAffinity: 'sticky'
+  }
+  {
+    skip: true
     addToAPIM: true
     apiPath: 'c'
     //connectKeyVault: false
@@ -200,14 +228,15 @@ var microservices = [
         }
         {
           name: 'PicBaseUrl'
-          value: 'https://${storageAccountName}.z13.web.${environment().suffixes.storage}/Catalog/[0].png'
-          //value: 'https://${apimName}.${apiManagementSuffix}/c/api/v1/catalog/items/[0]/pic/'
+          value: 'https://${storageAccountName}.z13.web.${environment().suffixes.storage}/Catalog/[0].png'  // Served from Storage
+          //value: 'https://${apimName}.${apiManagementSuffix}/c/api/v1/catalog/items/[0]/pic/'             // Served from App
         }
       ])
     resources: defaultResources
+    stickySessionAffinity: 'none'
   }
   {
-    skip: false
+    skip: true
     addToAPIM: true
     apiPath: 'b'
     //connectKeyVault: false
@@ -224,9 +253,10 @@ var microservices = [
         }
       ])
     resources: defaultResources
+    stickySessionAffinity: 'none'
   }
   {
-    skip: false
+    skip: true
     addToAPIM: true
     apiPath: 'o'
     //connectKeyVault: false
@@ -265,6 +295,7 @@ var microservices = [
         }
       ])
     resources: defaultResources
+    stickySessionAffinity: 'none'
   }
   // {// Test service
   //   skip: true
@@ -294,6 +325,7 @@ var microservices = [
   //     }
   //   ]
   //   resources: defaultResources
+  //  stickySessionAffinity: 'none'
   // }
 ]
 
@@ -378,6 +410,7 @@ module containerAppModule 'modules/containerApps.bicep' = [for (microservice, in
     minScale: microservice.minScale
     targetPort: microservice.targetPort
     transport: microservice.transport
+    stickySessionAffinity: microservice.stickySessionAffinity
     //    keyVaultId: keyVaultForSolution.outputs.id
     //    keyVaultName: keyVaultForSolution.outputs.name
     location: location

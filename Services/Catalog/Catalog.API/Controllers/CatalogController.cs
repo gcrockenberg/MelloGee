@@ -171,7 +171,6 @@ public class CatalogController : ControllerBase
     [Route("items/type/{catalogTypeId}/brand/{catalogBrandId:int}")]
     public async Task<ActionResult<PaginatedItemsViewModel<CatalogItem>>> ItemsByTypeIdAndBrandIdAsync(int catalogTypeId, int catalogBrandId = -1, [FromQuery] int pageSize = 10, [FromQuery] int pageIndex = 0)
     {
-        _logger.LogInformation("--> catalogTypeId: {type}, catalogBrandId: {brand}", catalogTypeId, catalogBrandId);
         var root = (IQueryable<CatalogItem>)_catalogContext.CatalogItems
             .Include(item => item.CatalogBrand)
             .Include(item => item.CatalogType)

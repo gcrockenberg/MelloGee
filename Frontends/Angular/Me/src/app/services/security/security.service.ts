@@ -1,6 +1,6 @@
 import { Injectable, DestroyRef, inject } from '@angular/core';
 import { MsalBroadcastService, MsalService } from '@azure/msal-angular';
-import { Subject, filter, takeUntil, tap } from 'rxjs';
+import { Observable, Subject, filter, switchMap, takeUntil, tap } from 'rxjs';
 import { IdTokenClaimsWithPolicyId } from 'src/app/config.auth';
 import { environment } from 'src/environments/environment';
 import {
@@ -14,9 +14,11 @@ import {
   PopupRequest,
   PromptValue,
   RedirectRequest,
+  SilentRequest,
   SsoSilentRequest
 } from '@azure/msal-browser';
 import { ClaimFields, UserData } from 'src/app/models/security/user-data.model';
+import { AuthRequestType } from 'src/environments/interfaces/IEnvironment';
 
 
 /**
@@ -32,7 +34,12 @@ export class SecurityService {
 
   // Observable fired when isAuthorized changes
   private _isAuthorizedSource = new Subject<boolean>();
-  isAutorizedUpdate$ = this._isAuthorizedSource.asObservable();
+  isAuthorizedUpdate$ = this._isAuthorizedSource.asObservable();
+  private _accessToken: string = '';
+  readonly accessToken = new Observable<string>((observer) => {
+    if ('' != this._accessToken) observer.next(this._accessToken);
+    this.isAuthorizedUpdate$.subscribe(() => observer.next(this._accessToken));
+  });
 
   public isAuthorized: boolean = false;
   public accountData?: AccountInfo;
@@ -161,6 +168,7 @@ export class SecurityService {
         let idtoken = payload.idTokenClaims as IdTokenClaimsWithPolicyId;
 
         if (idtoken.acr === environment.b2cPolicies.names.signUpSignIn || idtoken.tfp === environment.b2cPolicies.names.signUpSignIn) {
+          this._accessToken = payload.accessToken;
           this._msalInstance.setActiveAccount(payload.account);
         }
 

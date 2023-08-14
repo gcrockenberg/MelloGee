@@ -25,6 +25,7 @@ COPY "Services/Cart/Cart.API/Cart.API.csproj" "Services/Cart/Cart.API/Cart.API.c
 COPY "Services/Purchase/Purchase.Domain/Purchase.Domain.csproj" "Services/Purchase/Purchase.Domain/Purchase.Domain.csproj"
 COPY "Services/Purchase/Purchase.Infrastructure/Purchase.Infrastructure.csproj" "Services/Purchase/Purchase.Infrastructure/Purchase.Infrastructure.csproj"
 COPY "Services/Purchase/Purchase.API/Purchase.API.csproj" "Services/Purchase/Purchase.API/Purchase.API.csproj"
+COPY "Services/SignalRHub/SignalRHub.csproj" "Services/SignalRHub/SignalRHub.csproj"
 COPY "Directory.Packages.props" "Directory.Packages.props"
 
 RUN dotnet restore "MeServices.sln"

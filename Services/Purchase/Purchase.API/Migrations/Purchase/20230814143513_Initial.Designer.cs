@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Purchase.API.Migrations.Purchase
 {
     [DbContext(typeof(PurchaseContext))]
-    [Migration("20230811174006_Initial")]
+    [Migration("20230814143513_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -138,6 +138,9 @@ namespace Purchase.API.Migrations.Purchase
                     b.Property<string>("Description")
                         .HasColumnType("longtext");
 
+                    b.Property<int>("OrderStatusId")
+                        .HasColumnType("int");
+
                     b.Property<int>("PaymentMethodId")
                         .HasColumnType("int");
 
@@ -157,7 +160,11 @@ namespace Purchase.API.Migrations.Purchase
 
                     b.HasIndex("_orderStatusId");
 
-                    b.ToTable("orders", (string)null);
+                    b.ToTable("orders", null, t =>
+                        {
+                            t.Property("OrderStatusId")
+                                .HasColumnName("OrderStatusId1");
+                        });
                 });
 
             modelBuilder.Entity("Me.Services.Purchase.Domain.AggregatesModel.OrderAggregate.OrderItem", b =>

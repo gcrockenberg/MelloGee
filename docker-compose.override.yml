@@ -25,14 +25,29 @@ services:
       - "15672:15672"
       - "5672:5672"
 
+  me-signalr:
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: http://0.0.0.0:80
+      AllowedOrigins: http://localhost:4200,http://localhost
+      ConnectionStrings__EventBus: ${ME_ConnectionStrings_EventBus}
+      EventBus__RetryCount: 5
+      AzureAdB2C__Instance: ${ME_AzureAdB2C_Instance}
+      AzureAdB2C__Domain: ${ME_AzureAdB2C_Domain}
+      AzureAdB2C__ClientId: ${ME_AzureAdB2C_ClientId}
+      AzureAdB2C__SignedOutCallbackPath: ${ME_AzureAdB2C_SignedOutCallbackPath}
+      AzureAdB2C__SignUpSignInPolicyId: ${ME_AzureAdB2C_SignUpSignInPolicyId}
+    ports:
+      - "5112:80"
+
   me-catalog-api:
     environment:
       ASPNETCORE_ENVIRONMENT: Development
       ConnectionStrings__EventBus: ${ME_ConnectionStrings_EventBus}
+      EventBus__RetryCount: 5
       # ConnectionStrings__CatalogDb: Server=me-sql-data;Database=Me.Services.CatalogDb;User Id=sa;Password=${ME_MSSQL_SA_PASSWORD};Encrypt=False;TrustServerCertificate=true
       # ConnectionStrings__CatalogDb: server=me-my-sql;port=3306;database=Me.Services.CatalogDb;uid=root;password=
       ConnectionStrings__CatalogDb: server=me-mariadb;port=3306;uid=root;password=;database=Me.Services.CatalogDb
-      EventBus__RetryCount: 5
       PicBaseUrl: https://stmedev.z13.web.core.windows.net/Catalog/[0].png
       #      - AzureStorageAccountName=${ME_AZURE_STORAGE_CATALOG_NAME}
       #      - AzureStorageAccountKey=${ME_AZURE_STORAGE_CATALOG_KEY}
@@ -54,8 +69,8 @@ services:
       AzureAdB2C__SignedOutCallbackPath: ${ME_AzureAdB2C_SignedOutCallbackPath}
       AzureAdB2C__SignUpSignInPolicyId: ${ME_AzureAdB2C_SignUpSignInPolicyId}
       ConnectionStrings__EventBus: ${ME_ConnectionStrings_EventBus}
-      ConnectionStrings__Redis: ${ME_ConnectionStrings_Redis}
       EventBus__RetryCount: 5
+      ConnectionStrings__Redis: ${ME_ConnectionStrings_Redis}
       #      - ApplicationInsights__InstrumentationKey=${INSTRUMENTATION_KEY}
       #      - OrchestratorType=${ORCHESTRATOR_TYPE}
       UseLoadTest: ${USE_LOADTEST:-False}
@@ -75,9 +90,9 @@ services:
       # ConnectionStrings__PurchaseDb: Server=me-sql-data;Database=Me.Services.PurchaseDb;User Id=sa;Password=${ME_MSSQL_SA_PASSWORD};Encrypt=False;TrustServerCertificate=true
       ConnectionStrings__PurchaseDb: server=me-mariadb;port=3306;uid=root;password=;database=Me.Services.PurchaseDb
       ConnectionStrings__EventBus: ${ME_ConnectionStrings_EventBus}
+      EventBus__RetryCount: 5
       ConnectionStrings__Redis: ${ME_ConnectionStrings_Redis}
       GrpcCart: "http://me-cart-api:81"
-      EventBus__RetryCount: 5
       UseCustomizationData: True
       CheckUpdateTime: 30000
       #      - ApplicationInsights__InstrumentationKey=${INSTRUMENTATION_KEY}

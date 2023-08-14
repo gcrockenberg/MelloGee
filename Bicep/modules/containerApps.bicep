@@ -16,6 +16,7 @@ param dockerImageName string
 param minScale int
 param targetPort int
 param transport string
+param stickySessionAffinity string
 
 @description('The location into which your Azure resources should be deployed.')
 param location string = resourceGroup().location
@@ -411,7 +412,7 @@ resource containerApp 'Microsoft.App/containerApps@2023-05-01' = {
         allowInsecure: (transport == 'http')
         targetPort: targetPort
         stickySessions: {
-          affinity: 'none'
+          affinity: stickySessionAffinity
         }
         ipSecurityRestrictions: (addToAPIM) ? ipSecurityRestrictionsForAPIMConsuptionPlan : []   //[ 
         //   {  // For APIM Developer plan

@@ -18,9 +18,11 @@ public class UpdateOrderWhenBuyerAndPaymentMethodVerifiedDomainEventHandler : IN
     // then we can update the original Order with the BuyerId and PaymentId (foreign keys)
     public async Task Handle(BuyerPaymentMethodVerifiedDomainEvent domainEvent, CancellationToken cancellationToken)
     {
-        var orderToUpdate = await _orderRepository.GetAsync(domainEvent.OrderId);
-        orderToUpdate.SetBuyerId(domainEvent.Buyer.Id);
-        orderToUpdate.SetPaymentId(domainEvent.Payment.Id);
-        PurchaseApiTrace.LogOrderPaymentMethodUpdated(_logger, domainEvent.OrderId, nameof(domainEvent.Payment), domainEvent.Payment.Id);
+        // This is now handled in the CreateOrderCommand
+
+        // var orderToUpdate = await _orderRepository.GetAsync(domainEvent.OrderId);
+        // orderToUpdate.SetBuyerId(domainEvent.Buyer.Id);
+        // orderToUpdate.SetPaymentId(domainEvent.Payment.Id);
+        // PurchaseApiTrace.LogOrderPaymentMethodUpdated(_logger, domainEvent.OrderId, nameof(domainEvent.Payment), domainEvent.Payment.Id);
     }
 }

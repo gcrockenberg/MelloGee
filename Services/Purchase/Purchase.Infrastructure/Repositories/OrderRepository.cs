@@ -11,8 +11,10 @@ public class OrderRepository
         _context = context ?? throw new ArgumentNullException(nameof(context));
     }
 
-    public Order Add(Order order)
+    public async Task<Order> Add(Order order)
     {
+        OrderStatus status = await _context.OrderStatus.FirstOrDefaultAsync(os => os.Id == order.OrderStatusId);
+        order.OrderStatus = status;
         return _context.Orders.Add(order).Entity;
 
     }

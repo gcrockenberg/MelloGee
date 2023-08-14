@@ -5,10 +5,10 @@ export const environment: IEnvironment = {
   production: false,
   apiConfigs: [
     {
-    uri: 'http://localhost/o/api/v1/order*',
-    scopes: [
-      'https://meauth.onmicrosoft.com/cart/cart.read',
-      'https://meauth.onmicrosoft.com/cart/cart.write'
+      uri: 'http://localhost/o/api/v1/order*',
+      scopes: [
+        'https://meauth.onmicrosoft.com/cart/cart.read',
+        'https://meauth.onmicrosoft.com/cart/cart.write'
       ]
     }
   ],

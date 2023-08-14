@@ -2,6 +2,6 @@
   "catalogUrl": "http://localhost",
   "orderUrl": "http://localhost",
   "cartUrl": "http://localhost",
-  "signalrHubUrl": "http://localhost:5229",
+  "signalRHubUrl": "http://localhost",
   "activateCampaignDetailFunction": false
 }

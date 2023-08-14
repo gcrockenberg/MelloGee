@@ -77,6 +77,21 @@ services:
       - me-cart-api
       - me-order-api
 
+  me-signalr:
+    image: signalr
+    build:
+      context: .
+      dockerfile: Services/SignalRHub/Dockerfile
+    deploy:
+      resources:
+        limits:
+          memory: 128MB
+        reservations:
+          memory: 64MB
+    memswap_limit: 128MB
+    depends_on:
+      - me-rabbitmq
+
   me-catalog-api:
     image: catalog-api
     build:

@@ -40,8 +40,6 @@ public class CartController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<CustomerCart>> UpdateCartAsync([FromBody] CustomerCart cart)
     {
-        _logger.LogInformation("--> Cart SessionId: {sessionId}", cart.SessionId);
-
         if (null == cart || string.IsNullOrEmpty(cart.SessionId))
         {
             return BadRequest();

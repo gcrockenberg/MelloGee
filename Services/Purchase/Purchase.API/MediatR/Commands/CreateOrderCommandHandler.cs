@@ -70,10 +70,19 @@ public class CreateOrderCommandHandler
 
         _logger.LogInformation("Creating Order - Order: {@Order}", order);
 
-        _orderRepository.Add(order);
+        await _orderRepository.Add(order);
 
-        return await _orderRepository.UnitOfWork
+        bool result = await _orderRepository.UnitOfWork
             .SaveEntitiesAsync(cancellationToken);
+
+        if (result) // else fire failure event? what about cart?
+        {            
+            var integrationEvent = new OrderStatusChangedToSubmittedIntegrationEvent(order.Id, order.OrderStatus.Name, order.Buyer.Name);
+            await _purchaseIntegrationEventService.AddAndSaveEventAsync(integrationEvent);
+            PurchaseApiTrace.LogOrderBuyerAndPaymentValidatedOrUpdated(_logger, order.BuyerId, order.Id);
+        }
+
+        return result;
     }
 }
 

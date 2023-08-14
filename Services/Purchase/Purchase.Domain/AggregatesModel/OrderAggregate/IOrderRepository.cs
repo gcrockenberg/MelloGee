@@ -5,7 +5,7 @@
 
 public interface IOrderRepository : IRepository<Order>
 {
-    Order Add(Order order);
+    Task<Order> Add(Order order);
 
     void Update(Order order);
 

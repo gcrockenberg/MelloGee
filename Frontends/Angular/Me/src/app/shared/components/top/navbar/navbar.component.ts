@@ -46,12 +46,11 @@ export class NavbarComponent implements OnDestroy {
         this.isAuthorized.set(_securityService.isAuthorized);
         // Handle authorization updates
         this._subscriptions.push(
-            this._securityService.isAutorizedUpdate$
+            this._securityService.isAuthorizedUpdate$
                 .subscribe((newIsAuthorized: boolean) => {
                     this.isAuthorized.set(newIsAuthorized);
                     if (newIsAuthorized) {
-                        setTimeout(() =>
-                        this._wakeSecureApis(), 10000);
+                        //this._wakeSecureApis();
                     }
                 })
         );
@@ -111,5 +110,5 @@ export class NavbarComponent implements OnDestroy {
         this._orderService.getOrders().subscribe();
     }
 
-    
+
 }

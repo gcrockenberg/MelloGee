@@ -1,6 +1,6 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, Subject, catchError, tap } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 
 import { StorageService } from '../storage/storage.service';
 import { Constants, IConfiguration } from 'src/app/models/configuration/configuration.model';
@@ -35,7 +35,7 @@ export class ConfigurationService {
           this._storageService.store(Constants.CATALOG_URL, this.serverSettings.catalogUrl);
           this._storageService.store(Constants.ORDER_URL, this.serverSettings.orderUrl);
           this._storageService.store(Constants.CART_URL, this.serverSettings.cartUrl);
-          this._storageService.store(Constants.SIGNAL_R_HUB_URL, this.serverSettings.signalrHubUrl);
+          this._storageService.store(Constants.SIGNAL_R_HUB_URL, this.serverSettings.signalRHubUrl);
           this._storageService.store(Constants.ACTIVATE_CAMPAIGN_DETAIL_FUNCTION, this.serverSettings.activateCampaignDetailFunction);
           
           this.isReady = true;

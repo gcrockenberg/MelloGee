@@ -1,0 +1,10 @@
+<div class="w-full fixed z-40 {{ toast() ? 'bottom-0' : '-bottom-full' }} transition-all duration-500">
+ 
+        <div *ngFor="let message of messages()">
+            <div
+                class="flex flex-col mx-auto rounded-md max-w-lg justify-center text-center center-items h-20 bg-accent">
+                <p class="text-black">{{message}}</p>
+            </div>
+        </div>
+ 
+</div>

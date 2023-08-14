@@ -19,6 +19,8 @@ static_resources:
         typed_config:
           "@type": type.googleapis.com/envoy.extensions.filters.network.http_connection_manager.v3.HttpConnectionManager
           stat_prefix: ingress_http
+          upgrade_configs:  # SignalR
+            - upgrade_type: websocket
           route_config:
             name: local_route
             virtual_hosts:
@@ -67,6 +69,21 @@ static_resources:
                         regex: .*\.envoyproxy\.io
                     allow_methods: "*"
                     allow_headers: "*"
+              - match:
+                  prefix: "/hub/notificationhub"
+                route:
+                  #prefix_rewrite: "/api/v1/order"
+                  cluster: signalr_service
+                typed_per_filter_config:
+                  envoy.filters.http.cors:
+                    "@type": type.googleapis.com/envoy.extensions.filters.http.cors.v3.CorsPolicy
+                    allow_origin_string_match:
+                    - contains: localhost
+                    - safe_regex:
+                        regex: .*\.envoyproxy\.io
+                    allow_methods: "*"
+                    allow_headers: "*"
+                    allow_credentials: true
           http_filters:
           - name: envoy.filters.http.cors
             typed_config:
@@ -119,4 +136,19 @@ static_resources:
             address:
               socket_address:
                 address: me-order-api  # Container name
+                port_value: 80        # HTTP behind gateway
+  - name: signalr_service
+    connect_timeout: 30s
+    type: LOGICAL_DNS
+    # Comment out the following line to test on v6 networks
+    dns_lookup_family: V4_ONLY
+    lb_policy: ROUND_ROBIN
+    load_assignment:
+      cluster_name: order_service
+      endpoints:
+      - lb_endpoints:
+        - endpoint:
+            address:
+              socket_address:
+                address: me-signalr  # Container name
                 port_value: 80        # HTTP behind gateway

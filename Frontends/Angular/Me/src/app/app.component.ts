@@ -7,6 +7,8 @@ import { FooterComponent } from './shared/components/bottom/footer/footer.compon
 import { CartSidebarComponent } from "./components/cart/cart-sidebar/cart-sidebar.component";
 import { AltFooterComponent } from "./shared/components/bottom/alt-footer/alt-footer.component";
 import { MsalService } from '@azure/msal-angular';
+import { SignalRService } from './services/signalR/signal-r.service';
+import { ToastComponent } from "./shared/components/tools/toast/toast.component";
 
 declare const gtag: Function;   // Google analytics
 
@@ -15,14 +17,15 @@ declare const gtag: Function;   // Google analytics
     standalone: true,
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.scss'],
-  imports: [
+    imports: [
         FooterComponent,
         NgIf,
         RouterOutlet,
         HeaderComponent,
         NavbarComponent,
         CartSidebarComponent,
-        AltFooterComponent
+        AltFooterComponent,
+        ToastComponent
     ]
 })
 export class AppComponent {
@@ -30,7 +33,8 @@ export class AppComponent {
 
   constructor(
     private _router: Router, 
-    private _msalService: MsalService) {
+    private _msalService: MsalService,
+    private _signalRService: SignalRService) {
 
       _msalService.instance.initialize();
       

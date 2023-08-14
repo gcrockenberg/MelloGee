@@ -1,0 +1,11 @@
+global using Azure.Identity;
+global using Me.Services.Common;
+global using Me.Services.EventBus.Abstractions;
+global using Me.Services.EventBus.Events;
+global using Me.Services.SignalRHub;
+global using Me.Services.SignalRHub.Integration.EventHandlers;
+global using Me.Services.SignalRHub.Integration.Events;
+global using Microsoft.AspNetCore.Authentication.JwtBearer;
+global using Microsoft.AspNetCore.Authorization;
+global using Microsoft.AspNetCore.SignalR;
+global using Microsoft.Identity.Web.Resource;

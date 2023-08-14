@@ -11,6 +11,6 @@ export interface IConfiguration {
     catalogUrl: string,
     orderUrl: string,
     cartUrl: string,
-    signalrHubUrl: string,
+    signalRHubUrl: string,
     activateCampaignDetailFunction: boolean
 }
