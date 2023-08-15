@@ -1,6 +1,6 @@
 import { Injectable, DestroyRef, inject } from '@angular/core';
 import { MsalBroadcastService, MsalService } from '@azure/msal-angular';
-import { Observable, Subject, filter, switchMap, takeUntil, tap } from 'rxjs';
+import { Subject, filter, takeUntil } from 'rxjs';
 import { IdTokenClaimsWithPolicyId } from 'src/app/config.auth';
 import { environment } from 'src/environments/environment';
 import {
@@ -14,11 +14,9 @@ import {
   PopupRequest,
   PromptValue,
   RedirectRequest,
-  SilentRequest,
   SsoSilentRequest
 } from '@azure/msal-browser';
 import { ClaimFields, UserData } from 'src/app/models/security/user-data.model';
-import { AuthRequestType } from 'src/environments/interfaces/IEnvironment';
 
 
 /**
@@ -172,8 +170,6 @@ export class SecurityService {
       .subscribe((result: EventMessage) => {
         let payload = result.payload as AuthenticationResult;
         let idtoken = payload.idTokenClaims as IdTokenClaimsWithPolicyId;
-
-        console.log("--> Success? ", result.payload);
 
         if (idtoken.acr === environment.b2cPolicies.names.signUpSignIn || idtoken.tfp === environment.b2cPolicies.names.signUpSignIn) {
           
