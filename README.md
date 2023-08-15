@@ -23,7 +23,7 @@ A project to demonstrate full-stack aspects of a microservice based solution hos
 <h1>Notes</h1>
 <ul>
 <li>The steps below were established on my Windows 10 machine</li>
-<li>The Azure resources can be configured to auto scaling based upon demand</li>
+<li>The Azure resources can be configured to auto scale based upon demand</li>
 <li>Global scaling can be configured using a geode or stamped pattern</li>
 </ul>
 
