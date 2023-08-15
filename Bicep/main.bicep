@@ -101,7 +101,7 @@ var microservices = [
   {
     skip: true
     addToAPIM: false
-    enableIngress: true
+    public: false
     apiPath: ''
     //connectKeyVault: false
     containerAppName: '${solutionName}-cart-data'
@@ -149,7 +149,7 @@ var microservices = [
   { // Using MariaDb for demo because it requires 1/4 of the resources vs SQL Server
     skip: true
     addToAPIM: false
-    enableIngress: true
+    public: false
     apiPath: ''
     //connectKeyVault: false
     containerAppName: '${solutionName}-mariadb'
@@ -170,7 +170,7 @@ var microservices = [
   {
     skip: true
     addToAPIM: false
-    enableIngress: true
+    public: false
     apiPath: ''
     //connectKeyVault: false
     containerAppName: '${solutionName}-rabbitmq'
@@ -188,7 +188,7 @@ var microservices = [
   {
     skip: false
     addToAPIM: false
-    enableIngress: false
+    public: true
     apiPath: ''
     //connectKeyVault: false
     containerAppName: '${solutionName}-signalr'
@@ -204,7 +204,7 @@ var microservices = [
       }
       {
         name: 'ASPNETCORE_URLS'
-        value: 'http://0.0.0.0:80'
+        value: 'http://0.0.0.0:443'
       }
     ])
     resources: defaultResources
@@ -213,7 +213,7 @@ var microservices = [
   {
     skip: true
     addToAPIM: true
-    enableIngress: true
+    public: false
     apiPath: 'c'
     //connectKeyVault: false
     containerAppName: '${solutionName}-catalog-api'
@@ -245,7 +245,7 @@ var microservices = [
   {
     skip: true
     addToAPIM: true
-    enableIngress: true
+    public: false
     apiPath: 'b'
     //connectKeyVault: false
     containerAppName: '${solutionName}-cart-api'
@@ -266,7 +266,7 @@ var microservices = [
   {
     skip: true
     addToAPIM: true
-    enableIngress: true
+    public: false
     apiPath: 'o'
     //connectKeyVault: false
     containerAppName: '${solutionName}-order-api'
@@ -408,7 +408,7 @@ module containerAppModule 'modules/containerApps.bicep' = [for (microservice, in
     containerSecrets: microservice.secrets
     environmentVariables: microservice.environment
     addToAPIM: microservice.addToAPIM
-    enableIngress: microservice.enableIngress
+    public: microservice.public
     //apimIpAddress: apiManagementGateway.outputs.ipAddress
     apimName: apiManagementGateway.outputs.name
     apiPath: microservice.apiPath
