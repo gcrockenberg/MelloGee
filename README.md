@@ -3,7 +3,7 @@
 A project to demonstrate full-stack aspects of a microservice based solution hosted in Azure.
 
 ## Environment
-- [Azure Container Apps](https://learn.microsoft.com/en-us/azure/container-apps/) - IaaS, easy orchestration, scalable, pay-as-you-go
+- [Azure Container Apps](https://learn.microsoft.com/en-us/azure/container-apps/) - IaaS, easy orchestration, scalable, pay-as-you-go. NET Core 8.x preview
 - [Azure API Management](https://azure.microsoft.com/en-us/products/api-management/)
 - Docker Container Registry
 - GitHub Actions CI/CD
@@ -12,7 +12,7 @@ A project to demonstrate full-stack aspects of a microservice based solution hos
 - MariaDb Container App service for demo purposes
 - RabbitMQ Event Bus Container App service for demo purposes
 - Redis Container App service for demo purposes
-- Angular SPA with Tailwind CSS
+- Angular v16 SPA with Tailwind CSS
 - Stripe for order checkout
 - gRPC - [restricted in Azure Container Apps](https://github.com/microsoft/azure-container-apps/issues/763)
 - SignalR - connected with login. [APIM limitations with consumption plans](https://learn.microsoft.com/en-us/azure/api-management/websocket-api?tabs=portal)
