@@ -13,7 +13,7 @@ A project to demonstrate full-stack aspects of a microservice based solution hos
 - RabbitMQ Event Bus Container App service for demo purposes
 - Redis Container App service for demo purposes
 - Angular v16 SPA with Tailwind CSS
-- Stripe for order checkout
+- Stripe for order checkout (currently by redirect)
 - gRPC - [restricted in Azure Container Apps](https://github.com/microsoft/azure-container-apps/issues/763)
 - SignalR - connected with login. [APIM limitations with consumption plans](https://learn.microsoft.com/en-us/azure/api-management/websocket-api?tabs=portal)
 
