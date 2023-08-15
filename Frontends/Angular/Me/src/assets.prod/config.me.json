@@ -2,6 +2,6 @@
   "catalogUrl": "https://me-dev.azure-api.net",
   "orderUrl": "https://me-dev.azure-api.net",
   "cartUrl": "https://me-dev.azure-api.net",
-  "signalRHubUrl": "http://me-signalr--bfvbnig.purpleglacier-5f37b0bb.eastus.azurecontainerapps.io",
+  "signalRHubUrl": "http://me-signalr--posx4iu.purpleglacier-5f37b0bb.eastus.azurecontainerapps.io",
   "activateCampaignDetailFunction": false
 }
