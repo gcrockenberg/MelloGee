@@ -1,5 +1,4 @@
 import { MsalGuardAuthRequest, MsalGuardConfiguration } from '@azure/msal-angular';
-import { Configuration } from '@azure/msal-browser';
 
 /**
    * Scopes you add here will be prompted for user consent during sign-in.
@@ -8,7 +7,8 @@ import { Configuration } from '@azure/msal-browser';
    * https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-permissions-and-consent#openid-connect-scopes
    */
 const LOGIN_REQUEST: MsalGuardAuthRequest = {
-    scopes: [],
+    scopes: ['openid', 'offline_access', 'https://meauth.onmicrosoft.com/cart/cart.read',
+    'https://meauth.onmicrosoft.com/cart/cart.write'],
 };
 /**
    * An optional silentRequest object can be used to achieve silent SSO
@@ -18,7 +18,8 @@ const LOGIN_REQUEST: MsalGuardAuthRequest = {
    * https://github.com/AzureAD/microsoft-authentication-library-for-js/blob/dev/lib/msal-browser/FAQ.md#why-is-getaccountbyusername-returning-null-even-though-im-signed-in
    */
 const SILENT_REQUEST: MsalGuardAuthRequest = {
-  scopes: [],
+  scopes: ['openid', 'offline_access', 'https://meauth.onmicrosoft.com/cart/cart.read',
+  'https://meauth.onmicrosoft.com/cart/cart.write'],
   loginHint: 'example@domain.net',
 };
 export const AuthRequestType = {

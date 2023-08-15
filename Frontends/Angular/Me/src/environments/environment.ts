@@ -8,10 +8,10 @@ import { AuthRequestType, IEnvironment } from './interfaces/IEnvironment';
 
 export const environment: IEnvironment = {
   production: false,
-  apiConfigs: {
-    scopes: [''],
+  apiConfigs: [{
+    scopes: [],
     uri: '',
-  },
+  }],
   b2cPolicies: {
     names: {
       signUpSignIn: '',

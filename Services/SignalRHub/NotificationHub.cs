@@ -7,6 +7,9 @@ public class NotificationsHub : Hub
     {
         await Groups.AddToGroupAsync(Context.ConnectionId, Context.User.Identity.Name);
         await base.OnConnectedAsync();
+
+        Console.WriteLine("--> OnConnectedAsync()");
+        Clients.Caller.SendAsync("UpdatedOrderState", new { OrderId = 0, Status = "connected ..." });
     }
 
     public override async Task OnDisconnectedAsync(Exception ex)

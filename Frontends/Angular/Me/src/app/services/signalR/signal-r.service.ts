@@ -65,8 +65,8 @@ export class SignalRService {
     this._hubConnection = new HubConnectionBuilder()
       .withUrl(this._signalRHubUrl + '/hub/notificationhub', <IHttpConnectionOptions>{
         accessTokenFactory: async () => {
-          let token = await firstValueFrom(this._securityService.accessToken);
-          return token;
+          let token = await this._securityService.getToken();
+          return token.accessToken;
         },
         logger: LogLevel.Information,
         logMessageContent: true
@@ -92,7 +92,7 @@ export class SignalRService {
 
     this._hubConnection.on('UpdatedOrderState', (msg) => {
       console.log(`Order ${msg.orderId} updated to ${msg.status}`);
-      let message = `SignalR: Order ${msg.orderId} status: ${msg.status}`;
+      let message = (1 > msg.orderId) ? 'SignalR connected...' : `Order ${msg.orderId}: ${msg.status}`;
       this.signalRSource.next(message);
     });
   }

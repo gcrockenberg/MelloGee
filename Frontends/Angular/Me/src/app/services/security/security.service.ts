@@ -35,11 +35,17 @@ export class SecurityService {
   // Observable fired when isAuthorized changes
   private _isAuthorizedSource = new Subject<boolean>();
   isAuthorizedUpdate$ = this._isAuthorizedSource.asObservable();
-  private _accessToken: string = '';
-  readonly accessToken = new Observable<string>((observer) => {
-    if ('' != this._accessToken) observer.next(this._accessToken);
-    this.isAuthorizedUpdate$.subscribe(() => observer.next(this._accessToken));
-  });
+
+  getToken(): Promise<AuthenticationResult> {
+    const account = this._msalInstance.getAllAccounts()[0];
+    const accessTokenRequest = {
+      scopes: ['openid', 'offline_access', 'https://meauth.onmicrosoft.com/cart/cart.read',
+      'https://meauth.onmicrosoft.com/cart/cart.write'],
+      account: account
+    }
+
+    return this._msalInstance.acquireTokenSilent(accessTokenRequest);
+  }
 
   public isAuthorized: boolean = false;
   public accountData?: AccountInfo;
@@ -167,8 +173,10 @@ export class SecurityService {
         let payload = result.payload as AuthenticationResult;
         let idtoken = payload.idTokenClaims as IdTokenClaimsWithPolicyId;
 
+        console.log("--> Success? ", result.payload);
+
         if (idtoken.acr === environment.b2cPolicies.names.signUpSignIn || idtoken.tfp === environment.b2cPolicies.names.signUpSignIn) {
-          this._accessToken = payload.accessToken;
+          
           this._msalInstance.setActiveAccount(payload.account);
         }
 
@@ -274,8 +282,7 @@ export class SecurityService {
         this.userData.postalCode = this.accountData.idTokenClaims[ClaimFields.POSTAL_CODE] as string;
         this.userData.country = this.accountData.idTokenClaims[ClaimFields.COUNTRY] as string;
         this.userData.Emails = this.accountData.idTokenClaims[ClaimFields.EMAILS] as string[];
-      }
-      //console.log(this.UserData);
+      }      
       // console.log(`homeAccountId: ${accountInfo[0].homeAccountId}`);
       // console.log(`environment: ${accountInfo[0].environment}`);
       // console.log(`tenantId: ${accountInfo[0].tenantId}`);
