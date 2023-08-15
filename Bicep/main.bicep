@@ -194,7 +194,7 @@ var microservices = [
     containerAppName: '${solutionName}-signalr'
     dockerImageName: '${dockerHubUsername}/signalr:latest'
     minScale: 1
-    targetPort: 80
+    targetPort: 5112
     transport: 'http'
     secrets: microserviceCommonSecrets
     environment: concat(microserviceCommonEnvironment, [
@@ -204,7 +204,7 @@ var microservices = [
       }
       {
         name: 'ASPNETCORE_URLS'
-        value: 'http://0.0.0.0:443'
+        value: 'http://0.0.0.0:5112'
       }
     ])
     resources: defaultResources

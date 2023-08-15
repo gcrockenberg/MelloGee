@@ -408,7 +408,7 @@ resource containerApp 'Microsoft.App/containerApps@2023-05-01' = {
       registries: containerRegistries
       activeRevisionsMode: 'Single'
       ingress: {
-        external: addToAPIM
+        external: addToAPIM || public
         transport: transport
         allowInsecure: (transport == 'http')
         targetPort: targetPort
