@@ -22,7 +22,7 @@ A project to demonstrate full-stack aspects of a microservice based solution hos
 
 <h1>Notes</h1>
 <ul>
-<li>The steps below were established on my Windows 10 machine</li>
+<li>The steps below were established on a Windows 10 machine</li>
 <li>The Azure resources can be configured to auto scale based upon demand</li>
 <li>Global scaling can be configured using a geode or stamped pattern</li>
 </ul>
@@ -30,7 +30,7 @@ A project to demonstrate full-stack aspects of a microservice based solution hos
 <h2>Currently working on</h2>
 <ul> 
 <li><a href="https://green-wave-08182290f.3.azurestaticapps.net">Embedded Stripe - eliminate redirect</a> <-- Link to current version
-<li>Azure hosting for demo is configured with free or consumption plans which scale to 0 when unused. Initial perfomance might be poor as the services "wake up".</li>
+<li>Azure hosting for demo is configured with free or consumption plans, some of which scale to 0 when unused. Initial perfomance might lag as services "wake up".</li>
 </ul>
 
 <h1>Deploying Me</h1>
