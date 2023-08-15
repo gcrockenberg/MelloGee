@@ -20,9 +20,6 @@ A project to demonstrate full-stack aspects of a microservice based solution hos
 ## Bicep provisioning
 ![Me architecture](Images/Me%20Architecture.png)
 
-## Purchase database
-![Me Purchase Db](Images/PurchaseDB.png)
-
 <h1>Notes</h1>
 <ul>
 <li>The steps below were established on my Windows 10 machine</li>
@@ -112,6 +109,9 @@ az deployment group create --template-file bicep/main.bicep
 <li>Script AAD-B2C environment provisioning</li>
 <li>Implement semantic-release versioning</li>
 </ul>
+
+## Purchase database
+![Me Purchase Db](Images/PurchaseDB.png)
 
 <br/><br/>
 <sup>1</sup> The Azure Container Apps Managed Environment creates an additional Resource Group for Kubernetes that it controls
