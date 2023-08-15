@@ -49,7 +49,7 @@ npm run swa   (for Azure Static Web App emulator)
 <p>Deploying Me to Azure requires:</p>
 <ol type="1">
 <li> Azure account <a href="https://azure.microsoft.com/en-us/free/search/?ef_id=_k_4fffd49be29e1baacc4bb019e2ee66a6_k_&OCID=AIDcmm5edswduu_SEM__k_4fffd49be29e1baacc4bb019e2ee66a6_k_&msclkid=4fffd49be29e1baacc4bb019e2ee66a6">(Free is fine)</a></li>
-<li> <a href="https://learn.microsoft.com/en-us/cli/azure/install-azure-cli">[az CLI]</a> I used v2.50.0</li>
+<li> <a href="https://learn.microsoft.com/en-us/cli/azure/install-azure-cli">[az CLI]</a></li>
 </ol>
 
 <h3>Fork Me</h3>
