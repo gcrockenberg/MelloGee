@@ -7,7 +7,7 @@ import { ICatalogItem } from 'src/app/models/catalog/catalog-item.model';
 import { Guid } from 'src/guid';
 import { ICartItem } from 'src/app/models/cart/cart-item.model';
 import { CookieService } from 'ngx-cookie-service';
-import { IOrder } from 'src/app/models/order/order.model';
+import { IOrderCheckout } from 'src/app/models/order/order.model';
 import { ICartCheckout } from 'src/app/models/cart/cart-checkout.model';
 import { IStripeSuccessComponent, isStripeSuccessComponent } from 'src/app/models/order/stripe-success-route.model';
 import { Router } from '@angular/router';
@@ -34,8 +34,7 @@ export class CartService {
 
   constructor(
     private _dataService: DataService,
-    private _configurationService: ConfigurationService,
-    private _router: Router
+    private _configurationService: ConfigurationService
   ) {
     // TODO: Review cookie policy. Defaults to Lax. Should it be Strict?
     if (!this._cookieService.check('SessionId')) {
@@ -101,26 +100,12 @@ export class CartService {
   }
 
 
-  createCartCheckoutFromOrder(order: IOrder): ICartCheckout {
-    let successRoute = this._router.config.find(
-      (route) => isStripeSuccessComponent(route.component as unknown as IStripeSuccessComponent)
-    );
-    if (undefined == successRoute) {
-      throw new Error("Stripe success route undefined.");
-    }
-    let cancelRoute = this._router.config.find(
-      (route) => isStripeCancelComponent(route.component as unknown as IStripeCancelComponent)
-    );
-    if (undefined == cancelRoute) {
-      throw new Error("Stripe cancel route undefined.");
-    }
+  createCartCheckoutFromOrder(order: IOrderCheckout): ICartCheckout {
 
     let cartCheckout = <ICartCheckout>{};
 
-    cartCheckout.cancelRoute = `/${cancelRoute.path}`;
-    cartCheckout.successRoute = `/${successRoute.path}`;
-    cartCheckout.cartsessionid = order.cartSessionId
-    cartCheckout.street = order.street
+    cartCheckout.cartsessionid = order.cartSessionId;
+    cartCheckout.street = order.street;
     cartCheckout.city = order.city;
     cartCheckout.country = order.country;
     cartCheckout.state = order.state;

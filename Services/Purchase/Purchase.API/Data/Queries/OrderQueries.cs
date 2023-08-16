@@ -1,6 +1,7 @@
 namespace Me.Services.Purchase.API.Data.Queries;
 
-using Order = DTOs.Order;
+using Me.Services.Purchase.API.Data.DTOs;
+
 
 public class OrderQueries
     : IOrderQueries
@@ -13,7 +14,7 @@ public class OrderQueries
     }
 
 
-    public async Task<Order> GetOrderAsync(int id)
+    public async Task<OrderDTO> GetOrderAsync(int id)
     {
         //using var connection = new SqlConnection(_connectionString);
         using var connection = new MySqlConnection(_connectionString);
@@ -70,9 +71,9 @@ public class OrderQueries
 
 
 
-    private Order MapOrderItems(dynamic result)
+    private OrderDTO MapOrderItems(dynamic result)
     {
-        var order = new Order
+        var order = new OrderDTO
         {
             ordernumber = result[0].ordernumber,
             date = result[0].date,

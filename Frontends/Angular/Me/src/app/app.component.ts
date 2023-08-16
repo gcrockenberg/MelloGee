@@ -7,42 +7,43 @@ import { FooterComponent } from './shared/components/bottom/footer/footer.compon
 import { CartSidebarComponent } from "./components/cart/cart-sidebar/cart-sidebar.component";
 import { AltFooterComponent } from "./shared/components/bottom/alt-footer/alt-footer.component";
 import { MsalService } from '@azure/msal-angular';
-import { SignalRService } from './services/signalR/signal-r.service';
 import { ToastComponent } from "./shared/components/tools/toast/toast.component";
+import { environment } from 'src/environments/environment';
 
 declare const gtag: Function;   // Google analytics
 
 @Component({
-    selector: 'app-root',
-    standalone: true,
-    templateUrl: './app.component.html',
-    styleUrls: ['./app.component.scss'],
-    imports: [
-        FooterComponent,
-        NgIf,
-        RouterOutlet,
-        HeaderComponent,
-        NavbarComponent,
-        CartSidebarComponent,
-        AltFooterComponent,
-        ToastComponent
-    ]
+  selector: 'app-root',
+  standalone: true,
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.scss'],
+  imports: [
+    FooterComponent,
+    NgIf,
+    RouterOutlet,
+    HeaderComponent,
+    NavbarComponent,
+    CartSidebarComponent,
+    AltFooterComponent,
+    ToastComponent
+  ]
 })
 export class AppComponent {
-  title: string = 'me'; 
+  title: string = 'me';
 
   constructor(
-    private _router: Router, 
-    private _msalService: MsalService,
-    private _signalRService: SignalRService) {
+    private _router: Router,
+    private _msalService: MsalService) {
 
-      _msalService.instance.initialize();
-      
-    // Report page navigations to Google analytics
-    _router.events.subscribe((event) => {
-      if (event instanceof NavigationEnd) {
-        gtag('config', 'G-HVZMVYPD4C', { 'page_path': event.urlAfterRedirects });
-      }      
-    })    
+    _msalService.instance.initialize();
+
+    if (environment.production) {
+      // Report page navigations to Google analytics
+      _router.events.subscribe((event) => {
+        if (event instanceof NavigationEnd) {
+          gtag('config', 'G-HVZMVYPD4C', { 'page_path': event.urlAfterRedirects });
+        }
+      })
+    }
   }
 }

@@ -8,7 +8,7 @@ public record Orderitem
     public string pictureurl { get; init; }
 }
 
-public record Order
+public record OrderDTO
 {
     public int ordernumber { get; init; }
     public DateTime date { get; init; }

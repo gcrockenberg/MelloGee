@@ -1,10 +1,11 @@
-import { IOrderItem } from './order-item.model';
+
 
 /**
  * User must be logged in to create Order
- * Orders are posted to Checkout process
+ * OrderCheckout is posted to the Checkout process
+ * TODO: Clear out unnecessary fields now that Stripe is handling checkout
  */
-export interface IOrder {
+export interface IOrderCheckout {
     cartSessionId: string;
     ordernumber: string;
     orderItems: IOrderItem[];
@@ -22,20 +23,31 @@ export interface IOrder {
     cardsecuritynumber: string;
 }
 
-/**
- * Display the status of orders after Checkout
- */
+
+export interface ICheckoutResponse {
+    url: string;            // If checkout mode is redirect
+    clientSecret: string;   // If checkout mode is intent
+    orderId: number;
+}
+
 export interface IOrderSummary {
     ordernumber: string;
     status: string;
     date: Date;
     total: number;
-    }
+}
 
-    /**
- * Display the status of orders after Checkout
- */
-export interface IOrderStatus {
+
+export interface IOrderItem {
+    pictureurl: string;
+    productname: string;
+    unitprice: number;
+    units: number;
+    productId: number;
+}
+
+
+export interface IOrderDetails {
     ordernumber: string;
     status: string;
     description: string;

@@ -8,11 +8,13 @@ import { CartService } from 'src/app/services/cart/cart.service';
 import { Subscription } from 'rxjs';
 import { ICart } from 'src/app/models/cart/cart.model';
 import { CartItemComponent, IChangeQuantityEvent } from "../cart-item/cart-item.component";
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { OrderService } from 'src/app/services/order/order.service';
-import { IOrder } from 'src/app/models/order/order.model';
-import { ICartCheckout } from 'src/app/models/cart/cart-checkout.model';
+import { ICheckoutResponse, IOrderCheckout } from 'src/app/models/order/order.model';
+import { CheckoutMode, ICartCheckout } from 'src/app/models/cart/cart-checkout.model';
 import { SecurityService } from 'src/app/services/security/security.service';
+import { IStripeSuccessComponent, isStripeSuccessComponent } from 'src/app/models/order/stripe-success-route.model';
+import { IStripeCancelComponent, isStripeCancelComponent } from 'src/app/models/order/stripe-cancel-route.model';
 
 export const CART_SIDEBAR_ID: string = 'CART_SIDEBAR_ID';
 
@@ -56,7 +58,8 @@ export class CartSidebarComponent implements ISidebar, OnDestroy {
     private _sidebarService: SidebarService,
     private _cartService: CartService,
     private _orderService: OrderService,
-    private _securityService: SecurityService) {
+    private _securityService: SecurityService,
+    private _router: Router) {
 
     _sidebarService.add(this);
     this.cart.set(_cartService.cart);
@@ -110,18 +113,26 @@ export class CartSidebarComponent implements ISidebar, OnDestroy {
       return;
     }
 
-    let order: IOrder = this._orderService.createOrderFromCartAndIdentity();
+    let order: IOrderCheckout = this._orderService.createOrderFromCartAndIdentity();
     let cartCheckout: ICartCheckout = this._cartService.createCartCheckoutFromOrder(order);
 
+    //cartCheckout = this._configureCheckoutMode(CheckoutMode.Redirect, cartCheckout);
+    cartCheckout = this._configureCheckoutMode(CheckoutMode.Intent, cartCheckout);
+
     this._orderService.setCartCheckout(cartCheckout)
-      .subscribe((url: string) => {
-        // Cart gets cleard in OrderService and cloud Integration Event
-        window.location.href = url;     
+      .subscribe((response: ICheckoutResponse) => {
+        if (CheckoutMode.Redirect == cartCheckout.mode) {
+          // Cart gets cleard in OrderService and cloud Integration Event
+          window.location.href = response.url;
+        } else {
+          this._router.navigate([`/checkout/${response.orderId}/${response.clientSecret}`]); 
+          this.handleClose();
+        }
       });
   }
 
 
-  increaseQuantity(itemIndex: number) {    
+  increaseQuantity(itemIndex: number) {
     this._cartService.increaseItemQuantity(itemIndex);
   }
 
@@ -140,6 +151,30 @@ export class CartSidebarComponent implements ISidebar, OnDestroy {
   private _randomIntFromInterval(min: number, max: number) {
     // min and max included 
     return Math.floor(Math.random() * (max - min + 1) + min);
+  }
+
+
+  private _configureCheckoutMode(mode: CheckoutMode, cartCheckout: ICartCheckout): ICartCheckout {
+    if (CheckoutMode.Redirect == mode) {
+      let successRoute = this._router.config.find(
+        (route) => isStripeSuccessComponent(route.component as unknown as IStripeSuccessComponent)
+      );
+      if (undefined == successRoute) {
+        throw new Error("Stripe success route undefined.");
+      }
+      let cancelRoute = this._router.config.find(
+        (route) => isStripeCancelComponent(route.component as unknown as IStripeCancelComponent)
+      );
+      if (undefined == cancelRoute) {
+        throw new Error("Stripe cancel route undefined.");
+      }
+
+      cartCheckout.cancelRoute = `/${cancelRoute.path}`;
+      cartCheckout.successRoute = `/${successRoute.path}`;
+    }
+
+    cartCheckout.mode = mode;
+    return cartCheckout;
   }
 
 

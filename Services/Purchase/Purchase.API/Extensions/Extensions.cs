@@ -1,5 +1,7 @@
 namespace Me.Services.Purchase.API.Extensions;
 
+using StackExchange.Redis;
+
 internal static class Extensions
 {
     public static IServiceCollection AddHealthChecks(this IServiceCollection services, IConfiguration configuration)

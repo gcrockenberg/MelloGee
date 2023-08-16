@@ -14,6 +14,7 @@ import { ProductsComponent } from './pages/catalog/products/products.component';
 import { SearchResultsComponent } from './pages/search/search-results/search-results.component';
 import { ProductDetailsComponent } from './pages/catalog/product-details/product-details.component';
 import { OrderDetailsComponent } from './pages/order/order-details/order-details.component';
+import { CheckoutComponent } from './pages/order/checkout/checkout.component';
 
 export const routes: Routes = [
     {
@@ -39,6 +40,13 @@ export const routes: Routes = [
     {
         path: 'cart',
         component: CartComponent
+    },
+    {
+        path: 'checkout/:orderId/:checkoutId',
+        component: CheckoutComponent,
+        canActivate: [
+            MsalGuard
+        ]
     },
     {
         path: 'orders',

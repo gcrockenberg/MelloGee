@@ -9,9 +9,10 @@
 // http://blog.gauffin.org/2012/06/griffin-container-introducing-command-support/
 // https://docs.microsoft.com/dotnet/csharp/programming-guide/classes-and-structs/how-to-implement-a-lightweight-class-with-auto-implemented-properties
 
+
 [DataContract]
 public class CreateOrderCommand
-    : IRequest<bool>
+    : IRequest<Order>
 {
     [DataMember]
     private readonly List<OrderItemDTO> _orderItems;

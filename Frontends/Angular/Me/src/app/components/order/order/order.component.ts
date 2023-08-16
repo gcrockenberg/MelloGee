@@ -1,6 +1,6 @@
 import { Component, Input, WritableSignal, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { IOrderStatus } from 'src/app/models/order/order.model';
+import { IOrderDetails } from 'src/app/models/order/order.model';
 import { OrderItemComponent } from "../order-item/order-item.component";
 
 @Component({
@@ -11,10 +11,10 @@ import { OrderItemComponent } from "../order-item/order-item.component";
     imports: [CommonModule, OrderItemComponent]
 })
 export class OrderComponent {
-  order: WritableSignal<IOrderStatus> = signal(<IOrderStatus>{});
-  @Input() set orderStatus(value: IOrderStatus) {
+  order: WritableSignal<IOrderDetails> = signal(<IOrderDetails>{});
+  @Input() set orderStatus(value: IOrderDetails) {
     this.order.set(value);
   }
-  get orderStatus(): IOrderStatus { return this.order() }
+  get orderStatus(): IOrderDetails { return this.order() }
 
 }

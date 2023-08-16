@@ -45,7 +45,6 @@ global using Microsoft.Identity.Web.Resource;
 global using MySqlConnector;
 global using Polly;
 global using Polly.Retry;
-global using StackExchange.Redis;
 global using System.Data.Common;
 global using System.Data.SqlClient;
 global using System.Runtime.Serialization;

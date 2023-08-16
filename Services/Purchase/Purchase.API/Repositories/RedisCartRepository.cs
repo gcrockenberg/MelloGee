@@ -1,5 +1,7 @@
 namespace Me.Services.Purchase.API.Repositories;
 
+using StackExchange.Redis;
+
 public class RedisCartRepository : ICartRepository
 {
     private readonly ILogger<RedisCartRepository> _logger;

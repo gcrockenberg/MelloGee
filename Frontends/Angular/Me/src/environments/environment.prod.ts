@@ -4,6 +4,7 @@ import { IEnvironment, AuthRequestType } from "./interfaces/IEnvironment";
 
 export const environment: IEnvironment = {
   production: true,
+  stripePublishableKey: 'pk_test_51NYuSRA1eK3epo4cHtiKhkZJpfXpAPWqrIwa2EfqBw2m7GUz1hc6UvOFagLiwxvSKugdtQiUS62gUHDvzBOCTVEF00o5LaW9EH',
   apiConfigs: [
     {
     uri: 'http://me-dev.azure-api.net/o/api/v1/order*',

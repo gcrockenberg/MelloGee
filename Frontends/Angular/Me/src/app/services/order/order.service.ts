@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import { IOrderItem } from 'src/app/models/order/order-item.model';
-import { IOrder, IOrderStatus, IOrderSummary } from 'src/app/models/order/order.model';
+import { IOrderCheckout, IOrderItem, IOrderDetails, IOrderSummary, ICheckoutResponse } from 'src/app/models/order/order.model';
 import { CartService } from '../cart/cart.service';
 import { SecurityService } from '../security/security.service';
 import { UserData } from 'src/app/models/security/user-data.model';
@@ -32,8 +31,8 @@ export class OrderService {
    * TODO: Switch to accept ICart parameter to control which CartItems to process
    * @returns The Order object
    */
-  createOrderFromCartAndIdentity(): IOrder {
-    let order: IOrder = <IOrder>{};
+  createOrderFromCartAndIdentity(): IOrderCheckout {
+    let order: IOrderCheckout = <IOrderCheckout>{};
     let cart: ICart = this._cartService.cart;
     let identityInfo: UserData = this._securityService.userData;
 
@@ -85,15 +84,15 @@ export class OrderService {
   }
 
 
-  getOrderStatus(orderId: number): Observable<IOrderStatus> {
-    if (1 > orderId) return of(<IOrderStatus>{});
+  getOrderStatus(orderId: number): Observable<IOrderDetails> {
+    if (1 > orderId) return of(<IOrderDetails>{});
 
     return this._configurationService.whenReady
       .pipe(switchMap(x => {
           let url = `${this._ordersUrl}${orderId}`;
 
           return this._dataService.get(url)
-            .pipe<IOrderStatus>(
+            .pipe<IOrderDetails>(
               tap((response: any) => {
                 return (response) ? response : of([]);
               }));
@@ -101,19 +100,18 @@ export class OrderService {
   }
 
 
-  setCartCheckout(cartCheckout: ICartCheckout): Observable<string> {
+  setCartCheckout(cartCheckout: ICartCheckout): Observable<ICheckoutResponse> {
     return this._configurationService.whenReady
       .pipe(switchMap(x => {
           let url: string = this._ordersUrl + 'checkout';
 
-          return this._dataService.post(url, cartCheckout)
-            .pipe<string>(
-              map((response: any) => {
-                // This should happen automatically on the server via Integration Event
-                // Still seeing items in Cart after refresh
-                // TODO: Investigate and remove 
+          return this._dataService.post<ICheckoutResponse>(url, cartCheckout)
+            .pipe(
+              tap((response: ICheckoutResponse) => {
+                console.log('--> checkout response: ', response);
+                // Cleared on the server upon success. Clearing here reinforces user experience.
                 this._cartService.clearCart();
-                return response.value as string;
+                
               }));
         }));
   }

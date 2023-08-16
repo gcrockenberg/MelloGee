@@ -68,7 +68,7 @@ export class SignalRService {
           let token = await this._securityService.getToken();
           return token.accessToken;
         },
-        logger: LogLevel.Information,
+        logger: LogLevel.Warning,
         logMessageContent: true
       })
       .withAutomaticReconnect()
@@ -88,10 +88,7 @@ export class SignalRService {
 
 
   private registerHandlers() {
-    console.log('--> registerHandlers()');
-
     this._hubConnection.on('UpdatedOrderState', (msg) => {
-      console.log(`Order ${msg.orderId} updated to ${msg.status}`);
       let message = (1 > msg.orderId) ? 'SignalR connected...' : `Order ${msg.orderId}: ${msg.status}`;
       this.signalRSource.next(message);
     });

@@ -28,7 +28,7 @@ public class UserCheckoutAcceptedIntegrationEventHandler : IIntegrationEventHand
         {
             _logger.LogInformation("Handling integration event: {IntegrationEventId} - ({@IntegrationEvent})", @event.Id, @event);
 
-            var result = false;
+            Order result = null;
 
             if (@event.RequestId != Guid.Empty)
             {
@@ -39,7 +39,7 @@ public class UserCheckoutAcceptedIntegrationEventHandler : IIntegrationEventHand
                         @event.CardNumber, @event.CardHolderName, @event.CardExpiration,
                         @event.CardSecurityNumber, @event.CardTypeId, @event.Cart.SessionId);
 
-                    var requestCreateOrder = new IdentifiedCommand<CreateOrderCommand, bool>(createOrderCommand, @event.RequestId);
+                    var requestCreateOrder = new IdentifiedCommand<CreateOrderCommand, Order>(createOrderCommand, @event.RequestId);
 
                     _logger.LogInformation(
                         "Sending command: {CommandName} - {IdProperty}: {CommandId} ({@Command})",
@@ -50,7 +50,7 @@ public class UserCheckoutAcceptedIntegrationEventHandler : IIntegrationEventHand
 
                     result = await _mediator.Send(requestCreateOrder);
 
-                    if (result)
+                    if (null != result)
                     {
                         _logger.LogInformation("CreateOrderCommand suceeded - RequestId: {RequestId}", @event.RequestId);
                     }

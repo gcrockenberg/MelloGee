@@ -8,6 +8,7 @@ import { AuthRequestType, IEnvironment } from './interfaces/IEnvironment';
 
 export const environment: IEnvironment = {
   production: false,
+  stripePublishableKey: '',
   apiConfigs: [{
     scopes: [],
     uri: '',

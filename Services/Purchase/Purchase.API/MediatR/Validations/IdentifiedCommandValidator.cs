@@ -1,6 +1,6 @@
 ﻿namespace Me.Services.Purchase.API.MediatR.Validations;
 
-public class IdentifiedCommandValidator : AbstractValidator<IdentifiedCommand<CreateOrderCommand, bool>>
+public class IdentifiedCommandValidator : AbstractValidator<IdentifiedCommand<CreateOrderCommand, Order>>
 {
     public IdentifiedCommandValidator(ILogger<IdentifiedCommandValidator> logger)
     {

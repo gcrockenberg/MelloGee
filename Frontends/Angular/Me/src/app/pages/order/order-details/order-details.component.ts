@@ -1,7 +1,7 @@
 import { Component, OnInit, WritableSignal, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { OrderService } from 'src/app/services/order/order.service';
-import { IOrderStatus } from 'src/app/models/order/order.model';
+import { IOrderDetails } from 'src/app/models/order/order.model';
 import { ActivatedRoute } from '@angular/router';
 import { switchMap } from 'rxjs';
 import { OrderComponent } from "../../../components/order/order/order.component";
@@ -19,7 +19,7 @@ import { RouterLink } from '@angular/router';
     providers: [provideIcons({ bootstrapChevronLeft })]   
 })
 export class OrderDetailsComponent implements OnInit {
-  readonly order: WritableSignal<IOrderStatus> = signal(<IOrderStatus>{});
+  readonly order: WritableSignal<IOrderDetails> = signal(<IOrderDetails>{});
 
   constructor(
     private _orderService: OrderService,

@@ -36,6 +36,7 @@ export interface IApiConfig {
 
 export interface IEnvironment {
   production: boolean;
+  stripePublishableKey: string;
   apiConfigs: IApiConfig[];
   b2cPolicies: {
     names: {

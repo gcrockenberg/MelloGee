@@ -1,7 +1,7 @@
 namespace Me.Services.Purchase.API.Controllers;
 
+using Stripe;
 using Stripe.Checkout;
-using Order = Data.DTOs.Order;
 
 [Route("api/v1/[controller]")]
 [Authorize]
@@ -47,7 +47,7 @@ public class OrdersController : ControllerBase
     [HttpGet]
     [ProducesResponseType(typeof(Order), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<Order>> GetOrderAsync(int orderId)
+    public async Task<ActionResult<OrderDTO>> GetOrderAsync(int orderId)
     {
         try
         {
@@ -80,25 +80,25 @@ public class OrdersController : ControllerBase
 
 
     /// <summary>
-    /// Should only receive SessionId as parameter. Simply a Get request that is either accepted or rejected.
+    /// Stripe checkout by redirect.
     /// gRPC should pull Cart from Cart service to insure validity of Cart instead of Cart pushed from Client
     /// </summary>
-    /// <param name="cartCheckout"></param>
-    /// <param name="requestId"></param>
-    /// <returns></returns>
+    /// <param name="cartCheckout">Required fields</param>
+    /// <param name="requestId">Exception tracking</param>
+    /// <returns>Redirect url to complete the checkout process</returns>
     [RequiredScope("cart.write")]
     [Route("checkout")]
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status202Accepted)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult<KeyValuePair<string, string>>> CheckoutAsync([FromBody] CartCheckout cartCheckout, [FromHeader(Name = "x-requestid")] string requestId)
+    public async Task<ActionResult<CheckoutResponse>> CheckoutAsync([FromBody] CartCheckout cartCheckout, [FromHeader(Name = "x-requestid")] string requestId)
     {
         cartCheckout.RequestId = (Guid.TryParse(requestId, out Guid guid) && guid != Guid.Empty) ?
             guid : cartCheckout.RequestId;
 
 
-        // Making direct call until Microsoft releases update allowing multiple ports/transports for ACA containers
-        // Use gRPC to get Cart
+        // Making direct call until Microsoft releases update allowing multiple ports for ACA containers
+        // TODO return to using gRPC to get Cart
         //var cart = await _cartService.GetBySessionIdAsync(compositeId); //_repository.GetCartAsync(compositeId);
         var cart = await _cartRepository.GetCartAsync(cartCheckout.CartSessionId);
         if (cart == null)
@@ -111,12 +111,13 @@ public class OrdersController : ControllerBase
             return BadRequest();
         }
 
-        // Create the order via Mediator which, if Order creation is successful, will emit OrderCreated IntegrationEvent so Cart can clear itself
+        // Initialize command
         var createOrderCommand = new CreateOrderCommand(cart.Items, _identityService.GetUserIdentity(), _identityService.GetUserName(),
             cartCheckout.City, cartCheckout.Street, cartCheckout.State, cartCheckout.Country, cartCheckout.ZipCode, cartCheckout.CardNumber,
             cartCheckout.CardHolderName, cartCheckout.CardExpiration, cartCheckout.CardSecurityNumber, cartCheckout.CardTypeId, cart.SessionId);
 
-        var requestCreateOrder = new IdentifiedCommand<CreateOrderCommand, bool>(createOrderCommand, cartCheckout.RequestId);
+        // Wrap the command for Mediator
+        var requestCreateOrder = new IdentifiedCommand<CreateOrderCommand, Order>(createOrderCommand, cartCheckout.RequestId);
 
         _logger.LogInformation(
             "Sending command: {CommandName} - {IdProperty}: {CommandId} ({@Command})",
@@ -125,23 +126,68 @@ public class OrdersController : ControllerBase
             requestCreateOrder.Id,
             requestCreateOrder);
 
-        var orderSuccessfullyCreated = await _mediator.Send(requestCreateOrder);
-        if (!orderSuccessfullyCreated)
+        // If creation is successful, will emit OrderCreated integration event for Cart, SignalR, etc
+        var order = await _mediator.Send(requestCreateOrder);
+        if (null == order)
         {
             _logger.LogInformation("--> Error creating Order: _mediator.Send(requestCreateOrder);");
             return BadRequest();
         }
 
-        var session = _CreateStripeSession(cartCheckout, cart);
-        KeyValuePair<string, string> kvp = new("url", session.Url);
-        // TEPORARY FORCE ROUTE TO SUCCESS
-        //KeyValuePair<string, string> kvp = new("url", session.SuccessUrl);
+        CheckoutResponse response;
+        if (cartCheckout.Mode.Equals(CheckoutMode.Redirect, StringComparison.OrdinalIgnoreCase))
+        {
+            response = CreateStripeSession(cartCheckout, cart);
+        }
+        else
+        {
+            long orderAmount = CalculateOrderAmount(cart.Items);
+            response = CreateStripeIntent(orderAmount);
+        }
 
-        return Accepted(kvp);
+        response.OrderId = order.Id;
+
+        return Accepted(response);
     }
 
 
-    private Session _CreateStripeSession(CartCheckout cartCheckout, CustomerCart cart)
+    private CheckoutResponse CreateStripeIntent(long orderAmount)
+    {
+        var paymentIntentService = new PaymentIntentService();
+        var paymentIntent = paymentIntentService.Create(new PaymentIntentCreateOptions
+        {
+            Amount = orderAmount,
+            Currency = "usd",
+            AutomaticPaymentMethods = new PaymentIntentAutomaticPaymentMethodsOptions
+            {
+                Enabled = true,
+            },
+        });
+
+        return new CheckoutResponse { ClientSecret = paymentIntent.ClientSecret };    
+    }
+
+
+    private long CalculateOrderAmount(IEnumerable<CartItem> items)
+    {
+        long result = 0;
+
+        foreach (var item in items)
+        {
+            result += (long)(item.UnitPrice * item.Quantity * 100);
+        }
+    
+        return result;
+    }
+
+
+    /// <summary>
+    /// Initialize Stripe session which will return the url for redirect based checkout.
+    /// </summary>
+    /// <param name="cartCheckout"></param>
+    /// <param name="cart"></param>
+    /// <returns></returns>
+    private CheckoutResponse CreateStripeSession(CartCheckout cartCheckout, CustomerCart cart)
     {
         var domain = Request.Headers.Origin;    // e.g. http://localhost:4200
         List<SessionLineItemOptions> lineItemOptions = new();
@@ -175,7 +221,7 @@ public class OrdersController : ControllerBase
         var service = new SessionService();
         Session session = service.Create(options);
 
-        return session;
+        return new CheckoutResponse { Url = session.Url };
     }
 
 

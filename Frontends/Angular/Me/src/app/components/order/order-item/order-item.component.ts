@@ -1,6 +1,6 @@
 import { Component, Input, WritableSignal, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { IOrderItem } from 'src/app/models/order/order-item.model';
+import { IOrderItem } from 'src/app/models/order/order.model';
 
 @Component({
   selector: 'app-order-item',

@@ -1,11 +1,9 @@
 ﻿namespace Me.Services.Purchase.API.MediatR.Commands;
 
-// Resolve ambiguous Order definitions
-using Me.Services.Purchase.Domain.AggregatesModel.OrderAggregate;
 
 // Regular CommandHandler
 public class CreateOrderCommandHandler
-    : IRequestHandler<CreateOrderCommand, bool>
+    : IRequestHandler<CreateOrderCommand, Order>
 {
     private readonly IOrderRepository _orderRepository;
     private readonly IBuyerRepository _buyerRepository;
@@ -13,6 +11,7 @@ public class CreateOrderCommandHandler
     private readonly IMediator _mediator;
     private readonly IPurchaseIntegrationEventService _purchaseIntegrationEventService;
     private readonly ILogger<CreateOrderCommandHandler> _logger;
+
 
     // Using DI to inject infrastructure persistence Repositories
     public CreateOrderCommandHandler(IMediator mediator,
@@ -30,7 +29,7 @@ public class CreateOrderCommandHandler
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
-    public async Task<bool> Handle(CreateOrderCommand message, CancellationToken cancellationToken)
+    public async Task<Order> Handle(CreateOrderCommand message, CancellationToken cancellationToken)
     {
         // Add Integration event to clean the cart
         var orderStartedIntegrationEvent = new OrderStartedIntegrationEvent(message.UserId, message.SourceCartSessionId);
@@ -72,34 +71,35 @@ public class CreateOrderCommandHandler
 
         await _orderRepository.Add(order);
 
-        bool result = await _orderRepository.UnitOfWork
+        var _result = await _orderRepository.UnitOfWork
             .SaveEntitiesAsync(cancellationToken);
 
-        if (result) // else fire failure event? what about cart?
-        {            
+        if (_result) // else fire failure event? what about cart?
+        {
             var integrationEvent = new OrderStatusChangedToSubmittedIntegrationEvent(order.Id, order.OrderStatus.Name, order.Buyer.Name);
             await _purchaseIntegrationEventService.AddAndSaveEventAsync(integrationEvent);
             PurchaseApiTrace.LogOrderBuyerAndPaymentValidatedOrUpdated(_logger, order.BuyerId, order.Id);
+            return order;
         }
 
-        return result;
+        return null;
     }
 }
 
 
 // Use for Idempotency in Command process
-public class CreateOrderIdentifiedCommandHandler : IdentifiedCommandHandler<CreateOrderCommand, bool>
+public class CreateOrderIdentifiedCommandHandler : IdentifiedCommandHandler<CreateOrderCommand, Order>
 {
     public CreateOrderIdentifiedCommandHandler(
         IMediator mediator,
         IRequestManager requestManager,
-        ILogger<IdentifiedCommandHandler<CreateOrderCommand, bool>> logger)
+        ILogger<IdentifiedCommandHandler<CreateOrderCommand, Order>> logger)
         : base(mediator, requestManager, logger)
     {
     }
 
-    protected override bool CreateResultForDuplicateRequest()
+    protected override Order CreateResultForDuplicateRequest()
     {
-        return true; // Ignore duplicate requests for creating order.
+        return null; // Ignore duplicate requests for creating order.
     }
 }
