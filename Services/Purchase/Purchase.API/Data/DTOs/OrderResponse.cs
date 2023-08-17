@@ -8,7 +8,7 @@ public record OrderItem
     public string pictureUrl { get; init; } = string.Empty;
 }
 
-public record OrderDTO
+public record OrderResponse
 {
     public int orderNumber { get; init; }
     public DateTime date { get; init; }

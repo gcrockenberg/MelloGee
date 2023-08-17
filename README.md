@@ -29,7 +29,7 @@ A project to demonstrate full-stack aspects of a microservice based solution hos
 
 <h2>Currently working on</h2>
 <ul> 
-<li><a href="https://green-wave-08182290f.3.azurestaticapps.net">Embedded Stripe - eliminate redirect</a> <-- Link to current version
+<li><a href="https://green-wave-08182290f.3.azurestaticapps.net">Fulfillment webhooks</a> <-- Link to current version
 <li>Azure hosting for demo is configured with free or consumption plans, some of which scale to 0 when unused. Initial perfomance might lag as services "wake up".</li>
 </ul>
 

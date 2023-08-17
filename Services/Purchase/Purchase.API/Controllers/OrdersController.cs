@@ -48,15 +48,15 @@ public class OrdersController : ControllerBase
     [HttpGet]
     [ProducesResponseType(typeof(Order), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<OrderDTO>> GetOrderAsync(int orderId)
+    public async Task<ActionResult<OrderResponse>> GetOrderAsync(int orderId)
     {
         try
         {
             //Todo: It's good idea to take advantage of GetOrderByIdQuery and handle by GetCustomerByIdQueryHandler
             //var order customer = await _mediator.Send(new GetOrderByIdQuery(orderId));
-            var order = await _orderQueries.GetOrderAsync(orderId);
+            var response = await _orderQueries.GetOrderAsync(orderId);
 
-            return order;
+            return response;
         }
         catch
         {
@@ -68,41 +68,41 @@ public class OrdersController : ControllerBase
     /// <summary>
     /// Rereive Order with payment resources
     /// </summary>
-    /// <param name="orderCheckout">Stripe mode will default to "intent</param>
+    /// <param name="request">Stripe mode will default to "intent</param>
     /// <returns></returns>
     [Route("pay")]
     [HttpPost]
-    [ProducesResponseType(typeof(PayOrderDTO), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(PayOrderResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<PayOrderDTO>> PayOrderAsync([FromBody] OrderCheckout orderCheckout)
+    public async Task<ActionResult<PayOrderResponse>> PayOrderAsync([FromBody] OrderCheckoutRequest request)
     {
         try
         {
             //Todo: It's good idea to take advantage of GetOrderByIdQuery and handle by GetCustomerByIdQueryHandler
             //var order customer = await _mediator.Send(new GetOrderByIdQuery(orderId));
-            var order = await _orderQueries.GetOrderAsync(orderCheckout.OrderId);
+            var order = await _orderQueries.GetOrderAsync(request.OrderId);
             if (null == order)
             {
                 return NotFound();
             }
 
-            CheckoutResponse paymentResources;
-            if (orderCheckout.Mode.Equals(CheckoutMode.Redirect, StringComparison.OrdinalIgnoreCase))
+            CheckoutResponse response;
+            if (request.Mode.Equals(CheckoutMode.Redirect, StringComparison.OrdinalIgnoreCase))
             {
                 List<SessionLineItemOptions> lineItemOptions = GetSessionLineItemOptions(order.orderItems);
-                paymentResources = CreateStripeSession(lineItemOptions, orderCheckout.SuccessRoute, orderCheckout.CancelRoute);
+                response = CreateStripeSession(lineItemOptions, request.SuccessRoute, request.CancelRoute);
             }
             else
             {
                 long orderAmount = CalculateOrderAmount(order.orderItems);
-                paymentResources = CreateStripeIntent(orderAmount);
+                response = CreateStripeIntent(orderAmount);
             }
 
 
-            return new PayOrderDTO
+            return new PayOrderResponse
             {
                 Order = order,
-                Payment = paymentResources
+                Payment = response
             };
         }
         catch
@@ -129,39 +129,39 @@ public class OrdersController : ControllerBase
 
 
     /// <summary>
-    /// Stripe checkout by redirect.
-    /// gRPC should pull Cart from Cart service to insure validity of Cart instead of Cart pushed from Client
+    /// Transition Cart to Order
     /// </summary>
-    /// <param name="cartCheckout">Required fields</param>
+    /// <param name="request">Required fields</param>
     /// <param name="requestId">Exception tracking</param>
-    /// <returns>Redirect url to complete the checkout process</returns>
+    /// <returns>The new Order number</returns>
     [RequiredScope("cart.write")]
     [Route("checkout")]
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status202Accepted)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult<CheckoutResponse>> CheckoutAsync([FromBody] CartCheckout cartCheckout, [FromHeader(Name = "x-requestid")] string requestId)
+    public async Task<ActionResult<CheckoutResponse>> CartCheckoutAsync([FromBody] CartCheckoutRequest request, [FromHeader(Name = "x-requestid")] string requestId)
     {
-        cartCheckout.RequestId = (Guid.TryParse(requestId, out Guid guid) && guid != Guid.Empty) ?
-            guid : cartCheckout.RequestId;
+        request.RequestId = (Guid.TryParse(requestId, out Guid guid) && guid != Guid.Empty) ?
+            guid : request.RequestId;
 
 
         // Making direct call until Microsoft releases update allowing multiple ports for ACA containers
         // TODO return to using gRPC to get Cart
         //var cart = await _cartService.GetBySessionIdAsync(compositeId); //_repository.GetCartAsync(compositeId);
-        var cart = await _cartRepository.GetCartAsync(cartCheckout.CartSessionId);
+        var cart = await _cartRepository.GetCartAsync(request.CartSessionId);
         if (cart == null)
         {
-            return BadRequest();
+            return NotFound();
         }
 
         // Initialize command
         var createOrderCommand = new CreateOrderCommand(cart.Items, _identityService.GetUserIdentity(), _identityService.GetUserName(),
-            cartCheckout.City, cartCheckout.Street, cartCheckout.State, cartCheckout.Country, cartCheckout.ZipCode, cartCheckout.CardNumber,
-            cartCheckout.CardHolderName, cartCheckout.CardExpiration, cartCheckout.CardSecurityNumber, cartCheckout.CardTypeId, cart.SessionId);
+            request.City, request.Street, request.State, request.Country, request.ZipCode, request.CardNumber,
+            request.CardHolderName, request.CardExpiration, request.CardSecurityNumber, request.CardTypeId, cart.SessionId);
 
         // Wrap the command for Mediator
-        var requestCreateOrder = new IdentifiedCommand<CreateOrderCommand, Order>(createOrderCommand, cartCheckout.RequestId);
+        var requestCreateOrder = new IdentifiedCommand<CreateOrderCommand, Order>(createOrderCommand, request.RequestId);
 
         _logger.LogInformation(
             "Sending command: {CommandName} - {IdProperty}: {CommandId} ({@Command})",
@@ -178,21 +178,7 @@ public class OrdersController : ControllerBase
             return BadRequest();
         }
 
-        CheckoutResponse response;
-        if (cartCheckout.Mode.Equals(CheckoutMode.Redirect, StringComparison.OrdinalIgnoreCase))
-        {
-            List<SessionLineItemOptions> lineItemOptions = GetSessionLineItemOptions(cart.Items);
-            response = CreateStripeSession(lineItemOptions, cartCheckout.SuccessRoute, cartCheckout.CancelRoute);
-        }
-        else
-        {
-            long orderAmount = CalculateOrderAmount(cart.Items);
-            response = CreateStripeIntent(orderAmount);
-        }
-
-        response.OrderId = order.Id;
-
-        return Accepted(response);
+        return Accepted(new CheckoutResponse { OrderId = order.Id });
     }
 
 

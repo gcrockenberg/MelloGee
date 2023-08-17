@@ -3,24 +3,13 @@ export enum CheckoutMode {
     Intent = 'Intent'
 }
 
+
+/**
+ * Cart checkout creates and Order and clears the Cart
+ * Users must be logged in to create an Order
+ */
 export interface ICartCheckout {
-    mode: CheckoutMode;
-    successRoute: string;   // Stripe callback (e.g. "/orders")
-    cancelRoute: string;    // Stripe callback (e.g. "/cart")
-    cartsessionid: string;
+    cartSessionId: string;
 
-    street: string;
-    city: string;
-    state: string;
-    zipcode: string;
-    country: string;
-
-    buyer: string;
-    cardnumber: string;
-    cardholdername: string;
-    cardexpiration: Date;
-    cardsecuritynumber: string;
-    cardtypeid: number;
-
-    requestid: string;
+    requestId: string;
 }

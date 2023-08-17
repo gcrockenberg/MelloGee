@@ -9,9 +9,6 @@ import { ICartItem } from 'src/app/models/cart/cart-item.model';
 import { CookieService } from 'ngx-cookie-service';
 import { IOrderCheckout } from 'src/app/models/order/order.model';
 import { ICartCheckout } from 'src/app/models/cart/cart-checkout.model';
-import { IStripeSuccessComponent, isStripeSuccessComponent } from 'src/app/models/order/stripe-success-route.model';
-import { Router } from '@angular/router';
-import { IStripeCancelComponent, isStripeCancelComponent } from 'src/app/models/order/stripe-cancel-route.model';
 
 /**
  * Cart API is bound by SessionId
@@ -97,26 +94,6 @@ export class CartService {
 
     this.cart.items = [];
     this._postCartAndBroadcast();
-  }
-
-
-  createCartCheckoutFromOrder(order: IOrderCheckout): ICartCheckout {
-
-    let cartCheckout = <ICartCheckout>{};
-
-    cartCheckout.cartsessionid = order.cartSessionId;
-    cartCheckout.street = order.street;
-    cartCheckout.city = order.city;
-    cartCheckout.country = order.country;
-    cartCheckout.state = order.state;
-    cartCheckout.zipcode = order.zipcode;
-    cartCheckout.cardexpiration = order.cardexpiration;
-    cartCheckout.cardnumber = order.cardnumber;
-    cartCheckout.cardsecuritynumber = order.cardsecuritynumber;
-    cartCheckout.cardtypeid = order.cardtypeid;
-    cartCheckout.cardholdername = order.cardholdername;
-
-    return cartCheckout;
   }
 
 

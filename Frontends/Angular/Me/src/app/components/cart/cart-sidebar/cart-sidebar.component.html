@@ -1,13 +1,12 @@
-<div class="fixed top-0 bottom-0 w-full z-50 md:max-w-[500px] bg-[#0e0f10] shadow-xl px-4
+<div class="fixed top-0 bottom-0 w-full z-50 md:max-w-[500px] bg-[#0e0f10] shadow-xl 
             {{ isOpen() ? 'right-0' : '-right-full' }} transition-all duration-300">
-    <div class="overflow-y-auto overflow-x-hidden h-[75vh]">
-        <!-- close icon -->
-        <div class=" text-4xl w-20 h-[98px] flex justify-start items-center cursor-pointer transition"
-            (click)="handleClose()">
-            <ng-icon class="text-3xl transition {{ closeClicked() ? 'rotate-[2turn]' : 'rotate-0' }}"
-                name="bootstrapXLg" />
-        </div>
-        <div class="flex flex-col gap-y-10 px-2">
+    <!-- close icon -->
+    <div class=" text-4xl w-20 h-[70px] px-4 flex justify-start items-center cursor-pointer transition"
+        (click)="handleClose()">
+        <ng-icon class="text-3xl transition {{ closeClicked() ? 'rotate-[2turn]' : 'rotate-0' }}" name="bootstrapXLg" />
+    </div>
+    <div class="overflow-y-auto overflow-x-hidden h-full pb-[275px] mx-4">
+        <div class="flex flex-col gap-y-10 px-2 pb-2 border-b">
             <div *ngFor="let item of cart().items; index as i">
                 <app-cart-item [product]="item" [index]="i" (onRemoveItem)="removeItem($event)"
                     (onIncreaseQuantity)="increaseQuantity($event)" (onDecreaseQuantity)="decreaseQuantity($event)"
@@ -16,35 +15,37 @@
         </div>
     </div>
     <!-- totals and checkout -->
-    <div class="px-6 py-10 flex flex-col" *ngIf="0 < cart().items.length">
-        <!-- subtotal -->
-        <div class="flex justify-between text-lg">
-            <div>Subtotal</div>
-            <div>$ {{ totalPrice() | number: '1.2-2' }}</div>
+    <div class="sticky bottom-0 bg-black rounded-md py-6">
+        <div class="px-6 pb-10 flex flex-1 flex-col" *ngIf="0 < cart().items.length">
+            <!-- subtotal -->
+            <div class="flex justify-between text-lg">
+                <div>Subtotal</div>
+                <div>$ {{ totalPrice() | number: '1.2-2' }}</div>
+            </div>
+            <!-- total -->
+            <div class="flex justify-between text-2xl">
+                <div>Total</div>
+                <div>$ {{ totalPrice() | number: '1.2-2' }}</div>
+            </div>
         </div>
-        <!-- total -->
-        <div class="flex justify-between text-2xl">
-            <div>Total</div>
-            <div>$ {{ totalPrice() | number: '1.2-2' }}</div>
-        </div>
-    </div>
-    <!-- buttons -->
-    <div class="px-6">
-        <div class="flex justify-between gap-x-4" *ngIf="0 < cart().items.length">
-            <button class="btn btn-accent hover:bg-accent-hover text-primary" 
-                    (click)="clearCart()">
-                clear cart
-            </button>
-            <button class="btn btn-accent hover:bg-accent-hover text-primary flex-1 px-2 gap-x-2" 
-                    (click)="handlePayment()">
-                Checkout
-                <ng-icon class="text-lg" name="bootstrapChevronRight" />
-            </button>
-        </div>
-        <div class="h-full absolute top-0 right-0 left-0 flex justify-center items-center -z-10 flex-col text-white/30"
-             *ngIf="1 > cart().items.length">
-            <div class="text-2xl">Cart is empty</div>            
-            <div><ng-icon class="text-6xl" name="bootstrapCart3" /></div>
+        <!-- buttons -->
+        <div class="px-6">
+            <div class="flex justify-between gap-x-4" *ngIf="0 < cart().items.length">
+                <button class="btn btn-accent hover:bg-accent-hover text-primary" (click)="clearCart()">
+                    clear cart
+                </button>
+                <button class="btn btn-accent hover:bg-accent-hover text-primary flex-1 px-2 gap-x-2"
+                    (click)="handleCheckout()">
+                    Checkout
+                    <ng-icon class="text-lg" name="bootstrapChevronRight" />
+                </button>
+                <div class="text-sm py-0 text-right">Login required</div>
+            </div>
+            <div class="h-full absolute top-0 right-0 left-0 flex justify-center items-center -z-10 flex-col text-white/30"
+                *ngIf="1 > cart().items.length">
+                <div class="text-2xl">Cart is empty</div>
+                <div><ng-icon class="text-6xl" name="bootstrapCart3" /></div>
+            </div>
         </div>
     </div>
 </div>

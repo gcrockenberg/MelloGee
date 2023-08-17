@@ -9,14 +9,8 @@ public static class CheckoutMode
 }
 
 
-public class CartCheckout
+public class CartCheckoutRequest
 {
-    [Required]
-    public required string Mode { get; set; }
-
-    public string CancelRoute { get; set; } = string.Empty;
-    public string SuccessRoute { get; set; } = string.Empty;
-
     [Required]
     public required string CartSessionId { get; set; }
 

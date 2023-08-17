@@ -9,18 +9,34 @@
         </div>
     </div>
     <div class="flex w-full gap-[30px] flex-col lg:flex-row">
-        <form id="payment-form" class="flex flex-col w-full max-w-[600px] gap-y-6">
+        <form id="payment-form" class="flex flex-col w-full max-w-[600px] gap-y-6"
+            (submit)="handlePayNow($event, elements)">
             <div id="link-authentication-element">
                 <!--Stripe.js injects the Link Authentication Element-->
             </div>
             <div id="payment-element">
                 <!--Stripe.js injects the Payment Element-->
             </div>
-            <button id="submit">
-                <div class="spinner hidden" id="spinner"></div>
-                <span id="button-text" class="btn btn-accent min-w-[150px]">Pay now</span>
+            <button id="submit" class="btn btn-accent min-w-[150px]" [disabled]="isLoading()">
+                <svg *ngIf="isLoading()" class="animate-spin -ml-1 mr-3 h-5 w-5 text-primary" xmlns="http://www.w3.org/2000/svg" fill="none"
+                    viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                    </path>
+                </svg>
+                {{ buttonText() }}
             </button>
-            <div *ngIf="0 < paymentMessage().length" id="payment-message" class="hidden">{{ paymentMessage() }}</div>
+            <div id="payment-message" class="hidden text-center text-accent">{{ paymentMessage() }}</div>
+            <p class="text-xs">
+                <span class="w-[120px] inline-block">Approve test card #:</span> 4242 4242 4242 4242
+                <br />
+                <span class="w-[120px] inline-block">Decline test card #:</span> 4000 0000 0000 0002
+                <br />
+                <span class="w-[120px] inline-block">CVC:</span> Any 3 digits
+                <br />
+                <span class="w-[120px] inline-block">Date:</span> Any future date
+            </p>
         </form>
         <div class="w-full flex flex-col gap-y-6">
             <app-order class="flex-1" [orderStatus]="order()" />
@@ -30,5 +46,5 @@
                 </div>
             </div>
         </div>
-    </div>    
+    </div>
 </div>

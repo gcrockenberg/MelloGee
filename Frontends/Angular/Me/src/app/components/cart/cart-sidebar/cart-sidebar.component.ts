@@ -106,28 +106,24 @@ export class CartSidebarComponent implements ISidebar, OnDestroy {
     }, 200);
   }
 
-
-  handlePayment() {
+  /**
+   * Transition Cart to Order for further processing
+   */
+  handleCheckout() {
     if (!this._securityService.isAuthorized) {
       this._securityService.login();
       return;
     }
 
-    let order: IOrderCheckout = this._orderService.createOrderFromCartAndIdentity();
-    let cartCheckout: ICartCheckout = this._cartService.createCartCheckoutFromOrder(order);
-
-    //cartCheckout = this._configureCheckoutMode(CheckoutMode.Redirect, cartCheckout);
-    cartCheckout = this._configureCheckoutMode(CheckoutMode.Intent, cartCheckout);
+    let cartCheckout = <ICartCheckout> {
+      cartSessionId: this.cart().sessionId
+    };
 
     this._orderService.setCartCheckout(cartCheckout)
       .subscribe((response: ICheckoutResponse) => {
-        if (CheckoutMode.Redirect == cartCheckout.mode) {
-          // Cart gets cleard in OrderService and cloud Integration Event
-          window.location.href = response.url;
-        } else {
-          this._router.navigate([`/checkout/${response.orderId}`]); 
-          this.handleClose();
-        }
+        // Cart gets cleard in OrderService and cloud Integration Event
+        this._router.navigate([`/checkout/${response.orderId}`]);
+        this.handleClose();
       });
   }
 
@@ -151,30 +147,6 @@ export class CartSidebarComponent implements ISidebar, OnDestroy {
   private _randomIntFromInterval(min: number, max: number) {
     // min and max included 
     return Math.floor(Math.random() * (max - min + 1) + min);
-  }
-
-
-  private _configureCheckoutMode(mode: CheckoutMode, cartCheckout: ICartCheckout): ICartCheckout {
-    if (CheckoutMode.Redirect == mode) {
-      let successRoute = this._router.config.find(
-        (route) => isStripeSuccessComponent(route.component as unknown as IStripeSuccessComponent)
-      );
-      if (undefined == successRoute) {
-        throw new Error("Stripe success route undefined.");
-      }
-      let cancelRoute = this._router.config.find(
-        (route) => isStripeCancelComponent(route.component as unknown as IStripeCancelComponent)
-      );
-      if (undefined == cancelRoute) {
-        throw new Error("Stripe cancel route undefined.");
-      }
-
-      cartCheckout.cancelRoute = `/${cancelRoute.path}`;
-      cartCheckout.successRoute = `/${successRoute.path}`;
-    }
-
-    cartCheckout.mode = mode;
-    return cartCheckout;
   }
 
 

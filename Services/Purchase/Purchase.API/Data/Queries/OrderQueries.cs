@@ -14,7 +14,7 @@ public class OrderQueries
     }
 
 
-    public async Task<OrderDTO> GetOrderAsync(int id)
+    public async Task<OrderResponse> GetOrderAsync(int id)
     {
         //using var connection = new SqlConnection(_connectionString);
         using var connection = new MySqlConnection(_connectionString);
@@ -71,9 +71,9 @@ public class OrderQueries
 
 
 
-    private OrderDTO MapOrderItems(dynamic result)
+    private OrderResponse MapOrderItems(dynamic result)
     {
-        var order = new OrderDTO
+        var order = new OrderResponse
         {
             orderNumber = result[0].ordernumber,
             date = result[0].date,

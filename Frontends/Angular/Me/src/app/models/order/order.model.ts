@@ -2,13 +2,12 @@ import { CheckoutMode } from "../cart/cart-checkout.model";
 
 
 /**
- * User must be logged in to create Order
- * OrderCheckout is posted to the Checkout process
+ * Order checkout activates Stripe payment to transition Order to Paid status
  * TODO: Clear out unnecessary fields now that Stripe is handling checkout
  */
 export interface IOrderCheckout {
     cartSessionId: string;
-    ordernumber: string;
+    orderNumber: string;
     orderItems: IOrderItem[];
     total: number;
     street: string;
@@ -25,14 +24,21 @@ export interface IOrderCheckout {
 }
 
 
+/**
+ * Stripe integration
+ */
 export interface ICheckoutResponse {
     orderId: number;
     url: string;            // If checkout mode is redirect
     clientSecret: string;   // If checkout mode is intent
 }
 
+
+/**
+ * For brief listing
+ */
 export interface IOrderSummary {
-    ordernumber: string;
+    orderNumber: string;
     status: string;
     date: Date;
     total: number;

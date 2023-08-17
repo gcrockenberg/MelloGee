@@ -20,6 +20,6 @@ export class OrderSummaryComponent {
   constructor(private _router: Router) {}
 
   displayOrderDetails() {    
-    this._router.navigate([`/order-details/${this.order().ordernumber}`]); 
+    this._router.navigate([`/order-details/${this.order().orderNumber}`]); 
   }
 }

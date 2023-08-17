@@ -1,11 +1,8 @@
 import { Injectable } from '@angular/core';
-import { IOrderCheckout, IOrderItem, IOrderDetails, IOrderSummary, ICheckoutResponse, IPayOrder, IPayOrderRequest } from 'src/app/models/order/order.model';
+import { IOrderDetails, IOrderSummary, ICheckoutResponse, IPayOrder, IPayOrderRequest } from 'src/app/models/order/order.model';
 import { CartService } from '../cart/cart.service';
-import { SecurityService } from '../security/security.service';
-import { UserData } from 'src/app/models/security/user-data.model';
-import { ICart } from 'src/app/models/cart/cart.model';
 import { ConfigurationService } from '../configuration/configuration.service';
-import { Observable, map, of, switchMap, tap } from 'rxjs';
+import { Observable, of, switchMap, tap } from 'rxjs';
 import { DataService } from '../data/data.service';
 import { ICartCheckout } from 'src/app/models/cart/cart-checkout.model';
 
@@ -17,56 +14,11 @@ export class OrderService {
 
   constructor(
     private _cartService: CartService,
-    private _securityService: SecurityService,
     private _configurationService: ConfigurationService,
     private _dataService: DataService) {
 
       _configurationService.whenReady
         .subscribe(() => this._ordersUrl = this._configurationService.serverSettings.orderUrl + '/o/api/v1/orders/')
-  }
-
-
-  /**
-   * Creates an Order from all items in the Cart
-   * TODO: Switch to accept ICart parameter to control which CartItems to process
-   * @returns The Order object
-   */
-  createOrderFromCartAndIdentity(): IOrderCheckout {
-    let order: IOrderCheckout = <IOrderCheckout>{};
-    let cart: ICart = this._cartService.cart;
-    let identityInfo: UserData = this._securityService.userData;
-
-    // Identity data mapping
-    order.street = (identityInfo.streetAddress) ? identityInfo.streetAddress : '';
-    order.city = (identityInfo.city) ? identityInfo.city : '';
-    order.country = (identityInfo.country) ? identityInfo.country : '';
-    order.state = (identityInfo.state) ? identityInfo.state : '';
-    order.zipcode = (identityInfo.postalCode) ? identityInfo.postalCode : '';
-    order.cardexpiration = new Date(Date.now());
-    order.cardnumber = '';
-    order.cardsecuritynumber = '';
-    order.cardtypeid = 0;
-    order.cardholdername = `${identityInfo.givenName} ${identityInfo.surName}`;
-    order.total = 0;
-    order.expiration = '';
-
-    // Cart data mapping
-    order.cartSessionId = cart.sessionId;
-    order.orderItems = new Array<IOrderItem>();
-    cart.items.forEach(x => {
-      let item: IOrderItem = <IOrderItem>{};
-      item.pictureUrl = x.pictureUrl;
-      item.productId = +x.productId;
-      item.productName = x.productName;
-      item.unitPrice = x.unitPrice;
-      item.units = x.quantity;
-
-      order.total += (item.unitPrice * item.units);
-
-      order.orderItems.push(item);
-    });
-
-    return order;
   }
 
 
@@ -125,8 +77,7 @@ export class OrderService {
             .pipe(
               tap((response: ICheckoutResponse) => {
                 // Cleared on the server upon success. Clearing here reinforces user experience.
-                this._cartService.clearCart();
-                
+                this._cartService.clearCart();                
               }));
         }));
   }

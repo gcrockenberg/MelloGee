@@ -24,8 +24,9 @@ import { IStripeCancelComponent, isStripeCancelComponent } from 'src/app/models/
 })
 export class CheckoutComponent implements OnInit {
   readonly order: WritableSignal<IOrderDetails> = signal(<IOrderDetails>{});
-  readonly loading: WritableSignal<boolean> = signal(false);
   readonly paymentMessage: WritableSignal<string> = signal('');
+  readonly buttonText: WritableSignal<string> = signal('Pay now');
+  readonly isLoading: WritableSignal<boolean> = signal(false);
   private _stripe: Stripe | null = null;
   private _clientSecret: string = '';
   elements: StripeElements | undefined;
@@ -40,10 +41,11 @@ export class CheckoutComponent implements OnInit {
   }
 
 
-  async handlePayNow(e: any, elements: StripeElements) {
+  async handlePayNow(e: any, elements: StripeElements | undefined) {
     e.preventDefault();
+    if (!elements) return;
     if (0 > this._orderId) return;
-    this.loading.set(true);
+    this._setLoading(true);
 
     let result = await this._stripe?.confirmPayment({
       elements,
@@ -67,7 +69,8 @@ export class CheckoutComponent implements OnInit {
         this.paymentMessage.set("An unexpected error occurred.");
       }
 
-      this.loading.set(false);
+      this._showMessage();
+      this._setLoading(false);
     }
   }
 
@@ -143,5 +146,28 @@ export class CheckoutComponent implements OnInit {
       paymentElement?.mount("#payment-element");
     });
   }
+
+  // ------- UI helpers -------
+
+  private _showMessage() {
+    const messageContainer = document.querySelector("#payment-message");
+
+    messageContainer?.classList.remove("hidden");
+    setTimeout(function () {
+      messageContainer?.classList.add("hidden");
+    }, 4000);
+  }
+
+
+  // Show a spinner on payment submission
+  private _setLoading(isLoading: boolean) {
+    this.isLoading.set(isLoading);
+    if (isLoading) {
+      this.buttonText.set('Processing...');
+    } else {      
+      this.buttonText.set('Pay now');
+    }
+  }
+
 
 }

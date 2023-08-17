@@ -2,7 +2,7 @@ namespace Me.Services.Purchase.API.Data.DTOs;
 
 using System.ComponentModel.DataAnnotations;    // ValidationException conflict with FluentValidation in GlobalUsings
 
-public class OrderCheckout
+public class OrderCheckoutRequest
 {
     [Required]
     public required int OrderId { get; set; }
