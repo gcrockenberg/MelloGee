@@ -5,20 +5,19 @@ A project to demonstrate full-stack aspects of a microservice based solution hos
 ## Environment
 - [Azure Container Apps](https://learn.microsoft.com/en-us/azure/container-apps/) - IaaS, easy orchestration, scalable, pay-as-you-go. NET Core 8.x preview
 - [Azure API Management](https://azure.microsoft.com/en-us/products/api-management/)
+- [Bicep provisioning](Bicep/README.md)
 - Docker Container Registry
 - GitHub Actions CI/CD
 - [AAD B2C](https://learn.microsoft.com/en-us/azure/active-directory-b2c/) - Customer identity access management (CIAM). 
 - Azure Blob Storage - login customization
-- MariaDb Container App service for demo purposes
+- [MariaDb Container App service for demo purposes](Services/Purchase/README.md)
 - RabbitMQ Event Bus Container App service for demo purposes
 - Redis Container App service for demo purposes
-- Angular v16 SPA with Tailwind CSS
-- Stripe for order checkout (currently by redirect)
+- [Angular v16 SPA with Tailwind CSS](Frontends/Angular/Me/README.md)
+- Stripe for order checkout (using integrated intent instead of redirect)
 - gRPC - [restricted in Azure Container Apps](https://github.com/microsoft/azure-container-apps/issues/763)
-- SignalR - connected with login. [APIM limitations with consumption plans](https://learn.microsoft.com/en-us/azure/api-management/websocket-api?tabs=portal)
+- SignalR - connected after login [APIM limitations with consumption plans](https://learn.microsoft.com/en-us/azure/api-management/websocket-api?tabs=portal)
 
-## Bicep provisioning
-![Me architecture](Images/Me%20Architecture.png)
 
 <h1>Notes</h1>
 <ul>
