@@ -2,6 +2,7 @@ namespace Me.Services.Purchase.API.Controllers;
 
 using Stripe;
 using Stripe.Checkout;
+using OrderItem = Data.DTOs.OrderItem;
 
 [Route("api/v1/[controller]")]
 [Authorize]
@@ -27,7 +28,7 @@ public class OrdersController : ControllerBase
         _eventBus = eventBus ?? throw new ArgumentNullException(nameof(eventBus));
 
         // See Program.cs why this is duplicated
-        _cartService = cartService ?? throw new ArgumentNullException(nameof(cartService));        
+        _cartService = cartService ?? throw new ArgumentNullException(nameof(cartService));
         _cartRepository = cartRepository ?? throw new ArgumentNullException(nameof(cartRepository));
     }
 
@@ -38,7 +39,7 @@ public class OrdersController : ControllerBase
     {
         var userid = _identityService.GetUserIdentity();
         var orders = await _orderQueries.GetOrdersFromUserAsync(Guid.Parse(userid));
-        
+
         return Ok(orders.ToList());
     }
 
@@ -62,6 +63,54 @@ public class OrdersController : ControllerBase
             return NotFound();
         }
     }
+
+
+    /// <summary>
+    /// Rereive Order with payment resources
+    /// </summary>
+    /// <param name="orderCheckout">Stripe mode will default to "intent</param>
+    /// <returns></returns>
+    [Route("pay")]
+    [HttpPost]
+    [ProducesResponseType(typeof(PayOrderDTO), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<PayOrderDTO>> PayOrderAsync([FromBody] OrderCheckout orderCheckout)
+    {
+        try
+        {
+            //Todo: It's good idea to take advantage of GetOrderByIdQuery and handle by GetCustomerByIdQueryHandler
+            //var order customer = await _mediator.Send(new GetOrderByIdQuery(orderId));
+            var order = await _orderQueries.GetOrderAsync(orderCheckout.OrderId);
+            if (null == order)
+            {
+                return NotFound();
+            }
+
+            CheckoutResponse paymentResources;
+            if (orderCheckout.Mode.Equals(CheckoutMode.Redirect, StringComparison.OrdinalIgnoreCase))
+            {
+                List<SessionLineItemOptions> lineItemOptions = GetSessionLineItemOptions(order.orderItems);
+                paymentResources = CreateStripeSession(lineItemOptions, orderCheckout.SuccessRoute, orderCheckout.CancelRoute);
+            }
+            else
+            {
+                long orderAmount = CalculateOrderAmount(order.orderItems);
+                paymentResources = CreateStripeIntent(orderAmount);
+            }
+
+
+            return new PayOrderDTO
+            {
+                Order = order,
+                Payment = paymentResources
+            };
+        }
+        catch
+        {
+            return NotFound();
+        }
+    }
+
 
 
     [Route("draft")]
@@ -103,11 +152,6 @@ public class OrdersController : ControllerBase
         var cart = await _cartRepository.GetCartAsync(cartCheckout.CartSessionId);
         if (cart == null)
         {
-            _logger.LogInformation("--> Error retrieving Cart for cartId: {cartId}", cartCheckout.CartSessionId);
-            foreach (var key in _cartRepository.GetCartIds())
-            {
-                _logger.LogInformation("--> Existing Redis key: {key}", key);
-            }
             return BadRequest();
         }
 
@@ -137,7 +181,8 @@ public class OrdersController : ControllerBase
         CheckoutResponse response;
         if (cartCheckout.Mode.Equals(CheckoutMode.Redirect, StringComparison.OrdinalIgnoreCase))
         {
-            response = CreateStripeSession(cartCheckout, cart);
+            List<SessionLineItemOptions> lineItemOptions = GetSessionLineItemOptions(cart.Items);
+            response = CreateStripeSession(lineItemOptions, cartCheckout.SuccessRoute, cartCheckout.CancelRoute);
         }
         else
         {
@@ -164,7 +209,7 @@ public class OrdersController : ControllerBase
             },
         });
 
-        return new CheckoutResponse { ClientSecret = paymentIntent.ClientSecret };    
+        return new CheckoutResponse { ClientSecret = paymentIntent.ClientSecret };
     }
 
 
@@ -176,10 +221,22 @@ public class OrdersController : ControllerBase
         {
             result += (long)(item.UnitPrice * item.Quantity * 100);
         }
-    
+
         return result;
     }
 
+
+    private long CalculateOrderAmount(IEnumerable<OrderItem> items)
+    {
+        long result = 0;
+
+        foreach (var item in items)
+        {
+            result += (long)(item.unitPrice * item.units * 100);
+        }
+
+        return result;
+    }
 
     /// <summary>
     /// Initialize Stripe session which will return the url for redirect based checkout.
@@ -187,12 +244,30 @@ public class OrdersController : ControllerBase
     /// <param name="cartCheckout"></param>
     /// <param name="cart"></param>
     /// <returns></returns>
-    private CheckoutResponse CreateStripeSession(CartCheckout cartCheckout, CustomerCart cart)
+    private CheckoutResponse CreateStripeSession(List<SessionLineItemOptions> lineItemOptions, string successRoute, string cancelRoute)
     {
         var domain = Request.Headers.Origin;    // e.g. http://localhost:4200
+
+        var options = new SessionCreateOptions
+        {
+            SuccessUrl = domain + successRoute,
+            CancelUrl = domain + cancelRoute,
+            PaymentMethodTypes = new List<string> { "card" },
+            LineItems = lineItemOptions,
+            Mode = "payment",
+        };
+
+        var service = new SessionService();
+        Session session = service.Create(options);
+
+        return new CheckoutResponse { Url = session.Url };
+    }
+
+    List<SessionLineItemOptions> GetSessionLineItemOptions(List<CartItem> cartItems)
+    {
         List<SessionLineItemOptions> lineItemOptions = new();
 
-        foreach (var item in cart.Items)
+        foreach (var item in cartItems)
         {
             lineItemOptions.Add(new SessionLineItemOptions
             {
@@ -209,19 +284,32 @@ public class OrdersController : ControllerBase
             });
         }
 
-        var options = new SessionCreateOptions
+        return lineItemOptions;
+    }
+
+
+    List<SessionLineItemOptions> GetSessionLineItemOptions(List<OrderItem> orderItems)
+    {
+        List<SessionLineItemOptions> lineItemOptions = new();
+
+        foreach (var item in orderItems)
         {
-            SuccessUrl = domain + cartCheckout.SuccessRoute,
-            CancelUrl = domain + cartCheckout.CancelRoute,
-            PaymentMethodTypes = new List<string> { "card" },
-            LineItems = lineItemOptions,
-            Mode = "payment",
-        };
+            lineItemOptions.Add(new SessionLineItemOptions
+            {
+                PriceData = new SessionLineItemPriceDataOptions
+                {
+                    Currency = "usd",
+                    UnitAmount = (long)(item.unitPrice * 100),
+                    ProductData = new SessionLineItemPriceDataProductDataOptions
+                    {
+                        Name = item.productName
+                    }
+                },
+                Quantity = item.units
+            });
+        }
 
-        var service = new SessionService();
-        Session session = service.Create(options);
-
-        return new CheckoutResponse { Url = session.Url };
+        return lineItemOptions;
     }
 
 

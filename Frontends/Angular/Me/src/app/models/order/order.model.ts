@@ -1,3 +1,4 @@
+import { CheckoutMode } from "../cart/cart-checkout.model";
 
 
 /**
@@ -25,9 +26,9 @@ export interface IOrderCheckout {
 
 
 export interface ICheckoutResponse {
+    orderId: number;
     url: string;            // If checkout mode is redirect
     clientSecret: string;   // If checkout mode is intent
-    orderId: number;
 }
 
 export interface IOrderSummary {
@@ -39,24 +40,44 @@ export interface IOrderSummary {
 
 
 export interface IOrderItem {
-    pictureurl: string;
-    productname: string;
-    unitprice: number;
+    pictureUrl: string;
+    productName: string;
+    unitPrice: number;
     units: number;
     productId: number;
 }
 
 
 export interface IOrderDetails {
-    ordernumber: string;
+    orderNumber: string;
+    date: Date;
     status: string;
     description: string;
     street: string;
-    date: Date;
     city: number;
     state: string;
-    zipcode: string;
+    zipCode: string;
     country: number;
     total: number;
-    orderitems: IOrderItem[];
+    orderItems: IOrderItem[];
+}
+
+
+/**
+ * Response from orders/pay
+ */
+export interface IPayOrder {
+    order: IOrderDetails;
+    payment: ICheckoutResponse;
+}
+
+
+/**
+ * Post to orders/pay/mode&oid=orderId
+ */
+export interface IPayOrderRequest {
+    orderId: number;
+    mode: CheckoutMode;
+    cancelRoute: string;
+    successRoute: string;
 }

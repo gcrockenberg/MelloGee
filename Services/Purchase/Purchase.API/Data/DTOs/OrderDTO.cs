@@ -1,30 +1,31 @@
 namespace Me.Services.Purchase.API.Data.DTOs;
 
-public record Orderitem
+public record OrderItem
 {
-    public string productname { get; init; } 
+    public string productName { get; init; } = string.Empty;
     public int units { get; init; }
-    public double unitprice { get; init; }
-    public string pictureurl { get; init; }
+    public double unitPrice { get; init; }
+    public string pictureUrl { get; init; } = string.Empty;
 }
 
 public record OrderDTO
 {
-    public int ordernumber { get; init; }
+    public int orderNumber { get; init; }
     public DateTime date { get; init; }
-    public string status { get; init; }
-    public string description { get; init; }
-    public string street { get; init; }
-    public string city { get; init; }
-    public string zipcode { get; init; }
-    public string country { get; init; }
-    public List<Orderitem> orderitems { get; set; }
+    public string status { get; init; } = string.Empty;
+    public string description { get; init; } = string.Empty;
+    public string street { get; init; } = string.Empty;
+    public string city { get; init; } = string.Empty;
+    public string state { get; init; } = string.Empty;
+    public string zipCode { get; init; } = string.Empty;
+    public string country { get; init; } = string.Empty;
     public decimal total { get; set; }
+    public List<OrderItem> orderItems { get; set; }
 }
 
 public record OrderSummary
 {
-    public int ordernumber { get; init; }
+    public int orderNumber { get; init; }
     public DateTime date { get; init; }
     public string status { get; init; }
     public double total { get; init; }

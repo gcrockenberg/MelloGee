@@ -1,9 +1,9 @@
 <div class="flex gap-x-4">
-    <img class="h-[100px] w-[100px] object-contain" [src]="item().pictureurl" alt="Product image">
+    <img class="h-[100px] w-[100px] object-contain" [src]="item().pictureUrl" alt="Product image">
     <div class="flex-1">
         <div class="flex justify-between gap-x-4 mb-3">
             <a class="">
-                {{ item().productname }}
+                {{ item().productName }}
             </a>
         </div>
 
@@ -14,14 +14,14 @@
             </div>
             <!-- subtotal -->
             <div class="text-accent text-xl">
-                $ {{ (item().units * item().unitprice) | number: '1.2-2' }}
+                $ {{ (item().units * item().unitPrice) | number: '1.2-2' }}
             </div>
         </div>
 
         <!-- unit price -->
         <div class="">
             <span class="text-accent">
-                $ {{ item().unitprice | number: '1.2-2' }} ea.
+                $ {{ item().unitPrice | number: '1.2-2' }} ea.
             </span>
         </div>
 

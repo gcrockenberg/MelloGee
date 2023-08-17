@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { IOrderCheckout, IOrderItem, IOrderDetails, IOrderSummary, ICheckoutResponse } from 'src/app/models/order/order.model';
+import { IOrderCheckout, IOrderItem, IOrderDetails, IOrderSummary, ICheckoutResponse, IPayOrder, IPayOrderRequest } from 'src/app/models/order/order.model';
 import { CartService } from '../cart/cart.service';
 import { SecurityService } from '../security/security.service';
 import { UserData } from 'src/app/models/security/user-data.model';
@@ -55,13 +55,13 @@ export class OrderService {
     order.orderItems = new Array<IOrderItem>();
     cart.items.forEach(x => {
       let item: IOrderItem = <IOrderItem>{};
-      item.pictureurl = x.pictureUrl;
+      item.pictureUrl = x.pictureUrl;
       item.productId = +x.productId;
-      item.productname = x.productName;
-      item.unitprice = x.unitPrice;
+      item.productName = x.productName;
+      item.unitPrice = x.unitPrice;
       item.units = x.quantity;
 
-      order.total += (item.unitprice * item.units);
+      order.total += (item.unitPrice * item.units);
 
       order.orderItems.push(item);
     });
@@ -100,6 +100,22 @@ export class OrderService {
   }
 
 
+  getPayOrder(orderCheckout: IPayOrderRequest): Observable<IPayOrder> {
+    if (1 > orderCheckout.orderId) return of(<IPayOrder>{});
+
+    return this._configurationService.whenReady
+      .pipe(switchMap(x => {
+          let url = `${this._ordersUrl}pay`;
+
+          return this._dataService.post<IPayOrder>(url, orderCheckout)
+            .pipe<IPayOrder>(
+              tap((response: IPayOrder) => {
+                return (response) ? response : of([]);
+              }));
+        }));
+  }
+
+
   setCartCheckout(cartCheckout: ICartCheckout): Observable<ICheckoutResponse> {
     return this._configurationService.whenReady
       .pipe(switchMap(x => {
@@ -108,7 +124,6 @@ export class OrderService {
           return this._dataService.post<ICheckoutResponse>(url, cartCheckout)
             .pipe(
               tap((response: ICheckoutResponse) => {
-                console.log('--> checkout response: ', response);
                 // Cleared on the server upon success. Clearing here reinforces user experience.
                 this._cartService.clearCart();
                 

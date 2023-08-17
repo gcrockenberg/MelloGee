@@ -3,13 +3,13 @@
         {{ order().status }}
     </div>
     <h2 class="h2 mb-4">
-        Order: {{order().ordernumber}}
+        Order: {{ order().orderNumber }}
     </h2>
     <div class="mb-6">
-    <p class="mb-4">{{ order().date | date:'medium'}}</p>
+    <p class="mb-4">{{ order().date | date:'medium' }}</p>
     <p *ngIf="order().street">{{ order().street }}</p>
     <p *ngIf="order().city">{{ order().city }}</p>
-    <p *ngIf="order().zipcode">{{ order().zipcode }}</p>
+    <p *ngIf="order().zipCode">{{ order().zipCode }}</p>
     </div>
     <div class="flex items-center gap-x-8">
         <div class="text-3xl text-accent font-semibold">

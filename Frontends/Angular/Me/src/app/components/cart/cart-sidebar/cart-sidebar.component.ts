@@ -125,7 +125,7 @@ export class CartSidebarComponent implements ISidebar, OnDestroy {
           // Cart gets cleard in OrderService and cloud Integration Event
           window.location.href = response.url;
         } else {
-          this._router.navigate([`/checkout/${response.orderId}/${response.clientSecret}`]); 
+          this._router.navigate([`/checkout/${response.orderId}`]); 
           this.handleClose();
         }
       });

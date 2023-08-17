@@ -1,15 +1,18 @@
 import { Component, OnInit, WritableSignal, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { loadStripe, Stripe, StripeElements } from '@stripe/stripe-js';
 import { environment } from 'src/environments/environment';
-import { IOrderDetails } from 'src/app/models/order/order.model';
+import { IOrderDetails, IOrderCheckout, IPayOrderRequest } from 'src/app/models/order/order.model';
 import { switchMap } from 'rxjs';
 import { OrderService } from 'src/app/services/order/order.service';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { bootstrapChevronLeft } from '@ng-icons/bootstrap-icons';
 import { OrderComponent } from "../../../components/order/order/order.component";
 import { OrderItemComponent } from "../../../components/order/order-item/order-item.component";
+import { CheckoutMode } from 'src/app/models/cart/cart-checkout.model';
+import { IStripeSuccessComponent, isStripeSuccessComponent } from 'src/app/models/order/stripe-success-route.model';
+import { IStripeCancelComponent, isStripeCancelComponent } from 'src/app/models/order/stripe-cancel-route.model';
 
 @Component({
   selector: 'app-checkout',
@@ -31,7 +34,8 @@ export class CheckoutComponent implements OnInit {
 
   constructor(
     private _orderService: OrderService,
-    private _route: ActivatedRoute) {
+    private _route: ActivatedRoute,
+    private _router: Router) {
     this._initStripe();
   }
 
@@ -69,12 +73,11 @@ export class CheckoutComponent implements OnInit {
 
 
   /**
-   * Stripe recommends creating a new Session each time your customer attempts to pay…
+   * Stripe recommends creating a new Session each time customer attempts to pay…
    * https://stripe.com/docs/api/checkout/sessions
    */
   ngOnInit(): void {
-    this._loadOrder();
-    this._loadStripe();
+    this._loadPayOrder();
   }
 
 
@@ -84,22 +87,43 @@ export class CheckoutComponent implements OnInit {
   }
 
 
-  private _loadOrder() {
+  private _loadPayOrder() {
     this._route.paramMap
       .pipe(
         switchMap((params) => {
           this._orderId = Number(params.get('orderId'));
-          return this._orderService.getOrderStatus(this._orderId)
-        })).subscribe((orderStatus) => {
-          this.order.set(orderStatus);
+          let successRoute = this._router.config.find(
+            (route) => isStripeSuccessComponent(route.component as unknown as IStripeSuccessComponent)
+          );
+          if (undefined == successRoute) {
+            throw new Error("Stripe success route undefined.");
+          }
+          let cancelRoute = this._router.config.find(
+            (route) => isStripeCancelComponent(route.component as unknown as IStripeCancelComponent)
+          );
+          if (undefined == cancelRoute) {
+            throw new Error("Stripe cancel route undefined.");
+          }
+
+          let orderCheckout: IPayOrderRequest = {
+            orderId: this._orderId,
+            mode: CheckoutMode.Intent,
+            cancelRoute: `/${cancelRoute.path}`,
+            successRoute: `/${successRoute.path}`
+          }
+
+          return this._orderService.getPayOrder(orderCheckout);
+
+        })).subscribe((payorder) => {
+          this.order.set(payorder.order);
+          this._clientSecret = payorder.payment.clientSecret;
+          this._loadStripe();
         });
   }
 
 
   private _loadStripe() {
     this._route.paramMap.subscribe((params) => {
-      this._clientSecret = params.get('checkoutId') ?? '';
-
       this.elements = this._stripe?.elements({
         appearance: {
           theme: 'night'

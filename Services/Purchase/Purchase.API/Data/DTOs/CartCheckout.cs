@@ -32,6 +32,4 @@ public class CartCheckout
     public int CardTypeId { get; set; }
     public string Buyer { get; set; } = string.Empty;
     public Guid RequestId { get; set; }
-
-
 }

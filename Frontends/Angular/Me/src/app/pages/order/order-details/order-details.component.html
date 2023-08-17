@@ -11,7 +11,7 @@
     <div class="flex gap-[30px] flex-col lg:flex-row">
         <app-order class="flex-1" [orderStatus]="order()" />
         <div class="flex flex-1 flex-col gap-y-10 px-2">
-            <div *ngFor="let item of order().orderitems; index as i">
+            <div *ngFor="let item of order().orderItems; index as i">
                 <app-order-item [product]="item" />
             </div>
         </div>

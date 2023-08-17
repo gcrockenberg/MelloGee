@@ -42,7 +42,7 @@ export const routes: Routes = [
         component: CartComponent
     },
     {
-        path: 'checkout/:orderId/:checkoutId',
+        path: 'checkout/:orderId',
         component: CheckoutComponent,
         canActivate: [
             MsalGuard

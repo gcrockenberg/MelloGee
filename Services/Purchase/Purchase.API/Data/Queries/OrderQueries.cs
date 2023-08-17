@@ -75,30 +75,31 @@ public class OrderQueries
     {
         var order = new OrderDTO
         {
-            ordernumber = result[0].ordernumber,
+            orderNumber = result[0].ordernumber,
             date = result[0].date,
             status = result[0].status,
             description = result[0].description,
             street = result[0].street,
             city = result[0].city,
-            zipcode = result[0].zipcode,
+            state = result[0].state,
+            zipCode = result[0].zipcode,
             country = result[0].country,
-            orderitems = new List<Orderitem>(),
+            orderItems = new List<OrderItem>(),
             total = 0
         };
 
         foreach (dynamic item in result)
         {
-            var orderitem = new Orderitem
+            var orderitem = new OrderItem
             {
-                productname = item.productname,
+                productName = item.productname,
                 units = item.units,
-                unitprice = (double)item.unitprice,
-                pictureurl = item.pictureurl
+                unitPrice = (double)item.unitprice,
+                pictureUrl = item.pictureurl
             };
 
             order.total += item.units * item.unitprice;
-            order.orderitems.Add(orderitem);
+            order.orderItems.Add(orderitem);
         }
 
         return order;
