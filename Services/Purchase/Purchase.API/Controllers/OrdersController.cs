@@ -69,7 +69,7 @@ public class OrdersController : ControllerBase
     /// Rereive Order with payment resources
     /// </summary>
     /// <param name="request">Stripe mode will default to "intent"</param>
-    /// <returns></returns>
+    /// <returns>The order and Stripe payment resources</returns>
     [Route("pay")]
     [HttpPost]
     [ProducesResponseType(typeof(PayOrderResponse), StatusCodes.Status200OK)]
@@ -109,7 +109,6 @@ public class OrdersController : ControllerBase
             return NotFound();
         }
     }
-
 
 
     [Route("draft")]
