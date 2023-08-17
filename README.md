@@ -110,8 +110,13 @@ az deployment group create --template-file bicep/main.bicep
 <li>Implement semantic-release versioning</li>
 </ul>
 
-## Purchase database
-![Me Purchase Db](Images/PurchaseDB.png)
+<h2>Thanks</h2>
+<p>A quick shoutout to a few of my heavier influencers</p>
+<ul>
+<li><a href="https://www.youtube.com/@binarythistle">[Les Jackson]</a></li>
+<li><a href="https://www.youtube.com/@cristianmihai01">[Cristian Mihal]</a></li>
+</ul>
 
 <br/><br/>
 <sup>1</sup> The Azure Container Apps Managed Environment creates an additional Resource Group for Kubernetes that it controls
+
