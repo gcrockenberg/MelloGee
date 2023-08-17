@@ -15,8 +15,8 @@ A project to demonstrate full-stack aspects of a microservice based solution hos
 - Redis Container App service for demo purposes
 - [Angular v16 SPA with Tailwind CSS](Frontends/Angular/Me/README.md)
 - Stripe for order checkout (using integrated intent instead of redirect)
-- gRPC - [restricted in Azure Container Apps](https://github.com/microsoft/azure-container-apps/issues/763)
-- SignalR - connected after login [APIM limitations with consumption plans](https://learn.microsoft.com/en-us/azure/api-management/websocket-api?tabs=portal)
+- gRPC - [currently restricted in Azure Container Apps](https://github.com/microsoft/azure-container-apps/issues/763)
+- SignalR - connected after login, [APIM limitations with consumption plans](https://learn.microsoft.com/en-us/azure/api-management/websocket-api?tabs=portal)
 
 
 <h1>Notes</h1>
