@@ -68,7 +68,7 @@ public class OrdersController : ControllerBase
     /// <summary>
     /// Rereive Order with payment resources
     /// </summary>
-    /// <param name="request">Stripe mode will default to "intent</param>
+    /// <param name="request">Stripe mode will default to "intent"</param>
     /// <returns></returns>
     [Route("pay")]
     [HttpPost]
@@ -97,7 +97,6 @@ public class OrdersController : ControllerBase
                 long orderAmount = CalculateOrderAmount(order.orderItems);
                 response = CreateStripeIntent(orderAmount);
             }
-
 
             return new PayOrderResponse
             {
