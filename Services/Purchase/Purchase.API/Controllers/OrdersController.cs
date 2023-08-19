@@ -79,48 +79,41 @@ public class OrdersController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<OrderResponse>> PayOrderAsync([FromBody] OrderCheckoutRequest request)
     {
-        try
+        //Todo: It's good idea to take advantage of GetOrderByIdQuery and handle by GetCustomerByIdQueryHandler
+        //var order customer = await _mediator.Send(new GetOrderByIdQuery(orderId));
+        //var order = await _orderQueries.GetOrderAsync(request.OrderId);            
+        var order = await _orderRepository.GetAsync(request.OrderId, false, true, true, true);
+        if (null == order)
         {
-            //Todo: It's good idea to take advantage of GetOrderByIdQuery and handle by GetCustomerByIdQueryHandler
-            //var order customer = await _mediator.Send(new GetOrderByIdQuery(orderId));
-            //var order = await _orderQueries.GetOrderAsync(request.OrderId);            
-            var order = await _orderRepository.GetAsync(request.OrderId, false, true, true, true);
-            if (null == order)
-            {
-                _logger.LogError("--> PayOrder order not found with id: {orderId}", request.OrderId);
-                return NotFound();
-            }
-
-            // If CheckoutData data has already been generated then return the Order
-            // TODO: Investigate Stipe data expiration and when to generate new CheckoutData
-            if (!string.IsNullOrEmpty(order.StripeMode) && order.StripeMode.Equals(request.Mode, StringComparison.OrdinalIgnoreCase))
-            {
-                return new OrderResponse(order);
-            }
-
-            // Create and store Stripe checkout data
-            CheckoutData checkoutData;
-            if (request.Mode.Equals(CheckoutMode.Redirect, StringComparison.OrdinalIgnoreCase))
-            {
-                List<SessionLineItemOptions> lineItemOptions = GetSessionLineItemOptions(order.OrderItems);
-                checkoutData = CreateStripeSession(lineItemOptions, request.SuccessRoute, request.CancelRoute);
-            }
-            else
-            {
-                long orderAmount = (long) order.GetTotal() * 100;
-                checkoutData = CreateStripeIntent(order.Id.ToString(), orderAmount);
-            }
-            checkoutData.StripeMode = request.Mode;
-
-            order.SetCheckoutData(checkoutData);
-            await _orderRepository.UnitOfWork.SaveEntitiesAsync();  // Ensures any Domain Events get fired
-
-            return new OrderResponse(order);
-        }
-        catch
-        {
+            _logger.LogError("--> PayOrder order not found with id: {orderId}", request.OrderId);
             return NotFound();
         }
+
+        // If CheckoutData data has already been generated then return the Order
+        // TODO: Investigate Stipe data expiration and when to generate new CheckoutData
+        if (!string.IsNullOrEmpty(order.StripeMode) && order.StripeMode.Equals(request.Mode, StringComparison.OrdinalIgnoreCase))
+        {
+            return new OrderResponse(order);
+        }
+
+        // Create and store Stripe checkout data
+        CheckoutData checkoutData;
+        if (request.Mode.Equals(CheckoutMode.Redirect, StringComparison.OrdinalIgnoreCase))
+        {
+            List<SessionLineItemOptions> lineItemOptions = GetSessionLineItemOptions(order.OrderItems);
+            checkoutData = CreateStripeSession(lineItemOptions, request.SuccessRoute, request.CancelRoute);
+        }
+        else
+        {
+            long orderAmount = (long)order.GetTotal() * 100;
+            checkoutData = CreateStripeIntent(order.Id.ToString(), orderAmount);
+        }
+        checkoutData.StripeMode = request.Mode;
+
+        order.SetCheckoutData(checkoutData);
+        await _orderRepository.UnitOfWork.SaveEntitiesAsync();  // Ensures any Domain Events get fired
+
+        return new OrderResponse(order);
     }
 
 
