@@ -43,10 +43,10 @@ public class WebhookController : Controller
             var stripeEvent = EventUtility.ParseEvent(json);
             var signatureHeader = Request.Headers["Stripe-Signature"];
 
-            _logger.LogInformation("--> Constructing event");
+            _logger.LogInformation("--> Constructing event with Stripe-Signature: {signatureHeader}", signatureHeader);
             stripeEvent = EventUtility.ConstructEvent(json, signatureHeader, ENDPOINT_SECRET);
             _logger.LogInformation("--> Event constructed");
-            
+
             if (stripeEvent.Type == Events.PaymentIntentSucceeded)
             {
                 await HandlePaymentIntentSucceededAsync(stripeEvent.Data.Object as PaymentIntent);
