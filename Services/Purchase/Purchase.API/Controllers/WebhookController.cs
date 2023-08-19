@@ -17,12 +17,13 @@ public class WebhookController : Controller
 
     public WebhookController(IConfiguration configuration, ILogger<WebhookController> logger, IMediator mediator)
     {
-        ENDPOINT_SECRET = configuration["stripe-endpoint-secret"] ?? string.Empty;
-
-        if (string.IsNullOrWhiteSpace(ENDPOINT_SECRET)) throw new ArgumentNullException(nameof(ENDPOINT_SECRET));
-
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+
+        ENDPOINT_SECRET = configuration["stripe-endpoint-secret"] ?? string.Empty;
+        if (string.IsNullOrWhiteSpace(ENDPOINT_SECRET)) throw new ArgumentNullException(nameof(ENDPOINT_SECRET));
+
+        logger.LogInformation("--> Verified endpoint: {endpoint}", ENDPOINT_SECRET);
     }
 
 
@@ -42,9 +43,10 @@ public class WebhookController : Controller
             var stripeEvent = EventUtility.ParseEvent(json);
             var signatureHeader = Request.Headers["Stripe-Signature"];
 
-            stripeEvent = EventUtility.ConstructEvent(json,
-                    signatureHeader, ENDPOINT_SECRET);
-
+            _logger.LogInformation("--> Constructing event");
+            stripeEvent = EventUtility.ConstructEvent(json, signatureHeader, ENDPOINT_SECRET);
+            _logger.LogInformation("--> Event constructed");
+            
             if (stripeEvent.Type == Events.PaymentIntentSucceeded)
             {
                 await HandlePaymentIntentSucceededAsync(stripeEvent.Data.Object as PaymentIntent);
