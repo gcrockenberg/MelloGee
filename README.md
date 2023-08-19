@@ -17,20 +17,20 @@ A rewrite of [Microsofts Microservice reference project](https://github.com/dotn
 - Stripe for order checkout (using integrated intent instead of redirect)
 - gRPC - [currently restricted in Azure Container Apps](https://github.com/microsoft/azure-container-apps/issues/763)
 - SignalR - connected after login, [APIM limitations with consumption plans](https://learn.microsoft.com/en-us/azure/api-management/websocket-api?tabs=portal)
-- Webhooks - from Stripe for fulfillment
-
+- Webhooks - from Stripe for fulfillment (only wired up "Paid" webhook for now, many more available)
 
 <h1>Notes</h1>
 <ul>
 <li>The steps below were established on a Windows 10 machine</li>
 <li>The Azure resources can be configured to auto scale based upon demand</li>
 <li>Global scaling can be configured using a geode or stamped pattern</li>
+<li>Azure hosting for demo is configured with free or consumption plans, some of which scale to 0 when unused. Initial perfomance might lag as services "wake up".</li>
 </ul>
 
 <h2>Currently working on</h2>
 <ul> 
-<li><a href="https://green-wave-08182290f.3.azurestaticapps.net">Fulfillment webhooks</a> <-- Link to current version
-<li>Azure hosting for demo is configured with free or consumption plans, some of which scale to 0 when unused. Initial perfomance might lag as services "wake up".</li>
+<li><a href="https://green-wave-08182290f.3.azurestaticapps.net">Unity</a> <-- Link to current version
+<li>For fun, I'm experimenting with integrating a web based gaming experience with "hooks" to AR and purchasing. Then I'll move on to ChatGPT integration.</li>
 </ul>
 
 <h1>Deploying Me</h1>
