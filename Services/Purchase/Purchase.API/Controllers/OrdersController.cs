@@ -87,6 +87,7 @@ public class OrdersController : ControllerBase
             var order = await _orderRepository.GetAsync(request.OrderId, false, true, true, true);
             if (null == order)
             {
+                _logger.LogError("--> PayOrder order not found with id: {orderId}", request.OrderId);
                 return NotFound();
             }
 

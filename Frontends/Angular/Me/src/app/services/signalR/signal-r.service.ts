@@ -87,7 +87,8 @@ export class SignalRService {
         console.log('Hub connection started')
       })
       .catch(() => {
-        console.log('Error while establishing connection')
+        console.error('Error while establishing connection')
+        console.error(`Verify url ${this._signalRHubUrl} which changes whenever ACA revision changes`)
       });
   }
 
