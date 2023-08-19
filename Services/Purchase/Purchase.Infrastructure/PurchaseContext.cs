@@ -1,3 +1,5 @@
+using Microsoft.Extensions.Logging;
+
 namespace Me.Services.Purchase.Infrastructure;
 
 public class PurchaseContext : DbContext, IUnitOfWork
@@ -23,7 +25,6 @@ public class PurchaseContext : DbContext, IUnitOfWork
     {
         _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
 
-
         System.Diagnostics.Debug.WriteLine("PurchaseContext::ctor ->" + this.GetHashCode());
     }
 
@@ -40,6 +41,7 @@ public class PurchaseContext : DbContext, IUnitOfWork
 
     public async Task<bool> SaveEntitiesAsync(CancellationToken cancellationToken = default)
     {
+        Console.WriteLine("Dispatching domain events");
         // Dispatch Domain Events collection. 
         // Choices:
         // A) Right BEFORE committing data (EF SaveChanges) into the DB will make a single transaction including  
@@ -48,6 +50,7 @@ public class PurchaseContext : DbContext, IUnitOfWork
         // You will need to handle eventual consistency and compensatory actions in case of failures in any of the Handlers. 
         await _mediator.DispatchDomainEventsAsync(this);
 
+        Console.WriteLine("Dispatching domain events");
         // After executing this line all the changes (from the Command Handler and Domain Event Handlers) 
         // performed through the DbContext will be committed
         var result = await base.SaveChangesAsync(cancellationToken);

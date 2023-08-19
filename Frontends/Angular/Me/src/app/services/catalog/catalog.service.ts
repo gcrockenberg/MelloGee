@@ -2,10 +2,7 @@ import { Injectable } from '@angular/core';
 import { ConfigurationService } from '../configuration/configuration.service';
 import { DataService } from '../data/data.service';
 import { Observable, switchMap, tap } from 'rxjs';
-import { ICatalog } from 'src/app/models/catalog/catalog.model';
-import { ICatalogBrand } from 'src/app/models/catalog/catalog-brand.model';
-import { ICatalogType } from 'src/app/models/catalog/catalog-type.model';
-import { ICatalogItem } from 'src/app/models/catalog/catalog-item.model';
+import { ICatalog, ICatalogBrand, ICatalogItem, ICatalogType } from 'src/app/models/catalog.model';
 
 const urlPrefix = '/c/api/v1/catalog/';
 //const urlPrefix = '/api/v1/catalog/';

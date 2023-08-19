@@ -1,7 +1,7 @@
 import { Component, Input, WritableSignal, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CatalogService } from 'src/app/services/catalog/catalog.service';
-import { ICatalog } from 'src/app/models/catalog/catalog.model';
+import { ICatalog } from 'src/app/models/catalog.model';
 import { SliderComponent } from "../slider/slider.component";
 
 @Component({

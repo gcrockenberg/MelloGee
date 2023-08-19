@@ -9,5 +9,8 @@ public interface IOrderRepository : IRepository<Order>
 
     void Update(Order order);
 
-    Task<Order> GetAsync(int orderId);
+    Task<Order> GetAsync(int orderId, Boolean withBuyer = false, Boolean withStatus = false,
+                         Boolean withItems = false, Boolean withAddress = false);
+
+    Task<OrderStatus> GetOrderStatusAsync(int orderStatusId);
 }

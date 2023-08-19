@@ -46,16 +46,16 @@ public class IntegrationEventLogService : IIntegrationEventLogService, IDisposab
     }
 
 
-    public Task SaveEventAsync(IntegrationEvent @event, IDbContextTransaction transaction)
+    public async Task SaveEventAsync(IntegrationEvent @event, IDbContextTransaction transaction)
     {
         if (transaction == null) throw new ArgumentNullException(nameof(transaction));
 
-        var eventLogEntry = new IntegrationEventLogEntry(@event, transaction.TransactionId);
-
         _integrationEventLogContext.Database.UseTransaction(transaction.GetDbTransaction());
-        _integrationEventLogContext.IntegrationEventLogs.Add(eventLogEntry);
+        _integrationEventLogContext.IntegrationEventLogs.Add(
+            new IntegrationEventLogEntry(@event, transaction.TransactionId)
+        );
 
-        return _integrationEventLogContext.SaveChangesAsync();
+        await _integrationEventLogContext.SaveChangesAsync();
     }
 
 
@@ -99,7 +99,6 @@ public class IntegrationEventLogService : IIntegrationEventLogService, IDisposab
             {
                 _integrationEventLogContext?.Dispose();
             }
-
 
             _disposedValue = true;
         }

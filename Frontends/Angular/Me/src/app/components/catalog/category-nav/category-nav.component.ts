@@ -1,8 +1,8 @@
 import { Component, Input, WritableSignal, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ICatalogType } from 'src/app/models/catalog/catalog-type.model';
 import { CatalogService } from 'src/app/services/catalog/catalog.service';
 import { RouterLink } from '@angular/router';
+import { ICatalogType } from 'src/app/models/catalog.model';
 
 @Component({
   selector: 'app-category-nav',

@@ -84,17 +84,17 @@ public class OrderQueries
             state = result[0].state,
             zipCode = result[0].zipcode,
             country = result[0].country,
-            orderItems = new List<OrderItem>(),
+            orderItems = new List<OrderItemResponse>(),
             total = 0
         };
 
         foreach (dynamic item in result)
         {
-            var orderitem = new OrderItem
+            var orderitem = new OrderItemResponse
             {
                 productName = item.productname,
                 units = item.units,
-                unitPrice = (double)item.unitprice,
+                unitPrice = item.unitprice,
                 pictureUrl = item.pictureurl
             };
 

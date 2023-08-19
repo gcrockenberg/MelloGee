@@ -4,7 +4,6 @@ using Me.Services.Purchase.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -12,11 +11,9 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Purchase.API.Migrations.Purchase
 {
     [DbContext(typeof(PurchaseContext))]
-    [Migration("20230814143513_Initial")]
-    partial class Initial
+    partial class PurchaseContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -135,8 +132,15 @@ namespace Purchase.API.Migrations.Purchase
                     b.Property<int>("BuyerId")
                         .HasColumnType("int");
 
+                    b.Property<string>("ClientSecret")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
                     b.Property<string>("Description")
                         .HasColumnType("longtext");
+
+                    b.Property<DateTime>("OrderDate")
+                        .HasColumnType("datetime(6)");
 
                     b.Property<int>("OrderStatusId")
                         .HasColumnType("int");
@@ -144,27 +148,23 @@ namespace Purchase.API.Migrations.Purchase
                     b.Property<int>("PaymentMethodId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("_orderDate")
-                        .HasColumnType("datetime(6)")
-                        .HasColumnName("OrderDate");
+                    b.Property<string>("RedirectUrl")
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
-                    b.Property<int>("_orderStatusId")
-                        .HasColumnType("int")
-                        .HasColumnName("OrderStatusId");
+                    b.Property<string>("StripeMode")
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
                     b.HasKey("Id");
 
                     b.HasIndex("BuyerId");
 
+                    b.HasIndex("OrderStatusId");
+
                     b.HasIndex("PaymentMethodId");
 
-                    b.HasIndex("_orderStatusId");
-
-                    b.ToTable("orders", null, t =>
-                        {
-                            t.Property("OrderStatusId")
-                                .HasColumnName("OrderStatusId1");
-                        });
+                    b.ToTable("orders", (string)null);
                 });
 
             modelBuilder.Entity("Me.Services.Purchase.Domain.AggregatesModel.OrderAggregate.OrderItem", b =>
@@ -268,15 +268,15 @@ namespace Purchase.API.Migrations.Purchase
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Me.Services.Purchase.Domain.AggregatesModel.BuyerAggregate.PaymentMethod", "PaymentMethod")
-                        .WithMany()
-                        .HasForeignKey("PaymentMethodId")
+                    b.HasOne("Me.Services.Purchase.Domain.AggregatesModel.OrderAggregate.OrderStatus", "OrderStatus")
+                        .WithMany("Orders")
+                        .HasForeignKey("OrderStatusId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Me.Services.Purchase.Domain.AggregatesModel.OrderAggregate.OrderStatus", "OrderStatus")
-                        .WithMany()
-                        .HasForeignKey("_orderStatusId")
+                    b.HasOne("Me.Services.Purchase.Domain.AggregatesModel.BuyerAggregate.PaymentMethod", "PaymentMethod")
+                        .WithMany("Orders")
+                        .HasForeignKey("PaymentMethodId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -341,9 +341,19 @@ namespace Purchase.API.Migrations.Purchase
                     b.Navigation("PaymentMethods");
                 });
 
+            modelBuilder.Entity("Me.Services.Purchase.Domain.AggregatesModel.BuyerAggregate.PaymentMethod", b =>
+                {
+                    b.Navigation("Orders");
+                });
+
             modelBuilder.Entity("Me.Services.Purchase.Domain.AggregatesModel.OrderAggregate.Order", b =>
                 {
                     b.Navigation("OrderItems");
+                });
+
+            modelBuilder.Entity("Me.Services.Purchase.Domain.AggregatesModel.OrderAggregate.OrderStatus", b =>
+                {
+                    b.Navigation("Orders");
                 });
 #pragma warning restore 612, 618
         }

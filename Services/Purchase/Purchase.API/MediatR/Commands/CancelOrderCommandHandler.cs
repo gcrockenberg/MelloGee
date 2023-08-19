@@ -18,7 +18,7 @@ public class CancelOrderCommandHandler : IRequestHandler<CancelOrderCommand, boo
     /// <returns></returns>
     public async Task<bool> Handle(CancelOrderCommand command, CancellationToken cancellationToken)
     {
-        var orderToUpdate = await _orderRepository.GetAsync(command.OrderNumber);
+        var orderToUpdate = await _orderRepository.GetAsync(command.OrderNumber, false, true);
         if (orderToUpdate == null)
         {
             return false;

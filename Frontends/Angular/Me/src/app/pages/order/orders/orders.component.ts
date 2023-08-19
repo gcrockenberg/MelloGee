@@ -1,12 +1,12 @@
-import { Component, OnInit, WritableSignal, signal } from '@angular/core';
+import { Component, OnDestroy, OnInit, WritableSignal, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { IStripeSuccessComponent } from 'src/app/models/order/stripe-success-route.model';
-import { IStripeCancelComponent } from 'src/app/models/order/stripe-cancel-route.model';
 import { OrderService } from 'src/app/services/order/order.service';
-import { catchError, throwError } from 'rxjs';
+import { Subscription, catchError, throwError } from 'rxjs';
 import { OrderComponent } from "../../../components/order/order/order.component";
 import { OrderSummaryComponent } from "../../../components/order/order-summary/order-summary.component";
-import { IOrderSummary } from 'src/app/models/order/order.model';
+import { IOrderSummary, IStripeCancelComponent, IStripeSuccessComponent } from 'src/app/models/order.model';
+import { SignalRService } from 'src/app/services/signalR/signal-r.service';
+import { ISignalREvent } from 'src/app/models/signal-r.model';
 
 @Component({
     selector: 'app-orders',
@@ -15,15 +15,18 @@ import { IOrderSummary } from 'src/app/models/order/order.model';
     styleUrls: ['./orders.component.scss'],
     imports: [CommonModule, OrderComponent, OrderSummaryComponent]
 })
-export class OrdersComponent implements OnInit, IStripeSuccessComponent, IStripeCancelComponent {
+export class OrdersComponent implements OnInit, IStripeSuccessComponent, IStripeCancelComponent, OnDestroy {
+  private _subscriptions: Subscription[] = [];
   errorReceived: boolean = false;
   readonly orders: WritableSignal<IOrderSummary[]> = signal([]);
 
-  constructor(private _orderService: OrderService) { }
+  constructor(private _orderService: OrderService,
+    private _signalRService: SignalRService) { }
 
 
   ngOnInit(): void {
     this.getOrders();
+    this._trackOrderChanges();
   }
 
 
@@ -49,6 +52,26 @@ export class OrdersComponent implements OnInit, IStripeSuccessComponent, IStripe
   private _handleError(error: any) {
     this.errorReceived = true;
     return throwError(() => error);
+  }
+
+
+  private _trackOrderChanges() {
+    this._subscriptions.push(
+      this._signalRService.messageReceived$
+        .subscribe((event: ISignalREvent) => {         
+          this.orders.mutate(orders => {
+            let index: number = orders.findIndex(o => o.orderNumber == event.orderId);
+            if (-1 < index) {
+              orders[index].status = event.status;
+            }
+          });          
+        })
+    );
+  }
+
+
+  ngOnDestroy(): void {
+    this._subscriptions.forEach(s => s.unsubscribe());
   }
 
 }

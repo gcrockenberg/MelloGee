@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { IModal } from 'src/app/models/modal/modal.model';
+import { IModal } from 'src/app/models/modal.model';
 
 /**
  * Privide hook between Templates and Modal components that implement IModal

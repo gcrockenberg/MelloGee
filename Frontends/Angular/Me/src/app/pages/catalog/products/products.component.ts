@@ -1,13 +1,12 @@
 import { Component, Input, OnInit, Signal, WritableSignal, computed, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
-import { catchError, switchMap, throwError } from 'rxjs';
-import { ICatalog } from 'src/app/models/catalog/catalog.model';
-import { IPager } from 'src/app/models/utils/pager.model';
+import { switchMap, throwError } from 'rxjs';
+import { ICatalog, ICatalogItem } from 'src/app/models/catalog.model';
+import { IPager } from 'src/app/models/pager.model';
 import { CatalogService } from 'src/app/services/catalog/catalog.service';
 import { CategoryNavComponent } from "src/app/components/catalog/category-nav/category-nav.component";
 import { ProductComponent } from "src/app/components/catalog/product/product.component";
-import { ICatalogItem } from 'src/app/models/catalog/catalog-item.model';
 import { CatalogItemModalComponent } from "src/app/components/catalog/catalog-item-modal/catalog-item-modal.component";
 
 @Component({

@@ -10,6 +10,8 @@ public class OrderStatus
     public static OrderStatus Shipped = new OrderStatus(5, nameof(Shipped).ToLowerInvariant());
     public static OrderStatus Cancelled = new OrderStatus(6, nameof(Cancelled).ToLowerInvariant());
 
+    public virtual ICollection<Order> Orders { get; } = new List<Order>();
+
     public OrderStatus(int id, string name)
         : base(id, name)
     {

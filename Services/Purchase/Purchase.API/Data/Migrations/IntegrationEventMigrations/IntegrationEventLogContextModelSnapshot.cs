@@ -34,7 +34,7 @@ namespace Purchase.API.Migrations
 
                     b.Property<string>("EventTypeName")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasColumnType("varchar(255)");
 
                     b.Property<int>("State")
                         .HasColumnType("int");
@@ -44,9 +44,12 @@ namespace Purchase.API.Migrations
 
                     b.Property<string>("TransactionId")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasColumnType("varchar(255)");
 
                     b.HasKey("EventId");
+
+                    b.HasIndex("EventTypeName", "TransactionId")
+                        .IsUnique();
 
                     b.ToTable("IntegrationEventLog", (string)null);
                 });

@@ -83,7 +83,7 @@ public static class Extensions
         {
             options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString), ConfigureSqlOptions);
             //options.UseSqlServer(connectionString, ConfigureSqlOptions);
-        });
+        }, ServiceLifetime.Transient);  // Prevent duplicate event messages
 
         return services;
     }

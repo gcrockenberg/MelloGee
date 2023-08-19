@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
-import { IOrderDetails, IOrderSummary, ICheckoutResponse, IPayOrder, IPayOrderRequest } from 'src/app/models/order/order.model';
+import { IOrderDetailsResponse, IOrderSummary, ICheckoutResponse, IPayOrderResponse, IPayOrderRequest } from 'src/app/models/order.model';
 import { CartService } from '../cart/cart.service';
 import { ConfigurationService } from '../configuration/configuration.service';
 import { Observable, of, switchMap, tap } from 'rxjs';
 import { DataService } from '../data/data.service';
-import { ICartCheckout } from 'src/app/models/cart/cart-checkout.model';
+import { ICartCheckout } from 'src/app/models/cart.model';
 
 @Injectable({
   providedIn: 'root'
@@ -36,15 +36,15 @@ export class OrderService {
   }
 
 
-  getOrderStatus(orderId: number): Observable<IOrderDetails> {
-    if (1 > orderId) return of(<IOrderDetails>{});
+  getOrderStatus(orderId: number): Observable<IOrderDetailsResponse> {
+    if (1 > orderId) return of(<IOrderDetailsResponse>{});
 
     return this._configurationService.whenReady
       .pipe(switchMap(x => {
           let url = `${this._ordersUrl}${orderId}`;
 
           return this._dataService.get(url)
-            .pipe<IOrderDetails>(
+            .pipe<IOrderDetailsResponse>(
               tap((response: any) => {
                 return (response) ? response : of([]);
               }));
@@ -52,16 +52,16 @@ export class OrderService {
   }
 
 
-  getPayOrder(orderCheckout: IPayOrderRequest): Observable<IPayOrder> {
-    if (1 > orderCheckout.orderId) return of(<IPayOrder>{});
+  getPayOrder(orderCheckout: IPayOrderRequest): Observable<IOrderDetailsResponse> {
+    if (1 > orderCheckout.orderId) return of(<IOrderDetailsResponse>{});
 
     return this._configurationService.whenReady
       .pipe(switchMap(x => {
           let url = `${this._ordersUrl}pay`;
 
-          return this._dataService.post<IPayOrder>(url, orderCheckout)
-            .pipe<IPayOrder>(
-              tap((response: IPayOrder) => {
+          return this._dataService.post<IOrderDetailsResponse>(url, orderCheckout)
+            .pipe<IOrderDetailsResponse>(
+              tap((response: IOrderDetailsResponse) => {
                 return (response) ? response : of([]);
               }));
         }));
@@ -76,8 +76,9 @@ export class OrderService {
           return this._dataService.post<ICheckoutResponse>(url, cartCheckout)
             .pipe(
               tap((response: ICheckoutResponse) => {
-                // Cleared on the server upon success. Clearing here reinforces user experience.
-                this._cartService.clearCart();                
+                // Cleared on the server upon success. Pull cart to update client.
+                // Don't clear cart here in case of an error on the server.
+                this._cartService.getCart();                
               }));
         }));
   }

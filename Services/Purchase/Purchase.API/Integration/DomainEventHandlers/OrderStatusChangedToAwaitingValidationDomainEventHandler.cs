@@ -24,8 +24,8 @@ public class OrderStatusChangedToAwaitingValidationDomainEventHandler
     {
         PurchaseApiTrace.LogOrderStatusUpdated(_logger, domainEvent.OrderId, nameof(OrderStatus.AwaitingValidation), OrderStatus.AwaitingValidation.Id);
 
-        var order = await _orderRepository.GetAsync(domainEvent.OrderId);
-        var buyer = order.Buyer;    // await _buyerRepository.FindByIdAsync(order.GetBuyerId.Value.ToString());
+        var order = await _orderRepository.GetAsync(domainEvent.OrderId, true, true);
+        var buyer = order.Buyer;
 
         var orderStockList = domainEvent.OrderItems
             .Select(orderItem => new OrderStockItem(orderItem.ProductId, orderItem.GetUnits()));

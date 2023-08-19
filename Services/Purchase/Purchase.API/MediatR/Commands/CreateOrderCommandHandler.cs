@@ -35,37 +35,19 @@ public class CreateOrderCommandHandler
         var orderStartedIntegrationEvent = new OrderStartedIntegrationEvent(message.UserId, message.SourceCartSessionId);
         await _purchaseIntegrationEventService.AddAndSaveEventAsync(orderStartedIntegrationEvent);
 
-        var cardTypeId = message.CardTypeId != 0 ? message.CardTypeId : 1;
-        var buyer = await _buyerRepository.FindAsync(message.UserId);
-        var buyerExisted = buyer is not null;
-
-        if (!buyerExisted)
-        {
-            buyer = new Buyer(message.UserId, message.UserName);
-        }
-
-        var paymentMethod = buyer.VerifyOrAddPaymentMethod(cardTypeId,
-                                        $"Payment Method on {DateTime.UtcNow}",
-                                        message.CardNumber,
-                                        message.CardSecurityNumber,
-                                        message.CardHolderName,
-                                        message.CardExpiration,
-                                        0); // Placeholder for OrderId which is going to be eliminated as parameter
-
-        // Add/Update the Buyer AggregateRoot
-        // DDD patterns comment: Add child entities and value-objects through the Order Aggregate-Root
+        // Saving Order emits Buyer and Payment Validation and Creation domain events
+        // DDD patterns comment: Add related entities and value-objects through the Order Aggregate-Root
         // methods and constructor so validations, invariants and business logic 
         // make sure that consistency is preserved across the whole aggregate
         var address = new Address(message.Street, message.City, message.State, message.Country, message.ZipCode);
-        var order = new Order(message.UserId, message.UserName, address, message.CardTypeId, message.CardNumber, message.CardSecurityNumber, message.CardHolderName, message.CardExpiration);
+        var order = new Order(message.UserId, message.UserName, address, message.CardTypeId, message.CardNumber,
+                              message.CardSecurityNumber, message.CardHolderName, message.CardExpiration,
+                              message.StripeMode, message.RedirectUrl, message.ClientSecret);
 
         foreach (var item in message.OrderItems)
         {
             order.AddOrderItem(item.ProductId, item.ProductName, item.UnitPrice, item.Discount, item.PictureUrl, item.Units);
         }
-
-        order.Buyer = buyer;
-        order.PaymentMethod = paymentMethod;
 
         _logger.LogInformation("Creating Order - Order: {@Order}", order);
 
@@ -76,9 +58,6 @@ public class CreateOrderCommandHandler
 
         if (_result) // else fire failure event? what about cart?
         {
-            var integrationEvent = new OrderStatusChangedToSubmittedIntegrationEvent(order.Id, order.OrderStatus.Name, order.Buyer.Name);
-            await _purchaseIntegrationEventService.AddAndSaveEventAsync(integrationEvent);
-            PurchaseApiTrace.LogOrderBuyerAndPaymentValidatedOrUpdated(_logger, order.BuyerId, order.Id);
             return order;
         }
 

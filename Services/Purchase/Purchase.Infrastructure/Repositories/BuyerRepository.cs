@@ -11,6 +11,7 @@ public class BuyerRepository
         _context = context ?? throw new ArgumentNullException(nameof(context));
     }
 
+
     public Buyer Add(Buyer buyer)
     {
         if (buyer.IsTransient())
@@ -23,12 +24,14 @@ public class BuyerRepository
         return buyer;
     }
 
+
     public Buyer Update(Buyer buyer)
     {
         return _context.Buyers
                 .Update(buyer)
                 .Entity;
     }
+
 
     public async Task<Buyer> FindAsync(string identity)
     {
@@ -40,13 +43,21 @@ public class BuyerRepository
         return buyer;
     }
 
-    public async Task<Buyer> FindByIdAsync(string id)
+
+    public async Task<Buyer> FindByIdAsync(int buyerId)
     {
         var buyer = await _context.Buyers
             .Include(b => b.PaymentMethods)
-            .Where(b => b.Id == int.Parse(id))
+            .Where(b => b.Id == buyerId)
             .SingleOrDefaultAsync();
+        
+        if (buyer is null)
+        {
+            buyer = _context.Buyers.Local
+                .FirstOrDefault(b => b.Id == buyerId);            
+        }
 
         return buyer;
     }
+
 }

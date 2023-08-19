@@ -1,15 +1,14 @@
-import { Component, Input, OnDestroy, OnInit, WritableSignal, signal } from '@angular/core';
+import { Component, OnDestroy, OnInit, WritableSignal, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { bootstrapBagPlus, bootstrapXLg } from "@ng-icons/bootstrap-icons"
 import { ButtonAddToCartComponent } from "../../cart/button-add-to-cart/button-add-to-cart.component";
 import { ModalService } from 'src/app/services/modal/modal.service';
-import { IModal } from 'src/app/models/modal/modal.model';
-import { ICatalogItem } from 'src/app/models/catalog/catalog-item.model';
+import { IModal } from 'src/app/models/modal.model';
 import { CatalogService } from 'src/app/services/catalog/catalog.service';
 import { CartService } from 'src/app/services/cart/cart.service';
 import { RelatedProductsComponent } from "../related-products/related-products.component";
-import { ICatalog } from 'src/app/models/catalog/catalog.model';
+import { ICatalogItem } from 'src/app/models/catalog.model';
 
 export const CATALOG_ITEM_MODAL: string = 'CATALOG_ITEM_MODAL';
 

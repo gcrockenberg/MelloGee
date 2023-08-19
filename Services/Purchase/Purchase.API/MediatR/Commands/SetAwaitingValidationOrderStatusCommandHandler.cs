@@ -18,7 +18,7 @@ public class SetAwaitingValidationOrderStatusCommandHandler : IRequestHandler<Se
     /// <returns></returns>
     public async Task<bool> Handle(SetAwaitingValidationOrderStatusCommand command, CancellationToken cancellationToken)
     {
-        var orderToUpdate = await _orderRepository.GetAsync(command.OrderNumber);
+        var orderToUpdate = await _orderRepository.GetAsync(command.OrderNumber, false, true);
         if (orderToUpdate == null)
         {
             return false;

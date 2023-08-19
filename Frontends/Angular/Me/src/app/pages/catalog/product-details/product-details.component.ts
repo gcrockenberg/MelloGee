@@ -1,13 +1,13 @@
 import { Component, OnInit, WritableSignal, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RelatedProductsComponent } from "src/app/components/catalog/related-products/related-products.component";
-import { ICatalogItem } from 'src/app/models/catalog/catalog-item.model';
 import { CartService } from 'src/app/services/cart/cart.service';
 import { CatalogService } from 'src/app/services/catalog/catalog.service';
 import { ActivatedRoute } from '@angular/router';
 import { switchMap } from 'rxjs';
 import { CatalogItemModalComponent } from "src/app/components/catalog/catalog-item-modal/catalog-item-modal.component";
 import { CategoryNavComponent } from "src/app/components/catalog/category-nav/category-nav.component";
+import { ICatalogItem } from 'src/app/models/catalog.model';
 
 @Component({
     selector: 'app-product-details',

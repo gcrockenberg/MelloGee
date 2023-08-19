@@ -24,8 +24,8 @@ public class OrderStatusChangedToStockConfirmedDomainEventHandler
     {
         PurchaseApiTrace.LogOrderStatusUpdated(_logger, domainEvent.OrderId, nameof(OrderStatus.StockConfirmed), OrderStatus.StockConfirmed.Id);
 
-        var order = await _orderRepository.GetAsync(domainEvent.OrderId);
-        var buyer = order.Buyer; // await _buyerRepository.FindByIdAsync(order.GetBuyerId.Value.ToString());
+        var order = await _orderRepository.GetAsync(domainEvent.OrderId, true, true);
+        var buyer = order.Buyer;
 
         var integrationEvent = new OrderStatusChangedToStockConfirmedIntegrationEvent(order.Id, order.OrderStatus.Name, buyer.Name);
         await _purchaseIntegrationEventService.AddAndSaveEventAsync(integrationEvent);

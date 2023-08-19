@@ -48,6 +48,18 @@ public class PurchaseIntegrationEventService : IPurchaseIntegrationEventService
     {
         _logger.LogInformation("Enqueuing integration event {IntegrationEventId} to repository ({@IntegrationEvent})", evt.Id, evt);
 
-        await _eventLogService.SaveEventAsync(evt, _purchaseContext.GetCurrentTransaction());
+        try
+        {
+            await _eventLogService.SaveEventAsync(evt, _purchaseContext.GetCurrentTransaction());
+        }
+        catch (DbUpdateException e)
+        {
+            if (e.InnerException.Message.Contains("Duplicate"))
+            {
+                _logger.LogWarning("--> Ignoring duplicate Event Bus message exception: {message}", e.InnerException.Message);
+                return;
+            }
+            throw e;
+        }
     }
 }

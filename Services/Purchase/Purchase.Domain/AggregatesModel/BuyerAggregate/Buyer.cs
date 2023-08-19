@@ -3,9 +3,9 @@ namespace Me.Services.Purchase.Domain.AggregatesModel.BuyerAggregate;
 public class Buyer
     : Entity, IAggregateRoot
 {
-    public string IdentityGuid { get; private set; }
+    public string IdentityGuid { get; private set; } = string.Empty;
 
-    public string Name { get; private set; }
+    public string Name { get; private set; } = string.Empty;
 
 
     private List<PaymentMethod> _paymentMethods;
@@ -36,7 +36,7 @@ public class Buyer
 
         if (existingPayment != null)
         {
-            //AddDomainEvent(new BuyerPaymentMethodVerifiedDomainEvent(this, existingPayment, orderId));
+            AddDomainEvent(new BuyerPaymentMethodVerifiedDomainEvent(this, existingPayment, orderId));
 
             return existingPayment;
         }
@@ -45,7 +45,7 @@ public class Buyer
 
         _paymentMethods.Add(payment);
 
-        //AddDomainEvent(new BuyerPaymentMethodVerifiedDomainEvent(this, payment, orderId));
+        AddDomainEvent(new BuyerPaymentMethodVerifiedDomainEvent(this, payment, orderId));
 
         return payment;
     }

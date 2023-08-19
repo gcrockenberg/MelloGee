@@ -2,7 +2,6 @@ namespace Me.Services.Purchase.API.Controllers;
 
 using Stripe;
 using Stripe.Checkout;
-using OrderItem = Data.DTOs.OrderItem;
 
 [Route("api/v1/[controller]")]
 [Authorize]
@@ -16,10 +15,12 @@ public class OrdersController : ControllerBase
     private readonly IEventBus _eventBus;
     private readonly ICartService _cartService;
     private readonly ICartRepository _cartRepository;
+    private readonly IOrderRepository _orderRepository;
 
     public OrdersController(
         IMediator mediator, IIdentityService identityService, IOrderQueries orderQueries,
-        ILogger<OrdersController> logger, IEventBus eventBus, ICartService cartService, ICartRepository cartRepository)
+        ILogger<OrdersController> logger, IEventBus eventBus, ICartService cartService, ICartRepository cartRepository,
+        IOrderRepository orderRepository)
     {
         _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         _orderQueries = orderQueries ?? throw new ArgumentNullException(nameof(orderQueries));
@@ -30,6 +31,7 @@ public class OrdersController : ControllerBase
         // See Program.cs why this is duplicated
         _cartService = cartService ?? throw new ArgumentNullException(nameof(cartService));
         _cartRepository = cartRepository ?? throw new ArgumentNullException(nameof(cartRepository));
+        _orderRepository = orderRepository ?? throw new ArgumentNullException(nameof(orderRepository));
     }
 
 
@@ -54,9 +56,10 @@ public class OrdersController : ControllerBase
         {
             //Todo: It's good idea to take advantage of GetOrderByIdQuery and handle by GetCustomerByIdQueryHandler
             //var order customer = await _mediator.Send(new GetOrderByIdQuery(orderId));
-            var response = await _orderQueries.GetOrderAsync(orderId);
+            //var response = await _orderQueries.GetOrderAsync(orderId);
+            var order = await _orderRepository.GetAsync(orderId, false, true, true, true);
 
-            return response;
+            return new OrderResponse(order);
         }
         catch
         {
@@ -72,37 +75,46 @@ public class OrdersController : ControllerBase
     /// <returns>The order and Stripe payment resources</returns>
     [Route("pay")]
     [HttpPost]
-    [ProducesResponseType(typeof(PayOrderResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(OrderResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<PayOrderResponse>> PayOrderAsync([FromBody] OrderCheckoutRequest request)
+    public async Task<ActionResult<OrderResponse>> PayOrderAsync([FromBody] OrderCheckoutRequest request)
     {
         try
         {
             //Todo: It's good idea to take advantage of GetOrderByIdQuery and handle by GetCustomerByIdQueryHandler
             //var order customer = await _mediator.Send(new GetOrderByIdQuery(orderId));
-            var order = await _orderQueries.GetOrderAsync(request.OrderId);
+            //var order = await _orderQueries.GetOrderAsync(request.OrderId);            
+            var order = await _orderRepository.GetAsync(request.OrderId, false, true, true, true);
             if (null == order)
             {
                 return NotFound();
             }
 
-            CheckoutResponse response;
+            // If CheckoutData data has already been generated then return the Order
+            // TODO: Investigate Stipe data expiration and when to generate new CheckoutData
+            if (!string.IsNullOrEmpty(order.StripeMode) && order.StripeMode.Equals(request.Mode, StringComparison.OrdinalIgnoreCase))
+            {
+                return new OrderResponse(order);
+            }
+
+            // Create and store Stripe checkout data
+            CheckoutData checkoutData;
             if (request.Mode.Equals(CheckoutMode.Redirect, StringComparison.OrdinalIgnoreCase))
             {
-                List<SessionLineItemOptions> lineItemOptions = GetSessionLineItemOptions(order.orderItems);
-                response = CreateStripeSession(lineItemOptions, request.SuccessRoute, request.CancelRoute);
+                List<SessionLineItemOptions> lineItemOptions = GetSessionLineItemOptions(order.OrderItems);
+                checkoutData = CreateStripeSession(lineItemOptions, request.SuccessRoute, request.CancelRoute);
             }
             else
             {
-                long orderAmount = CalculateOrderAmount(order.orderItems);
-                response = CreateStripeIntent(orderAmount);
+                long orderAmount = (long) order.GetTotal() * 100;
+                checkoutData = CreateStripeIntent(order.Id.ToString(), orderAmount);
             }
+            checkoutData.StripeMode = request.Mode;
 
-            return new PayOrderResponse
-            {
-                Order = order,
-                Payment = response
-            };
+            order.SetCheckoutData(checkoutData);
+            await _orderRepository.UnitOfWork.SaveEntitiesAsync();  // Ensures any Domain Events get fired
+
+            return new OrderResponse(order);
         }
         catch
         {
@@ -138,7 +150,7 @@ public class OrdersController : ControllerBase
     [ProducesResponseType(StatusCodes.Status202Accepted)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult<CheckoutResponse>> CartCheckoutAsync([FromBody] CartCheckoutRequest request, [FromHeader(Name = "x-requestid")] string requestId)
+    public async Task<ActionResult> CartCheckoutAsync([FromBody] CartCheckoutRequest request, [FromHeader(Name = "x-requestid")] string requestId)
     {
         request.RequestId = (Guid.TryParse(requestId, out Guid guid) && guid != Guid.Empty) ?
             guid : request.RequestId;
@@ -176,11 +188,11 @@ public class OrdersController : ControllerBase
             return BadRequest();
         }
 
-        return Accepted(new CheckoutResponse { OrderId = order.Id });
+        return Accepted(new { OrderId = order.Id });
     }
 
 
-    private CheckoutResponse CreateStripeIntent(long orderAmount)
+    private CheckoutData CreateStripeIntent(string orderId, long orderAmount)
     {
         var paymentIntentService = new PaymentIntentService();
         var paymentIntent = paymentIntentService.Create(new PaymentIntentCreateOptions
@@ -191,9 +203,10 @@ public class OrdersController : ControllerBase
             {
                 Enabled = true,
             },
+            Metadata = new Dictionary<string, string> { { ORDER_NUMBER_TAG, orderId } }
         });
 
-        return new CheckoutResponse { ClientSecret = paymentIntent.ClientSecret };
+        return new CheckoutData { ClientSecret = paymentIntent.ClientSecret };
     }
 
 
@@ -210,25 +223,13 @@ public class OrdersController : ControllerBase
     }
 
 
-    private long CalculateOrderAmount(IEnumerable<OrderItem> items)
-    {
-        long result = 0;
-
-        foreach (var item in items)
-        {
-            result += (long)(item.unitPrice * item.units * 100);
-        }
-
-        return result;
-    }
-
     /// <summary>
     /// Initialize Stripe session which will return the url for redirect based checkout.
     /// </summary>
     /// <param name="cartCheckout"></param>
     /// <param name="cart"></param>
     /// <returns></returns>
-    private CheckoutResponse CreateStripeSession(List<SessionLineItemOptions> lineItemOptions, string successRoute, string cancelRoute)
+    private CheckoutData CreateStripeSession(List<SessionLineItemOptions> lineItemOptions, string successRoute, string cancelRoute)
     {
         var domain = Request.Headers.Origin;    // e.g. http://localhost:4200
 
@@ -244,7 +245,7 @@ public class OrdersController : ControllerBase
         var service = new SessionService();
         Session session = service.Create(options);
 
-        return new CheckoutResponse { Url = session.Url };
+        return new CheckoutData { Url = session.Url };
     }
 
     List<SessionLineItemOptions> GetSessionLineItemOptions(List<CartItem> cartItems)
@@ -272,7 +273,7 @@ public class OrdersController : ControllerBase
     }
 
 
-    List<SessionLineItemOptions> GetSessionLineItemOptions(List<OrderItem> orderItems)
+    List<SessionLineItemOptions> GetSessionLineItemOptions(IEnumerable<OrderItem> orderItems)
     {
         List<SessionLineItemOptions> lineItemOptions = new();
 
@@ -283,13 +284,13 @@ public class OrdersController : ControllerBase
                 PriceData = new SessionLineItemPriceDataOptions
                 {
                     Currency = "usd",
-                    UnitAmount = (long)(item.unitPrice * 100),
+                    UnitAmount = (long)(item.GetUnitPrice() * 100),
                     ProductData = new SessionLineItemPriceDataProductDataOptions
                     {
-                        Name = item.productName
+                        Name = item.GetOrderItemProductName()
                     }
                 },
-                Quantity = item.units
+                Quantity = item.GetUnits()
             });
         }
 

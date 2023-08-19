@@ -1,14 +1,11 @@
 import { Injectable, inject } from '@angular/core';
 import { DataService } from '../data/data.service';
-import { ICart } from 'src/app/models/cart/cart.model';
+import { ICart, ICartCheckout, ICartItem } from 'src/app/models/cart.model';
 import { ConfigurationService } from '../configuration/configuration.service';
 import { Observable, Subject, map, switchMap, tap } from 'rxjs';
-import { ICatalogItem } from 'src/app/models/catalog/catalog-item.model';
 import { Guid } from 'src/guid';
-import { ICartItem } from 'src/app/models/cart/cart-item.model';
 import { CookieService } from 'ngx-cookie-service';
-import { IOrderCheckout } from 'src/app/models/order/order.model';
-import { ICartCheckout } from 'src/app/models/cart/cart-checkout.model';
+import { ICatalogItem } from 'src/app/models/catalog.model';
 
 /**
  * Cart API is bound by SessionId
@@ -44,7 +41,7 @@ export class CartService {
 
     _configurationService.whenReady.subscribe(() => {
       this._cartUrl = this._configurationService.serverSettings.cartUrl + '/b/api/v1/cart/';
-      this._getCart();
+      this.getCart();
     });
   }
 
@@ -145,7 +142,11 @@ export class CartService {
   }
 
 
-  private _getCart() {
+  /**
+   * Pull cart from server
+   * @returns 
+   */
+  getCart() {
     return this._configurationService.whenReady.subscribe(x => {
       let url: string = this._cartUrl + this._cookieService.get('SessionId');
 

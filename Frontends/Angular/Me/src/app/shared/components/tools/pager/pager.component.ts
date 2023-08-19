@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { IPager } from 'src/app/models/utils/pager.model';
+import { IPager } from 'src/app/models/pager.model';
 
 @Component({
   selector: 'app-pager',

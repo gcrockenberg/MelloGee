@@ -1,4 +1,4 @@
-using System.ComponentModel.DataAnnotations.Schema;
+using System.Runtime.Intrinsics.X86;
 
 namespace Me.Services.Purchase.Domain.AggregatesModel.OrderAggregate;
 
@@ -8,24 +8,25 @@ public class Order
     // DDD Patterns comment
     // Using private fields, allowed since EF Core 1.1, is a much better encapsulation
     // aligned with DDD Aggregates and Domain Entities (Instead of properties and property collections)
-    private DateTime _orderDate;
+    public DateTime OrderDate { get; private set; }
 
     // Address is a Value Object pattern example persisted as EF Core 2.0 owned entity
     public Address Address { get; private set; }
 
     public int BuyerId { get; private set; }
-    public virtual Buyer Buyer { get; set; }
-    //private int _buyerId;
+    public virtual Buyer Buyer { get; private set; }
 
 
-    public PaymentMethod PaymentMethod { get; set; }
-    //private int _paymentMethodId;
+    public int PaymentMethodId { get; private set; }
+    public PaymentMethod PaymentMethod { get; private set; }
 
 
-    public virtual OrderStatus OrderStatus { get; set; }
+
     public int OrderStatusId { get; private set; }
+    public virtual OrderStatus OrderStatus { get; set; }
 
-    private string _description;
+
+    public string Description { get; private set; } = string.Empty;
 
 
 
@@ -39,6 +40,12 @@ public class Order
     private readonly List<OrderItem> _orderItems;
     public IReadOnlyCollection<OrderItem> OrderItems => _orderItems;
 
+    public string StripeMode { get; private set; } = string.Empty;
+
+    public string RedirectUrl { get; private set; } = string.Empty;
+
+    public string ClientSecret { get; private set; } = string.Empty;
+
 
     public static Order NewDraft()
     {
@@ -46,6 +53,7 @@ public class Order
         order._isDraft = true;
         return order;
     }
+
 
     protected Order()
     {
@@ -55,13 +63,16 @@ public class Order
 
 
     public Order(string userId, string userName, Address address, int cardTypeId, string cardNumber, string cardSecurityNumber,
-            string cardHolderName, DateTime cardExpiration) : this() //, int buyerId, int? paymentMethodId = null) : this()
+            string cardHolderName, DateTime cardExpiration, string stripeMode, string redirectUrl, string clientSecret) : this()
     {
         //_buyerId = buyerId;
         //_paymentMethodId = paymentMethodId;
         OrderStatusId = OrderStatus.Submitted.Id;
-        _orderDate = DateTime.UtcNow;
+        OrderDate = DateTime.UtcNow;
         Address = address;
+        StripeMode = stripeMode;
+        RedirectUrl = redirectUrl;
+        ClientSecret = clientSecret;
 
         // Add the OrderStarterDomainEvent to the domain events collection 
         // to be raised/dispatched when comitting changes into the Database [ After DbContext.SaveChanges() ]
@@ -100,12 +111,65 @@ public class Order
     }
 
 
+    public decimal GetTotal()
+    {
+        return _orderItems.Sum(o => o.GetUnits() * o.GetUnitPrice());
+    }
+
+
     public void SetAwaitingValidationStatus()
     {
         if (OrderStatusId == OrderStatus.Submitted.Id)
         {
             AddDomainEvent(new OrderStatusChangedToAwaitingValidationDomainEvent(Id, _orderItems));
             OrderStatusId = OrderStatus.AwaitingValidation.Id;
+        }
+    }
+
+
+    public void SetPaymentMethod(PaymentMethod paymentMethod)
+    {
+        PaymentMethod = paymentMethod;
+        PaymentMethodId = paymentMethod.Id;
+    }
+
+
+    public void SetBuyer(Buyer buyer)
+    {
+        Buyer = buyer;
+        BuyerId = buyer.Id;
+    }
+
+
+    public void SetCheckoutData(CheckoutData checkoutDetails)
+    {
+        switch (checkoutDetails.StripeMode.ToLower())
+        {
+            case STRIPE_MODE_INTENT:
+                if (string.IsNullOrWhiteSpace(checkoutDetails.ClientSecret))
+                    throw new PurchaseDomainException($"Stripe mode: {checkoutDetails.StripeMode} missing client secret");
+                break;
+            case STRIPE_MODE_REDIRECT:
+                if (string.IsNullOrWhiteSpace(checkoutDetails.Url))
+                    throw new PurchaseDomainException($"Stripe mode: {checkoutDetails.StripeMode} missing redirect url");
+                break;
+            default:
+                throw new PurchaseDomainException($"Invalid Stripe mode: {checkoutDetails.StripeMode}");
+        }
+        StripeMode = checkoutDetails.StripeMode.ToLowerInvariant();
+        RedirectUrl = checkoutDetails.Url;
+        ClientSecret = checkoutDetails.ClientSecret;
+    }
+
+
+    public void SetPaidStatus()
+    {
+        if (OrderStatusId == OrderStatus.StockConfirmed.Id)
+        {
+            AddDomainEvent(new OrderStatusChangedToPaidDomainEvent(Id, OrderItems));
+
+            OrderStatusId = OrderStatus.Paid.Id;
+            Description = "The payment was performed at a simulated \"American Bank checking bank account ending on XX35071\"";
         }
     }
 
@@ -117,19 +181,7 @@ public class Order
             AddDomainEvent(new OrderStatusChangedToStockConfirmedDomainEvent(Id));
 
             OrderStatusId = OrderStatus.StockConfirmed.Id;
-            _description = "All the items were confirmed with available stock.";
-        }
-    }
-
-
-    public void SetPaidStatus()
-    {
-        if (OrderStatusId == OrderStatus.StockConfirmed.Id)
-        {
-            AddDomainEvent(new OrderStatusChangedToPaidDomainEvent(Id, OrderItems));
-
-            OrderStatusId = OrderStatus.Paid.Id;
-            _description = "The payment was performed at a simulated \"American Bank checking bank account ending on XX35071\"";
+            Description = "All the items were confirmed with available stock.";
         }
     }
 
@@ -142,7 +194,7 @@ public class Order
         }
 
         OrderStatusId = OrderStatus.Shipped.Id;
-        _description = "The order was shipped.";
+        Description = "The order was shipped.";
         AddDomainEvent(new OrderShippedDomainEvent(this));
     }
 
@@ -156,7 +208,7 @@ public class Order
         }
 
         OrderStatusId = OrderStatus.Cancelled.Id;
-        _description = $"The order was cancelled.";
+        Description = $"The order was cancelled.";
         AddDomainEvent(new OrderCancelledDomainEvent(this));
     }
 
@@ -172,7 +224,7 @@ public class Order
                 .Select(c => c.GetOrderItemProductName());
 
             var itemsStockRejectedDescription = string.Join(", ", itemsStockRejectedProductNames);
-            _description = $"The product items don't have stock: ({itemsStockRejectedDescription}).";
+            Description = $"The product items don't have stock: ({itemsStockRejectedDescription}).";
         }
     }
 
@@ -191,12 +243,6 @@ public class Order
     private void StatusChangeException(OrderStatus orderStatusToChange)
     {
         throw new PurchaseDomainException($"Is not possible to change the order status from {OrderStatus.Name} to {orderStatusToChange.Name}.");
-    }
-
-
-    public decimal GetTotal()
-    {
-        return _orderItems.Sum(o => o.GetUnits() * o.GetUnitPrice());
     }
 
 

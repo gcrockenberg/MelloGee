@@ -1,6 +1,6 @@
 # 'Me', a technology demonstration
 
-A project to demonstrate full-stack aspects of a microservice based solution hosted in Azure.
+A rewrite of [Microsofts Microservice reference project](https://github.com/dotnet-architecture/eShopOnContainers) to demonstrate full-stack aspects of a microservice based solution hosted in Azure.
 
 ## Environment
 - [Azure Container Apps](https://learn.microsoft.com/en-us/azure/container-apps/) - IaaS, easy orchestration, scalable, pay-as-you-go. NET Core 8.x preview
@@ -17,6 +17,7 @@ A project to demonstrate full-stack aspects of a microservice based solution hos
 - Stripe for order checkout (using integrated intent instead of redirect)
 - gRPC - [currently restricted in Azure Container Apps](https://github.com/microsoft/azure-container-apps/issues/763)
 - SignalR - connected after login, [APIM limitations with consumption plans](https://learn.microsoft.com/en-us/azure/api-management/websocket-api?tabs=portal)
+- Webhooks - from Stripe for fulfillment
 
 
 <h1>Notes</h1>
@@ -33,6 +34,11 @@ A project to demonstrate full-stack aspects of a microservice based solution hos
 </ul>
 
 <h1>Deploying Me</h1>
+<h3>General prereqs</h3>
+<ul>
+<li> Stripe dev account - bicep secure parameters will prompt you</li>
+<li> Docker - used by Bicep and Github CI/CD</li>
+</ul>
 
 <h2>Local</h2>
 <p>After cloning Me</p>

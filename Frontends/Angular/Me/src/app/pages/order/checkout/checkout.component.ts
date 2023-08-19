@@ -1,18 +1,18 @@
-import { Component, OnInit, WritableSignal, signal } from '@angular/core';
+import { Component, OnDestroy, OnInit, WritableSignal, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { loadStripe, Stripe, StripeElements } from '@stripe/stripe-js';
 import { environment } from 'src/environments/environment';
-import { IOrderDetails, IOrderCheckout, IPayOrderRequest } from 'src/app/models/order/order.model';
-import { switchMap } from 'rxjs';
+import { CheckoutMode, IOrderDetailsResponse, IPayOrderRequest, IStripeCancelComponent, IStripeSuccessComponent, isStripeCancelComponent, isStripeSuccessComponent } from 'src/app/models/order.model';
+import { Subscription, switchMap } from 'rxjs';
 import { OrderService } from 'src/app/services/order/order.service';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { bootstrapChevronLeft } from '@ng-icons/bootstrap-icons';
 import { OrderComponent } from "../../../components/order/order/order.component";
 import { OrderItemComponent } from "../../../components/order/order-item/order-item.component";
-import { CheckoutMode } from 'src/app/models/cart/cart-checkout.model';
-import { IStripeSuccessComponent, isStripeSuccessComponent } from 'src/app/models/order/stripe-success-route.model';
-import { IStripeCancelComponent, isStripeCancelComponent } from 'src/app/models/order/stripe-cancel-route.model';
+import { SignalRService } from 'src/app/services/signalR/signal-r.service';
+import { ISignalREvent } from 'src/app/models/signal-r.model';
+
 
 @Component({
   selector: 'app-checkout',
@@ -20,10 +20,11 @@ import { IStripeCancelComponent, isStripeCancelComponent } from 'src/app/models/
   providers: [provideIcons({ bootstrapChevronLeft })],
   templateUrl: './checkout.component.html',
   styleUrls: ['./checkout.component.scss'],
-  imports: [CommonModule, NgIconComponent, OrderComponent, OrderItemComponent]
+  imports: [CommonModule, NgIconComponent, OrderComponent, OrderItemComponent, RouterLink]
 })
-export class CheckoutComponent implements OnInit {
-  readonly order: WritableSignal<IOrderDetails> = signal(<IOrderDetails>{});
+export class CheckoutComponent implements OnInit, OnDestroy {
+  private _subscriptions: Subscription[] = [];
+  readonly order: WritableSignal<IOrderDetailsResponse> = signal(<IOrderDetailsResponse>{});
   readonly paymentMessage: WritableSignal<string> = signal('');
   readonly buttonText: WritableSignal<string> = signal('Pay now');
   readonly isLoading: WritableSignal<boolean> = signal(false);
@@ -36,7 +37,8 @@ export class CheckoutComponent implements OnInit {
   constructor(
     private _orderService: OrderService,
     private _route: ActivatedRoute,
-    private _router: Router) {
+    private _router: Router,
+    private _signalRService: SignalRService) {
     this._initStripe();
   }
 
@@ -75,22 +77,18 @@ export class CheckoutComponent implements OnInit {
   }
 
 
-  /**
-   * Stripe recommends creating a new Session each time customer attempts to pay…
-   * https://stripe.com/docs/api/checkout/sessions
-   */
   ngOnInit(): void {
     this._loadPayOrder();
+    this._trackOrderChanges();
   }
 
 
   private async _initStripe() {
     this._stripe = await loadStripe(environment.stripePublishableKey);
-    console.log(`--> Stripe initialized: ${null != this._stripe}`);
   }
 
 
-  private _loadPayOrder() {
+  private _loadPayOrder(withStripe: boolean = true) {
     this._route.paramMap
       .pipe(
         switchMap((params) => {
@@ -117,10 +115,12 @@ export class CheckoutComponent implements OnInit {
 
           return this._orderService.getPayOrder(orderCheckout);
 
-        })).subscribe((payorder) => {
-          this.order.set(payorder.order);
-          this._clientSecret = payorder.payment.clientSecret;
-          this._loadStripe();
+        })).subscribe((orderDetails: IOrderDetailsResponse) => {
+          this.order.set(orderDetails);
+          if (withStripe) {
+            this._clientSecret = orderDetails.clientSecret;
+            this._loadStripe();
+          }
         });
   }
 
@@ -147,6 +147,18 @@ export class CheckoutComponent implements OnInit {
     });
   }
 
+
+  private _trackOrderChanges() {
+    this._subscriptions.push(
+      this._signalRService.messageReceived$
+        .subscribe((event: ISignalREvent) => {
+          if (this.order().orderNumber == event.orderId) {
+            this.order.mutate(o => o.status = event.status);
+          }
+        })
+    );
+  }
+
   // ------- UI helpers -------
 
   private _showMessage() {
@@ -164,9 +176,14 @@ export class CheckoutComponent implements OnInit {
     this.isLoading.set(isLoading);
     if (isLoading) {
       this.buttonText.set('Processing...');
-    } else {      
+    } else {
       this.buttonText.set('Pay now');
     }
+  }
+
+
+  ngOnDestroy(): void {
+    this._subscriptions.forEach(s => s.unsubscribe());
   }
 
 

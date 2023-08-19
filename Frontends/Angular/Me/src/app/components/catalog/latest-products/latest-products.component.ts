@@ -1,8 +1,7 @@
 import { Component, Input, WritableSignal, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SliderComponent } from "../slider/slider.component";
-import { ICatalogItem } from 'src/app/models/catalog/catalog-item.model';
-import { ICatalog } from 'src/app/models/catalog/catalog.model';
+import { ICatalog, ICatalogItem } from 'src/app/models/catalog.model';
 
 @Component({
     selector: 'app-latest-products',

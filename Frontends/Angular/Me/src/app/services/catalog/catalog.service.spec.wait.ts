@@ -8,7 +8,7 @@ import { CatalogService } from './catalog.service';
 import { DataService } from '../data/data.service';
 import { asyncData } from 'src/app/testing/async-observable-helpers';
 
-import { ICatalog } from 'src/app/models/catalog/catalog.model';
+import { ICatalog } from 'src/app/models/catalog.model';
 import { firstValueFrom } from 'rxjs';
 
 

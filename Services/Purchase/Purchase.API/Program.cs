@@ -59,12 +59,14 @@ services.AddTransient<INotificationHandler<BuyerPaymentMethodVerifiedDomainEvent
 services.AddTransient<INotificationHandler<OrderCancelledDomainEvent>, OrderCancelledDomainEventHandler>();
 services.AddTransient<INotificationHandler<OrderStatusChangedToAwaitingValidationDomainEvent>, OrderStatusChangedToAwaitingValidationDomainEventHandler>();
 services.AddTransient<INotificationHandler<OrderStatusChangedToStockConfirmedDomainEvent>, OrderStatusChangedToStockConfirmedDomainEventHandler>();
+services.AddTransient<INotificationHandler<OrderStartedDomainEvent>, ValidateOrAddBuyerAggregateWhenOrderStartedDomainEventHandler>();
 //
 // End integration event
 //
 
-// Using environment secrets
+// Stripe intents and redirection sessions - Using environment secrets
 StripeConfiguration.ApiKey = builder.Configuration["stripe-configuration-apikey"];
+StripeConfiguration.MaxNetworkRetries = 5;  // Idempotency protection
 Console.WriteLine($"--> Stripe config loaded: {!string.IsNullOrWhiteSpace(StripeConfiguration.ApiKey)}");
 
 var app = builder.Build();

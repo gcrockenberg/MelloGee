@@ -3,10 +3,9 @@ import { CommonModule } from '@angular/common';
 import { of, switchMap } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { CatalogService } from 'src/app/services/catalog/catalog.service';
-import { ICatalog } from 'src/app/models/catalog/catalog.model';
-import { IPager } from 'src/app/models/utils/pager.model';
+import { ICatalog, ICatalogItem } from 'src/app/models/catalog.model';
+import { IPager } from 'src/app/models/pager.model';
 import { ProductComponent } from "../../../components/catalog/product/product.component";
-import { ICatalogItem } from 'src/app/models/catalog/catalog-item.model';
 import { CatalogItemModalComponent } from "../../../components/catalog/catalog-item-modal/catalog-item-modal.component";
 import { CategoryNavComponent } from "../../../components/catalog/category-nav/category-nav.component";
 

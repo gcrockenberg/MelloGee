@@ -4,6 +4,7 @@ public class IntegrationEventLogContext : DbContext
 {
     public IntegrationEventLogContext(DbContextOptions<IntegrationEventLogContext> options) : base(options)
     {
+        
     }
 
     public DbSet<IntegrationEventLogEntry> IntegrationEventLogs { get; set; }
@@ -36,6 +37,7 @@ public class IntegrationEventLogContext : DbContext
 
         builder.Property(e => e.EventTypeName)
             .IsRequired();
-
+        
+        builder.HasIndex(nameof(IntegrationEventLogEntry.EventTypeName), nameof(IntegrationEventLogEntry.TransactionId)).IsUnique();
     }
 }

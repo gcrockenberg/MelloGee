@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 
 import { StorageService } from '../storage/storage.service';
-import { Constants, IConfiguration } from 'src/app/models/configuration/configuration.model';
+import { Constants, IConfiguration } from 'src/app/models/configuration.model';
 
 @Injectable({
   providedIn: 'root'

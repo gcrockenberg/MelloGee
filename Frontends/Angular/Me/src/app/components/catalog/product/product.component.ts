@@ -1,12 +1,11 @@
 import { Component, Input, WritableSignal, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ICatalogItem } from 'src/app/models/catalog/catalog-item.model';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { bootstrapBagPlus, bootstrapInfoCircle } from "@ng-icons/bootstrap-icons";
 import { CartService } from 'src/app/services/cart/cart.service';
-import { CATALOG_ITEM_MODAL } from '../catalog-item-modal/catalog-item-modal.component';
 import { ModalService } from 'src/app/services/modal/modal.service';
 import { Router } from '@angular/router';
+import { ICatalogItem } from 'src/app/models/catalog.model';
 
 @Component({
   selector: 'app-product',

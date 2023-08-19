@@ -4,9 +4,9 @@ import { FooterListTitleComponent } from '../footer-list-title/footer-list-title
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { bootstrapFacebook, bootstrapGithub, bootstrapLinkedin, bootstrapYoutube } from "@ng-icons/bootstrap-icons"
 import { CatalogService } from 'src/app/services/catalog/catalog.service';
-import { ICatalogType } from 'src/app/models/catalog/catalog-type.model';
 import { RouterLink } from '@angular/router';
 import { SecurityService } from 'src/app/services/security/security.service';
+import { ICatalogType } from 'src/app/models/catalog.model';
 
 @Component({
   selector: 'app-footer',

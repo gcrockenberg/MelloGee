@@ -1,6 +1,6 @@
 import { Component, Input, WritableSignal, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { IOrderDetails } from 'src/app/models/order/order.model';
+import { IOrderDetailsResponse } from 'src/app/models/order.model';
 import { OrderItemComponent } from "../order-item/order-item.component";
 import { Router } from '@angular/router';
 
@@ -13,11 +13,11 @@ import { Router } from '@angular/router';
 })
 export class OrderComponent {
   @Input() enablePayNow: boolean = false;
-  order: WritableSignal<IOrderDetails> = signal(<IOrderDetails>{});
-  @Input() set orderStatus(value: IOrderDetails) {
+  order: WritableSignal<IOrderDetailsResponse> = signal(<IOrderDetailsResponse>{});
+  @Input() set orderStatus(value: IOrderDetailsResponse) {
     this.order.set(value);
   }
-  get orderStatus(): IOrderDetails { return this.order() }
+  get orderStatus(): IOrderDetailsResponse { return this.order() }
 
   constructor(private _router: Router) {}
 

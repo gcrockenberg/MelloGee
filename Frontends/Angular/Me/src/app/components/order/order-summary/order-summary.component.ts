@@ -1,7 +1,7 @@
 import { Component, Input, WritableSignal, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { IOrderSummary } from 'src/app/models/order/order.model';
+import { IOrderSummary } from 'src/app/models/order.model';
 
 @Component({
   selector: 'app-order-summary',

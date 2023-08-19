@@ -29,9 +29,13 @@ param dockerHubUsername string
 @secure()
 param githubOrganizationOrUsername string
 
-@description('Required to provision Federated Id Credentials for Github Open Id Connect login.')
+@description('Required to generate Stripe sessions and intents.')
 @secure()
 param stripeApiKey string
+
+@description('Required to validate Stripe webhook calls.')
+@secure()
+param stripeEndpointSecret string
 
 // @description('Required to configure SQL Server. 8 character min, 3 of following - uppercase, lowercase, digit, non-alphanumeric')
 // @secure()
@@ -99,7 +103,7 @@ var defaultResources = {
 @description('The Container App microservices')
 var microservices = [
   {
-    skip: true
+    skip: false
     addToAPIM: false
     public: false
     apiPath: ''
@@ -147,7 +151,7 @@ var microservices = [
   //  stickySessionAffinity: 'none'
   // }
   { // Using MariaDb for demo because it requires 1/4 of the resources vs SQL Server
-    skip: true
+    skip: false
     addToAPIM: false
     public: false
     apiPath: ''
@@ -168,7 +172,7 @@ var microservices = [
     stickySessionAffinity: 'none'
   }
   {
-    skip: true
+    skip: false
     addToAPIM: false
     public: false
     apiPath: ''
@@ -211,7 +215,7 @@ var microservices = [
     stickySessionAffinity: 'sticky'
   }
   {
-    skip: true
+    skip: false
     addToAPIM: true
     public: false
     apiPath: 'c'
@@ -225,7 +229,7 @@ var microservices = [
         {
           name: 'connectionstrings-catalogdb'
           //value: 'Server=${solutionName}-sql-data;Database=Me.Services.CatalogDb;User Id=sa;Password=${msSqlSaPassword};Encrypt=False;TrustServerCertificate=true'
-          value: 'server=${solutionName}-mariadb;port=3306;uid=root;password=;database=Me.Services.CatalogDb'
+          value: 'server=${solutionName}-mariadb;port=3306;uid=root;password=;database=Me.Services.CatalogDb;IgnoreCommandTransaction=true'
         }
       ])
     environment: concat(microserviceCommonEnvironment, [
@@ -243,7 +247,7 @@ var microservices = [
     stickySessionAffinity: 'none'
   }
   {
-    skip: true
+    skip: false
     addToAPIM: true
     public: false
     apiPath: 'b'
@@ -264,7 +268,7 @@ var microservices = [
     stickySessionAffinity: 'none'
   }
   {
-    skip: true
+    skip: false
     addToAPIM: true
     public: false
     apiPath: 'o'
@@ -278,11 +282,15 @@ var microservices = [
         {
           name: 'connectionstrings-purchasedb'
           //value: 'Server=${solutionName}-sql-data;Database=Me.Services.PurchaseDb;User Id=sa;Password=${msSqlSaPassword};Encrypt=False;TrustServerCertificate=true'
-          value: 'server=${solutionName}-mariadb;port=3306;uid=root;password=;database=Me.Services.PurchaseDb'
+          value: 'server=${solutionName}-mariadb;port=3306;uid=root;password=;database=Me.Services.PurchaseDb;IgnoreCommandTransaction=true'
         }
         {
           name: 'stripe-configuration-apikey'
           value: stripeApiKey
+        }
+        {
+          name: 'stripe-endpoint-secret'
+          value: stripeEndpointSecret
         }
       ])
     environment: concat(microserviceCommonEnvironment, [
@@ -293,6 +301,10 @@ var microservices = [
         {
           name: 'stripe-configuration-apikey'
           secretRef: 'stripe-configuration-apikey'
+        }
+        {
+          name: 'stripe-endpoint-secret'
+          secretRef: 'stripe-endpoint-secret'
         }
         { // ACA prevents gRPC due to Ingress port limitations https://github.com/microsoft/azure-container-apps/issues/763
           name: 'GrpcCart'

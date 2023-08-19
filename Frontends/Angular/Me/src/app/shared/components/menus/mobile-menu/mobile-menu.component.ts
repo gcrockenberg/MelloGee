@@ -3,8 +3,8 @@ import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { bootstrapXLg } from '@ng-icons/bootstrap-icons';
-import { ICatalogType } from 'src/app/models/catalog/catalog-type.model';
 import { CatalogService } from 'src/app/services/catalog/catalog.service';
+import { ICatalogType } from 'src/app/models/catalog.model';
 
 
 @Component({

@@ -1,11 +1,11 @@
 import { Component, EventEmitter, Input, Output, Signal, WritableSignal, computed, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ICartItem } from 'src/app/models/cart/cart-item.model';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { bootstrapDash, bootstrapPlusLg, bootstrapX } from "@ng-icons/bootstrap-icons";
 import { Router } from '@angular/router';
 import { QuantityButtonsComponent } from "../quantity-buttons/quantity-buttons.component";
 import { QuantitySelectComponent } from "../quantity-select/quantity-select.component";
+import { ICartItem } from 'src/app/models/cart.model';
 
 export interface IChangeQuantityEvent {
   itemIndex: number;

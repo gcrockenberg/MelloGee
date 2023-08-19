@@ -19,14 +19,14 @@ namespace Purchase.API.Migrations
                 columns: table => new
                 {
                     EventId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
-                    EventTypeName = table.Column<string>(type: "longtext", nullable: false)
+                    EventTypeName = table.Column<string>(type: "varchar(255)", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     State = table.Column<int>(type: "int", nullable: false),
                     TimesSent = table.Column<int>(type: "int", nullable: false),
                     CreationTime = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     Content = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    TransactionId = table.Column<string>(type: "longtext", nullable: false)
+                    TransactionId = table.Column<string>(type: "varchar(255)", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>
@@ -34,6 +34,12 @@ namespace Purchase.API.Migrations
                     table.PrimaryKey("PK_IntegrationEventLog", x => x.EventId);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_IntegrationEventLog_EventTypeName_TransactionId",
+                table: "IntegrationEventLog",
+                columns: new[] { "EventTypeName", "TransactionId" },
+                unique: true);
         }
 
         /// <inheritdoc />

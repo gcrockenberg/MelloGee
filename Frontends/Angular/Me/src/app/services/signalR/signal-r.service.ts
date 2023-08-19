@@ -3,6 +3,7 @@ import { HubConnection, HubConnectionBuilder, IHttpConnectionOptions, LogLevel }
 import { Subject, firstValueFrom, takeUntil } from 'rxjs';
 import { SecurityService } from '../security/security.service';
 import { ConfigurationService } from '../configuration/configuration.service';
+import { ISignalREvent } from 'src/app/models/signal-r.model';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +13,7 @@ export class SignalRService {
   private _destroyRef = inject(DestroyRef);
   private _hubConnection: HubConnection = <HubConnection>{};
   private _signalRHubUrl: string = '';
-  private signalRSource = new Subject<string>();
+  private signalRSource = new Subject<ISignalREvent>();
   messageReceived$ = this.signalRSource.asObservable();
 
   constructor(
@@ -43,7 +44,11 @@ export class SignalRService {
 
   private transmitFakeMessages(index: number = 1) {
     setTimeout(() => {
-      this.signalRSource.next(`FAKE MESSAGE ${index}`);
+      this.signalRSource.next({
+        orderId: 0,
+        message: `FAKE MESSAGE ${index}`,
+        status: 'fake'
+      });
       this.transmitFakeMessages(++index);
     }, 10000)
   }
@@ -90,7 +95,14 @@ export class SignalRService {
   private registerHandlers() {
     this._hubConnection.on('UpdatedOrderState', (msg) => {
       let message = (1 > msg.orderId) ? 'SignalR connected...' : `Order ${msg.orderId}: ${msg.status}`;
-      this.signalRSource.next(message);
+      console.log('--> SignalR: ', msg);
+      this.signalRSource.next(
+        {
+          orderId: msg.orderId,
+          message: message,
+          status: msg.status
+        }
+      );
     });
   }
 

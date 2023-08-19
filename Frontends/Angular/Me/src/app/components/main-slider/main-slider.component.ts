@@ -2,7 +2,7 @@ import { CUSTOM_ELEMENTS_SCHEMA, Component, ElementRef, ViewChild, WritableSigna
 import { CommonModule } from '@angular/common';
 import { register } from 'swiper/element/bundle'
 import { Swiper, SwiperOptions } from 'swiper/types';
-import { ICatalogItem } from 'src/app/models/catalog/catalog-item.model';
+import { ICatalogItem } from 'src/app/models/catalog.model';
 
 
 @Component({

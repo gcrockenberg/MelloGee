@@ -1,6 +1,5 @@
 ﻿namespace Me.Services.Purchase.Infrastructure.Repositories;
-public class OrderRepository
-    : IOrderRepository
+public class OrderRepository : IOrderRepository
 {
     private readonly PurchaseContext _context;
 
@@ -16,32 +15,51 @@ public class OrderRepository
         OrderStatus status = await _context.OrderStatus.FirstOrDefaultAsync(os => os.Id == order.OrderStatusId);
         order.OrderStatus = status;
         return _context.Orders.Add(order).Entity;
-
     }
 
-    public async Task<Order> GetAsync(int orderId)
+
+    public async Task<Order> GetAsync(int orderId, Boolean withBuyer = false, Boolean withStatus = false, Boolean withItems = false, Boolean withAddress = false)
     {
-        var order = await _context
-                            .Orders
-                            .Include(o => o.Address)
-                            .Include(o => o.Buyer)
-                            .FirstOrDefaultAsync(o => o.Id == orderId);
-        if (order == null)
+        var order = await _context.Orders.FirstOrDefaultAsync(o => o.Id == orderId);
+
+        if (order is null)
         {
             order = _context
                         .Orders
                         .Local
                         .FirstOrDefault(o => o.Id == orderId);
         }
-        if (order != null)
+        if (order is not null)
         {
-            await _context.Entry(order)
-                .Collection(i => i.OrderItems).LoadAsync();
-            await _context.Entry(order)
-                .Reference(i => i.OrderStatus).LoadAsync();
+            if (withItems)
+            {
+                await _context.Entry(order)
+                    .Collection(i => i.OrderItems).LoadAsync();
+            }
+            if (withStatus)
+            {
+                await _context.Entry(order)
+                    .Reference(i => i.OrderStatus).LoadAsync();
+            }
+            if (withBuyer)
+            {
+                await _context.Entry(order)
+                .Reference(i => i.Buyer).LoadAsync();
+            }
+            if (withAddress)
+            {
+                await _context.Entry(order)
+                .Reference(i => i.Address).LoadAsync();
+            }
         }
 
         return order;
+    }
+
+
+    public async Task<OrderStatus> GetOrderStatusAsync(int orderStatusId)
+    {
+        return await _context.OrderStatus.FirstOrDefaultAsync(os => os.Id == orderStatusId);
     }
 
 
@@ -56,4 +74,6 @@ public class OrderRepository
     {
         _context.Entry(order).State = EntityState.Modified;
     }
+
+
 }

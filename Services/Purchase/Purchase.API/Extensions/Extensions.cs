@@ -65,7 +65,7 @@ internal static class Extensions
             //  .EnableSensitiveDataLogging()
             //  .EnableDetailedErrors();
             //options.UseSqlServer(connectionString, ConfigureSqlOptions);
-        });
+        }, ServiceLifetime.Transient);
 
         return services;
     }

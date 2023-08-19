@@ -16,7 +16,7 @@ import {
   RedirectRequest,
   SsoSilentRequest
 } from '@azure/msal-browser';
-import { ClaimFields, UserData } from 'src/app/models/security/user-data.model';
+import { ClaimFields, UserData } from 'src/app/models/security.model';
 
 
 /**

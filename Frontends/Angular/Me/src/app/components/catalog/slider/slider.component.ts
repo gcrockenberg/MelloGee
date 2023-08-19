@@ -1,7 +1,6 @@
 import { CUSTOM_ELEMENTS_SCHEMA, Component, ElementRef, Input, OnInit, ViewChild, WritableSignal, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ICatalog } from 'src/app/models/catalog/catalog.model';
-import { ICatalogItem } from 'src/app/models/catalog/catalog-item.model';
+import { ICatalog, ICatalogItem } from 'src/app/models/catalog.model';
 import { Swiper, SwiperOptions } from 'swiper/types';
 import { register } from 'swiper/element/bundle'
 import { ProductComponent } from "../product/product.component";

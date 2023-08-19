@@ -6,7 +6,7 @@ import { bootstrapCart3 } from '@ng-icons/bootstrap-icons';
 import { CartService } from 'src/app/services/cart/cart.service';
 import { SidebarService } from 'src/app/services/sidebar/sidebar.service';
 import { CART_SIDEBAR_ID } from 'src/app/components/cart/cart-sidebar/cart-sidebar.component';
-import { ICart } from 'src/app/models/cart/cart.model';
+import { ICart } from 'src/app/models/cart.model';
 import { Subscription } from 'rxjs';
 
 @Component({

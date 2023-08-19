@@ -1,5 +1,15 @@
-import { ICatalogBrand } from "./catalog-brand.model";
-import { ICatalogType } from "./catalog-type.model";
+
+export interface ICatalog {
+    pageIndex: number;
+    data: ICatalogItem[];
+    pageSize: number;
+    count: number;
+}
+
+export interface ICatalogType {
+    id: number;
+    type: string;
+}
 
 export interface ICatalogItem {
     id: number;
@@ -13,4 +23,9 @@ export interface ICatalogItem {
     catalogType: ICatalogType;
     units: number;
     isNew: boolean;
+}
+
+export interface ICatalogBrand {
+    id: number | null;
+    brand: string;
 }

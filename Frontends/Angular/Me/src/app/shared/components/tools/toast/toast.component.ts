@@ -2,6 +2,7 @@ import { Component, OnDestroy, WritableSignal, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SignalRService } from 'src/app/services/signalR/signal-r.service';
 import { Subscription } from 'rxjs';
+import { ISignalREvent } from 'src/app/models/signal-r.model';
 
 @Component({
   selector: 'app-toast',
@@ -21,8 +22,8 @@ export class ToastComponent implements OnDestroy {
 
     this._subscriptions.push(
       this._signalRService.messageReceived$
-        .subscribe((message: string) => {
-          this.messages.mutate(m => m.push(message));
+        .subscribe((event: ISignalREvent) => {
+          this.messages.mutate(m => m.push(event.message));
           this._showToast();
           setTimeout(() => { }, 600);
         })
@@ -51,4 +52,6 @@ export class ToastComponent implements OnDestroy {
   ngOnDestroy(): void {
     this._subscriptions.forEach(s => s.unsubscribe());
   }
+
+
 }

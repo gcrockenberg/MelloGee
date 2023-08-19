@@ -1,7 +1,7 @@
 import { Component, computed, WritableSignal, signal, Signal, OnDestroy } from '@angular/core';
 import { CommonModule, NgFor } from '@angular/common';
 import { CartService } from 'src/app/services/cart/cart.service';
-import { ICart } from 'src/app/models/cart/cart.model';
+import { ICart } from 'src/app/models/cart.model';
 import { Subscription } from 'rxjs';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 

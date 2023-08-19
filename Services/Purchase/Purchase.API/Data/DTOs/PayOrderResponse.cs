@@ -2,6 +2,6 @@ namespace Me.Services.Purchase.API.Data.DTOs;
 
 public class PayOrderResponse
 {
-    public OrderResponse Order { get; set; }
-    public CheckoutResponse Payment { get; set; }
+    public required OrderResponse Order { get; set; }
+    public required CheckoutData Payment { get; set; }
 }

@@ -84,6 +84,21 @@ static_resources:
                     allow_methods: "*"
                     allow_headers: "*"
                     allow_credentials: true
+              - match:
+                  prefix: "/webhook"
+                route:
+                  #prefix_rewrite: "/api/v1/order"
+                  cluster: order_service
+                typed_per_filter_config:
+                  envoy.filters.http.cors:
+                    "@type": type.googleapis.com/envoy.extensions.filters.http.cors.v3.CorsPolicy
+                    allow_origin_string_match:
+                    - contains: localhost
+                    - safe_regex:
+                        regex: .*\.envoyproxy\.io
+                    allow_methods: "*"
+                    allow_headers: "*"
+                    allow_credentials: true
           http_filters:
           - name: envoy.filters.http.cors
             typed_config:

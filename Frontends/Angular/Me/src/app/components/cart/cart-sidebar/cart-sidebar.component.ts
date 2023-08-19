@@ -2,19 +2,15 @@ import { Component, OnDestroy, Signal, WritableSignal, computed, signal } from '
 import { CommonModule } from '@angular/common';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { bootstrapChevronRight, bootstrapTrash3, bootstrapXLg, bootstrapCart3 } from "@ng-icons/bootstrap-icons";
-import { ISidebar } from 'src/app/models/sidebar/sidebar.model';
+import { ISidebar } from 'src/app/models/sidebar.model';
 import { SidebarService } from 'src/app/services/sidebar/sidebar.service';
 import { CartService } from 'src/app/services/cart/cart.service';
 import { Subscription } from 'rxjs';
-import { ICart } from 'src/app/models/cart/cart.model';
+import { ICart, ICartCheckout } from 'src/app/models/cart.model';
 import { CartItemComponent, IChangeQuantityEvent } from "../cart-item/cart-item.component";
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { OrderService } from 'src/app/services/order/order.service';
-import { ICheckoutResponse, IOrderCheckout } from 'src/app/models/order/order.model';
-import { CheckoutMode, ICartCheckout } from 'src/app/models/cart/cart-checkout.model';
 import { SecurityService } from 'src/app/services/security/security.service';
-import { IStripeSuccessComponent, isStripeSuccessComponent } from 'src/app/models/order/stripe-success-route.model';
-import { IStripeCancelComponent, isStripeCancelComponent } from 'src/app/models/order/stripe-cancel-route.model';
 
 export const CART_SIDEBAR_ID: string = 'CART_SIDEBAR_ID';
 
@@ -120,7 +116,7 @@ export class CartSidebarComponent implements ISidebar, OnDestroy {
     };
 
     this._orderService.setCartCheckout(cartCheckout)
-      .subscribe((response: ICheckoutResponse) => {
+      .subscribe((response: any) => {
         // Cart gets cleard in OrderService and cloud Integration Event
         this._router.navigate([`/checkout/${response.orderId}`]);
         this.handleClose();
