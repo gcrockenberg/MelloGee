@@ -29,8 +29,8 @@ A rewrite of [Microsofts Microservice reference project](https://github.com/dotn
 
 <h2>Currently working on</h2>
 <ul> 
-<li><a href="https://green-wave-08182290f.3.azurestaticapps.net">Unity</a> <-- Link to current version
-<li>For fun, I'm experimenting with integrating a web based gaming experience with "hooks" to AR and purchasing. Then I'll move on to ChatGPT integration.</li>
+<li><a href="https://green-wave-08182290f.3.azurestaticapps.net">Link to current version</a> 
+<li>I'm experimenting with integrating a web based Unity gaming experience with "hooks" to augmented reality and purchasing. Then I'm planning on ChatGPT integration for context based guided navigation.</li>
 </ul>
 
 <h1>Deploying Me</h1>
