@@ -20,7 +20,6 @@ export class ThreeDComponent implements OnInit {
     private _scriptService: ScriptService) { }
 
   ngOnInit() {
-    console.log("--> userAgent:", navigator.userAgent);
     if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
       this.showText.set(false);
     }

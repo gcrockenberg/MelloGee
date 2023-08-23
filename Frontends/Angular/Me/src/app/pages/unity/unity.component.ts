@@ -44,7 +44,7 @@ export class UnityComponent implements OnInit {
   // user.
   private _unityShowBanner(msg: any, type: any) {
     var div = document.createElement('div');
-    div.innerHTML = msg;
+    div.innerHTML = `A Me solution`;
     this._warningBanner.appendChild(div);
     if (type == 'error') div.setAttribute('style', 'background: red; padding: 10px;');
     else {
