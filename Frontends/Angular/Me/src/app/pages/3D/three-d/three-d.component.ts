@@ -1,4 +1,4 @@
-import { CUSTOM_ELEMENTS_SCHEMA, Component, OnInit, Renderer2 } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, Component, OnInit, Renderer2, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ScriptService } from 'src/app/services/script/script.service';
 
@@ -14,12 +14,18 @@ const SCRIPT_PATH = 'https://ajax.googleapis.com/ajax/libs/model-viewer/3.2.0/mo
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class ThreeDComponent implements OnInit {
-
+  showText = signal(true);
   
   constructor(private _renderer: Renderer2,
     private _scriptService: ScriptService) { }
 
   ngOnInit() {
+    console.log("--> userAgent:", navigator.userAgent);
+    if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+      this.showText.set(false);
+    }
+
+
     const scriptElement = this._scriptService.loadJsScript(this._renderer, SCRIPT_PATH, 'module');
     scriptElement.onload = () => {
       console.log('Google Model-Viewer script loaded');

@@ -4,7 +4,7 @@
         <source src="assets/videos/space.mp4"> Your browser does not support the video tag.
     </video>
     <div class="absolute top-36 lg:top-28 bottom-0 h-full w-full transition-all">
-        <div class="h2 flex justify-center lg:justify-normal text-center lg:text-left mx-6 md:mx-8">Try Me on mobile</div>
+        <div *ngIf="showText()" class="h2 flex justify-center lg:justify-normal text-center lg:text-left mx-6 md:mx-8">Try Me on mobile</div>
         <model-viewer
             alt="Neil Armstrong's Spacesuit from the Smithsonian Digitization Programs Office and National Air and Space Museum"
             class="h-3/4 w-full" src="assets/models/NeilArmstrong.glb" ar

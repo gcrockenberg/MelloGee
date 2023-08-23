@@ -1,4 +1,4 @@
-import { Component, NgZone, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 const SCRIPT_PATH = 'external/Jobs4.framework.js';
@@ -18,7 +18,6 @@ export class UnityComponent implements OnInit {
   private _progressBarFull: HTMLElement = <HTMLElement>{};
   private _fullscreenButton: HTMLInputElement = <HTMLInputElement>{};
   private _warningBanner: HTMLElement = <HTMLElement>{};
-
 
   ngOnInit(): void {
     this._container = document.querySelector("#unity-container") ?? <HTMLElement>{};
