@@ -16,7 +16,6 @@ export class UnityComponent implements OnInit {
   private _canvas: HTMLElement = <HTMLElement>{};
   private _loadingBar: HTMLElement = <HTMLElement>{};
   private _progressBarFull: HTMLElement = <HTMLElement>{};
-  private _fullscreenButton: HTMLInputElement = <HTMLInputElement>{};
   private _warningBanner: HTMLElement = <HTMLElement>{};
 
   ngOnInit(): void {
@@ -24,7 +23,6 @@ export class UnityComponent implements OnInit {
     this._canvas = document.querySelector("#unity-canvas") ?? <HTMLElement>{};
     this._loadingBar = document.querySelector("#unity-loading-bar") ?? <HTMLElement>{};
     this._progressBarFull = document.querySelector("#unity-progress-bar-full") ?? <HTMLElement>{};
-    this._fullscreenButton = document.querySelector("#unity-fullscreen-button") ?? <HTMLInputElement>{};
     this._warningBanner = document.querySelector("#unity-warning") ?? <HTMLElement>{};
 
     this._loadGame();
@@ -77,9 +75,6 @@ export class UnityComponent implements OnInit {
       this._progressBarFull.style.width = 100 * progress + "%";
     }).then((unityInstance: any) => {
       this._loadingBar.style.display = "none";
-      this._fullscreenButton.onclick = () => {
-        unityInstance.SetFullscreen(1);
-      };
     }).catch((message: any) => {
       alert(message);
     });
