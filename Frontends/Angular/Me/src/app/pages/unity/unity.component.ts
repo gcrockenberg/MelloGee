@@ -20,9 +20,6 @@ export class UnityComponent implements OnInit {
   private _warningBanner: HTMLElement = <HTMLElement>{};
 
 
-  constructor(private _ngZone: NgZone) { }
-
-
   ngOnInit(): void {
     this._container = document.querySelector("#unity-container") ?? <HTMLElement>{};
     this._canvas = document.querySelector("#unity-canvas") ?? <HTMLElement>{};
@@ -31,9 +28,7 @@ export class UnityComponent implements OnInit {
     this._fullscreenButton = document.querySelector("#unity-fullscreen-button") ?? <HTMLInputElement>{};
     this._warningBanner = document.querySelector("#unity-warning") ?? <HTMLElement>{};
 
-    this._ngZone.runOutsideAngular(() => {
-      this._loadGame();
-    });
+    this._loadGame();
   }
 
 
