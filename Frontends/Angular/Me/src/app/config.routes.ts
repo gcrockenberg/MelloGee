@@ -70,7 +70,8 @@ export const routes: Routes = [
     },
     {
         path: 'unity',
-        component: UnityComponent
+        loadComponent: () => import('./pages/unity/unity.component')
+            .then((mod) => mod.UnityComponent),
     },
     {
         path: 'login',

@@ -1,6 +1,5 @@
-import { Component, NgZone, OnInit, Renderer2 } from '@angular/core';
+import { Component, NgZone, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ScriptService } from 'src/app/services/script/script.service';
 
 const SCRIPT_PATH = 'external/Jobs4.framework.js';
 declare function createUnityInstance(canvas: any, config: any, onProgress: any): any;
@@ -21,10 +20,7 @@ export class UnityComponent implements OnInit {
   private _warningBanner: HTMLElement = <HTMLElement>{};
 
 
-  constructor(
-    private _scriptService: ScriptService,
-    private _renderer: Renderer2,
-    private _ngZone: NgZone) { }
+  constructor(private _ngZone: NgZone) { }
 
 
   ngOnInit(): void {
@@ -34,14 +30,6 @@ export class UnityComponent implements OnInit {
     this._progressBarFull = document.querySelector("#unity-progress-bar-full") ?? <HTMLElement>{};
     this._fullscreenButton = document.querySelector("#unity-fullscreen-button") ?? <HTMLInputElement>{};
     this._warningBanner = document.querySelector("#unity-warning") ?? <HTMLElement>{};
-
-    const scriptElement = this._scriptService.loadJsScript(this._renderer, SCRIPT_PATH, 'module');
-    scriptElement.onload = () => {
-      console.log('Jobs4 script loaded');
-    }
-    scriptElement.onerror = () => {
-      console.log('Could not load Jobs4 script');
-    }
 
     this._ngZone.runOutsideAngular(() => {
       this._loadGame();
