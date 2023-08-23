@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, WritableSignal, signal } from '@angular/core';
+import { Component, OnDestroy, OnInit, Renderer2, WritableSignal, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { loadStripe, Stripe, StripeElements } from '@stripe/stripe-js';
@@ -12,6 +12,10 @@ import { OrderComponent } from "../../../components/order/order/order.component"
 import { OrderItemComponent } from "../../../components/order/order-item/order-item.component";
 import { SignalRService } from 'src/app/services/signalR/signal-r.service';
 import { ISignalREvent } from 'src/app/models/signal-r.model';
+import { ScriptService } from 'src/app/services/script/script.service';
+
+
+const SCRIPT_PATH = 'https://js.stripe.com/v3/';
 
 
 @Component({
@@ -38,7 +42,9 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     private _orderService: OrderService,
     private _route: ActivatedRoute,
     private _router: Router,
-    private _signalRService: SignalRService) {
+    private _signalRService: SignalRService,
+    private _scriptService: ScriptService,
+    private _renderer: Renderer2) {
     this._initStripe();
   }
 
@@ -78,6 +84,14 @@ export class CheckoutComponent implements OnInit, OnDestroy {
 
 
   ngOnInit(): void {
+    const scriptElement = this._scriptService.loadJsScript(this._renderer, SCRIPT_PATH, 'module');
+    scriptElement.onload = () => {
+      console.log('Stripe script loaded');
+    }
+    scriptElement.onerror = () => {
+      console.log('Could not load Stripe script');
+    }
+
     this._loadPayOrder();
     this._trackOrderChanges();
   }

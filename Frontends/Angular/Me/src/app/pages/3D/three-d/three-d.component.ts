@@ -1,6 +1,9 @@
-import { CUSTOM_ELEMENTS_SCHEMA, Component } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, Component, OnInit, Renderer2 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import "external/ajax.googleapis.com_ajax_libs_model-viewer_3.1.1_model-viewer.min.js"
+import { ScriptService } from 'src/app/services/script/script.service';
+
+// https://github.com/google/model-viewer/releases
+const SCRIPT_PATH = 'https://ajax.googleapis.com/ajax/libs/model-viewer/3.2.0/model-viewer.min.js';
 
 @Component({
   selector: 'app-three-d',
@@ -8,6 +11,22 @@ import "external/ajax.googleapis.com_ajax_libs_model-viewer_3.1.1_model-viewer.m
   imports: [CommonModule],
   templateUrl: './three-d.component.html',
   styleUrls: ['./three-d.component.scss'],
-  schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
-export class ThreeDComponent { }
+export class ThreeDComponent implements OnInit {
+
+  
+  constructor(private _renderer: Renderer2,
+    private _scriptService: ScriptService) { }
+
+  ngOnInit() {
+    const scriptElement = this._scriptService.loadJsScript(this._renderer, SCRIPT_PATH, 'module');
+    scriptElement.onload = () => {
+      console.log('Google Model-Viewer script loaded');
+    }
+    scriptElement.onerror = () => {
+      console.log('Could not load the Google Model-Viewer script');
+    }
+  }
+
+}
