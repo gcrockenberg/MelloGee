@@ -4,7 +4,6 @@ import { LoginComponent } from './pages/login/login.component';
 import { MainComponent } from './pages/main/main.component';
 import { DeleteMyDataComponent } from './pages/delete-my-data/delete-my-data.component';
 import { PrivacyComponent } from './pages/privacy/privacy.component';
-import { SecureComponent } from './pages/secure/secure.component';
 import { CatalogComponent } from './pages/catalog/catalog/catalog.component';
 import { ProfileComponent } from './pages/profile/profile.component';
 import { NotFoundComponent } from './pages/not-found/not-found/not-found.component';
@@ -15,6 +14,7 @@ import { SearchResultsComponent } from './pages/search/search-results/search-res
 import { ProductDetailsComponent } from './pages/catalog/product-details/product-details.component';
 import { OrderDetailsComponent } from './pages/order/order-details/order-details.component';
 import { CheckoutComponent } from './pages/order/checkout/checkout.component';
+import { UnityComponent } from './pages/unity/unity.component';
 
 export const routes: Routes = [
     {
@@ -43,7 +43,8 @@ export const routes: Routes = [
     },
     {
         path: 'checkout/:orderId',
-        component: CheckoutComponent,
+        loadComponent: () => import('./pages/order/checkout/checkout.component')
+            .then((mod) => mod.CheckoutComponent),
         canActivate: [
             MsalGuard
         ]
@@ -68,11 +69,8 @@ export const routes: Routes = [
             .then((mod) => mod.ThreeDComponent)
     },
     {
-        path: 'secure',
-        component: SecureComponent,
-        canActivate: [
-            MsalGuard
-        ]
+        path: 'unity',
+        component: UnityComponent
     },
     {
         path: 'login',

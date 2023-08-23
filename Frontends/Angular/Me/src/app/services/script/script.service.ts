@@ -1,6 +1,10 @@
 import { Renderer2, Inject, Injectable } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 
+
+/**
+ * https://www.htmlgoodies.com/javascript/loading-external-scripts-dynamically-in-angular/
+ */
 @Injectable({
   providedIn: 'root'
 })
