@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-const SCRIPT_PATH = 'external/Jobs4.framework.js';
+const SCRIPT_PATH = 'external/Build.framework.js';
 declare function createUnityInstance(canvas: any, config: any, onProgress: any): any;
 
 @Component({
@@ -59,12 +59,12 @@ export class UnityComponent implements OnInit {
   private _loadGame() {
     let buildUrl = 'external'
     var config = {
-      dataUrl: buildUrl + "/Jobs4.data",
-      frameworkUrl: buildUrl + "/Jobs4.framework.js",
-      codeUrl: buildUrl + "/Jobs4.wasm",
+      dataUrl: buildUrl + "/Build.data",
+      frameworkUrl: buildUrl + "/Build.framework.js",
+      codeUrl: buildUrl + "/Build.wasm",
       streamingAssetsUrl: "StreamingAssets",
       companyName: "Myoptyx",
-      productName: "Test",
+      productName: "Showroom",
       productVersion: "0.1.0",
       showBanner: this._unityShowBanner
     };

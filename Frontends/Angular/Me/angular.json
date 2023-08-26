@@ -35,7 +35,7 @@
               "src/styles.scss"
             ],
             "scripts": [
-              "src/assets/js/Jobs4.loader.js"
+              "src/assets/js/Build.loader.js"
             ]
           },
           "configurations": {

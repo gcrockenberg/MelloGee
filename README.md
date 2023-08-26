@@ -30,7 +30,7 @@ A rewrite of [Microsofts Microservice reference project](https://github.com/dotn
 <h2>Currently working on</h2>
 <ul> 
 <li><a href="https://green-wave-08182290f.3.azurestaticapps.net">Link to current version</a> 
-<li>I'm experimenting with integrating a web based Unity gaming experience with "hooks" to augmented reality and purchasing. Then I'm planning on ChatGPT integration for context based guided navigation.</li>
+<li>I'm integrating a web based gaming experience I call Showroom. It will hooks into augmented reality and purchasing. It is built using Unity and their latest ECS/DOTS technology. The current demo dynamically renders over 2000 objects that connect with each other based upon proximity. Later, I'm planning on ChatGPT integration for context based guided navigation.</li>
 </ul>
 
 <h1>Deploying Me</h1>
