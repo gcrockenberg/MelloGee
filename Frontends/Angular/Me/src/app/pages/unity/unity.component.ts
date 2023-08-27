@@ -17,6 +17,7 @@ export class UnityComponent implements OnInit {
   private _loadingBar: HTMLElement = <HTMLElement>{};
   private _progressBarFull: HTMLElement = <HTMLElement>{};
   private _warningBanner: HTMLElement = <HTMLElement>{};
+  private _unityInstance: any;
 
   ngOnInit(): void {
     this._container = document.querySelector("#unity-container") ?? <HTMLElement>{};
@@ -55,6 +56,13 @@ export class UnityComponent implements OnInit {
     this._updateBannerVisibility();
   }
 
+  
+  fullScreen() {
+    if (this._unityInstance) {
+      this._unityInstance.SetFullscreen(1)
+    }
+  }
+  
 
   private _loadGame() {
     let buildUrl = 'external'
@@ -74,6 +82,7 @@ export class UnityComponent implements OnInit {
     createUnityInstance(this._canvas, config, (progress: any) => {
       this._progressBarFull.style.width = 100 * progress + "%";
     }).then((unityInstance: any) => {
+      this._unityInstance = unityInstance;
       this._loadingBar.style.display = "none";
     }).catch((message: any) => {
       alert(message);
