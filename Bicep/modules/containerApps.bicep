@@ -28,6 +28,8 @@ param containerSecrets array
 @description('Container environment variables.')
 param environmentVariables array
 
+param additionalPortMappings array
+
 @description('Required to integrate with Docker as container registry')
 @secure()
 param dockerHubUsername string
@@ -54,7 +56,7 @@ param containerRegistries array = [
 ]
 
 
-resource containerAppManagedEnvironment 'Microsoft.App/managedEnvironments@2023-04-01-preview' existing = {
+resource containerAppManagedEnvironment 'Microsoft.App/managedEnvironments@2023-05-01' existing = {
   name: containerAppManagedEnvironmentName
 }
 
@@ -398,7 +400,7 @@ var ipSecurityRestrictionsForAPIMConsuptionPlan = [for (ipRange, i) in eastusDat
   description: 'Allow request from data center ip range ${i}'
 }]
 @description('Provision container app - CI/CD completes the api deployment')
-resource containerApp 'Microsoft.App/containerApps@2023-05-01' = {
+resource containerApp 'Microsoft.App/containerApps@2023-05-02-preview' = {
   name: containerAppName
   location: location
   properties: {
@@ -412,6 +414,7 @@ resource containerApp 'Microsoft.App/containerApps@2023-05-01' = {
         transport: transport
         allowInsecure: (transport == 'http')
         targetPort: targetPort
+        additionalPortMappings: additionalPortMappings
         stickySessions: {
           affinity: stickySessionAffinity
         } 

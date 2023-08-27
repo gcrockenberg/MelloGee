@@ -103,7 +103,7 @@ var defaultResources = {
 @description('The Container App microservices')
 var microservices = [
   {
-    skip: false
+    skip: true
     addToAPIM: false
     public: false
     apiPath: ''
@@ -113,6 +113,7 @@ var microservices = [
     minScale: 1
     targetPort: 6379
     transport: 'tcp'
+    additionalPortMappings: []
     secrets: microserviceCommonSecrets
     environment: []
     resources: defaultResources
@@ -128,6 +129,7 @@ var microservices = [
   //   minScale: 1
   //   targetPort: 1433
   //   transport: 'tcp'
+  //   additionalPortMappings: []
   //   secrets: [
   //     {
   //       name: 'container-registry-password'
@@ -151,7 +153,7 @@ var microservices = [
   //  stickySessionAffinity: 'none'
   // }
   { // Using MariaDb for demo because it requires 1/4 of the resources vs SQL Server
-    skip: false
+    skip: true
     addToAPIM: false
     public: false
     apiPath: ''
@@ -161,6 +163,7 @@ var microservices = [
     minScale: 1
     targetPort: 3306
     transport: 'tcp'
+    additionalPortMappings: []
     secrets: microserviceCommonSecrets
     environment: [
       {
@@ -172,7 +175,7 @@ var microservices = [
     stickySessionAffinity: 'none'
   }
   {
-    skip: false
+    skip: true
     addToAPIM: false
     public: false
     apiPath: ''
@@ -182,6 +185,7 @@ var microservices = [
     minScale: 1
     targetPort: 5672
     transport: 'tcp'
+    additionalPortMappings: []
     secrets: microserviceCommonSecrets
     environment: []
     resources: defaultResources
@@ -190,7 +194,7 @@ var microservices = [
   // APIM has many restrictions for WebSockets for demo just expose container app
   // https://learn.microsoft.com/en-us/azure/api-management/websocket-api?tabs=portal
   {
-    skip: false
+    skip: true
     addToAPIM: false
     public: true
     apiPath: ''
@@ -200,6 +204,7 @@ var microservices = [
     minScale: 1
     targetPort: 5112
     transport: 'http'
+    additionalPortMappings: []
     secrets: microserviceCommonSecrets
     environment: concat(microserviceCommonEnvironment, [
       {
@@ -215,7 +220,7 @@ var microservices = [
     stickySessionAffinity: 'sticky'
   }
   {
-    skip: false
+    skip: true
     addToAPIM: true
     public: false
     apiPath: 'c'
@@ -225,6 +230,7 @@ var microservices = [
     minScale: 0
     targetPort: 80
     transport: 'http'
+    additionalPortMappings: []
     secrets: concat(microserviceCommonSecrets, [
         {
           name: 'connectionstrings-catalogdb'
@@ -247,7 +253,7 @@ var microservices = [
     stickySessionAffinity: 'none'
   }
   {
-    skip: false
+    skip: true
     addToAPIM: true
     public: false
     apiPath: 'b'
@@ -257,6 +263,13 @@ var microservices = [
     minScale: 0
     targetPort: 80
     transport: 'http'
+    additionalPortMappings: [
+      {
+        external: false
+        targetPort: 81
+        exposedPort: 81
+      }
+    ]
     secrets: microserviceCommonSecrets
     environment: concat(microserviceCommonEnvironment, [
         {
@@ -278,6 +291,7 @@ var microservices = [
     minScale: 0
     targetPort: 80
     transport: 'http'
+    additionalPortMappings: []
     secrets: concat(microserviceCommonSecrets, [
         {
           name: 'connectionstrings-purchasedb'
@@ -328,6 +342,7 @@ var microservices = [
   //   minScale: 1
   //   targetPort: 80
   //   transport: 'http'
+  //   additionalPortMappings: []
   //   secrets: microserviceCommonSecrets
   //   // concat(microserviceCommonSecrets, [
   //   //   {
@@ -432,6 +447,7 @@ module containerAppModule 'modules/containerApps.bicep' = [for (microservice, in
     minScale: microservice.minScale
     targetPort: microservice.targetPort
     transport: microservice.transport
+    additionalPortMappings: microservice.additionalPortMappings
     stickySessionAffinity: microservice.stickySessionAffinity
     //keyVaultId: keyVaultForSolution.outputs.id
     //keyVaultName: keyVaultForSolution.outputs.name
