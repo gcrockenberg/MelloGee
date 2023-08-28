@@ -18,6 +18,7 @@ A rewrite of [Microsofts Microservice reference project](https://github.com/dotn
 - gRPC - [currently restricted in Azure Container Apps](https://github.com/microsoft/azure-container-apps/issues/763)
 - SignalR - connected after login, [APIM limitations with consumption plans](https://learn.microsoft.com/en-us/azure/api-management/websocket-api?tabs=portal)
 - Webhooks - from Stripe for fulfillment (only wired up "Paid" webhook for now, many more available)
+- Unity - The Showroom experience is built using Unity, uses ECS/DOTS, compiled to WebGL with javascript hooks (code managed separately)
 
 <h1>Notes</h1>
 <ul>
@@ -30,7 +31,7 @@ A rewrite of [Microsofts Microservice reference project](https://github.com/dotn
 <h2>Currently working on</h2>
 <ul> 
 <li><a href="https://green-wave-08182290f.3.azurestaticapps.net">Link to current version</a> 
-<li>I'm integrating a WebGL based gaming experience I call Showroom. It will hooks into augmented reality and purchasing. It is built using Unity and their latest ECS/DOTS technology. The current demo dynamically renders over 2000 objects that connect with each other based upon proximity. Later, I'm planning on ChatGPT integration for context based guided navigation.</li>
+<li>I'm expanding the AI assited navigation in Showroom. The current demo dynamically renders over 2000 objects that connect with each other based upon proximity. Later, I'm planning on ChatGPT integration for context based guided navigation.</li>
 </ul>
 
 <h1>Deploying Me</h1>
