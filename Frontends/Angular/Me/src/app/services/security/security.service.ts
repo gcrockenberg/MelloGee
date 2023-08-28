@@ -242,20 +242,6 @@ export class SecurityService {
   }
 
 
-  isSecurePath(url: string): boolean {
-    let matchingSecurePath = environment.apiConfigs.find((config) => {
-      let configUri = config.uri.replace('*', '');
-      return url.startsWith(configUri);
-    });
-
-    if (!matchingSecurePath) {
-      return false;
-    }
-
-    return true;
-  }
-
-
   private async _setIsAuthorized() {
     // see https://github.com/AzureAD/microsoft-authentication-library-for-js/blob/dev/lib/msal-common/docs/Accounts.md
     await this._msalInstance.handleRedirectPromise();   // <-- Important

@@ -30,6 +30,22 @@ export class UnityComponent implements OnInit {
   }
 
 
+  showLoc() {
+    let location: any = window.location;
+    const logLines = [
+      "Property (Typeof): Value",
+      `location (${typeof location}): ${location}`,
+    ];
+
+    for (const prop in location) {
+      logLines.push(
+        `${prop} (${typeof location[prop]}): ${location[prop] || "n/a"}`,
+      );
+    }
+    alert(logLines.join("\n"));
+  }
+  
+
   private _updateBannerVisibility = () => {
     this._warningBanner.style.display = this._warningBanner.children.length ? 'block' : 'none';
   }
@@ -67,9 +83,9 @@ export class UnityComponent implements OnInit {
   private _loadGame() {
     let buildUrl = 'external'
     var config = {
-      dataUrl: buildUrl + "/Build.data",
-      frameworkUrl: buildUrl + "/Build.framework.js",
-      codeUrl: buildUrl + "/Build.wasm",
+      dataUrl: buildUrl + "/Showroom.data",
+      frameworkUrl: buildUrl + "/Showroom.framework.js",
+      codeUrl: buildUrl + "/Showroom.wasm",
       streamingAssetsUrl: "StreamingAssets",
       companyName: "Myoptyx",
       productName: "Showroom",
