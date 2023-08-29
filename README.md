@@ -30,7 +30,7 @@ A rewrite of [Microsofts Microservice reference project](https://github.com/dotn
 
 <h2>Currently working on</h2>
 <ul> 
-<li><a href="https://green-wave-08182290f.3.azurestaticapps.net">Link to current version</a> 
+<li><a href="https://www.myoptyx.com">Link to current version</a> 
 <li>I'm expanding the AI assited navigation in Showroom. The current demo dynamically renders over 2000 objects that connect with each other based upon proximity. Later, I'm planning on ChatGPT integration for context based guided navigation.</li>
 </ul>
 
