@@ -18,7 +18,7 @@ A rewrite of [Microsofts Microservice reference project](https://github.com/dotn
 - gRPC - [currently restricted in Azure Container Apps](https://github.com/microsoft/azure-container-apps/issues/763)
 - SignalR - connected after login, [APIM limitations with consumption plans](https://learn.microsoft.com/en-us/azure/api-management/websocket-api?tabs=portal)
 - Webhooks - from Stripe for fulfillment (only wired up "Paid" webhook for now, many more available)
-- Unity - The Showroom experience is built using Unity, uses ECS/DOTS, compiled to WebGL with javascript hooks (code managed separately)
+- Unity - The Showroom experience uses ECS/DOTS, compiled to WebGL with javascript hooks (code managed separately)
 
 <h1>Notes</h1>
 <ul>
