@@ -209,7 +209,7 @@ var microservices = [
     environment: concat(microserviceCommonEnvironment, [
       {
         name: 'AllowedOrigins'
-        value: 'https://green-wave-08182290f.3.azurestaticapps.net' // Automate this
+        value: 'https://www.myoptyx.com' // Automate this
       }
       {
         name: 'ASPNETCORE_URLS'
