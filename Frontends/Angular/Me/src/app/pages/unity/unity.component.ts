@@ -81,9 +81,10 @@ export class UnityComponent implements OnInit {
   
 
   private _loadGame() {
-    let buildUrl = 'external'
+    let buildUrl = 'external';
+    let dataUri = 'https://stmedev.z13.web.core.windows.net/Unity';
     var config = {
-      dataUrl: buildUrl + "/Showroom.data",
+      dataUrl: dataUri + "/Showroom.data",
       frameworkUrl: buildUrl + "/Showroom.framework.js",
       codeUrl: buildUrl + "/Showroom.wasm",
       streamingAssetsUrl: "StreamingAssets",
